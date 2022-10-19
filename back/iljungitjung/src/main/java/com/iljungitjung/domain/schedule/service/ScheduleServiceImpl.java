@@ -1,7 +1,9 @@
 package com.iljungitjung.domain.schedule.service;
 
+import com.iljungitjung.domain.schedule.dto.ScheduleViewDetailResponseDto;
 import com.iljungitjung.domain.schedule.dto.ScheduleViewResponseDto;
 import com.iljungitjung.domain.schedule.entity.Schedule;
+import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +38,14 @@ public class ScheduleServiceImpl implements ScheduleService{
         }
 
         return responseDtos;
+    }
+
+    @Override
+    public ScheduleViewDetailResponseDto scheduleViewDetail(Long id) {
+        Schedule schedule = scheduleRepository.findScheduleById(id).orElseThrow(()->{
+            throw new NoExistScheduleDetailException();
+        });
+        ScheduleViewDetailResponseDto responseDto = new ScheduleViewDetailResponseDto(schedule);
+        return responseDto;
     }
 }
