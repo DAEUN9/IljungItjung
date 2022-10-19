@@ -23,6 +23,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         String id = "1";
         String color = "#000000";
         List<ScheduleViewResponseDto> responseDtos = new ArrayList<>();
+
         try{
             List<Schedule> scheduleList = scheduleRepository.findScheduleByUserToId(id);
 
@@ -34,9 +35,6 @@ public class ScheduleServiceImpl implements ScheduleService{
             throw new NoExistScheduleException();
         }
 
-        for(ScheduleViewResponseDto r : responseDtos){
-            System.out.println(r.toString());
-    }
         return responseDtos;
     }
 }
