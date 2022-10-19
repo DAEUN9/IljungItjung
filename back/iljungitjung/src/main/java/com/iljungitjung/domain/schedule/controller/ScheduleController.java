@@ -19,7 +19,7 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @GetMapping("/{nickname}")
-    public ResponseEntity<CommonResponse> scheduleView(HttpServletRequest request, @PathVariable("nickname") String nickname){
+    public ResponseEntity<CommonResponse> scheduleView(@PathVariable("nickname") String nickname){
         //String id = (String) request.getAttribute("id");
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(scheduleService.scheduleView(nickname)), HttpStatus.OK);
     }
