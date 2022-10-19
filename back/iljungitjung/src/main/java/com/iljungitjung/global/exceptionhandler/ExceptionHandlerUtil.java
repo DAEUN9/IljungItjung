@@ -1,5 +1,6 @@
 package com.iljungitjung.global.exceptionhandler;
 
+import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
 import com.iljungitjung.global.common.CommonResponse;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,11 @@ public class ExceptionHandlerUtil {
 
     @ExceptionHandler(NoExistScheduleException.class)
     ResponseEntity<CommonResponse> handleNoExistScheduleException(BindingResult bindingResult){
+        return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
+    }
+
+    @ExceptionHandler(value={NoExistCategoryException.class})
+    ResponseEntity<CommonResponse> handleNoExistCategoryException(BindingResult bindingResult) {
         return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
     }
 
