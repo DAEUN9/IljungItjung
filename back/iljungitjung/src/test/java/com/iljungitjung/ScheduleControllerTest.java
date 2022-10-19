@@ -46,4 +46,16 @@ public class ScheduleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("success"));
     }
+    @Test
+    public void 일정_상세_조회() throws Exception {
+        //given
+        ResultActions actions = mockMvc.perform(get("/schedules/detail/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("success"));
+    }
 }
