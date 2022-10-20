@@ -17,14 +17,15 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int category_id;
+    @Column(name = "category_id")
+    private int categoryId;
 
 //    @ManyToOne
 //    @JoinColumn(name = "user_id")
 //    @OnDelete(action = OnDeleteAction.CASCADE)
 //    private User user;
 
-    private String category_name;
+    private String categoryName;
 
     private String color;
 
@@ -37,14 +38,14 @@ public class Category {
 //        this.time = time;
 //    }
 
-    public Category(String category_name, String color, String time) {
-        this.category_name = category_name;
+    public Category(String categoryName, String color, String time) {
+        this.categoryName = categoryName;
         this.color = color;
         this.time = time;
     }
 
-    public void change(String category_name, String color, String time) {
-        this.category_name = category_name;
+    public void change(String categoryName, String color, String time) {
+        this.categoryName = categoryName;
         this.color = color;
         this.time = time;
     }

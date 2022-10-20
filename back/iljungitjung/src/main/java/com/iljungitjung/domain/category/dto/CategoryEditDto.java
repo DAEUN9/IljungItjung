@@ -6,9 +6,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CategoryEditDto {
 
-    private int category_id;
+    private int categoryId;
 
-    private String category_name;
+    private String categoryName;
 
     private String time;
 

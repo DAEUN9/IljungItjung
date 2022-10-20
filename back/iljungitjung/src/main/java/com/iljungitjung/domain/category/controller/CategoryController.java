@@ -20,7 +20,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     // user생기면 session으로 수정
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<CommonResponse> createCategory(
             @RequestBody CategoryCreateDto requestDto
     ) {
@@ -28,7 +28,7 @@ public class CategoryController {
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(""), HttpStatus.OK);
     }
 
-    @PutMapping("")
+    @PutMapping
     public ResponseEntity<CommonResponse> updateCategory(
             @RequestBody CategoryEditDto requestDto
     ) {
@@ -38,9 +38,9 @@ public class CategoryController {
 
     @DeleteMapping("/{category_id}")
     public ResponseEntity<CommonResponse> deleteCategory(
-            @PathVariable("category_id") int category_id
+            @PathVariable("category_id") int categoryId
     ) {
-        categoryService.deleteCategory(category_id);
+        categoryService.deleteCategory(categoryId);
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(""), HttpStatus.OK);
     }
 

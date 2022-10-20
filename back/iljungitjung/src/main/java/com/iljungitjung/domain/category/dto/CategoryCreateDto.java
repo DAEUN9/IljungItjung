@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CategoryCreateDto {
 
-    private String category_name;
+    private String categoryName;
 
     private String time;
 

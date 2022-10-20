@@ -19,7 +19,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public void addCategory(CategoryCreateDto requestDto) {
-        String categoryName = requestDto.getCategory_name();
+        String categoryName = requestDto.getCategoryName();
         String time = requestDto.getTime();
         String color = requestDto.getColor();
 //        User user = userRepository.findById(user_id);
@@ -31,13 +31,13 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public void updateCategory(CategoryEditDto requestDto) {
 
-        int categoryId = requestDto.getCategory_id();
+        int categoryId = requestDto.getCategoryId();
 
         Category category = categoryRepository.findById(categoryId);
         if (category==null) {
             throw new NoExistCategoryException();
         }
-        String categoryName = requestDto.getCategory_name();
+        String categoryName = requestDto.getCategoryName();
         String color = requestDto.getColor();
         String time = requestDto.getTime();
         category.change(categoryName, color, time);

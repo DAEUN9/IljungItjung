@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
-    Category findById(int category_id);
+    Category findById(int categoryId);
 }
