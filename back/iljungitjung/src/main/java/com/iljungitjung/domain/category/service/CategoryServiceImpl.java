@@ -1,7 +1,7 @@
 package com.iljungitjung.domain.category.service;
 
-import com.iljungitjung.domain.category.dto.CategoryCreateDto;
-import com.iljungitjung.domain.category.dto.CategoryEditDto;
+import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
+import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
@@ -9,6 +9,8 @@ import com.iljungitjung.domain.category.repository.CategoryRepository;
 //import com.iljungitjung.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,38 +20,31 @@ public class CategoryServiceImpl implements CategoryService{
     private final CategoryRepository categoryRepository;
 
     @Override
-    public void addCategory(CategoryCreateDto requestDto) {
-        String categoryName = requestDto.getCategoryName();
-        String time = requestDto.getTime();
-        String color = requestDto.getColor();
-//        User user = userRepository.findById(user_id);
-//        Category category = new Category(user, categoryName, color, time);
-        Category category = new Category(categoryName, color, time);
+    @Transactional
+    public void addCategory(CategoryCreateRequestDto requestDto) {
+        Category category = requestDto.toCategoryEntity(requestDto);
+        System.out.println(category.toString());
         categoryRepository.save(category);
     }
 
     @Override
-    public void updateCategory(CategoryEditDto requestDto) {
+    public void updateCategory(CategoryEditRequestDto requestDto) {
 
-        int categoryId = requestDto.getCategoryId();
+        Long categoryId = requestDto.getCategoryId();
 
-        Category category = categoryRepository.findById(categoryId);
-        if (category==null) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {
             throw new NoExistCategoryException();
-        }
-        String categoryName = requestDto.getCategoryName();
-        String color = requestDto.getColor();
-        String time = requestDto.getTime();
-        category.change(categoryName, color, time);
+        });
+        Category updateCategory = requestDto.toCategoryEntity(requestDto);
+        category.change(updateCategory);
         categoryRepository.save(category);
     }
 
     @Override
-    public void deleteCategory(int categoryId) {
-        Category category = categoryRepository.findById(categoryId);
-        if (category==null) {
+    public void deleteCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {
             throw new NoExistCategoryException();
-        }
+        });
         categoryRepository.delete(category);
     }
 }

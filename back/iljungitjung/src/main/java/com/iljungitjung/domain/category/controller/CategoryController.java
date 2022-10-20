@@ -1,9 +1,8 @@
 package com.iljungitjung.domain.category.controller;
 
-import com.iljungitjung.domain.category.dto.CategoryCreateDto;
-import com.iljungitjung.domain.category.dto.CategoryEditDto;
+import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
+import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
 import com.iljungitjung.domain.category.service.CategoryService;
-import com.iljungitjung.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,27 +20,27 @@ public class CategoryController {
 
     // user생기면 session으로 수정
     @PostMapping
-    public ResponseEntity<CommonResponse> createCategory(
-            @RequestBody CategoryCreateDto requestDto
+    public ResponseEntity<?> createCategory(
+            @RequestBody CategoryCreateRequestDto requestDto
     ) {
         categoryService.addCategory(requestDto);
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(""), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<CommonResponse> updateCategory(
-            @RequestBody CategoryEditDto requestDto
+    public ResponseEntity<?> updateCategory(
+            @RequestBody CategoryEditRequestDto requestDto
     ) {
         categoryService.updateCategory(requestDto);
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(""), HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{category_id}")
-    public ResponseEntity<CommonResponse> deleteCategory(
-            @PathVariable("category_id") int categoryId
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<?> deleteCategory(
+            @PathVariable("categoryId") Long categoryId
     ) {
         categoryService.deleteCategory(categoryId);
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(""), HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
 

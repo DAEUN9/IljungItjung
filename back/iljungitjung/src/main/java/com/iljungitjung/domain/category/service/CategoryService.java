@@ -1,10 +1,10 @@
 package com.iljungitjung.domain.category.service;
 
-import com.iljungitjung.domain.category.dto.CategoryCreateDto;
-import com.iljungitjung.domain.category.dto.CategoryEditDto;
+import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
+import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
 
 public interface CategoryService {
-    void addCategory(CategoryCreateDto requestDto);
-    void updateCategory(CategoryEditDto requestDto);
-    void deleteCategory(int categoryId);
+    void addCategory(CategoryCreateRequestDto requestDto);
+    void updateCategory(CategoryEditRequestDto requestDto);
+    void deleteCategory(Long categoryId);
 }

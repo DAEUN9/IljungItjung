@@ -24,7 +24,7 @@ import javax.transaction.Transactional;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class ScheduleControllerTest {
+public class ScheduleControllerTest{
     @Autowired
     private MockMvc mockMvc;
 
