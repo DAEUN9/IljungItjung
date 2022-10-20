@@ -1,0 +1,8 @@
+@use "../common/utils.module" as *;
+
+.register-page {
+  @include page-default();
+}
+
+.content {
+}

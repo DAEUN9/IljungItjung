@@ -1,0 +1,8 @@
+@use "../common/utils.module" as *;
+
+.setting-page {
+  @include page-default();
+}
+
+.content {
+}
