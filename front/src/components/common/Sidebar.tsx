@@ -6,8 +6,8 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import { useNavigate } from "react-router-dom";
 
 import styles from "@styles/common/Sidebar.module.scss";
-import logo from "@assets/images/logo.png";
-import defaultImg from "@assets/images/defaultImg.png";
+import logo from "@assets/logo.png";
+import defaultImg from "@assets/defaultImg.png";
 
 const Sidebar = () => {
   const navigate = useNavigate();
