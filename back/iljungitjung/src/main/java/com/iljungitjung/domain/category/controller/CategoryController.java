@@ -24,7 +24,7 @@ public class CategoryController {
             @RequestBody CategoryCreateRequestDto requestDto
     ) {
         categoryService.addCategory(requestDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping
