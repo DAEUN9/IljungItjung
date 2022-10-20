@@ -1,6 +1,7 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import CustomModal from '@components/common/CustomModal';
 import { Box } from '@mui/material';
+
+import CustomModal from '@components/common/CustomModal';
 import iljung from '@assets/iljung.png';
 
 export default {

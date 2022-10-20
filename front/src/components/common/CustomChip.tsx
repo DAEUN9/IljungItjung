@@ -1,7 +1,8 @@
-import styles from '@styles/common/Custom.module.scss';
 import { ReactNode, MouseEventHandler } from 'react';
-import Chip from '@mui/material/Chip';
 import { ThemeProvider } from '@mui/material';
+import Chip from '@mui/material/Chip';
+
+import styles from '@styles/common/Custom.module.scss';
 import theme from './theme';
 
 interface ChipProps {

@@ -1,5 +1,6 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { ButtonHTMLAttributes } from 'react';
 import { ThemeProvider } from '@mui/material';
+
 import Button from '@mui/material/Button';
 import theme from './theme';
 
