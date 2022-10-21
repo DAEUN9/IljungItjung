@@ -1,8 +1,11 @@
-package com.iljungitjung.domain.schedule.dto;
+package com.iljungitjung.domain.schedule.dto.schedule;
 
 
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import lombok.Getter;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Getter
 public class ScheduleViewDetailResponseDto {
@@ -11,18 +14,17 @@ public class ScheduleViewDetailResponseDto {
     private final String categoryName;
 
     private final String contents;
-    private final String date;
-    private final String startTime;
-    private final String endTime;
+    private final String startDate;
+    private final String endDate;
     private final String phonenum;
 
     public ScheduleViewDetailResponseDto(Schedule schedule){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm");
         this.id=schedule.getId();
         this.categoryName=schedule.getCategoryName();
         this.contents=schedule.getContents();
-        this.date=schedule.getDate();
-        this.startTime=schedule.getStartTime();
-        this.endTime=schedule.getEndTime();
+        this.startDate=simpleDateFormat.format(schedule.getStartDate());
+        this.endDate=simpleDateFormat.format(schedule.getEndDate());
         this.phonenum=schedule.getPhonenum();
     }
 }
