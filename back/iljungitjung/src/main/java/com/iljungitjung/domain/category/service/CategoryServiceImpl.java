@@ -23,11 +23,11 @@ public class CategoryServiceImpl implements CategoryService{
     @Transactional
     public void addCategory(CategoryCreateRequestDto requestDto) {
         Category category = requestDto.toCategoryEntity(requestDto);
-        System.out.println(category.toString());
         categoryRepository.save(category);
     }
 
     @Override
+    @Transactional
     public void updateCategory(CategoryEditRequestDto requestDto) {
 
         Long categoryId = requestDto.getCategoryId();
@@ -41,6 +41,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
+    @Transactional
     public void deleteCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {
             throw new NoExistCategoryException();
