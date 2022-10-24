@@ -1,6 +1,7 @@
 package com.iljungitjung.domain.schedule.entity;
 
 
+import com.iljungitjung.domain.category.entity.Category;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -65,6 +66,8 @@ public class Schedule {
         this.phonenum = phonenum;
         this.type=type;
     }
-
+    public void accpeted() {
+        this.type= Type.ACCEPTED;
+    }
 
 }

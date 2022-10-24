@@ -5,6 +5,7 @@ import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDetailResponseDto;
+import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
@@ -29,20 +30,24 @@ public class ScheduleServiceImpl implements ScheduleService{
     private final ScheduleRepository scheduleRepository;
     private final CategoryRepository categoryRepository;
     @Override
-    public List<ScheduleViewResponseDto> scheduleView(String nickname) {
+    public ScheduleViewResponseDto scheduleView(String nickname) {
 
         //닉네임으로 유저 조회
         String id = "1";
-        String color = "#000000";
-        List<ScheduleViewResponseDto> responseDtos = new ArrayList<>();
+        ScheduleViewResponseDto responseDtos;
 
         try{
-            List<Schedule> scheduleList = scheduleRepository.findScheduleByUserToId(id);
-
+            List<Schedule> scheduleList = scheduleRepository.findScheduleByUserFromId(id);
+            List<ScheduleViewDto> requestList = new ArrayList<>();
+            List<ScheduleViewDto> acceptedList = new ArrayList<>();
             for(Schedule schedule : scheduleList){
-                responseDtos.add(new ScheduleViewResponseDto(schedule, color));
+                if(schedule.getType().equals(Type.REQUEST)){
+                    requestList.add(new ScheduleViewDto(schedule));
+                }else{
+                    acceptedList.add(new ScheduleViewDto(schedule));
+                }
             }
-
+            responseDtos = new ScheduleViewResponseDto(requestList, acceptedList);
         }catch (Exception e){
             throw new NoExistScheduleException();
         }

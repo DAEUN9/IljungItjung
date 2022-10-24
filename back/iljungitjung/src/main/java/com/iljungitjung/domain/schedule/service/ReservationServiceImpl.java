@@ -3,6 +3,7 @@ package com.iljungitjung.domain.schedule.service;
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
+import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDetailResponseDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
@@ -55,4 +56,18 @@ public class ReservationServiceImpl implements ReservationService{
         Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, startDate, endDate, category.getColor(), Type.REQUEST);
         scheduleRepository.save(schedule);
     }
+
+    @Override
+    @Transactional
+    public void reservationManage(Long id, ReservationManageRequestDto reservationManageRequestDto) {
+        Schedule schedule = scheduleRepository.findScheduleById(id).orElseThrow(()->{
+            throw new NoExistScheduleDetailException();
+        });
+        if(reservationManageRequestDto.isAccept()){
+            schedule.accpeted();
+        }else{
+           scheduleRepository.delete(schedule);
+        }
+    }
+
 }

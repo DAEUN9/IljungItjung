@@ -7,22 +7,16 @@ import lombok.Getter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 public class ScheduleViewResponseDto {
 
-    private final Long id;
-    private final String categoryName;
-    private final String color;
-    private final String startDate;
-    private final String endDate;
+    private final List<ScheduleViewDto> requestList;
+    private final List<ScheduleViewDto> acceptedList;
 
-    public ScheduleViewResponseDto(Schedule schedule, String color){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm");
-        this.id=schedule.getId();
-        this.categoryName=schedule.getCategoryName();
-        this.color=color;
-        this.startDate=simpleDateFormat.format(schedule.getStartDate());
-        this.endDate=simpleDateFormat.format(schedule.getEndDate());
+    public ScheduleViewResponseDto(List<ScheduleViewDto> requestList, List<ScheduleViewDto> acceptedList) {
+        this.requestList=requestList;
+        this.acceptedList=acceptedList;
     }
 }
