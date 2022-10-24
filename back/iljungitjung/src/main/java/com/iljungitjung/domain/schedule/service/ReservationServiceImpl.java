@@ -69,4 +69,5 @@ public class ReservationServiceImpl implements ReservationService{
            scheduleRepository.delete(schedule);
         }
     }
+
 }

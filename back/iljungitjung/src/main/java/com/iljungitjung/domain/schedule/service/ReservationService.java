@@ -8,4 +8,5 @@ import java.text.ParseException;
 public interface ReservationService {
     void reservationRequest(ReservationRequestDto reservationRequestDto);
     void reservationManage(Long id, ReservationManageRequestDto reservationManageRequestDto);
+
 }
