@@ -1,8 +1,36 @@
 @use "../common/utils.module" as *;
 
+@mixin custom-scrollbar {
+  height: 100%;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    position: fixed;
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    position: fixed;
+    background: #D4D4D4;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    position: fixed;
+    background: #ffffff24;
+  }
+}
+
 .calendar-page {
   @include page-default();
 }
 
 .content {
+  width: 100%;
+}
+
+.my-calendar {
+  //@include custom-scrollbar();
+  width: 63%;
+  height: 100%;
 }
