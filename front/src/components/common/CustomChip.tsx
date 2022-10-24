@@ -1,5 +1,5 @@
 import { ReactNode, MouseEventHandler } from 'react';
-import { ThemeProvider } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 
 import styles from '@styles/common/Custom.module.scss';
