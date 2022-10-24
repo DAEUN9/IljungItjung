@@ -4,6 +4,7 @@ import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import styles from "@styles/common/Sidebar.module.scss";
 import logo from "@assets/logo.png";
@@ -12,8 +13,16 @@ import defaultImg from "@assets/defaultImg.png";
 const Sidebar = () => {
   const navigate = useNavigate();
 
+  const url = new URL(window.location.href);
+  const [menu, setMenu] = useState(url.pathname.substring(1, url.pathname.length));
+
+  useEffect(() => {
+    console.log(menu);
+  }, [menu])
+
   const handleClick = (type: string) => {
     navigate(`/${type}`);
+    setMenu((menu) => type);
   };
 
   return (
@@ -27,10 +36,10 @@ const Sidebar = () => {
         <div className={styles["top"]}>
           <img src={logo} onClick={() => handleClick("calendar/my")} />
           <div className={styles["icons"]}>
-            <IconButton onClick={() => handleClick("search")}>
+            <IconButton className={styles[`${menu === "search" ? "click-icon" : ""}`]} onClick={() => handleClick("search")}>
               <SearchOutlinedIcon />
             </IconButton>
-            <IconButton onClick={() => handleClick("reservation")}>
+            <IconButton className={styles[`${menu === "reservation" ? "click-icon" : ""}`]} onClick={() => handleClick("reservation")}>
               <DescriptionOutlinedIcon />
             </IconButton>
           </div>
@@ -40,11 +49,11 @@ const Sidebar = () => {
             <IconButton className={styles["logout"]}>
               <LogoutOutlinedIcon />
             </IconButton>
-            <IconButton onClick={() => handleClick("profile")}>
+            <IconButton className={styles[`${menu === "profile" ? "click-icon" : ""}`]} onClick={() => handleClick("profile")}>
               <PersonOutlineOutlinedIcon />
             </IconButton>
           </div>
-          <img src={defaultImg} onClick={() => handleClick("calendar/my")} />
+          <img className={styles[`${menu === "calendar/my" ? "click-profile" : ""}`]} src={defaultImg} onClick={() => handleClick("calendar/my")} />
         </div>
       </div>
     </Drawer>
