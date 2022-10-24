@@ -16,10 +16,6 @@ const Sidebar = () => {
   const url = new URL(window.location.href);
   const [menu, setMenu] = useState(url.pathname.substring(1, url.pathname.length));
 
-  useEffect(() => {
-    console.log(menu);
-  }, [menu])
-
   const handleClick = (type: string) => {
     navigate(`/${type}`);
     setMenu((menu) => type);
