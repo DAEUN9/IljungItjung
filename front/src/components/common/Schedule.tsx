@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import styles from "@styles/common/Schedule.module.scss";
 
@@ -14,9 +14,10 @@ interface ScheduleProps {
 }
 
 const Schedule = ({ color, date = "", time, userId, userImg, userName, category, render }: ScheduleProps) => {
+  const colorRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    const el = document.querySelector(".color") as HTMLElement;
-    if (el) el.style.backgroundColor = color;
+    if (colorRef.current) colorRef.current.style.backgroundColor = color;
   }, [])
 
   const handleClickProfile = () => {
@@ -28,7 +29,7 @@ const Schedule = ({ color, date = "", time, userId, userImg, userName, category,
     <div className={styles["schedule"]}>
       <div className={styles["top"]}>
         <div className={styles["left"]}>
-          <div className={`${styles["color"]} color`}></div>
+          <div className={`${styles["color"]}`} ref={colorRef}></div>
           <div className={styles["dateTime"]}>
             {date &&
               <span className={styles["date"]}>{date}&nbsp;</span>
