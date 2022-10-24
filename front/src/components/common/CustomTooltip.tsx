@@ -1,9 +1,6 @@
 import styled from '@emotion/styled';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip';
 
-// 받아야하는 props: title, children, 툴팁 위치(required)
 interface customTooltipProps extends TooltipProps {}
 
 const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
