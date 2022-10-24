@@ -1,0 +1,8 @@
+@use "../common/utils.module" as *;
+
+.calendar-page {
+  @include page-default();
+}
+
+.content {
+}

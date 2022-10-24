@@ -1,0 +1,36 @@
+/* inactivate chip */
+.half-opacity {
+  opacity: 0.63;
+}
+
+/* modal */
+.modal-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: white;
+  border-radius: 5px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+
+  & .content {
+    width: 100%;
+  }
+
+  & .button-group {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    & button {
+      width: 100px;
+
+      &:last-child {
+        margin-left: 20px;
+      }
+    }
+  }
+}
