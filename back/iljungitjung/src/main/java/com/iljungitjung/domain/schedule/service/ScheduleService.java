@@ -8,6 +8,6 @@ import java.text.ParseException;
 import java.util.List;
 
 public interface ScheduleService {
-    List<ScheduleViewResponseDto> scheduleView(String nickname);
+    ScheduleViewResponseDto scheduleView(String nickname);
     ScheduleViewDetailResponseDto scheduleViewDetail(Long id);
 }

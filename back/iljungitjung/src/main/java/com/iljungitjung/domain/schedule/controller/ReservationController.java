@@ -1,5 +1,6 @@
 package com.iljungitjung.domain.schedule.controller;
 
+import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.service.ReservationService;
 import com.iljungitjung.domain.schedule.service.ScheduleService;
@@ -22,4 +23,9 @@ public class ReservationController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/{scheduleId}")
+    public ResponseEntity<CommonResponse> reservationManage(@PathVariable("scheduleId") Long id, @RequestBody ReservationManageRequestDto reservationManageRequestDto){
+        reservationService.reservationManage(id, reservationManageRequestDto);
+        return ResponseEntity.ok().build();
+    }
 }
