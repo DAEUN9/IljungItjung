@@ -1,0 +1,8 @@
+@use "../common/utils.module" as *;
+
+.profile-edit-page {
+  @include page-default();
+}
+
+.content {
+}

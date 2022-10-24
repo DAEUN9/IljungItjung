@@ -1,0 +1,8 @@
+$primary-color: #6b7bb1;
+
+@mixin page-default {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba($color: #d9d9d9, $alpha: 0.08);
+  display: flex;
+}

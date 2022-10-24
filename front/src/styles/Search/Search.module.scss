@@ -1,0 +1,8 @@
+@use "../common/utils.module" as *;
+
+.search-page {
+  @include page-default();
+}
+
+.content {
+}

@@ -1,0 +1,8 @@
+@use "../common/utils.module" as *;
+
+.reservation-page {
+  @include page-default();
+}
+
+.content {
+}
