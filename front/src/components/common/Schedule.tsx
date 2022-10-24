@@ -29,7 +29,7 @@ const Schedule = ({ color, date = "", time, userId, userImg, userName, category,
     <div className={styles["schedule"]}>
       <div className={styles["top"]}>
         <div className={styles["left"]}>
-          <div className={`${styles["color"]}`} ref={colorRef}></div>
+          <div className={styles["color"]} ref={colorRef}></div>
           <div className={styles["dateTime"]}>
             {date &&
               <span className={styles["date"]}>{date}&nbsp;</span>
