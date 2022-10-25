@@ -1,10 +1,10 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import Schedule from '@components/common/Schedule';
-import defaultImg from '@assets/defaultImg.png';
+import Schedule from "@components/common/Schedule";
+import defaultImg from "@assets/defaultImg.png";
 
 export default {
-  title: 'Common/Schedule',
+  title: "Common/Schedule",
   component: Schedule,
 } as ComponentMeta<typeof Schedule>;
 
@@ -33,12 +33,8 @@ NoDate.args = {
 };
 
 const renderSomeComponents = (): JSX.Element => {
-  return (
-    <div>
-      * some components *
-    </div>
-  )
-}
+  return <div>* some components *</div>;
+};
 
 export const Render = Template.bind({});
 Render.args = {
@@ -49,5 +45,16 @@ Render.args = {
   userImg: defaultImg,
   userName: "곰고구마",
   category: "예쁜 그림",
-  render: renderSomeComponents
+  render: renderSomeComponents,
+};
+
+export const Cancel = Template.bind({});
+Cancel.args = {
+  isCanceled: true,
+  color: "#F4F38A",
+  time: "11:00-12:00",
+  userId: "1",
+  userImg: defaultImg,
+  userName: "곰고구마",
+  category: "예쁜 그림",
 };
