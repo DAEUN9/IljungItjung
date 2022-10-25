@@ -1,13 +1,10 @@
 package com.iljungitjung.domain.schedule.dto.reservation;
 
-import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Getter

@@ -6,5 +6,5 @@ import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
 public interface CategoryService {
     void addCategory(CategoryCreateRequestDto requestDto);
     void updateCategory(CategoryEditRequestDto requestDto);
-    void deleteCategory(Long categoryId);
+    void deleteCategory(Long id);
 }

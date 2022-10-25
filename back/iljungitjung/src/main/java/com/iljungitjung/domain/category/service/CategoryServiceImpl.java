@@ -30,8 +30,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Transactional
     public void updateCategory(CategoryEditRequestDto requestDto) {
 
-        Long categoryId = requestDto.getCategoryId();
-
+        Long categoryId = requestDto.getId();
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });

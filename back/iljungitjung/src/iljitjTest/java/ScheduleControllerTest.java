@@ -1,21 +1,11 @@
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
-import com.iljungitjung.domain.schedule.controller.ReservationController;
-import com.iljungitjung.domain.schedule.controller.ScheduleController;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-
-import javax.transaction.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -42,6 +32,8 @@ public class ScheduleControllerTest extends AbstractControllerTest{
         //then
         actions.andDo(print())
                 .andExpect(status().isOk());
+
+        categoryId++;
     }
 
     @Test
@@ -59,6 +51,7 @@ public class ScheduleControllerTest extends AbstractControllerTest{
         //then
         actions.andDo(print())
                 .andExpect(status().isOk());
+        scheduleId++;
     }
 
     @Test
@@ -78,7 +71,7 @@ public class ScheduleControllerTest extends AbstractControllerTest{
     @Order(4)
     public void 일정_상세_조회() throws Exception {
         //given
-        ResultActions actions = mockMvc.perform(get("/schedules/detail/1")
+        ResultActions actions = mockMvc.perform(get("/schedules/detail/"+scheduleId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
@@ -86,5 +79,19 @@ public class ScheduleControllerTest extends AbstractControllerTest{
         actions.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("success"));
+    }
+    @Test
+    @Order(5)
+    public void 카테고리_삭제() throws Exception {
+
+
+        //given
+        ResultActions actions = mockMvc.perform(delete("/categories/"+categoryId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andDo(print())
+                .andExpect(status().isOk());
     }
 }
