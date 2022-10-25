@@ -3,6 +3,7 @@ package com.iljungitjung.domain.schedule.service;
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
+import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.entity.Schedule;
@@ -61,6 +62,25 @@ public class ReservationServiceImpl implements ReservationService{
         }else{
            scheduleRepository.delete(schedule);
         }
+    }
+
+    @Override
+    @Transactional
+    public void reservationBlock(ReservationBlockRequestDto reservationBlockRequestDto) {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+        Date startDate;
+        Date endDate;
+        try{
+            startDate = formatter.parse(reservationBlockRequestDto.getDate()+reservationBlockRequestDto.getStartTime());
+            endDate = formatter.parse(reservationBlockRequestDto.getDate()+reservationBlockRequestDto.getEndTime());
+        }catch (Exception e){
+            throw new DateFormatErrorException();
+        }
+
+        Schedule schedule = reservationBlockRequestDto.toScheduleEntity(reservationBlockRequestDto, startDate, endDate);
+        scheduleRepository.save(schedule);
+
     }
 
 }
