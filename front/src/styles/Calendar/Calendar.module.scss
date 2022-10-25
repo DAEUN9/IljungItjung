@@ -8,6 +8,11 @@
   width: 100%;
 }
 
+.calendar-container {
+  width: 60%;
+  height: 100%;
+}
+
 .date-cell {
   text-align: start;
   display: flex;
@@ -15,6 +20,21 @@
 
   & .name {
     margin-left: 5px;
+  }
+}
+
+.today {
+  min-width: 50px !important;
+  padding: 3px !important;
+  color: #3D3D3D !important;
+  border: 1px solid #3D3D3D !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+
+  & .MuiTouchRipple-root {
+    color: transparent !important;
   }
 }
 

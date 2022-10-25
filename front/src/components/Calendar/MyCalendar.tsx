@@ -1,81 +1,71 @@
-import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom/client';
-import { useNavigate } from 'react-router-dom';
-import 'devextreme/dist/css/dx.light.css';
-import { Scheduler, View, Scrolling } from 'devextreme-react/scheduler';
-import Avatar from '@mui/material/Avatar';
-import AvatarGroup from '@mui/material/AvatarGroup';
+
+import { ComponentType, ButtonHTMLAttributes, useState } from 'react';
+import Paper from '@mui/material/Paper';
+import { ViewState, TodayButton } from '@devexpress/dx-react-scheduler';
+import {
+  Scheduler,
+  WeekView,
+  Toolbar,
+  DateNavigator,
+  Appointments,
+  TodayButton as MuiTodayButton,
+} from '@devexpress/dx-react-scheduler-material-ui';
 
 import styles from '@styles/Calendar/Calendar.module.scss';
-import setting from '@assets/setting.png';
-import iljung from '@assets/defaultImg.png';
-import '@styles/Calendar/CustomCalendar.css';
 
-const dayOfWeekNames = ['일', '월', '화', '수', '목', '금', '토'];
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Function that sets the Scheduler's current date. */
+  setCurrentDate: (nextDate: Date) => void;
+  /** Returns a localization message by the message key. */
+  getMessage: (messageKey: string) => string;
+  className?: string;
+  style?: React.CSSProperties;
+  [x: string]: any;
+}
+
+const StyledTodayButton: ComponentType<ButtonProps> = (props: ButtonProps) => (
+  <MuiTodayButton.Button {...props} className={styles.today} />
+);
+
+const schedulerData = [
+  {
+    startDate: '2022-10-25T09:45',
+    endDate: '2022-10-25T11:00',
+    title: 'Meeting',
+  },
+  {
+    startDate: '2022-10-26T12:00',
+    endDate: '2022-10-26T13:30',
+    title: 'Go to a gym',
+  },
+  {
+    startDate: '2022-10-30T12:00',
+    endDate: '2022-10-30T13:30',
+    title: 'Go to a gym',
+  },
+];
 
 const MyCalendar = () => {
-  const navigate = useNavigate();
-
-  // 설정 버튼 추가
-  useEffect(() => {
-    const settingEl = document.getElementsByClassName('setting')[0];
-    if (!settingEl) {
-      const wrapper = document.createElement('div');
-      wrapper.className = styles.setting;
-      wrapper.innerHTML = `<img src=${setting} alt='setting' />`;
-      wrapper.addEventListener('click', () => {
-        navigate('/setting');
-      });
-
-      const el = document.getElementsByClassName('dx-toolbar-before')[0];
-      el.appendChild(wrapper);
-    }
-  }, []);
-
-  // avatar 추가
-  useEffect(() => {
-    const el = document.getElementsByClassName('dx-toolbar-after')[0];
-    ReactDOM.createRoot(el).render(
-      <AvatarGroup max={4} sx={{
-        '& .MuiAvatar-root': { width: 30, height: 30, fontSize: 15 },
-      }}>
-        <Avatar alt="img" src={iljung} />
-        <Avatar alt="img" src={iljung} />
-        <Avatar alt="img" src={iljung} />
-        <Avatar alt="img" src={iljung} />
-        <Avatar alt="img" src={iljung} />
-      </AvatarGroup>
-    );
-  });
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   return (
-    <Scheduler
-      className={styles.calendar}
-      defaultCurrentView="week"
-      timeZone="Asia/Seoul"
-      showAllDayPanel={false}
-      startDayHour={9}
-      endDayHour={22}
-      height={'100%'}
-      width={'63%'}
-    >
-      <View type="week" dateCellRender={renderDateCell} firstDayOfWeek={1} />
-      <Scrolling mode="virtual" />
-    </Scheduler>
+    <Paper className={styles['calendar-container']}>
+      <Scheduler data={schedulerData} locale="ko-KR">
+        <ViewState
+          currentDate={currentDate}
+          onCurrentDateChange={(currentDate) => setCurrentDate(currentDate)}
+        />
+        <WeekView startDayHour={9} endDayHour={22} />
+        <Toolbar />
+        <TodayButton
+          messages={{ today: '오늘' }}
+          buttonComponent={StyledTodayButton}
+        />
+        <DateNavigator />
+        <Appointments />
+      </Scheduler>
+    </Paper>
   );
 };
-
-function renderDateCell(cellData: any) {
-  return (
-    <div className={styles['date-cell']}>
-      <div>
-        <span className={styles.number}>{cellData.date.getDate()}</span>
-        <span className={styles.name}>
-          {dayOfWeekNames[cellData.date.getDay()]}
-        </span>
-      </div>
-    </div>
-  );
-}
 
 export default MyCalendar;
