@@ -12,7 +12,7 @@ VOLUME /tmp
 FROM openjdk:11
 COPY --from=builder build/libs/*.jar app.jar
 
-EXPOSE 9090
+EXPOSE 8080
 
 # 배포용 properties 실행 명령어
 ENTRYPOINT ["java","-jar","/app.jar","--spring.config.name=application-prod"]
