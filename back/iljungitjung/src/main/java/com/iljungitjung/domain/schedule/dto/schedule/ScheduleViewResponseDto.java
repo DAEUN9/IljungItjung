@@ -9,10 +9,13 @@ import java.util.List;
 public class ScheduleViewResponseDto {
 
     private final List<ScheduleViewDto> requestList;
-    private final List<ScheduleViewDto> acceptedList;
+    private final List<ScheduleViewDto> acceptList;
 
-    public ScheduleViewResponseDto(List<ScheduleViewDto> requestList, List<ScheduleViewDto> acceptedList) {
+    private final List<ScheduleBlockDto> blockList;
+
+    public ScheduleViewResponseDto(List<ScheduleViewDto> requestList, List<ScheduleViewDto> acceptList, List<ScheduleBlockDto> blockList) {
         this.requestList=requestList;
-        this.acceptedList=acceptedList;
+        this.acceptList=acceptList;
+        this.blockList=blockList;
     }
 }
