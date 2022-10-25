@@ -1,4 +1,3 @@
-
 import { ComponentType, ButtonHTMLAttributes, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import { ViewState, TodayButton } from '@devexpress/dx-react-scheduler';
@@ -12,6 +11,7 @@ import {
 } from '@devexpress/dx-react-scheduler-material-ui';
 
 import styles from '@styles/Calendar/Calendar.module.scss';
+import '@styles/Calendar/CustomCalendar.css';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Function that sets the Scheduler's current date. */
