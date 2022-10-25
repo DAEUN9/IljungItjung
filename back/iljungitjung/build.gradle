@@ -49,7 +49,8 @@ test {
 
 sourceSets {
 	iljitjTest {
-		java.srcDir "$projectDir/src/iljitjTest/java"
+		java.srcDir "$projectDir/src/iljitjTest/controller"
+		java.srcDir "$projectDir/src/iljitjTest/service"
 		resources.srcDir "$projectDir/src/iljitjTest/resources"
 		compileClasspath += main.output + test.output
 		runtimeClasspath += main.output + test.output

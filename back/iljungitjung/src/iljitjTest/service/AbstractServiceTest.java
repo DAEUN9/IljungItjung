@@ -7,26 +7,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest(classes = IljungitjungApplication.class)
-public abstract class AbstractControllerTest{
-
-	@Autowired
-	protected WebApplicationContext webApplicationContext;
-	protected static MockMvc mockMvc;
-
-	@Autowired
-	protected ObjectMapper objectMapper= new ObjectMapper();
-
-	static Long categoryId=0L;
-	static Long scheduleId=0L;
-
-	@BeforeEach
-	public void setUp() {
-		mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext)
-				.alwaysDo(print())
-				.build();
-	}
+public abstract class AbstractServiceTest {
+    static Long categoryId=0L;
+    static Long scheduleId=0L;
 
 }

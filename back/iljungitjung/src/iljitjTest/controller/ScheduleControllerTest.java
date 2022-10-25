@@ -1,4 +1,5 @@
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
+import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -56,6 +57,24 @@ public class ScheduleControllerTest extends AbstractControllerTest{
 
     @Test
     @Order(3)
+    public void 일정_차단_요청() throws Exception {
+
+        String content = objectMapper.writeValueAsString(new ReservationBlockRequestDto(
+                "1", "공휴일", "공휴일이라서 쉽니다.", "20221017", "1500", "1630"));
+        //given
+        ResultActions actions = mockMvc.perform(post("/reservations/block")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        actions.andDo(print())
+                .andExpect(status().isOk());
+        scheduleId++;
+    }
+
+    @Test
+    @Order(4)
     public void 일정_리스트_조회() throws Exception {
         //given
         ResultActions actions = mockMvc.perform(get("/schedules/nickname=1")
@@ -68,7 +87,7 @@ public class ScheduleControllerTest extends AbstractControllerTest{
                 .andExpect(jsonPath("$.status").value("success"));
     }
     @Test
-    @Order(4)
+    @Order(5)
     public void 일정_상세_조회() throws Exception {
         //given
         ResultActions actions = mockMvc.perform(get("/schedules/detail/"+scheduleId)
@@ -81,7 +100,7 @@ public class ScheduleControllerTest extends AbstractControllerTest{
                 .andExpect(jsonPath("$.status").value("success"));
     }
     @Test
-    @Order(5)
+    @Order(6)
     public void 카테고리_삭제() throws Exception {
 
 
