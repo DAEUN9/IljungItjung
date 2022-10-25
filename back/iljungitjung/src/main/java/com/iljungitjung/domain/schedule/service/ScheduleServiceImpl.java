@@ -1,6 +1,7 @@
 package com.iljungitjung.domain.schedule.service;
 
 import com.iljungitjung.domain.category.repository.CategoryRepository;
+import com.iljungitjung.domain.schedule.dto.schedule.ScheduleBlockDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDetailResponseDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
@@ -31,15 +32,19 @@ public class ScheduleServiceImpl implements ScheduleService{
         try{
             List<Schedule> scheduleList = scheduleRepository.findScheduleByUserFromId(id);
             List<ScheduleViewDto> requestList = new ArrayList<>();
-            List<ScheduleViewDto> acceptedList = new ArrayList<>();
+            List<ScheduleViewDto> acceptList = new ArrayList<>();
+            List<ScheduleBlockDto> blockList = new ArrayList<>();
             for(Schedule schedule : scheduleList){
+                System.out.println(schedule.getType());
                 if(schedule.getType().equals(Type.REQUEST)){
                     requestList.add(new ScheduleViewDto(schedule));
+                }else if(schedule.getType().equals(Type.ACCEPT)){
+                    acceptList.add(new ScheduleViewDto(schedule));
                 }else{
-                    acceptedList.add(new ScheduleViewDto(schedule));
+                    blockList.add(new ScheduleBlockDto(schedule));
                 }
             }
-            responseDtos = new ScheduleViewResponseDto(requestList, acceptedList);
+            responseDtos = new ScheduleViewResponseDto(requestList, acceptList, blockList);
         }catch (Exception e){
             throw new NoExistScheduleException();
         }

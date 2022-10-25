@@ -1,5 +1,6 @@
 package com.iljungitjung.domain.schedule.controller;
 
+import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.service.ReservationService;
@@ -24,6 +25,12 @@ public class ReservationController {
     @PutMapping("/{scheduleId}")
     public ResponseEntity<CommonResponse> reservationManage(@PathVariable("scheduleId") Long id, @RequestBody ReservationManageRequestDto reservationManageRequestDto){
         reservationService.reservationManage(id, reservationManageRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/block")
+    public ResponseEntity<CommonResponse> reservationBlock(@RequestBody ReservationBlockRequestDto reservationBlockRequestDto){
+        reservationService.reservationBlock(reservationBlockRequestDto);
         return ResponseEntity.ok().build();
     }
 }
