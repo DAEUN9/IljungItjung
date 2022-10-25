@@ -27,7 +27,7 @@ public class Schedule {
     @Column(nullable = false, name="user_from_id")
     private String userFromId;
 
-    @Column(nullable = false, name="user_to_id")
+    @Column(name="user_to_id")
     private String userToId;
 
     @Column(nullable = false, name="start_date")
@@ -39,13 +39,11 @@ public class Schedule {
     @Column(nullable = false, name="category_name")
     private String categoryName;
 
-    @Column(nullable = false)
     private String color;
 
     @Column(nullable = false)
     private String contents;
 
-    @Column(nullable = false)
     private String phonenum;
 
     @Column(nullable = false)
@@ -64,7 +62,7 @@ public class Schedule {
         this.type=type;
     }
     public void accpeted() {
-        this.type= Type.ACCEPTED;
+        this.type= Type.ACCEPT;
     }
 
 }
