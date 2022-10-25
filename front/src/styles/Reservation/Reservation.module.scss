@@ -2,7 +2,94 @@
 
 .reservation-page {
   @include page-default();
+
+  overflow: overlay;
 }
 
 .content {
+  width: 100%;
+  padding: 2rem;
+
+  & .header {
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    left: 0;
+
+    & h2 {
+      margin: 0;
+    }
+  }
+
+  & .reservations {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    overflow-x: overlay;
+    margin-top: 2rem;
+    width: 100%;
+    height: 80vh;
+
+    @include custom-scroll();
+  }
+}
+
+/* 기간 설정 컴포넌트 */
+.period {
+  & span {
+    font-size: 0.9rem;
+  }
+}
+
+/* 날짜별 예약 목록 컴포넌트 */
+.reservation {
+  margin-right: 3rem;
+  padding-right: 3rem;
+  border-right: 1px solid rgba($color: #000000, $alpha: 0.5);
+  height: 80vh;
+  overflow-y: overlay;
+  overflow-x: hidden;
+
+  @include custom-scroll();
+
+  &:last-child {
+    border-right: 0;
+  }
+
+  & .date {
+    padding: 0 0.5rem 1rem 1rem;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fcfcfc;
+    z-index: 1;
+  }
+}
+
+/* 만료 X, 취소X - 취소 버튼 */
+.cancel-button {
+  margin-top: 0.8rem;
+
+  & .button {
+    display: flex;
+    justify-content: center;
+
+    & button {
+      color: rgba($color: #ff0000, $alpha: 0.5);
+      font-weight: 600;
+
+      &:hover {
+        color: #ff0000;
+        background-color: #fff;
+      }
+    }
+  }
+}
+
+/* 취소된 Schedule */
+.canceled {
+  opacity: 50%;
 }
