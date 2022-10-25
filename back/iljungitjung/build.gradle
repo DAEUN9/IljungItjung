@@ -27,6 +27,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'junit:junit:4.13.1'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
@@ -36,11 +37,35 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
-	// 스프링 테스트
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	implementation 'com.google.guava:guava:30.1.1-jre'
+
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
 }
+
+sourceSets {
+	iljitjTest {
+		java.srcDir "$projectDir/src/iljitjTest/java"
+		resources.srcDir "$projectDir/src/iljitjTest/resources"
+		compileClasspath += main.output + test.output
+		runtimeClasspath += main.output + test.output
+	}
+}
+
+configurations {
+	iljitjTestImplementation.extendsFrom implementation
+	iljitjTestImplementation.extendsFrom testImplementation
+	iljitjTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+task iljitjTest(type: Test) {
+	testClassesDirs = sourceSets.iljitjTest.output.classesDirs
+	classpath = sourceSets.iljitjTest.runtimeClasspath
+	useJUnitPlatform()
+}
+
+check.dependsOn iljitjTest

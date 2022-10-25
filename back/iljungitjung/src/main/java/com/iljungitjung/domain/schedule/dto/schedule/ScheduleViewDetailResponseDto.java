@@ -5,7 +5,6 @@ import com.iljungitjung.domain.schedule.entity.Schedule;
 import lombok.Getter;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Getter
 public class ScheduleViewDetailResponseDto {

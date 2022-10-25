@@ -1,9 +1,6 @@
 package com.iljungitjung.domain.schedule.service;
 
-import com.iljungitjung.domain.category.entity.Category;
-import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDetailResponseDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
@@ -15,12 +12,7 @@ import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Service

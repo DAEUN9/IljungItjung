@@ -1,14 +1,11 @@
 package com.iljungitjung.domain.schedule.entity;
 
 
-import com.iljungitjung.domain.category.entity.Category;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
