@@ -1,25 +1,31 @@
-import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom/client'
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import 'devextreme/dist/css/dx.light.css';
 import { Scheduler, View, Scrolling } from 'devextreme-react/scheduler';
-import IconButton from '@mui/material/IconButton';
-import SettingsIcon from '@mui/icons-material/Settings';
 
+import setting from '@assets/setting.png';
 import styles from '@styles/Calendar/Calendar.module.scss';
 import '@styles/Calendar/CustomCalendar.css';
 
 const dayOfWeekNames = ['일', '월', '화', '수', '목', '금', '토'];
 
 const MyCalendar = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const setting = document.createElement('div');
-    setting.className = 'setting';
-    setting.innerText = 'setting';
-    const el = document.getElementsByClassName('dx-toolbar-before')[0];
-    el.appendChild(setting);
-    // const settingBtn = React.createElement(IconButton);
-    // ReactDOM.createRoot(el as HTMLElement).render(<IconButton><SettingsIcon /></IconButton>)
-  }, [])
+    const settingEl = document.getElementsByClassName('setting')[0];
+    if (!settingEl) {
+      const wrapper = document.createElement('div');
+      wrapper.className = styles.setting;
+      wrapper.innerHTML = `<img src=${setting} alt='setting' />`;
+      wrapper.addEventListener('click', () => {
+        navigate('/setting');
+      });
+
+      const el = document.getElementsByClassName('dx-toolbar-before')[0];
+      el.appendChild(wrapper);
+    }
+  }, []);
 
   return (
     <Scheduler
@@ -38,12 +44,14 @@ const MyCalendar = () => {
   );
 };
 
-function renderDateCell(cellData: any) {  
+function renderDateCell(cellData: any) {
   return (
     <div className={styles['date-cell']}>
       <div>
         <span className={styles.number}>{cellData.date.getDate()}</span>
-        <span className={styles.name}>{dayOfWeekNames[cellData.date.getDay()]}</span>
+        <span className={styles.name}>
+          {dayOfWeekNames[cellData.date.getDay()]}
+        </span>
       </div>
     </div>
   );

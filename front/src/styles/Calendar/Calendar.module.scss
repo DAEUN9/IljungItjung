@@ -17,3 +17,17 @@
     margin-left: 5px;
   }
 }
+
+.setting {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  cursor: pointer;
+  margin-left: 10px;
+
+  > img {
+    height: 22px;
+    width: 22px;
+  }
+}
