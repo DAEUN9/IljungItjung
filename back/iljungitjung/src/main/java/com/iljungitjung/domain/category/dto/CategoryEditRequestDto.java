@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CategoryEditRequestDto {
 
-    private Long categoryId;
+    private Long id;
 
     private String categoryName;
 

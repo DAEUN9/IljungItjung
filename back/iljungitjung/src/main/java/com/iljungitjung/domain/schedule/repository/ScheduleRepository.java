@@ -1,7 +1,6 @@
 package com.iljungitjung.domain.schedule.repository;
 
 import com.iljungitjung.domain.schedule.entity.Schedule;
-import com.iljungitjung.domain.schedule.entity.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

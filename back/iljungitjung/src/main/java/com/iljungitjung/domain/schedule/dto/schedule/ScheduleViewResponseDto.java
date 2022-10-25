@@ -1,12 +1,8 @@
 package com.iljungitjung.domain.schedule.dto.schedule;
 
 
-import com.iljungitjung.domain.schedule.entity.Schedule;
 import lombok.Getter;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Getter
