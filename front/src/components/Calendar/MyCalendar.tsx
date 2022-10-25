@@ -1,10 +1,14 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import ReactDOM from 'react-dom/client';
 import { useNavigate } from 'react-router-dom';
 import 'devextreme/dist/css/dx.light.css';
 import { Scheduler, View, Scrolling } from 'devextreme-react/scheduler';
+import Avatar from '@mui/material/Avatar';
+import AvatarGroup from '@mui/material/AvatarGroup';
 
-import setting from '@assets/setting.png';
 import styles from '@styles/Calendar/Calendar.module.scss';
+import setting from '@assets/setting.png';
+import iljung from '@assets/defaultImg.png';
 import '@styles/Calendar/CustomCalendar.css';
 
 const dayOfWeekNames = ['일', '월', '화', '수', '목', '금', '토'];
@@ -12,6 +16,7 @@ const dayOfWeekNames = ['일', '월', '화', '수', '목', '금', '토'];
 const MyCalendar = () => {
   const navigate = useNavigate();
 
+  // 설정 버튼 추가
   useEffect(() => {
     const settingEl = document.getElementsByClassName('setting')[0];
     if (!settingEl) {
@@ -26,6 +31,22 @@ const MyCalendar = () => {
       el.appendChild(wrapper);
     }
   }, []);
+
+  // avatar 추가
+  useEffect(() => {
+    const el = document.getElementsByClassName('dx-toolbar-after')[0];
+    ReactDOM.createRoot(el).render(
+      <AvatarGroup max={4} sx={{
+        '& .MuiAvatar-root': { width: 30, height: 30, fontSize: 15 },
+      }}>
+        <Avatar alt="img" src={iljung} />
+        <Avatar alt="img" src={iljung} />
+        <Avatar alt="img" src={iljung} />
+        <Avatar alt="img" src={iljung} />
+        <Avatar alt="img" src={iljung} />
+      </AvatarGroup>
+    );
+  });
 
   return (
     <Scheduler

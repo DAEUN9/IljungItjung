@@ -1,3 +1,25 @@
 .dx-toolbar-after {
-  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 10px;
+}
+
+.dx-scheduler-header-panel-current-time-cell {
+  color: #6B7BB1 !important;
+  font-weight: 600;
+}
+
+.dx-scheduler-header-panel-current-time-cell::before {
+  background-color: #6B7BB1 !important;
+}
+
+.dx-scheduler-time-panel-current-time-cell {
+  color: #6B7BB1 !important;
+  font-weight: 600;
+}
+
+.dx-scheduler-time-panel-cell.dx-scheduler-time-panel-current-time-cell::before {
+  background-color: #6B7BB1 !important;
 }
