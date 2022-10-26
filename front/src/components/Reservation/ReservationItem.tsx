@@ -4,6 +4,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
 import styles from "@styles/Reservation/Reservation.module.scss";
+import CustomModal from "@components/common/CustomModal";
+import iljung from "@assets/iljung.png";
 
 interface CancelReasonProps {
   reason: string;
@@ -15,11 +17,42 @@ interface CancelButtonProps {
 }
 
 const CancelButton = ({ detail }: CancelButtonProps) => {
+  const [open, setOpen] = useState(false);
+
+  const handleConfirm = () => {
+    // 예약 취소 api 통신 코드
+  };
+
   return (
     <div className={styles["cancel-button"]}>
       <div className={styles["detail"]}>{detail}</div>
       <div className={styles["button"]}>
-        <Button startIcon={<DeleteForeverOutlinedIcon />}>취소하기</Button>
+        <Button
+          startIcon={<DeleteForeverOutlinedIcon />}
+          onClick={() => setOpen(true)}
+        >
+          취소하기
+        </Button>
+        <CustomModal
+          open={open}
+          setOpen={setOpen}
+          cancelLabel="취소"
+          confirmLabel="확인"
+          handleCancle={() => setOpen(false)}
+          handleConfirm={handleConfirm}
+          children={
+            <div className={styles["modal-content"]}>
+              <div className={styles["img"]}>
+                <img src={iljung} />
+              </div>
+              <div className={styles["text"]}>
+                예약이 취소됩니다.
+                <br />
+                계속 하시겠습니까?
+              </div>
+            </div>
+          }
+        />
       </div>
     </div>
   );
