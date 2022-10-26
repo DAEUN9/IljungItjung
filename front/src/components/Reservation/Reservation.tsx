@@ -1,8 +1,9 @@
-import { Button } from "@mui/material";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-
 import Schedule from "@components/common/Schedule";
 import styles from "@styles/Reservation/Reservation.module.scss";
+import {
+  CancelButton,
+  CancelReason,
+} from "@components/Reservation/ReservationItem";
 
 interface ListType {
   isCanceled: boolean; // 취소 여부
@@ -21,37 +22,6 @@ interface ReservationProps {
   date: string;
   list: ListType[];
 }
-
-interface CancelButtonProps {
-  detail: string;
-}
-
-// 취소 버튼
-const CancelButton = ({ detail }: CancelButtonProps) => {
-  return (
-    <div className={styles["cancel-button"]}>
-      <div className={styles["detail"]}>{detail}</div>
-      <div className={styles["button"]}>
-        <Button startIcon={<DeleteForeverOutlinedIcon />}>취소하기</Button>
-      </div>
-    </div>
-  );
-};
-
-// 취소 사유
-interface CancelReasonProps {
-  reason: string;
-  detail: string;
-}
-
-const CancelReason = ({ reason, detail }: CancelReasonProps) => {
-  return (
-    <div className={styles["cancel-reason"]}>
-      <div className={styles["detail"]}>{detail}</div>
-      <div className={styles["reason-wraaper"]}>{reason}</div>
-    </div>
-  );
-};
 
 /**
  * 만료된 예약인지 아닌지 계산
@@ -101,7 +71,11 @@ const Reservation = ({ date, list }: ReservationProps) => {
                   userName={item.userName}
                   category={item.category}
                   render={() => (
-                    <div className={styles["detail"]}>{item.detail}</div>
+                    <div
+                      className={`${styles["detail"]} ${styles["canceled"]}`}
+                    >
+                      {item.detail}
+                    </div>
                   )}
                 />
               );
