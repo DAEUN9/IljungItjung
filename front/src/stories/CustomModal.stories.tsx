@@ -46,3 +46,5 @@ const ModalContent = () => {
 ModalWithContent.args = {
   children: <ModalContent />,
 };
+
+export const ModalWithHandleConfirm = Template.bind({});
