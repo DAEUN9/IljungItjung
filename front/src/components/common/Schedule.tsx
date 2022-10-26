@@ -57,14 +57,16 @@ const Schedule = ({
           <div>{userName}</div>
         </div>
       </div>
-      <div
-        className={
-          isCanceled
-            ? `${styles["bottom"]} ${styles["canceled"]}`
-            : `${styles["bottom"]}`
-        }
-      >
-        <div className={styles["category"]}>{category}</div>
+      <div className={styles["bottom"]}>
+        <div
+          className={
+            isCanceled
+              ? `${styles["category"]} ${styles["canceled"]}`
+              : `${styles["category"]}`
+          }
+        >
+          {category}
+        </div>
         {render && render()}
       </div>
     </div>
