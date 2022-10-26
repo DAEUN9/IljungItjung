@@ -6,6 +6,7 @@ import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.service.ReservationService;
 import com.iljungitjung.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,19 +19,18 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<CommonResponse> reservationRequest(@RequestBody ReservationRequestDto reservationRequestDto){
-        reservationService.reservationRequest(reservationRequestDto);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationRequest(reservationRequestDto)), HttpStatus.OK);
     }
 
     @PutMapping("/{scheduleId}")
     public ResponseEntity<CommonResponse> reservationManage(@PathVariable("scheduleId") Long id, @RequestBody ReservationManageRequestDto reservationManageRequestDto){
-        reservationService.reservationManage(id, reservationManageRequestDto);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationManage(id, reservationManageRequestDto)), HttpStatus.OK);
+
     }
 
     @PostMapping("/block")
     public ResponseEntity<CommonResponse> reservationBlock(@RequestBody ReservationBlockRequestDto reservationBlockRequestDto){
-        reservationService.reservationBlock(reservationBlockRequestDto);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationBlock(reservationBlockRequestDto)), HttpStatus.OK);
+
     }
 }

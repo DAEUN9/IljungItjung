@@ -1,9 +1,11 @@
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
+import com.iljungitjung.domain.category.service.CategoryService;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -12,8 +14,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class CategoryControllerTest extends AbstractControllerTest{
 
+public class CategoryControllerTest extends AbstractControllerTest{
 
     @Test
     @Order(1)
@@ -21,6 +23,7 @@ public class CategoryControllerTest extends AbstractControllerTest{
 
         String content = objectMapper.writeValueAsString(new CategoryCreateRequestDto(
                 "커트", "0130", "#000000"));
+
 
         //given
         ResultActions actions = mockMvc.perform(post("/categories")

@@ -4,6 +4,7 @@ import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
+import com.iljungitjung.domain.schedule.dto.reservation.ReservationIdResponseDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.entity.Schedule;
@@ -28,7 +29,7 @@ public class ReservationServiceImpl implements ReservationService{
 
     @Override
     @Transactional
-    public void reservationRequest(ReservationRequestDto reservationRequestDto) {
+    public ReservationIdResponseDto reservationRequest(ReservationRequestDto reservationRequestDto) {
         Category category = categoryRepository.findByCategoryName(reservationRequestDto.getCategoryName()).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });
@@ -49,11 +50,12 @@ public class ReservationServiceImpl implements ReservationService{
         Date endDate = cal.getTime();
         Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, startDate, endDate, category.getColor(), Type.REQUEST);
         scheduleRepository.save(schedule);
+        return new ReservationIdResponseDto(schedule.getId());
     }
 
     @Override
     @Transactional
-    public void reservationManage(Long id, ReservationManageRequestDto reservationManageRequestDto) {
+    public ReservationIdResponseDto reservationManage(Long id, ReservationManageRequestDto reservationManageRequestDto) {
         Schedule schedule = scheduleRepository.findScheduleById(id).orElseThrow(()->{
             throw new NoExistScheduleDetailException();
         });
@@ -62,11 +64,12 @@ public class ReservationServiceImpl implements ReservationService{
         }else{
            scheduleRepository.delete(schedule);
         }
+        return new ReservationIdResponseDto(schedule.getId());
     }
 
     @Override
     @Transactional
-    public void reservationBlock(ReservationBlockRequestDto reservationBlockRequestDto) {
+    public ReservationIdResponseDto reservationBlock(ReservationBlockRequestDto reservationBlockRequestDto) {
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
         Date startDate;
@@ -80,6 +83,7 @@ public class ReservationServiceImpl implements ReservationService{
 
         Schedule schedule = reservationBlockRequestDto.toScheduleEntity(reservationBlockRequestDto, startDate, endDate);
         scheduleRepository.save(schedule);
+        return new ReservationIdResponseDto(schedule.getId());
 
     }
 

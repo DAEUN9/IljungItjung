@@ -3,6 +3,7 @@ package com.iljungitjung.domain.category.controller;
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
 import com.iljungitjung.domain.category.service.CategoryService;
+import com.iljungitjung.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,27 +21,24 @@ public class CategoryController {
 
     // user생기면 session으로 수정
     @PostMapping
-    public ResponseEntity<?> createCategory(
+    public ResponseEntity<CommonResponse> createCategory(
             @RequestBody CategoryCreateRequestDto requestDto
     ) {
-        categoryService.addCategory(requestDto);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.addCategory(requestDto)), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<?> updateCategory(
+    public ResponseEntity<CommonResponse> updateCategory(
             @RequestBody CategoryEditRequestDto requestDto
     ) {
-        categoryService.updateCategory(requestDto);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.updateCategory(requestDto)), HttpStatus.OK);
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<?> deleteCategory(
+    public ResponseEntity<CommonResponse> deleteCategory(
             @PathVariable("categoryId") Long categoryId
     ) {
-        categoryService.deleteCategory(categoryId);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.deleteCategory(categoryId)), HttpStatus.OK);
     }
 
 
