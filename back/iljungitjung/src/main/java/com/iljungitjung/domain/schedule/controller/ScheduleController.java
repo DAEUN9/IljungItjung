@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RequiredArgsConstructor
 @RequestMapping("/schedules")
 @RestController
@@ -20,8 +18,12 @@ public class ScheduleController {
 
     @GetMapping("/{nickname}")
     public ResponseEntity<CommonResponse> scheduleView(@PathVariable("nickname") String nickname){
-        //String id = (String) request.getAttribute("id");
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(scheduleService.scheduleView(nickname)), HttpStatus.OK);
+    }
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<CommonResponse> scheduleViewDetail(@PathVariable("id") Long id){
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(scheduleService.scheduleViewDetail(id)), HttpStatus.OK);
     }
 
 }
