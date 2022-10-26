@@ -49,6 +49,8 @@ public class Schedule {
     @Column(nullable = false)
     private Type type;
 
+    private String reason;
+
     @Builder
     public Schedule(String userFromId, String userToId, Date startDate, Date endDate, String categoryName, String color, String contents, String phonenum, Type type) {
         this.userFromId = userFromId;
@@ -63,6 +65,10 @@ public class Schedule {
     }
     public void accpeted() {
         this.type= Type.ACCEPT;
+    }
+    public void canceled(String reason){
+        this.reason=reason;
+        this.type=Type.CANCEL;
     }
 
 }

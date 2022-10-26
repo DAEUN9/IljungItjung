@@ -62,7 +62,7 @@ public class ReservationServiceImpl implements ReservationService{
         if(reservationManageRequestDto.isAccept()){
             schedule.accpeted();
         }else{
-           scheduleRepository.delete(schedule);
+            schedule.canceled(reservationManageRequestDto.getReason());
         }
         return new ReservationIdResponseDto(schedule.getId());
     }
