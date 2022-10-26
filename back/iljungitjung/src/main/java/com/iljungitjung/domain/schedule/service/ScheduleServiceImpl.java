@@ -35,7 +35,6 @@ public class ScheduleServiceImpl implements ScheduleService{
             List<ScheduleViewDto> acceptList = new ArrayList<>();
             List<ScheduleBlockDto> blockList = new ArrayList<>();
             for(Schedule schedule : scheduleList){
-                System.out.println(schedule.getType());
                 if(schedule.getType().equals(Type.REQUEST)){
                     requestList.add(new ScheduleViewDto(schedule));
                 }else if(schedule.getType().equals(Type.ACCEPT)){
