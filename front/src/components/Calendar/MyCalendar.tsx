@@ -1,4 +1,4 @@
-import { ComponentType, ReactNode, useState } from 'react';
+import { ComponentType, useState, useCallback } from 'react';
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -52,7 +52,7 @@ interface NavigationButtonProps {
 
 const SettingButton = () => {
   const navigate = useNavigate();
-  const handleClick = () => navigate('/setting');
+  const handleClick = useCallback(() => navigate('/setting'), []);
 
   return (
     <IconButton sx={{ marginLeft: '20px' }} onClick={handleClick}>
