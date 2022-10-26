@@ -3,21 +3,24 @@ import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
 import com.iljungitjung.domain.category.service.CategoryService;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationIdResponseDto;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
+import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDetailResponseDto;
+import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
 import com.iljungitjung.domain.schedule.service.ReservationService;
+import com.iljungitjung.domain.schedule.service.ScheduleService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ReservationServiceTest extends AbstractServiceTest{
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class ScheduleServiceTest extends AbstractControllerTest{
 
     @Autowired
     ReservationService reservationService;
@@ -25,9 +28,13 @@ public class ReservationServiceTest extends AbstractServiceTest{
     @Autowired
     CategoryService categoryService;
 
+    @Autowired
+    ScheduleService scheduleService;
+
     @Test
     @Order(1)
     public void 카테고리_등록() throws Exception {
+
         //given
         CategoryCreateRequestDto categoryCreateRequestDto = new CategoryCreateRequestDto(
                 "커트", "0130", "#000000");
@@ -40,7 +47,6 @@ public class ReservationServiceTest extends AbstractServiceTest{
         Assertions.assertEquals(categoryIdResponseDto.getId(), categoryId);
 
     }
-
 
     @Test
     @Order(2)
@@ -60,36 +66,6 @@ public class ReservationServiceTest extends AbstractServiceTest{
 
     @Test
     @Order(3)
-    public void 일정_수락() throws Exception {
-
-        //given
-        ReservationManageRequestDto reservationManageRequestDto = new ReservationManageRequestDto(true, "가능합니다. 연락주세요");
-
-        //when
-        ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationManage(scheduleId, reservationManageRequestDto);
-
-        //then
-        Assertions.assertEquals(reservationIdResponseDto.getId(), scheduleId);
-
-    }
-
-    @Test
-    @Order(4)
-    public void 일정_삭제() throws Exception {
-
-        //given
-        ReservationManageRequestDto reservationManageRequestDto = new ReservationManageRequestDto(false, "시간이 없어요");
-
-        //when
-        ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationManage(scheduleId, reservationManageRequestDto);
-
-        //then
-        Assertions.assertEquals(reservationIdResponseDto.getId(), scheduleId);
-
-    }
-
-    @Test
-    @Order(5)
     public void 일정_차단_요청() throws Exception {
 
         //given
@@ -105,6 +81,32 @@ public class ReservationServiceTest extends AbstractServiceTest{
     }
 
     @Test
+    @Order(4)
+    public void 일정_리스트_조회() throws Exception {
+
+        //given
+
+        //when
+        ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView("1");
+
+        //then
+        int sum = scheduleViewResponseDto.getRequestList().size()+scheduleViewResponseDto.getBlockList().size();
+        Assertions.assertEquals(sum, scheduleId);
+
+
+    }
+    @Test
+    @Order(5)
+    public void 일정_상세_조회() throws Exception {
+        //given
+
+        //when
+        ScheduleViewDetailResponseDto scheduleViewDetailResponseDto = scheduleService.scheduleViewDetail(scheduleId);
+
+        //then
+        Assertions.assertEquals(scheduleViewDetailResponseDto.getId(), scheduleId);
+    }
+    @Test
     @Order(6)
     public void 카테고리_삭제() throws Exception {
         //given
@@ -116,5 +118,4 @@ public class ReservationServiceTest extends AbstractServiceTest{
         Assertions.assertEquals(categoryIdResponseDto.getId(), categoryId);
 
     }
-
 }
