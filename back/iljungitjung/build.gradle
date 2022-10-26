@@ -49,6 +49,7 @@ test {
 
 sourceSets {
 	iljitjTest {
+		java.srcDir "$projectDir/src/iljitjTest/main"
 		java.srcDir "$projectDir/src/iljitjTest/controller"
 		java.srcDir "$projectDir/src/iljitjTest/service"
 		resources.srcDir "$projectDir/src/iljitjTest/resources"

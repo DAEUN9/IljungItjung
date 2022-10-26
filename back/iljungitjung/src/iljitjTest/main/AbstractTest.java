@@ -9,20 +9,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-public class AbstractControllerTest extends AbstractTest{
+@SpringBootTest(classes = IljungitjungApplication.class)
+public abstract class AbstractTest {
 
-	@Autowired
-	protected WebApplicationContext webApplicationContext;
-	protected MockMvc mockMvc;
-
-	@Autowired
-	protected ObjectMapper objectMapper= new ObjectMapper();
-
-	@BeforeEach
-	public void setUp() {
-		mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext)
-				.alwaysDo(print())
-				.build();
-	}
+	static Long categoryId=0L;
+	static Long scheduleId=0L;
 
 }

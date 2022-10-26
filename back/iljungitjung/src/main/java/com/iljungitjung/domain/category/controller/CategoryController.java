@@ -21,21 +21,21 @@ public class CategoryController {
 
     // user생기면 session으로 수정
     @PostMapping
-    public ResponseEntity<?> createCategory(
+    public ResponseEntity<CommonResponse> createCategory(
             @RequestBody CategoryCreateRequestDto requestDto
     ) {
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.addCategory(requestDto)), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<?> updateCategory(
+    public ResponseEntity<CommonResponse> updateCategory(
             @RequestBody CategoryEditRequestDto requestDto
     ) {
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.updateCategory(requestDto)), HttpStatus.OK);
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<?> deleteCategory(
+    public ResponseEntity<CommonResponse> deleteCategory(
             @PathVariable("categoryId") Long categoryId
     ) {
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.deleteCategory(categoryId)), HttpStatus.OK);

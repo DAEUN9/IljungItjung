@@ -12,9 +12,6 @@ import javax.persistence.PersistenceContext;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-@SpringBootTest(classes = IljungitjungApplication.class)
-public abstract class AbstractServiceTest {
-    static Long categoryId=0L;
-    static Long scheduleId=0L;
+public class AbstractServiceTest extends AbstractTest{
 
 }

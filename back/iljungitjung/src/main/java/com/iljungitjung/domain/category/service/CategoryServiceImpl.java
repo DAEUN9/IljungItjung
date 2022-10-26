@@ -1,19 +1,18 @@
 package com.iljungitjung.domain.category.service;
 
-import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
+import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
-//import com.iljungitjung.domain.user.entity.User;
-//import com.iljungitjung.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +28,6 @@ public class CategoryServiceImpl implements CategoryService{
     public CategoryIdResponseDto addCategory(CategoryCreateRequestDto requestDto) {
         Category category = requestDto.toCategoryEntity(requestDto);
         categoryRepository.save(category);
-        entityManager.persist(category);
         return new CategoryIdResponseDto(category.getId());
     }
 
