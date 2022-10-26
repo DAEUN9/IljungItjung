@@ -20,11 +20,10 @@ import {
 
 import styles from '@styles/Calendar/Calendar.module.scss';
 import '@styles/Calendar/CustomCalendar.css';
+import { useNavigate } from 'react-router-dom';
 
 interface ButtonProps {
-  /** Function that sets the Scheduler's current date. */
   setCurrentDate: (nextDate: Date) => void;
-  /** Returns a localization message by the message key. */
   getMessage: (messageKey: string) => string;
   className?: string;
   style?: React.CSSProperties;
@@ -32,14 +31,35 @@ interface ButtonProps {
 }
 
 interface RootProps {
-  /** A React node to be placed in the toolbar. */
   children?: React.ReactNode;
 }
 
 interface FlexibleSpaceProps {
-  /** A React node that should be placed inside the empty area. */
   children?: React.ReactNode;
 }
+
+interface OpenButtonProps {
+  onVisibilityToggle: () => void;
+  text?: string;
+}
+
+interface NavigationButtonProps {
+  /** The button type. */
+  type: 'forward' | 'back';
+  /** An event raised when the button is clicked. */
+  onClick?: (e: any) => void;
+}
+
+const SettingButton = () => {
+  const navigate = useNavigate();
+  const handleClick = () => navigate('/setting');
+
+  return (
+    <IconButton sx={{ marginLeft: '20px' }} onClick={handleClick}>
+      <SettingsIcon />
+    </IconButton>
+  );
+};
 
 const CustomTodayButton: ComponentType<ButtonProps> = (props) => (
   <MuiTodayButton.Button {...props} className={styles.today} />
@@ -49,23 +69,36 @@ const CustomToolbarRoot: ComponentType<RootProps> = ({ children }) => (
   <MuiToolbar.Root>{children}</MuiToolbar.Root>
 );
 
-const CustomToolbarFlexibleSpace: ComponentType<FlexibleSpaceProps> = ({
-  children,
-}) => <MuiToolbar.FlexibleSpace>{children}</MuiToolbar.FlexibleSpace>;
+const CustomToolbarFlexibleSpace: ComponentType<FlexibleSpaceProps> = () => (
+  <MuiToolbar.FlexibleSpace className={styles['toolbar-right']}>
+    <CustomerAvatar />
+    <SettingButton />
+  </MuiToolbar.FlexibleSpace>
+);
 
-const CustomerList = () => (
-  <AvatarGroup
-    max={4}
-    sx={{
-      '& .MuiAvatar-root': { width: 30, height: 30, fontSize: 15 },
-    }}
-  >
-    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-    <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-    <Avatar alt="Agnes Walker" src="/static/images/avatar/4.jpg" />
-    <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
-    <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
-  </AvatarGroup>
+const CustomDateNavigatorOpenButton: ComponentType<OpenButtonProps> = (
+  props
+) => <DateNavigator.OpenButton {...props} className={styles['open-button']} />;
+
+const CustomDateNavigatorButton: ComponentType<NavigationButtonProps> = (
+  props
+) => <DateNavigator.NavigationButton {...props} className={styles.navigator} />;
+
+const CustomerAvatar = () => (
+  <div className={styles.avatar}>
+    <AvatarGroup
+      max={4}
+      sx={{
+        '& .MuiAvatar-root': { width: 30, height: 30, fontSize: 15 },
+      }}
+    >
+      <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+      <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
+      <Avatar alt="Agnes Walker" src="/static/images/avatar/4.jpg" />
+      <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
+      <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
+    </AvatarGroup>
+  </div>
 );
 
 const schedulerData = [
@@ -99,24 +132,16 @@ const MyCalendar = () => {
         <WeekView startDayHour={9} endDayHour={22} />
         <Toolbar
           rootComponent={CustomToolbarRoot}
-          flexibleSpaceComponent={() => (
-            <CustomToolbarFlexibleSpace
-              children={
-                // <div className={styles['customer-list']}>
-                //   <IconButton>
-                //     <SettingsIcon />
-                //   </IconButton>
-                // </div>
-                <CustomerList />
-              }
-            />
-          )}
+          flexibleSpaceComponent={CustomToolbarFlexibleSpace}
+        />
+        <DateNavigator
+          openButtonComponent={CustomDateNavigatorOpenButton}
+          navigationButtonComponent={CustomDateNavigatorButton}
         />
         <TodayButton
           messages={{ today: '오늘' }}
           buttonComponent={CustomTodayButton}
         />
-        <DateNavigator />
         <Appointments />
       </Scheduler>
     </Paper>

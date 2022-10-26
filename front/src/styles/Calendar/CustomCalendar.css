@@ -1,3 +1,10 @@
+/* calendar toolbar */
+.Container-container > .MuiToolbar-root {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+/* calendar scroll */
 .MainLayout-container {
   height: 100%;
   overflow-y: auto;

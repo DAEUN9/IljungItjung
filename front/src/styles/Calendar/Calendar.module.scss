@@ -1,5 +1,7 @@
 @use "../common/utils.module" as *;
 
+$gray: #3d3d3d;
+
 .calendar-page {
   @include page-default();
 }
@@ -13,21 +15,12 @@
   height: 100%;
 }
 
-.date-cell {
-  text-align: start;
-  display: flex;
-  padding: 10px;
-
-  & .name {
-    margin-left: 5px;
-  }
-}
-
 .today {
   min-width: 50px !important;
   padding: 3px !important;
-  color: #3D3D3D !important;
-  border: 1px solid #3D3D3D !important;
+  color: $gray !important;
+  border: 1px solid $gray !important;
+  margin-right: 10px !important;
 
   &:hover {
     background-color: transparent !important;
@@ -38,6 +31,40 @@
   }
 }
 
-.customer-list {
+.open-button {
+  color: $gray !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+
+  & .MuiTouchRipple-root {
+    color: transparent !important;
+  }
+}
+
+.navigator {
+  color: $gray !important;
+  border: 1px solid $gray !important;
+  border-radius: 4px !important;
+  padding: 3px !important;
+  margin-right: 5px !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+
+  & .MuiTouchRipple-root {
+    color: transparent !important;
+  }
+}
+
+.toolbar-right {
   display: flex;
+}
+
+.avatar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
