@@ -23,4 +23,55 @@
       }
     }
   }
+
+  &__triangle::after {
+    border-bottom-color: #fff !important;
+  }
+
+  &__navigation-icon::before {
+    border-color: #000 !important;
+    border-width: 2px 2px 0 0 !important;
+    height: 7px !important;
+    width: 7px !important;
+    margin-top: 3px;
+  }
+
+  &__header {
+    background-color: #fff;
+    border: 0;
+  }
+
+  &__day-names {
+    font-weight: 800;
+    margin-top: 0.5rem;
+  }
+
+  &__month {
+    &--selecting-range {
+      border-radius: 30px;
+    }
+  }
+
+  &__day {
+    border-radius: 30px !important;
+
+    &--in-selecting-range,
+    &--in-range {
+      background-color: rgba($color: $primary-color, $alpha: 0.5) !important;
+      color: #fff !important;
+    }
+
+    &--selected {
+      background-color: $primary-color !important;
+    }
+
+    &--keyboard-selected {
+      background-color: #fff;
+      color: #000;
+
+      &:hover {
+        background-color: #f0f0f0;
+      }
+    }
+  }
 }
