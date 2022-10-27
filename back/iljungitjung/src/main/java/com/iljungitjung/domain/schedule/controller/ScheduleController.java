@@ -1,14 +1,12 @@
 package com.iljungitjung.domain.schedule.controller;
 
+import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewRequestDto;
 import com.iljungitjung.domain.schedule.service.ScheduleService;
 import com.iljungitjung.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/schedules")
@@ -17,8 +15,8 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @GetMapping("/{nickname}")
-    public ResponseEntity<CommonResponse> scheduleView(@PathVariable("nickname") String nickname){
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(scheduleService.scheduleView(nickname)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> scheduleView(@PathVariable("nickname") String nickname, @RequestBody ScheduleViewRequestDto scheduleViewRequestDto){
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(scheduleService.scheduleView(nickname, scheduleViewRequestDto)), HttpStatus.OK);
     }
 
     @GetMapping("/detail/{id}")
