@@ -1,7 +1,9 @@
 import { Button, Collapse } from "@mui/material";
 import { useState } from "react";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import { TbTrashX } from "react-icons/tb";
+import { RiArrowDownSLine } from "react-icons/ri";
+// import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+// import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
 import styles from "@styles/Reservation/Reservation.module.scss";
 import CustomModal from "@components/common/CustomModal";
@@ -27,10 +29,7 @@ const CancelButton = ({ detail }: CancelButtonProps) => {
     <div className={styles["cancel-button"]}>
       <div className={styles["detail"]}>{detail}</div>
       <div className={styles["button"]}>
-        <Button
-          startIcon={<DeleteForeverOutlinedIcon />}
-          onClick={() => setOpen(true)}
-        >
+        <Button startIcon={<TbTrashX />} onClick={() => setOpen(true)}>
           취소하기
         </Button>
         <CustomModal
@@ -69,7 +68,7 @@ const CancelReason = ({ reason, detail }: CancelReasonProps) => {
       <div className={styles["wraaper"]}>
         <div className={styles["button"]}>
           <Button
-            startIcon={<ExpandMoreIcon />}
+            startIcon={<RiArrowDownSLine />}
             onClick={() => setChecked(!checked)}
           >
             취소 사유
