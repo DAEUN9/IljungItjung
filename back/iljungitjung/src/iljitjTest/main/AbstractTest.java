@@ -11,8 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @SpringBootTest(classes = IljungitjungApplication.class)
 public abstract class AbstractTest {
-
-	static Long categoryId=0L;
-	static Long scheduleId=0L;
+    static Long categoryId=0L;
+    static Long scheduleId=0L;
 
 }
