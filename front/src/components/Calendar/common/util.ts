@@ -10,3 +10,16 @@ export interface SchedulerDate {
   exDate?: string | undefined;
   [propertyName: string]: any;
 }
+
+export interface ResourceInstance {
+  id: number | string;
+  color?: string;
+  text?: string;
+};
+
+export interface Resource {
+  fieldName: string;
+  title?: string;
+  allowMultiple?: boolean;
+  instances: Array<ResourceInstance>;
+};

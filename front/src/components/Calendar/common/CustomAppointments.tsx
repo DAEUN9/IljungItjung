@@ -9,29 +9,34 @@ export default function CustomAppointments() {
       appointmentComponent={(props) => (
         <Appointments.Appointment
           {...props}
-          style={{ backgroundColor: '#D7CBF4' }}
+          style={{ backgroundColor: props.data.color }}
         />
       )}
-      appointmentContentComponent={(props) => (
-        <Appointments.AppointmentContent
-          {...props}
-          children={
-            <>
-              <div className={styles['appointment-category']}>
-                카테고리명이 길면 우째
-              </div>
-              <div className={styles['appointment-nickname']}>
-                <Avatar sx={{ width: '18px', height: '18px' }} />
-                <div className={styles['appointment-nickname-wrapper']}>
-                  <div>
-                    <span style={{ fontWeight: 600 }}>nickname</span> 님
+      appointmentContentComponent={(props) => {
+        const [nickname] = props.resources;
+
+        return (
+          <Appointments.AppointmentContent
+            {...props}
+            children={
+              <>
+                <div className={styles['appointment-category']}>
+                  {props.data.title}
+                </div>
+                <div className={styles['appointment-nickname']}>
+                  <Avatar sx={{ width: '18px', height: '18px' }} />
+                  <div className={styles['appointment-nickname-wrapper']}>
+                    <div>
+                      <span style={{ fontWeight: 600 }}>{nickname.text}</span>{' '}
+                      님
+                    </div>
                   </div>
                 </div>
-              </div>
-            </>
-          }
-        />
-      )}
+              </>
+            }
+          />
+        );
+      }}
     />
   );
 }
