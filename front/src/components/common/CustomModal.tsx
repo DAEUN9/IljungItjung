@@ -7,32 +7,32 @@ import CustomButton from './CustomButton';
 
 interface ModalProps {
   open: boolean;
-  setOpen?: (open: boolean) => void;
+  setOpen: (open: boolean) => void;
+  handleConfirm: () => void;
   confirmLabel?: string;
   cancelLabel?: string;
   children?: ReactNode;
-  handleConfirm?: () => void;
-  handleCancle?: () => void;
 }
 
 const CustomModal = ({
   open = true,
   setOpen,
+  handleConfirm,
   confirmLabel = '확인',
   cancelLabel = '취소',
-  handleConfirm = undefined,
-  handleCancle = undefined,
   children,
   ...rest
 }: ModalProps) => {
+  const handleCancle = () => setOpen(false);
+
   return (
     <div className="custom-modal">
       <Modal open={open}>
         <Box className={styles['modal-box']}>
           <div>{children}</div>
           <div className={styles['button-group']}>
-            <CustomButton color="secondary">{cancelLabel}</CustomButton>
-            <CustomButton>{confirmLabel}</CustomButton>
+            <CustomButton onClick={handleCancle} color="secondary">{cancelLabel}</CustomButton>
+            <CustomButton onClick={handleConfirm}>{confirmLabel}</CustomButton>
           </div>
         </Box>
       </Modal>
