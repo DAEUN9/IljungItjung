@@ -37,7 +37,7 @@ public class B_ScheduleControllerTest extends AbstractControllerTest{
 
     @Test
     @Order(1)
-    public void 카테고리_등록() throws Exception {
+    public void 카테고리_등록_컨트롤러() throws Exception {
 
         //given
         CategoryCreateRequestDto requestDto = new CategoryCreateRequestDto("커트", "0130", "#000000");
@@ -62,7 +62,7 @@ public class B_ScheduleControllerTest extends AbstractControllerTest{
 
     @Test
     @Order(2)
-    public void 일정_요청() throws Exception {
+    public void 일정_요청_컨트롤러() throws Exception {
 
         //given
         ReservationRequestDto requestDto = new ReservationRequestDto("1", "2", "20221017", "1500", "안녕하세요", "01011111111", "커트");
@@ -87,7 +87,7 @@ public class B_ScheduleControllerTest extends AbstractControllerTest{
 
     @Test
     @Order(3)
-    public void 일정_차단_요청() throws Exception {
+    public void 일정_차단_요청_컨트롤러() throws Exception {
 
         //given
         ReservationBlockRequestDto requestDto = new ReservationBlockRequestDto("1", "공휴일", "공휴일이라서 쉽니다.", "20221017", "1500", "1630");
@@ -112,7 +112,7 @@ public class B_ScheduleControllerTest extends AbstractControllerTest{
 
     @Test
     @Order(4)
-    public void 일정_리스트_조회() throws Exception {
+    public void 일정_리스트_조회_컨트롤러() throws Exception {
 
         //given
         ScheduleViewRequestDto requestDto = new ScheduleViewRequestDto("20221017", "20221017");
@@ -132,7 +132,7 @@ public class B_ScheduleControllerTest extends AbstractControllerTest{
     }
     @Test
     @Order(5)
-    public void 일정_상세_조회() throws Exception {
+    public void 일정_상세_조회_컨트롤러() throws Exception {
 
         //given
 
@@ -149,7 +149,7 @@ public class B_ScheduleControllerTest extends AbstractControllerTest{
     }
     @Test
     @Order(6)
-    public void 카테고리_삭제() throws Exception {
+    public void 카테고리_삭제_컨트롤러() throws Exception {
 
         //given
         CategoryIdResponseDto responseDto = new CategoryIdResponseDto(categoryId);

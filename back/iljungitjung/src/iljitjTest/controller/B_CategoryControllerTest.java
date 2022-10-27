@@ -24,7 +24,7 @@ public class B_CategoryControllerTest extends AbstractControllerTest{
 
     @Test
     @Order(1)
-    public void 카테고리_등록() throws Exception {
+    public void 카테고리_등록_컨트롤러() throws Exception {
 
         //given
         CategoryCreateRequestDto requestDto = new CategoryCreateRequestDto("커트", "0130", "#000000");
@@ -48,7 +48,7 @@ public class B_CategoryControllerTest extends AbstractControllerTest{
     }
     @Test
     @Order(2)
-    public void 카테고리_수정() throws Exception {
+    public void 카테고리_수정_컨트롤러() throws Exception {
 
         //given
         CategoryEditRequestDto requestDto = new CategoryEditRequestDto(categoryId, "커트 수정", "0200", "#111111");
@@ -72,7 +72,7 @@ public class B_CategoryControllerTest extends AbstractControllerTest{
     }
     @Test
     @Order(3)
-    public void 카테고리_삭제() throws Exception {
+    public void 카테고리_삭제_컨트롤러() throws Exception {
 
 
         //given
