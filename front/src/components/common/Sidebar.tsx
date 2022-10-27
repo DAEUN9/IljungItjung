@@ -1,10 +1,12 @@
 import { Drawer, IconButton } from "@mui/material";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import {
+  IoSearchOutline,
+  IoDocumentTextOutline,
+  IoExitOutline,
+  IoPersonOutline,
+} from "react-icons/io5";
 
 import styles from "@styles/common/Sidebar.module.scss";
 import logo from "@assets/logo.png";
@@ -14,7 +16,9 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const url = new URL(window.location.href);
-  const [menu, setMenu] = useState(url.pathname.substring(1, url.pathname.length));
+  const [menu, setMenu] = useState(
+    url.pathname.substring(1, url.pathname.length)
+  );
 
   const handleClick = (type: string) => {
     navigate(`/${type}`);
@@ -32,24 +36,41 @@ const Sidebar = () => {
         <div className={styles["top"]}>
           <img src={logo} onClick={() => handleClick("calendar/my")} />
           <div className={styles["icons"]}>
-            <IconButton className={styles[`${menu === "search" ? "click-icon" : ""}`]} onClick={() => handleClick("search")}>
-              <SearchOutlinedIcon />
+            <IconButton
+              className={styles[`${menu === "search" ? "click-icon" : ""}`]}
+              onClick={() => handleClick("search")}
+            >
+              <IoSearchOutline />
             </IconButton>
-            <IconButton className={styles[`${menu === "reservation" ? "click-icon" : ""}`]} onClick={() => handleClick("reservation")}>
-              <DescriptionOutlinedIcon />
+            <IconButton
+              className={
+                styles[`${menu === "reservation" ? "click-icon" : ""}`]
+              }
+              onClick={() => handleClick("reservation")}
+            >
+              <IoDocumentTextOutline />
             </IconButton>
           </div>
         </div>
         <div className={styles["bottom"]}>
           <div className={styles["icons"]}>
             <IconButton className={styles["logout"]}>
-              <LogoutOutlinedIcon />
+              <IoExitOutline />
             </IconButton>
-            <IconButton className={styles[`${menu === "profile" ? "click-icon" : ""}`]} onClick={() => handleClick("profile")}>
-              <PersonOutlineOutlinedIcon />
+            <IconButton
+              className={styles[`${menu === "profile" ? "click-icon" : ""}`]}
+              onClick={() => handleClick("profile")}
+            >
+              <IoPersonOutline />
             </IconButton>
           </div>
-          <img className={styles[`${menu === "calendar/my" ? "click-profile" : ""}`]} src={defaultImg} onClick={() => handleClick("calendar/my")} />
+          <img
+            className={
+              styles[`${menu === "calendar/my" ? "click-profile" : ""}`]
+            }
+            src={defaultImg}
+            onClick={() => handleClick("calendar/my")}
+          />
         </div>
       </div>
     </Drawer>
