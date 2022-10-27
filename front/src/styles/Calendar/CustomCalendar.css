@@ -1,7 +1,6 @@
 /* calendar toolbar */
-.Container-container > .MuiToolbar-root {
-  padding-left: 10px !important;
-  padding-right: 10px !important;
+.MainLayout-relativeContainer > .Container-container > div {
+  width: 14% !important;
 }
 
 /* calendar scroll */
@@ -50,4 +49,17 @@
 
 .Cell-highlightedText {
   color: #6B7BB1 !important;
+}
+
+/* appointment */
+.Container-container > .MuiToolbar-root {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.VerticalAppointment-content {
+  height: calc(100% - 8px);
+  padding: 4px 5px !important;
+  flex-direction: column;
+  justify-content: space-between;
 }

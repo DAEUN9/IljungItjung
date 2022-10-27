@@ -68,3 +68,32 @@ $gray: #3d3d3d;
   flex-direction: column;
   justify-content: center;
 }
+
+.appointment {
+  &-category {
+    color: black;
+    font-size: 1.2em;
+    font-weight: 900;
+    white-space: normal;
+    line-height: normal;
+    letter-spacing: normal;
+  }
+
+  &-nickname {
+    display: flex;
+    justify-content: end;
+    font-size: 0.8em;
+    color: black;
+    white-space: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    margin-bottom: 2px;
+
+    &-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-left: 2px;
+    }
+  }
+}
