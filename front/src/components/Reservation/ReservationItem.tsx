@@ -2,8 +2,6 @@ import { Button, Collapse } from "@mui/material";
 import { useState } from "react";
 import { TbTrashX } from "react-icons/tb";
 import { RiArrowDownSLine } from "react-icons/ri";
-// import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-// import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
 import styles from "@styles/Reservation/Reservation.module.scss";
 import CustomModal from "@components/common/CustomModal";
@@ -37,7 +35,6 @@ const CancelButton = ({ detail }: CancelButtonProps) => {
           setOpen={setOpen}
           cancelLabel="취소"
           confirmLabel="확인"
-          handleCancle={() => setOpen(false)}
           handleConfirm={handleConfirm}
           children={
             <div className={styles["modal-content"]}>
