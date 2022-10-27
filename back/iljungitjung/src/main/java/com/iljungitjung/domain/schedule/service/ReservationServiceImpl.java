@@ -13,6 +13,7 @@ import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
 import com.iljungitjung.domain.user.entity.Users;
+import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -53,8 +54,12 @@ public class ReservationServiceImpl implements ReservationService{
 
         Date endDate = cal.getTime();
 
-        Users userFrom = userRepository.findUsersByNickname(reservationRequestDto.getUserFromNickname()).get();
-        Users userTo= userRepository.findUsersByNickname(reservationRequestDto.getUserToNickname()).get();
+        Users userFrom = userRepository.findUsersByNickname(reservationRequestDto.getUserFromNickname()).orElseThrow(() -> {
+            throw new NoExistUserException();
+        });
+        Users userTo= userRepository.findUsersByNickname(reservationRequestDto.getUserToNickname()).orElseThrow(() -> {
+            throw new NoExistUserException();
+        });
         Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, userFrom, userTo, startDate, endDate, category.getColor(), Type.REQUEST);
         scheduleRepository.save(schedule);
         return new ReservationIdResponseDto(schedule.getId());
@@ -63,6 +68,10 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     @Transactional
     public ReservationIdResponseDto reservationManage(Long id, ReservationManageRequestDto reservationManageRequestDto) {
+        //현재 아이디가 해당 예약의 주인일 때만 가능 추가 필수
+        /*
+
+         */
         Schedule schedule = scheduleRepository.findScheduleById(id).orElseThrow(()->{
             throw new NoExistScheduleDetailException();
         });
@@ -77,6 +86,11 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     @Transactional
     public ReservationIdResponseDto reservationBlock(ReservationBlockRequestDto reservationBlockRequestDto) {
+        //현재 아이디가 해당 예약의 주인일 때만 가능 추가 필수
+        /*
+
+        */
+
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
         Date startDate;
