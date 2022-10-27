@@ -8,6 +8,8 @@ import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
+import com.iljungitjung.domain.user.entity.Users;
+import com.iljungitjung.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +24,11 @@ public class ScheduleServiceImpl implements ScheduleService{
 
     private final ScheduleRepository scheduleRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
     @Override
     public ScheduleViewResponseDto scheduleView(String nickname, ScheduleViewRequestDto scheduleViewRequestDto) {
 
         //닉네임으로 유저 조회
-        String id = "1";
         ScheduleViewResponseDto responseDtos;
 
         Date startDate;
@@ -41,12 +43,16 @@ public class ScheduleServiceImpl implements ScheduleService{
         }
 
         try{
-            List<Schedule> scheduleList = scheduleRepository.findScheduleByUserFromIdAndStartDateBetween(id, startDate, endDate);
+            Users user = userRepository.findUsersByNickname(nickname).get();
+            List<Schedule> scheduleList = user.getScheduleRequestList();
+            scheduleList.addAll(user.getScheduleResponseList());
+
             List<ScheduleViewDto> requestList = new ArrayList<>();
             List<ScheduleViewDto> acceptList = new ArrayList<>();
             List<ScheduleBlockDto> blockList = new ArrayList<>();
             List<ScheduleCancelDto> cancelList = new ArrayList<>();
             for(Schedule schedule : scheduleList){
+                if(schedule.getStartDate().before(startDate) || schedule.getEndDate().after(endDate)) continue;
                 if(schedule.getType().equals(Type.REQUEST)){
                     requestList.add(new ScheduleViewDto(schedule));
                 }else if(schedule.getType().equals(Type.ACCEPT)){

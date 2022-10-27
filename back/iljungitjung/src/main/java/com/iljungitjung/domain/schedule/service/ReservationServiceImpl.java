@@ -12,6 +12,8 @@ import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
+import com.iljungitjung.domain.user.entity.Users;
+import com.iljungitjung.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,8 @@ public class ReservationServiceImpl implements ReservationService{
 
     private final ScheduleRepository scheduleRepository;
     private final CategoryRepository categoryRepository;
+
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -48,7 +52,10 @@ public class ReservationServiceImpl implements ReservationService{
         cal.add(Calendar.HOUR, Integer.parseInt(date.substring(0, 2)));
 
         Date endDate = cal.getTime();
-        Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, startDate, endDate, category.getColor(), Type.REQUEST);
+
+        Users userFrom = userRepository.findUsersByNickname(reservationRequestDto.getUserFromNickname()).get();
+        Users userTo= userRepository.findUsersByNickname(reservationRequestDto.getUserToNickname()).get();
+        Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, userFrom, userTo, startDate, endDate, category.getColor(), Type.REQUEST);
         scheduleRepository.save(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
@@ -80,8 +87,9 @@ public class ReservationServiceImpl implements ReservationService{
         }catch (Exception e){
             throw new DateFormatErrorException();
         }
+        Users user = userRepository.findUsersByNickname(reservationBlockRequestDto.getUserFromNickname()).get();
 
-        Schedule schedule = reservationBlockRequestDto.toScheduleEntity(reservationBlockRequestDto, startDate, endDate);
+        Schedule schedule = reservationBlockRequestDto.toScheduleEntity(reservationBlockRequestDto, user, user, startDate, endDate);
         scheduleRepository.save(schedule);
         return new ReservationIdResponseDto(schedule.getId());
 
