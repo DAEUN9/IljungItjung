@@ -31,7 +31,7 @@
 }
 
 .day-scale {
-  border-right: 1px solid rgba(224, 224, 224, 1);  
+  border-right: 1px solid rgba(224, 224, 224, 1);
 }
 
 .Cell-dayView {
@@ -48,7 +48,7 @@
 }
 
 .Cell-highlightedText {
-  color: #6B7BB1 !important;
+  color: #6b7bb1 !important;
 }
 
 /* appointment */
@@ -62,4 +62,17 @@
   padding: 4px 5px !important;
   flex-direction: column;
   justify-content: space-between;
+}
+
+/* appointment tooltip */
+.Layout-popover > .Header-head {
+  display: none !important;
+}
+
+.Layout-popover > .Content-content {
+  padding: 12px 8px !important;
+}
+
+.Layout-popover > .Content-content > .Content-contentContainer {
+  display: none;
 }

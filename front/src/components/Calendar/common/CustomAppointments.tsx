@@ -13,7 +13,7 @@ export default function CustomAppointments() {
         />
       )}
       appointmentContentComponent={(props) => {
-        const [nickname] = props.resources;
+        const {data} = props;
 
         return (
           <Appointments.AppointmentContent
@@ -21,13 +21,13 @@ export default function CustomAppointments() {
             children={
               <>
                 <div className={styles['appointment-category']}>
-                  {props.data.title}
+                  {data.title}
                 </div>
                 <div className={styles['appointment-nickname']}>
                   <Avatar sx={{ width: '18px', height: '18px' }} />
                   <div className={styles['appointment-nickname-wrapper']}>
                     <div>
-                      <span style={{ fontWeight: 600 }}>{nickname.text}</span>{' '}
+                      <span style={{ fontWeight: 600 }}>{data.nickname}</span>{' '}
                       님
                     </div>
                   </div>
