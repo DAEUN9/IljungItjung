@@ -25,3 +25,30 @@
   position: fixed;
   background: #eeeeeeaa;
 }
+
+/* day scale */
+.MainLayout-header {
+  border-bottom: 1px solid gray;
+}
+
+.day-scale {
+  border-right: 1px solid rgba(224, 224, 224, 1);  
+}
+
+.Cell-dayView {
+  display: flex;
+  padding: 10px 0;
+}
+
+.Cell-dayView > .Cell-dayOfMonth,
+.Cell-dayView > .Cell-dayOfWeek {
+  font-size: 13px !important;
+}
+
+.Cell-dayView > .Cell-dayOfWeek {
+  margin: 0 5px !important;
+}
+
+.Cell-highlightedText {
+  color: #6B7BB1 !important;
+}

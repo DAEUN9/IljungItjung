@@ -12,6 +12,7 @@ import {
 import {
   Scheduler,
   WeekView,
+  WeekViewProps,
   Toolbar as MuiToolbar,
   DateNavigator,
   Appointments,
@@ -21,6 +22,7 @@ import {
 import styles from '@styles/Calendar/Calendar.module.scss';
 import '@styles/Calendar/CustomCalendar.css';
 import { useNavigate } from 'react-router-dom';
+import { ClassNames } from '@emotion/react';
 
 interface ButtonProps {
   setCurrentDate: (nextDate: Date) => void;
@@ -44,9 +46,7 @@ interface OpenButtonProps {
 }
 
 interface NavigationButtonProps {
-  /** The button type. */
   type: 'forward' | 'back';
-  /** An event raised when the button is clicked. */
   onClick?: (e: any) => void;
 }
 
@@ -61,30 +61,7 @@ const SettingButton = () => {
   );
 };
 
-const CustomTodayButton: ComponentType<ButtonProps> = (props) => (
-  <MuiTodayButton.Button {...props} className={styles.today} />
-);
-
-const CustomToolbarRoot: ComponentType<RootProps> = ({ children }) => (
-  <MuiToolbar.Root>{children}</MuiToolbar.Root>
-);
-
-const CustomToolbarFlexibleSpace: ComponentType<FlexibleSpaceProps> = () => (
-  <MuiToolbar.FlexibleSpace className={styles['toolbar-right']}>
-    <CustomerAvatar />
-    <SettingButton />
-  </MuiToolbar.FlexibleSpace>
-);
-
-const CustomDateNavigatorOpenButton: ComponentType<OpenButtonProps> = (
-  props
-) => <DateNavigator.OpenButton {...props} className={styles['open-button']} />;
-
-const CustomDateNavigatorButton: ComponentType<NavigationButtonProps> = (
-  props
-) => <DateNavigator.NavigationButton {...props} className={styles.navigator} />;
-
-const CustomerAvatar = () => (
+const CustomerList = () => (
   <div className={styles.avatar}>
     <AvatarGroup
       max={4}
@@ -99,6 +76,37 @@ const CustomerAvatar = () => (
       <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
     </AvatarGroup>
   </div>
+);
+
+const CustomTodayButton: ComponentType<ButtonProps> = (props) => (
+  <MuiTodayButton.Button {...props} className={styles.today} />
+);
+
+const CustomToolbarRoot: ComponentType<RootProps> = ({ children }) => (
+  <MuiToolbar.Root>{children}</MuiToolbar.Root>
+);
+
+const CustomToolbarFlexibleSpace: ComponentType<FlexibleSpaceProps> = () => (
+  <MuiToolbar.FlexibleSpace className={styles['toolbar-right']}>
+    <CustomerList />
+    <SettingButton />
+  </MuiToolbar.FlexibleSpace>
+);
+
+const CustomDateNavigatorOpenButton: ComponentType<OpenButtonProps> = (
+  props
+) => <DateNavigator.OpenButton {...props} className={styles['open-button']} />;
+
+const CustomDateNavigatorButton: ComponentType<NavigationButtonProps> = (
+  props
+) => <DateNavigator.NavigationButton {...props} className={styles.navigator} />;
+
+const CustomTimeTableCell = (props: any) => (
+  <WeekView.TimeTableCell {...props} />
+);
+
+const CustomDayScaleCell = (props: any) => (
+  <WeekView.DayScaleCell {...props} className="day-scale" />
 );
 
 const schedulerData = [
@@ -129,7 +137,11 @@ const MyCalendar = () => {
           currentDate={currentDate}
           onCurrentDateChange={(currentDate) => setCurrentDate(currentDate)}
         />
-        <WeekView startDayHour={9} endDayHour={22} />
+        <WeekView
+          startDayHour={9}
+          endDayHour={22}
+          dayScaleCellComponent={CustomDayScaleCell}
+        />
         <Toolbar
           rootComponent={CustomToolbarRoot}
           flexibleSpaceComponent={CustomToolbarFlexibleSpace}
