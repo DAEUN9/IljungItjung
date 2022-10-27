@@ -13,9 +13,12 @@ public class ScheduleViewResponseDto {
 
     private final List<ScheduleBlockDto> blockList;
 
-    public ScheduleViewResponseDto(List<ScheduleViewDto> requestList, List<ScheduleViewDto> acceptList, List<ScheduleBlockDto> blockList) {
+    private final List<ScheduleCancelDto> cancelList;
+
+    public ScheduleViewResponseDto(List<ScheduleViewDto> requestList, List<ScheduleViewDto> acceptList, List<ScheduleBlockDto> blockList, List<ScheduleCancelDto> cancelList) {
         this.requestList=requestList;
         this.acceptList=acceptList;
         this.blockList=blockList;
+        this.cancelList=cancelList;
     }
 }

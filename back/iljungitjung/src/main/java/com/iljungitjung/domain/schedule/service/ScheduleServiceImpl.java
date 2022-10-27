@@ -1,19 +1,19 @@
 package com.iljungitjung.domain.schedule.service;
 
 import com.iljungitjung.domain.category.repository.CategoryRepository;
-import com.iljungitjung.domain.schedule.dto.schedule.ScheduleBlockDto;
-import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDetailResponseDto;
-import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDto;
-import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
+import com.iljungitjung.domain.schedule.dto.schedule.*;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
+import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,27 +23,41 @@ public class ScheduleServiceImpl implements ScheduleService{
     private final ScheduleRepository scheduleRepository;
     private final CategoryRepository categoryRepository;
     @Override
-    public ScheduleViewResponseDto scheduleView(String nickname) {
+    public ScheduleViewResponseDto scheduleView(String nickname, ScheduleViewRequestDto scheduleViewRequestDto) {
 
         //닉네임으로 유저 조회
         String id = "1";
         ScheduleViewResponseDto responseDtos;
 
+        Date startDate;
+        Date endDate;
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
         try{
-            List<Schedule> scheduleList = scheduleRepository.findScheduleByUserFromId(id);
+            startDate = formatter.parse(scheduleViewRequestDto.getStartDate()+"0000");
+            endDate = formatter.parse(scheduleViewRequestDto.getEndDate()+"2359");
+        }catch (Exception e){
+            throw new DateFormatErrorException();
+        }
+
+        try{
+            List<Schedule> scheduleList = scheduleRepository.findScheduleByUserFromIdAndStartDateBetween(id, startDate, endDate);
             List<ScheduleViewDto> requestList = new ArrayList<>();
             List<ScheduleViewDto> acceptList = new ArrayList<>();
             List<ScheduleBlockDto> blockList = new ArrayList<>();
+            List<ScheduleCancelDto> cancelList = new ArrayList<>();
             for(Schedule schedule : scheduleList){
                 if(schedule.getType().equals(Type.REQUEST)){
                     requestList.add(new ScheduleViewDto(schedule));
                 }else if(schedule.getType().equals(Type.ACCEPT)){
                     acceptList.add(new ScheduleViewDto(schedule));
-                }else{
+                }else if(schedule.getType().equals(Type.BLOCK)){
                     blockList.add(new ScheduleBlockDto(schedule));
+                }else{
+                    cancelList.add(new ScheduleCancelDto(schedule));
                 }
             }
-            responseDtos = new ScheduleViewResponseDto(requestList, acceptList, blockList);
+            responseDtos = new ScheduleViewResponseDto(requestList, acceptList, blockList, cancelList);
         }catch (Exception e){
             throw new NoExistScheduleException();
         }
