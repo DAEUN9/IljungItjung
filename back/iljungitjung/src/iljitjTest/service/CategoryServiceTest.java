@@ -1,15 +1,17 @@
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
+import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.category.service.CategoryService;
+import com.iljungitjung.domain.category.service.CategoryServiceImpl;
 import org.junit.jupiter.api.*;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CategoryServiceTest extends AbstractServiceTest{
 
-    @Autowired
-    CategoryService categoryService;
+    private CategoryService categoryService;
 
     @Test
     @Order(1)

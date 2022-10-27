@@ -5,6 +5,7 @@ import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestD
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationIdResponseDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDetailResponseDto;
+import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewRequestDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
 import com.iljungitjung.domain.schedule.service.ReservationService;
 import com.iljungitjung.domain.schedule.service.ScheduleService;
@@ -87,7 +88,7 @@ public class ScheduleServiceTest extends AbstractControllerTest{
         //given
 
         //when
-        ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView("1");
+        ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView("1", new ScheduleViewRequestDto("20221017", "20221017"));
 
         //then
         int sum = scheduleViewResponseDto.getRequestList().size()+scheduleViewResponseDto.getBlockList().size();
