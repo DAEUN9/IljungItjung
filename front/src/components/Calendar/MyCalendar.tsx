@@ -1,4 +1,5 @@
 import { ComponentType, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -21,8 +22,6 @@ import {
 
 import styles from '@styles/Calendar/Calendar.module.scss';
 import '@styles/Calendar/CustomCalendar.css';
-import { useNavigate } from 'react-router-dom';
-import { ClassNames } from '@emotion/react';
 
 interface ButtonProps {
   setCurrentDate: (nextDate: Date) => void;
@@ -78,6 +77,43 @@ const CustomerList = () => (
   </div>
 );
 
+const formatDate = (nextDate: string | Date, nextOptions: any) => {
+  const date = typeof nextDate === 'object' ? nextDate : new Date(nextDate);
+  const { day } = nextOptions;
+
+  if (day) {
+    return date.getDate();
+  } else {
+    let day: string = '';
+
+    switch (date.getDay()) {
+      case 0:
+        day = '일';
+        break;
+      case 1:
+        day = '월';
+        break;
+      case 2:
+        day = '화';
+        break;
+      case 3:
+        day = '수';
+        break;
+      case 4:
+        day = '목';
+        break;
+      case 5:
+        day = '금';
+        break;
+      case 6:
+        day = '토';
+        break;
+    }
+    
+    return day;
+  }
+};
+
 const CustomTodayButton: ComponentType<ButtonProps> = (props) => (
   <MuiTodayButton.Button {...props} className={styles.today} />
 );
@@ -106,7 +142,11 @@ const CustomTimeTableCell = (props: any) => (
 );
 
 const CustomDayScaleCell = (props: any) => (
-  <WeekView.DayScaleCell {...props} className="day-scale" />
+  <WeekView.DayScaleCell
+    {...props}
+    className="day-scale"
+    formatDate={formatDate}
+  />
 );
 
 const schedulerData = [
@@ -129,6 +169,13 @@ const schedulerData = [
 
 const MyCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  // useEffect(() =>{
+  //   const els = document.getElementsByClassName('Cell-dayOfMonth');
+  //   for(let el of els) {
+  //     el.innerHTML = el.innerHTML.split('일')[0];
+  //   }
+  // }, []);
 
   return (
     <Paper className={styles['calendar-container']}>

@@ -37,16 +37,15 @@
 
 .Cell-dayView {
   display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
   padding: 10px 0;
 }
 
 .Cell-dayView > .Cell-dayOfMonth,
 .Cell-dayView > .Cell-dayOfWeek {
   font-size: 13px !important;
-}
-
-.Cell-dayView > .Cell-dayOfWeek {
-  margin: 0 5px !important;
+  margin-left: 5px !important;
 }
 
 .Cell-highlightedText {
