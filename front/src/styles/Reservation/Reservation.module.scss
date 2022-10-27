@@ -14,6 +14,7 @@
     display: flex;
     justify-content: space-between;
     position: sticky;
+    z-index: 2;
     top: 0;
     left: 0;
 
@@ -37,8 +38,33 @@
 
 /* 기간 설정 컴포넌트 */
 .period {
-  & span {
-    font-size: 0.9rem;
+  display: flex;
+
+  & .picker {
+    display: flex;
+    align-items: center;
+
+    & button {
+      color: #3d3d3d;
+
+      &:hover {
+        background-color: inherit;
+      }
+
+      & svg {
+        text-align: center;
+        font-size: 1.2rem;
+      }
+    }
+
+    & .divider {
+      margin: 0 0.2rem;
+    }
+  }
+
+  // 툴팁
+  & .MuiTooltip-popper {
+    inset: -10px auto 0px auto;
   }
 }
 

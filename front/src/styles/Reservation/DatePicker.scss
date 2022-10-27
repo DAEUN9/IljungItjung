@@ -1,0 +1,26 @@
+@use "../common/utils.module" as *;
+
+.react-datepicker {
+  &-wrapper {
+    width: inherit;
+  }
+
+  &__input-container {
+    input {
+      border: 0;
+      border-radius: 15px;
+      padding: 0.3rem 0.5rem;
+      background-color: #3d3d3d;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #fff;
+      text-align: center;
+      width: 90px;
+      cursor: pointer;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}

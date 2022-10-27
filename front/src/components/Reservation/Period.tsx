@@ -1,31 +1,56 @@
-import { FormControl, FormControlLabel, Radio, RadioGroup, ThemeProvider } from "@mui/material";
 import { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { ko } from "date-fns/esm/locale";
+import { RiCalendarCheckLine } from "react-icons/ri";
+import { IconButton, Tooltip, Zoom } from "@mui/material";
 
 import styles from "@styles/Reservation/Reservation.module.scss";
-import theme from "@components/common/theme";
+import "@styles/Reservation/DatePicker.scss";
 
 const Period = () => {
-  const [value, setValue] = useState("1w");
+  // default 기간은 오늘로부터 -15일~15일
+  const date = new Date();
+  const [startDate, setStartDate] = useState<Date>(
+    new Date(date.getFullYear(), date.getMonth(), date.getDate() - 15)
+  );
+  const [endDate, setEndDate] = useState<Date>(
+    new Date(date.getFullYear(), date.getMonth(), date.getDate() + 15)
+  );
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value);
-  }
+  const tooltip = "기간을 설정해 보세요.";
 
   return (
     <div className={styles["period"]}>
-      <ThemeProvider theme={theme}>
-        <FormControl>
-          <RadioGroup row value={value} onChange={handleChange}>
-            <FormControlLabel value="1w" control={<Radio />} label="일주일" />
-            <FormControlLabel value="1m" control={<Radio />} label="1개월" />
-            <FormControlLabel value="3m" control={<Radio />} label="3개월" />
-            <FormControlLabel value="6m" control={<Radio />} label="6개월" />
-            <FormControlLabel value="1y" control={<Radio />} label="1년" />
-          </RadioGroup>
-        </FormControl>
-      </ThemeProvider>
+      <div className={styles["picker"]}>
+        <Tooltip title={tooltip} arrow TransitionComponent={Zoom}>
+          <IconButton disableTouchRipple>
+            <RiCalendarCheckLine />
+          </IconButton>
+        </Tooltip>
+        <DatePicker
+          dateFormat="yyyy/MM/dd"
+          selected={startDate}
+          onChange={(date: Date) => setStartDate(date)}
+          selectsStart
+          startDate={startDate}
+          endDate={endDate}
+          locale={ko}
+        ></DatePicker>
+        <div className={styles["divider"]}>-</div>
+        <DatePicker
+          dateFormat="yyyy/MM/dd"
+          selected={endDate > startDate ? endDate : startDate}
+          onChange={(date: Date) => setEndDate(date)}
+          selectsEnd
+          startDate={startDate}
+          endDate={endDate}
+          minDate={startDate}
+          locale={ko}
+        />
+      </div>
     </div>
   );
-}
+};
 
 export default Period;
