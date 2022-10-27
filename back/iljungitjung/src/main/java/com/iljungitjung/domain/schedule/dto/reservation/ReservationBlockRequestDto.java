@@ -2,6 +2,7 @@ package com.iljungitjung.domain.schedule.dto.reservation;
 
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
+import com.iljungitjung.domain.user.entity.Users;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,9 +19,10 @@ public class ReservationBlockRequestDto {
     private String startTime;
     private String endTime;
 
-    public Schedule toScheduleEntity(ReservationBlockRequestDto reservationBlockRequestDto, Date startDate, Date endDate) {
+    public Schedule toScheduleEntity(ReservationBlockRequestDto reservationBlockRequestDto, Users userFrom, Users userTo, Date startDate, Date endDate) {
         return Schedule.builder()
-                .userFromId(reservationBlockRequestDto.getUserFromNickname())
+                .userFrom(userFrom)
+                .userTo(userTo)
                 .categoryName(reservationBlockRequestDto.getTitle())
                 .contents(reservationBlockRequestDto.getContents())
                 .startDate(startDate)

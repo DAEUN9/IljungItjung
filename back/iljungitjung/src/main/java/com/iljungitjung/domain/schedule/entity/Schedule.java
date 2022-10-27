@@ -1,9 +1,12 @@
 package com.iljungitjung.domain.schedule.entity;
 
 
+import com.iljungitjung.domain.user.entity.Users;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.catalina.User;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,17 +21,18 @@ public class Schedule {
     @Column(name = "schedule_id")
     private Long id;
 
-//    @JoinColumn(name="user_id")
-//    private User userFrom;
 
-//    @JoinColumn(name="user_id")
-//    private User userTo;
+    @ManyToOne
+    @JoinColumn
+    @Setter
+    private Users userFrom;
 
-    @Column(nullable = false, name="user_from_id")
-    private String userFromId;
+    @ManyToOne
+    @JoinColumn
+    @Setter
+    private Users userTo;
 
-    @Column(name="user_to_id")
-    private String userToId;
+
 
     @Column(nullable = false, name="start_date")
     private Date startDate;
@@ -52,9 +56,9 @@ public class Schedule {
     private String reason;
 
     @Builder
-    public Schedule(String userFromId, String userToId, Date startDate, Date endDate, String categoryName, String color, String contents, String phonenum, Type type) {
-        this.userFromId = userFromId;
-        this.userToId=userToId;
+    public Schedule(Users userFrom, Users userTo, Date startDate, Date endDate, String categoryName, String color, String contents, String phonenum, Type type) {
+        this.userFrom = userFrom;
+        this.userTo=userTo;
         this.startDate = startDate;
         this.endDate=endDate;
         this.categoryName=categoryName;
