@@ -1,5 +1,8 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iljungitjung.IljungitjungApplication;
+import com.iljungitjung.domain.category.service.CategoryService;
+import com.iljungitjung.domain.schedule.service.ReservationService;
+import com.iljungitjung.domain.schedule.service.ScheduleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,7 +17,18 @@ import javax.persistence.PersistenceContext;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-@ExtendWith(MockitoExtension.class)
+
 public class AbstractServiceTest extends AbstractTest{
+
+    @Autowired
+    ReservationService reservationService;
+
+    @Autowired
+    CategoryService categoryService;
+
+    @Autowired
+    ScheduleService scheduleService;
+
+
 
 }

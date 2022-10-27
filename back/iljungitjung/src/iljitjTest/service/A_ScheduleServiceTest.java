@@ -1,36 +1,21 @@
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
-import com.iljungitjung.domain.category.service.CategoryService;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationIdResponseDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDetailResponseDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewRequestDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
-import com.iljungitjung.domain.schedule.service.ReservationService;
-import com.iljungitjung.domain.schedule.service.ScheduleService;
 import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ScheduleServiceTest extends AbstractControllerTest{
+public class A_ScheduleServiceTest extends AbstractServiceTest{
 
-    @Autowired
-    ReservationService reservationService;
 
-    @Autowired
-    CategoryService categoryService;
-
-    @Autowired
-    ScheduleService scheduleService;
 
     @Test
     @Order(1)
@@ -43,8 +28,9 @@ public class ScheduleServiceTest extends AbstractControllerTest{
         //when
         CategoryIdResponseDto categoryIdResponseDto = categoryService.addCategory(categoryCreateRequestDto);
 
-        categoryId++;
         //then
+        categoryId++;
+        System.out.println(categoryIdResponseDto.getId() + ", " + categoryId);
         Assertions.assertEquals(categoryIdResponseDto.getId(), categoryId);
 
     }
@@ -91,7 +77,7 @@ public class ScheduleServiceTest extends AbstractControllerTest{
         ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView("1", new ScheduleViewRequestDto("20221017", "20221017"));
 
         //then
-        int sum = scheduleViewResponseDto.getRequestList().size()+scheduleViewResponseDto.getBlockList().size();
+        int sum = scheduleViewResponseDto.getRequestList().size()+scheduleViewResponseDto.getBlockList().size()+scheduleViewResponseDto.getAcceptList().size()+scheduleViewResponseDto.getCancelList().size();
         Assertions.assertEquals(sum, scheduleId);
 
 

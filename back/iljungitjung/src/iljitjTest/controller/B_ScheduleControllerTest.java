@@ -4,10 +4,7 @@ import com.iljungitjung.domain.category.service.CategoryService;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationIdResponseDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
-import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDetailResponseDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewRequestDto;
-import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
-import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.service.ReservationService;
 import com.iljungitjung.domain.schedule.service.ScheduleService;
 import org.junit.jupiter.api.MethodOrderer;
@@ -27,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ScheduleControllerTest extends AbstractControllerTest{
+public class B_ScheduleControllerTest extends AbstractControllerTest{
 
     @MockBean
     private CategoryService categoryService;

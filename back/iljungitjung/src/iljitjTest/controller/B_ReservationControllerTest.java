@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ReservationControllerTest extends AbstractControllerTest{
+public class B_ReservationControllerTest extends AbstractControllerTest{
 
     @MockBean
     private CategoryService categoryService;
