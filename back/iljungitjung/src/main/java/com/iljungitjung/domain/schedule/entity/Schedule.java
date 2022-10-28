@@ -23,11 +23,11 @@ public class Schedule {
 
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "user_to_id")
     private Users userTo;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "user_from_id")
     private Users userFrom;
 
     @Column(nullable = false, name="start_date")

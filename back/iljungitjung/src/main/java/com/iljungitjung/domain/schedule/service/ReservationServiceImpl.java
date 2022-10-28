@@ -12,7 +12,7 @@ import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
-import com.iljungitjung.domain.user.entity.Users;
+import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -53,18 +53,15 @@ public class ReservationServiceImpl implements ReservationService{
         cal.add(Calendar.HOUR, Integer.parseInt(date.substring(0, 2)));
 
         Date endDate = cal.getTime();
-
-        Users userFrom = userRepository.findUsersByNickname(reservationRequestDto.getUserFromNickname()).orElseThrow(() -> {
+        User userFrom = userRepository.findUserByNickname(reservationRequestDto.getUserFromNickname()).orElseThrow(() -> {
             throw new NoExistUserException();
         });
-        Users userTo= userRepository.findUsersByNickname(reservationRequestDto.getUserToNickname()).orElseThrow(() -> {
+        User userTo= userRepository.findUserByNickname(reservationRequestDto.getUserToNickname()).orElseThrow(() -> {
             throw new NoExistUserException();
         });
-        Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, startDate, endDate, category.getColor(), Type.REQUEST);
-
+        Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, userFrom, userTo, startDate, endDate, category.getColor(), Type.REQUEST);
         schedule.setScheduleRequestList(userTo);
         schedule.setScheduleResponseList(userFrom);
-
         schedule = scheduleRepository.save(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
@@ -105,7 +102,7 @@ public class ReservationServiceImpl implements ReservationService{
         }catch (Exception e){
             throw new DateFormatErrorException();
         }
-        Users user = userRepository.findUsersByNickname(reservationBlockRequestDto.getUserFromNickname()).get();
+        User user = userRepository.findUsersByNickname(reservationBlockRequestDto.getUserFromNickname()).get();
 
         Schedule schedule = reservationBlockRequestDto.toScheduleEntity(reservationBlockRequestDto, startDate, endDate);
         schedule.setScheduleRequestList(user);
