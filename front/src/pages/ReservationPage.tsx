@@ -3,6 +3,11 @@ import Period from "@components/Reservation/Period";
 import Reservation from "@components/Reservation/Reservation";
 import styles from "@styles/Reservation/Reservation.module.scss";
 import defaultImg from "@assets/defaultImg.png";
+import { useEffect } from "react";
+import { getReservations } from "@api/reservation";
+import { useDispatch } from "react-redux";
+import { setReservations } from "@modules/reservation";
+import { AxiosResponse } from "axios";
 
 const reservations = [
   {
@@ -139,6 +144,42 @@ const reservations = [
 ];
 
 const ReservationPage = () => {
+  const dispatch = useDispatch();
+  const onSetReservations = (reservations: object[]) => {
+    dispatch(setReservations(reservations));
+  };
+
+  useEffect(() => {
+    // 첫 렌더링 시 현재 날짜로부터 15일 전후를 기간으로 요청한다.
+    const date = new Date();
+    const startDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate() - 15
+    );
+    const endDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate() + 15
+    );
+
+    const startMonth = startDate.getMonth() + 1;
+    const endMonth = endDate.getMonth() + 1;
+
+    const dateParam = {
+      startDate: `${startDate.getFullYear()}${
+        startMonth >= 10 ? startMonth : "0" + startMonth
+      }${startDate.getDate()}`,
+      endDate: `${endDate.getFullYear()}${
+        endMonth >= 10 ? endMonth : "0" + endMonth
+      }${endDate.getDate()}`,
+    };
+
+    // 닉네임과 기간을 보내서 내 예약 목록을 요청한다.
+    // const response = getReservations("곰고구마", dateParam);
+    // console.log(response);
+  }, []);
+
   return (
     <div className={styles["reservation-page"]}>
       <Sidebar />
