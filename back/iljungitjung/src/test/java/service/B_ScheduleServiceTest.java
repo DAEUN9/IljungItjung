@@ -25,14 +25,13 @@ public class B_ScheduleServiceTest extends AbstractServiceTest{
 
         //given
         CategoryCreateRequestDto categoryCreateRequestDto = new CategoryCreateRequestDto(
-                "커트", "0130", "#000000");
+                "파마", "0300", "#111111");
 
         //when
         CategoryIdResponseDto categoryIdResponseDto = categoryService.addCategory(categoryCreateRequestDto);
 
         //then
         categoryId++;
-        System.out.println(categoryIdResponseDto.getId() + ", " + categoryId);
         Assertions.assertEquals(categoryIdResponseDto.getId(), categoryId);
 
     }
@@ -42,7 +41,7 @@ public class B_ScheduleServiceTest extends AbstractServiceTest{
     public void 일정_요청_서비스() throws Exception {
 
         //given
-        ReservationRequestDto reservationRequestDto = new ReservationRequestDto("1", "2", "20221017", "1500", "안녕하세요", "01011111111", "커트");
+        ReservationRequestDto reservationRequestDto = new ReservationRequestDto("1", "2", "20221017", "1500", "안녕하세요", "01011111111", "파마");
 
         //when
         ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationRequest(reservationRequestDto);
@@ -81,7 +80,7 @@ public class B_ScheduleServiceTest extends AbstractServiceTest{
         //then
         int sum = scheduleViewResponseDto.getRequestList().size()+scheduleViewResponseDto.getBlockList().size()+scheduleViewResponseDto.getAcceptList().size()+scheduleViewResponseDto.getCancelList().size();
 
-        Assertions.assertEquals(sum, 4);
+        Assertions.assertEquals(sum, 2);
 
 
     }

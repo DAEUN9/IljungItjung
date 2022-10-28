@@ -1,6 +1,7 @@
 package com.iljungitjung.domain.category.entity;
 
 //import com.iljungitjung.domain.user.entity.User;
+import com.iljungitjung.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,10 +21,9 @@ public class Category {
     @Column(name = "category_id")
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 
     @Column(nullable = false, name = "category_name")
     private String categoryName;
@@ -33,12 +33,10 @@ public class Category {
     @Column(nullable = false)
     private String time;
 
-//    public Category(User user, String category_name, String color, String time) {
-//        this.user = user;
-//        this.category_name = category_name;
-//        this.color = color;
-//        this.time = time;
-//    }
+    public void setCategoryList(User user){
+        user.getCategoryList().add(this);
+        this.user = user;
+    }
 
     @Builder
     public Category(String categoryName, String color, String time) {

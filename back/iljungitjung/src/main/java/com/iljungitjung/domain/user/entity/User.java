@@ -1,6 +1,7 @@
 package com.iljungitjung.domain.user.entity;
 
 
+import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,11 +30,14 @@ public class User {
 
     private String email;
 
-    @OneToMany(mappedBy = "userTo", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userTo", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Schedule> scheduleRequestList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userFrom", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userFrom", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Schedule> scheduleResponseList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Category> categoryList = new ArrayList<>();
 
     @Builder
     public User(String nickname, String phonenum, String imagePath, String kakaoToken, String openTime, String closeTime, String email) {

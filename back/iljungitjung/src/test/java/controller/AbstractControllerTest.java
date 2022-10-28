@@ -35,6 +35,8 @@ public class AbstractControllerTest extends AbstractTest {
 	@MockBean
 	ScheduleService scheduleService;
 
+	public static Long categoryId=0L;
+	public static Long scheduleId=0L;
 	@BeforeEach
 	public void setUp() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext)
