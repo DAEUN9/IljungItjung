@@ -6,6 +6,8 @@ import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
+import com.iljungitjung.domain.user.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService{
 
-//    private final UserRepository userRepository;
+    private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     @PersistenceContext
     EntityManager entityManager;
@@ -28,6 +30,8 @@ public class CategoryServiceImpl implements CategoryService{
     public CategoryIdResponseDto addCategory(CategoryCreateRequestDto requestDto) {
         Category category = requestDto.toCategoryEntity(requestDto);
         categoryRepository.save(category);
+        category = categoryRepository.save(category);
+
         return new CategoryIdResponseDto(category.getId());
     }
 
@@ -50,7 +54,11 @@ public class CategoryServiceImpl implements CategoryService{
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });
+
         categoryRepository.delete(category);
+
+       categoryRepository.delete(category);
+
         return new CategoryIdResponseDto(categoryId);
     }
 }

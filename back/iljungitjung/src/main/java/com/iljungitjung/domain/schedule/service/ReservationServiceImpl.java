@@ -12,6 +12,9 @@ import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
+import com.iljungitjung.domain.user.entity.Users;
+import com.iljungitjung.domain.user.exception.NoExistUserException;
+import com.iljungitjung.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,8 @@ public class ReservationServiceImpl implements ReservationService{
 
     private final ScheduleRepository scheduleRepository;
     private final CategoryRepository categoryRepository;
+
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -48,21 +53,42 @@ public class ReservationServiceImpl implements ReservationService{
         cal.add(Calendar.HOUR, Integer.parseInt(date.substring(0, 2)));
 
         Date endDate = cal.getTime();
+
+        Users userFrom = userRepository.findUsersByNickname(reservationRequestDto.getUserFromNickname()).orElseThrow(() -> {
+            throw new NoExistUserException();
+        });
+        Users userTo= userRepository.findUsersByNickname(reservationRequestDto.getUserToNickname()).orElseThrow(() -> {
+            throw new NoExistUserException();
+        });
+
         Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, startDate, endDate, category.getColor(), Type.REQUEST);
-        scheduleRepository.save(schedule);
+
+        schedule.setScheduleRequestList(userTo);
+        schedule.setScheduleResponseList(userFrom);
+
+        schedule = scheduleRepository.save(schedule);
+
+
+
         return new ReservationIdResponseDto(schedule.getId());
     }
 
     @Override
     @Transactional
     public ReservationIdResponseDto reservationManage(Long id, ReservationManageRequestDto reservationManageRequestDto) {
+
+        //현재 아이디가 해당 예약의 주인일 때만 가능 추가 필수
+        /*
+
+         */
+
         Schedule schedule = scheduleRepository.findScheduleById(id).orElseThrow(()->{
             throw new NoExistScheduleDetailException();
         });
         if(reservationManageRequestDto.isAccept()){
             schedule.accpeted();
         }else{
-           scheduleRepository.delete(schedule);
+            schedule.canceled(reservationManageRequestDto.getReason());
         }
         return new ReservationIdResponseDto(schedule.getId());
     }
@@ -70,6 +96,12 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     @Transactional
     public ReservationIdResponseDto reservationBlock(ReservationBlockRequestDto reservationBlockRequestDto) {
+
+        //현재 아이디가 해당 예약의 주인일 때만 가능 추가 필수
+        /*
+
+        */
+
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
         Date startDate;
@@ -80,9 +112,14 @@ public class ReservationServiceImpl implements ReservationService{
         }catch (Exception e){
             throw new DateFormatErrorException();
         }
+        Users user = userRepository.findUsersByNickname(reservationBlockRequestDto.getUserFromNickname()).get();
 
         Schedule schedule = reservationBlockRequestDto.toScheduleEntity(reservationBlockRequestDto, startDate, endDate);
-        scheduleRepository.save(schedule);
+        schedule = scheduleRepository.save(schedule);
+
+        schedule.setScheduleRequestList(user);
+        schedule.setScheduleResponseList(user);
+
         return new ReservationIdResponseDto(schedule.getId());
 
     }

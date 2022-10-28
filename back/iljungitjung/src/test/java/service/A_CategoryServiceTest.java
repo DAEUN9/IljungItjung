@@ -1,19 +1,21 @@
+package service;
+
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
-import com.iljungitjung.domain.category.service.CategoryService;
 import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.mockito.ArgumentMatchers.any;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class CategoryServiceTest extends AbstractServiceTest{
+public class A_CategoryServiceTest extends AbstractServiceTest{
 
-    @Autowired
-    CategoryService categoryService;
+
 
     @Test
     @Order(1)
-    public void 카테고리_등록() throws Exception {
+    public void 카테고리_등록_서비스() throws Exception {
+
         //given
         CategoryCreateRequestDto categoryCreateRequestDto = new CategoryCreateRequestDto(
                 "커트", "0130", "#000000");
@@ -21,14 +23,15 @@ public class CategoryServiceTest extends AbstractServiceTest{
         //when
         CategoryIdResponseDto categoryIdResponseDto = categoryService.addCategory(categoryCreateRequestDto);
 
-        categoryId++;
         //then
+        categoryId++;
+        System.out.println(categoryIdResponseDto.getId() + ", " + categoryId);
         Assertions.assertEquals(categoryIdResponseDto.getId(), categoryId);
 
     }
     @Test
     @Order(2)
-    public void 카테고리_수정() throws Exception {
+    public void 카테고리_수정_서비스() throws Exception {
 
 
         //given
@@ -43,7 +46,7 @@ public class CategoryServiceTest extends AbstractServiceTest{
     }
     @Test
     @Order(3)
-    public void 카테고리_삭제() throws Exception {
+    public void 카테고리_삭제_서비스() throws Exception {
 
         //given
 

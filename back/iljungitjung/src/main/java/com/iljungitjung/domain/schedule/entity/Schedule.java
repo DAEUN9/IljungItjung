@@ -1,9 +1,12 @@
 package com.iljungitjung.domain.schedule.entity;
 
 
+import com.iljungitjung.domain.user.entity.Users;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.catalina.User;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,17 +21,14 @@ public class Schedule {
     @Column(name = "schedule_id")
     private Long id;
 
-//    @JoinColumn(name="user_id")
-//    private User userFrom;
+    @ManyToOne
+    @JoinColumn
+    private Users userTo;
 
-//    @JoinColumn(name="user_id")
-//    private User userTo;
+    @ManyToOne
+    @JoinColumn
+    private Users userFrom;
 
-    @Column(nullable = false, name="user_from_id")
-    private String userFromId;
-
-    @Column(name="user_to_id")
-    private String userToId;
 
     @Column(nullable = false, name="start_date")
     private Date startDate;
@@ -49,10 +49,21 @@ public class Schedule {
     @Column(nullable = false)
     private Type type;
 
+    private String reason;
+
+    public void setScheduleRequestList(Users user){
+        user.getScheduleRequestList().add(this);
+        this.userTo=user;
+    }
+
+    public void setScheduleResponseList(Users user){
+        user.getScheduleResponseList().add(this);
+        this.userFrom=user;
+    }
+
+
     @Builder
-    public Schedule(String userFromId, String userToId, Date startDate, Date endDate, String categoryName, String color, String contents, String phonenum, Type type) {
-        this.userFromId = userFromId;
-        this.userToId=userToId;
+    public Schedule(Date startDate, Date endDate, String categoryName, String color, String contents, String phonenum, Type type) {
         this.startDate = startDate;
         this.endDate=endDate;
         this.categoryName=categoryName;
@@ -63,6 +74,10 @@ public class Schedule {
     }
     public void accpeted() {
         this.type= Type.ACCEPT;
+    }
+    public void canceled(String reason){
+        this.reason=reason;
+        this.type=Type.CANCEL;
     }
 
 }
