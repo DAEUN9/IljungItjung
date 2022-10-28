@@ -8,7 +8,6 @@ import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
-import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -44,11 +43,11 @@ public class ScheduleServiceImpl implements ScheduleService{
         }
 
         try{
-            User user = userRepository.findUserByNickname(nickname).orElseThrow(() -> {
-                throw new NoExistUserException();
-            });
-            List<Schedule> scheduleList = user.getScheduleRequestList();
-            scheduleList.addAll(user.getScheduleResponseList());
+            List<Schedule> scheduleList;
+            if(scheduleViewRequestDto.isRequest())
+                scheduleList = scheduleRepository.findByUserTo_NicknameIs(nickname);
+            else
+                scheduleList = scheduleRepository.findByUserFrom_NicknameIs(nickname);
 
             List<ScheduleViewDto> requestList = new ArrayList<>();
             List<ScheduleViewDto> acceptList = new ArrayList<>();

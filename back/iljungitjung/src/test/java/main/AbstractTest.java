@@ -2,7 +2,6 @@ package main;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iljungitjung.IljungitjungApplication;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,8 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @SpringBootTest(classes = IljungitjungApplication.class)
 public abstract class AbstractTest {
-    public static Long categoryId=0L;
-    public static Long scheduleId=0L;
 
 
 

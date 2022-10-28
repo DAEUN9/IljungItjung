@@ -31,8 +31,8 @@ public class AbstractServiceTest extends AbstractTest {
 
     @Autowired
     ScheduleService scheduleService;
-
-
+    public static Long categoryId=0L;
+    public static Long scheduleId=0L;
 
 
 }
