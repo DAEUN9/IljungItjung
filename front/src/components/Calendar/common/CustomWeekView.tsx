@@ -1,6 +1,7 @@
 import { WeekView } from '@devexpress/dx-react-scheduler-material-ui';
 
 import { getDay } from './util';
+import styles from '@styles/Calendar/Calendar.module.scss';
 
 export default function CustomWeekView() {
   return (
@@ -13,6 +14,9 @@ export default function CustomWeekView() {
           className="day-scale"
           formatDate={getDay}
         />
+      )}
+      timeTableCellComponent={(props) => (
+        <WeekView.TimeTableCell {...props} className={styles.timeTableCell} />
       )}
     />
   );
