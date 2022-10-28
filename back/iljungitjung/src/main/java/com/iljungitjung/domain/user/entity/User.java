@@ -2,6 +2,7 @@ package com.iljungitjung.domain.user.entity;
 
 
 import com.iljungitjung.domain.schedule.entity.Schedule;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Users {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,19 +27,22 @@ public class Users {
     private String openTime;
     private String closeTime;
 
+    private String email;
+
     @OneToMany(mappedBy = "userTo", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Schedule> scheduleRequestList = new ArrayList<>();
 
     @OneToMany(mappedBy = "userFrom", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Schedule> scheduleResponseList = new ArrayList<>();
 
-
-    public Users(String nickname, String phonenum, String imagePath, String kakaoToken, String openTime, String closeTime) {
+    @Builder
+    public User(String nickname, String phonenum, String imagePath, String kakaoToken, String openTime, String closeTime, String email) {
         this.nickname = nickname;
         this.phonenum = phonenum;
         this.imagePath = imagePath;
         this.kakaoToken = kakaoToken;
         this.openTime = openTime;
         this.closeTime = closeTime;
+        this.email = email;
     }
 }
