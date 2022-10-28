@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @RestController
@@ -24,7 +25,7 @@ public class OauthController {
     private final KakaoLoginService kakaoLoginService;
 
     @GetMapping("/kakao")
-    public void kakaoOauthService(@RequestParam("code") String code, @RequestParam("client-uri") String clientUri, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        kakaoLoginService.sendRedirectToClientUriWithEmail(clientUri, code);
+    public void kakaoOauthService(@RequestParam("code") String code, @RequestParam("client-uri") String clientUri, HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
+        kakaoLoginService.sendRedirectToClientUriWithEmail(clientUri, code, request, response, session);
     }
 }

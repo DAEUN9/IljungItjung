@@ -1,5 +1,8 @@
 package com.iljungitjung.global.login.service;
 
+import com.iljungitjung.domain.user.entity.User;
+import com.iljungitjung.domain.user.service.UserService;
+import com.iljungitjung.global.login.exception.NotMemberException;
 import com.iljungitjung.global.oauth.dto.KakaoTokenResponseDto;
 import com.iljungitjung.global.oauth.dto.KakaoUserInfoResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 @Service
 @RequestMapping
@@ -42,6 +47,8 @@ public class KakaoLoginService implements LoginService{
 
     @Value("${oauth.kakao.token.path}")
     private String OAUTH_TOKEN_PATH;
+
+    private final UserService userService;
 
     private String createUri(){
         return UriComponentsBuilder.newInstance().scheme("https")
@@ -85,7 +92,7 @@ public class KakaoLoginService implements LoginService{
         return httpHeaders;
     }
     @Override
-    public void sendRedirectToClientUriWithEmail(String clientUri, String code) {
+    public void sendRedirectToClientUriWithEmail(String clientUri, String code, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<KakaoTokenResponseDto> kakaoTokenResponse = restTemplate.postForEntity(createTokenRequestUri(), createTokenRequestBody(code), KakaoTokenResponseDto.class);
         log.debug("kakaoTokenReponse : {}", kakaoTokenResponse.getBody());
@@ -94,5 +101,15 @@ public class KakaoLoginService implements LoginService{
 
         ResponseEntity<KakaoUserInfoResponseDto> responseEntity = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, entity, KakaoUserInfoResponseDto.class);
         log.debug("responseEntity : {}", responseEntity.getBody());
+
+        if(!userService.isExistUserByEmail(responseEntity.getBody().getKakaoAccount().getEmail())) throw new NotMemberException();
+
+        log.debug("session id : {}", session.getId());
+
+        try {
+            response.sendRedirect(clientUri);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
