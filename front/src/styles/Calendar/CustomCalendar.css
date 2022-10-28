@@ -65,6 +65,7 @@
 }
 
 /* appointment tooltip */
+.Layout-popover > .Content-content > .Content-titleContainer,
 .Layout-popover > .Header-head {
   display: none !important;
 }
