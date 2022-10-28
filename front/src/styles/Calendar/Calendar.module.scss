@@ -97,3 +97,23 @@ $gray: #3d3d3d;
     }
   }
 }
+
+.tooltip-content {
+  margin-left: 20px;
+}
+
+.tooltip {
+  display: flex;
+  margin-bottom: 10px;
+
+  &-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10px;
+
+    > div > span {
+      font-weight: 500;
+    }
+  }
+}
