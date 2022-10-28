@@ -1,3 +1,5 @@
+package service;
+
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
@@ -6,7 +8,7 @@ import org.junit.jupiter.api.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class A_CategoryServiceTest extends AbstractServiceTest{
+public class B_CategoryServiceTest extends AbstractServiceTest{
 
 
 
@@ -23,7 +25,6 @@ public class A_CategoryServiceTest extends AbstractServiceTest{
 
         //then
         categoryId++;
-        System.out.println(categoryIdResponseDto.getId() + ", " + categoryId);
         Assertions.assertEquals(categoryIdResponseDto.getId(), categoryId);
 
     }

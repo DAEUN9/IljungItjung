@@ -37,38 +37,7 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
-	testImplementation 'org.springframework.security:spring-security-test'
-
-	implementation 'com.google.guava:guava:30.1.1-jre'
-
 }
-
-test {
+tasks.named('test') {
 	useJUnitPlatform()
 }
-
-sourceSets {
-	iljitjTest {
-		java.srcDir "$projectDir/src/iljitjTest/main"
-		java.srcDir "$projectDir/src/iljitjTest/controller"
-		java.srcDir "$projectDir/src/iljitjTest/service"
-		java.srcDir "$projectDir/src/iljitjTest/repository"
-		resources.srcDir "$projectDir/src/iljitjTest/resources"
-		compileClasspath += main.output + test.output
-		runtimeClasspath += main.output + test.output
-	}
-}
-
-configurations {
-	iljitjTestImplementation.extendsFrom implementation
-	iljitjTestImplementation.extendsFrom testImplementation
-	iljitjTestRuntimeOnly.extendsFrom testRuntimeOnly
-}
-
-task iljitjTest(type: Test) {
-	testClassesDirs = sourceSets.iljitjTest.output.classesDirs
-	classpath = sourceSets.iljitjTest.runtimeClasspath
-	useJUnitPlatform()
-}
-
-check.dependsOn iljitjTest

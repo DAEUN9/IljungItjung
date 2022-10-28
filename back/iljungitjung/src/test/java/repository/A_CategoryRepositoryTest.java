@@ -1,22 +1,14 @@
+package repository;
+
 import com.iljungitjung.domain.category.entity.Category;
-import com.iljungitjung.domain.category.repository.CategoryRepository;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 import java.util.Optional;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class C_CategoryRepositoryTest extends AbstractTest{
+public class A_CategoryRepositoryTest extends AbstractRepositoryTest {
 
-    @Autowired
-    CategoryRepository categoryRepository;
 
     @Test
     @Order(1)

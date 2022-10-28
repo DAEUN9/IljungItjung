@@ -24,15 +24,11 @@ public class Schedule {
 
     @ManyToOne
     @JoinColumn
-    @Setter
-    private Users userFrom;
+    private Users userTo;
 
     @ManyToOne
     @JoinColumn
-    @Setter
-    private Users userTo;
-
-
+    private Users userFrom;
 
     @Column(nullable = false, name="start_date")
     private Date startDate;
@@ -55,10 +51,19 @@ public class Schedule {
 
     private String reason;
 
+    public void setScheduleRequestList(Users user){
+        user.getScheduleRequestList().add(this);
+        this.userTo = user;
+    }
+
+    public void setScheduleResponseList(Users user){
+        user.getScheduleResponseList().add(this);
+        this.userFrom = user;
+    }
+
+
     @Builder
-    public Schedule(Users userFrom, Users userTo, Date startDate, Date endDate, String categoryName, String color, String contents, String phonenum, Type type) {
-        this.userFrom = userFrom;
-        this.userTo=userTo;
+    public Schedule(Date startDate, Date endDate, String categoryName, String color, String contents, String phonenum, Type type) {
         this.startDate = startDate;
         this.endDate=endDate;
         this.categoryName=categoryName;

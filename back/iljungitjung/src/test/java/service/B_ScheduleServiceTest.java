@@ -1,3 +1,5 @@
+package service;
+
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
@@ -13,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class A_ScheduleServiceTest extends AbstractServiceTest{
+public class B_ScheduleServiceTest extends AbstractServiceTest{
 
 
 
@@ -74,11 +76,12 @@ public class A_ScheduleServiceTest extends AbstractServiceTest{
         //given
 
         //when
-        ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView("1", new ScheduleViewRequestDto("20221017", "20221017"));
+        ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView("1", new ScheduleViewRequestDto(true, "20221017", "20221017"));
 
         //then
         int sum = scheduleViewResponseDto.getRequestList().size()+scheduleViewResponseDto.getBlockList().size()+scheduleViewResponseDto.getAcceptList().size()+scheduleViewResponseDto.getCancelList().size();
-        Assertions.assertEquals(sum, scheduleId);
+
+        Assertions.assertEquals(sum, 4);
 
 
     }

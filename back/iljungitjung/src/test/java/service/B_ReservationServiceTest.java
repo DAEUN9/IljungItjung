@@ -1,3 +1,5 @@
+package service;
+
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
@@ -10,7 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class A_ReservationServiceTest extends AbstractServiceTest{
+public class B_ReservationServiceTest extends AbstractServiceTest{
 
 
     @Test
@@ -25,7 +27,6 @@ public class A_ReservationServiceTest extends AbstractServiceTest{
 
         //then
         categoryId++;
-        System.out.println(categoryIdResponseDto.getId() + ", " + categoryId);
         Assertions.assertEquals(categoryIdResponseDto.getId(), categoryId);
 
     }

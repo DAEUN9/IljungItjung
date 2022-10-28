@@ -19,10 +19,8 @@ public class ReservationBlockRequestDto {
     private String startTime;
     private String endTime;
 
-    public Schedule toScheduleEntity(ReservationBlockRequestDto reservationBlockRequestDto, Users userFrom, Users userTo, Date startDate, Date endDate) {
+    public Schedule toScheduleEntity(ReservationBlockRequestDto reservationBlockRequestDto,  Date startDate, Date endDate) {
         return Schedule.builder()
-                .userFrom(userFrom)
-                .userTo(userTo)
                 .categoryName(reservationBlockRequestDto.getTitle())
                 .contents(reservationBlockRequestDto.getContents())
                 .startDate(startDate)

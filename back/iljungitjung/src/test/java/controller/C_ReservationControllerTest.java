@@ -1,17 +1,16 @@
+package controller;
+
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
-import com.iljungitjung.domain.category.service.CategoryService;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationIdResponseDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
-import com.iljungitjung.domain.schedule.service.ReservationService;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -21,13 +20,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class B_ReservationControllerTest extends AbstractControllerTest{
+public class C_ReservationControllerTest extends AbstractControllerTest{
 
-    @MockBean
-    private CategoryService categoryService;
 
-    @MockBean
-    private ReservationService reservationService;
 
     @Test
     @Order(1)

@@ -1,18 +1,16 @@
+package controller;
+
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
-import com.iljungitjung.domain.category.service.CategoryService;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationIdResponseDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewRequestDto;
-import com.iljungitjung.domain.schedule.service.ReservationService;
-import com.iljungitjung.domain.schedule.service.ScheduleService;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -24,16 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class B_ScheduleControllerTest extends AbstractControllerTest{
+public class C_ScheduleControllerTest extends AbstractControllerTest{
 
-    @MockBean
-    private CategoryService categoryService;
 
-    @MockBean
-    private ReservationService reservationService;
-
-    @MockBean
-    private ScheduleService scheduleService;
 
     @Test
     @Order(1)
@@ -115,7 +106,7 @@ public class B_ScheduleControllerTest extends AbstractControllerTest{
     public void 일정_리스트_조회_컨트롤러() throws Exception {
 
         //given
-        ScheduleViewRequestDto requestDto = new ScheduleViewRequestDto("20221017", "20221017");
+        ScheduleViewRequestDto requestDto = new ScheduleViewRequestDto(true, "20221017", "20221017");
         String requestAsString = objectMapper.writeValueAsString(requestDto);
 
 

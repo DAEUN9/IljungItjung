@@ -60,7 +60,11 @@ public class ReservationServiceImpl implements ReservationService{
         Users userTo= userRepository.findUsersByNickname(reservationRequestDto.getUserToNickname()).orElseThrow(() -> {
             throw new NoExistUserException();
         });
-        Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, userFrom, userTo, startDate, endDate, category.getColor(), Type.REQUEST);
+        Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, startDate, endDate, category.getColor(), Type.REQUEST);
+
+        schedule.setScheduleRequestList(userTo);
+        schedule.setScheduleResponseList(userFrom);
+
         schedule = scheduleRepository.save(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
@@ -103,7 +107,8 @@ public class ReservationServiceImpl implements ReservationService{
         }
         Users user = userRepository.findUsersByNickname(reservationBlockRequestDto.getUserFromNickname()).get();
 
-        Schedule schedule = reservationBlockRequestDto.toScheduleEntity(reservationBlockRequestDto, user, user, startDate, endDate);
+        Schedule schedule = reservationBlockRequestDto.toScheduleEntity(reservationBlockRequestDto, startDate, endDate);
+        schedule.setScheduleRequestList(user);
         schedule = scheduleRepository.save(schedule);
         return new ReservationIdResponseDto(schedule.getId());
 

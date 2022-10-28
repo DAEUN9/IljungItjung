@@ -26,10 +26,10 @@ public class Users {
     private String openTime;
     private String closeTime;
 
-    @OneToMany(mappedBy = "userTo", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userTo", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Schedule> scheduleRequestList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userFrom", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userFrom", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Schedule> scheduleResponseList = new ArrayList<>();
 
 
