@@ -22,10 +22,8 @@ public class ReservationRequestDto {
     private String phone;
     private String categoryName;
 
-    public Schedule toScheduleEntity(ReservationRequestDto reservationRequestDto, User userFrom, User userTo, Date startDate, Date endDate, String color, Type type) {
+    public Schedule toScheduleEntity(ReservationRequestDto reservationRequestDto, Date startDate, Date endDate, String color, Type type) {
         return Schedule.builder()
-                .userFrom(userFrom)
-                .userTo(userTo)
                 .categoryName(reservationRequestDto.getCategoryName())
                 .color(color)
                 .contents(reservationRequestDto.getContents())
