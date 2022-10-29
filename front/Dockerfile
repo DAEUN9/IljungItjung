@@ -6,6 +6,6 @@ COPY . .
 RUN npm run build
 FROM nginx
 COPY --from=build-stage /var/jenkins_home/workspace/IJIJ-front/front/dist /usr/share/nginx/html
-COPY --from=build-stage /var/jenkins_home/workspace/IJIJ-front/front/nginx/default /etc/nginx/sites-available/default
+COPY --from=build-stage /var/jenkins_home/workspace/IJIJ-front/front/nginx /etc/nginx/sites-available
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
