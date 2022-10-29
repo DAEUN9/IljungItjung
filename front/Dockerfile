@@ -4,8 +4,8 @@ COPY package*.json ./
 RUN npm install --force
 COPY . .
 RUN npm run build
-# FROM nginx:stable-alpine as production-stage
-# COPY var/jenkins_home/workspace/IJIJ-front/front/build /usr/share/nginx/html
+FROM nginx
+COPY var/jenkins_home/workspace/IJIJ-front/front/build /usr/share/nginx/html
 # COPY --from=build-stage var/jenkins_home/workspace/IJIJ-front/front/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
