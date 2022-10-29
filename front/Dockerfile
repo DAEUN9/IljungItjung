@@ -1,5 +1,5 @@
 FROM node:16-alpine as build-stage
-WORKDIR app
+WORKDIR /app
 COPY package.json ./
 RUN npm install --force
 COPY . .
