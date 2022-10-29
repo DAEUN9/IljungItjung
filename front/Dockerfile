@@ -4,6 +4,6 @@ COPY package*.json ./
 RUN npm install --force
 COPY . .
 RUN npm run build
-FROM nginx
-COPY --from=build-stage /var/jenkins_home/workspace/IJIJ-front/front/dist /usr/share/nginx/html
+# FROM nginx
+# COPY --from=build-stage /var/jenkins_home/workspace/IJIJ-front/front/dist /usr/share/nginx/html
 EXPOSE 80
