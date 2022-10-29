@@ -10,4 +10,4 @@ COPY --from=build-stage var/jenkins_home/workspace/IJIJ-front/front/build /usr/s
 
 EXPOSE 80
 # CMD ["nginx", "-g", "daemon off;"]
-# CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start"]
