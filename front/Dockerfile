@@ -1,6 +1,6 @@
 FROM node:16-alpine as build-stage
 WORKDIR /var/jenkins_home/workspace/IJIJ-front/front
-COPY package*.json ./
+COPY package.json ./
 RUN npm install --force
 COPY . .
 RUN npm run build
