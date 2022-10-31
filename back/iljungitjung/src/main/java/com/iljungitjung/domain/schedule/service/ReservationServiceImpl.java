@@ -94,6 +94,14 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     @Override
+    public ReservationIdResponseDto reservationDelete(Long id, String reason) {
+        Schedule schedule = scheduleRepository.findScheduleById(id).get();
+        Long scheduleId = schedule.getId();
+        scheduleRepository.delete(schedule);
+        return new ReservationIdResponseDto(scheduleId);
+    }
+
+    @Override
     @Transactional
     public ReservationIdResponseDto reservationBlock(ReservationBlockRequestDto reservationBlockRequestDto) {
         //현재 아이디가 해당 예약의 주인일 때만 가능 추가 필수
@@ -121,17 +129,17 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     @Override
-    public ReservationViewResponseDto reservationView(String nickname, ReservationViewRequestDto reservationViewRequestDto) {
+    public ReservationViewResponseDto reservationView(String nickname, String startDate, String endDate) {
         //닉네임으로 유저 조회
         ReservationViewResponseDto responseDtos;
 
-        Date startDate;
-        Date endDate;
+        Date startDateFormat;
+        Date endDateFormat;
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
         try{
-            startDate = formatter.parse(reservationViewRequestDto.getStartDate()+"0000");
-            endDate = formatter.parse(reservationViewRequestDto.getEndDate()+"2359");
+            startDateFormat = formatter.parse(startDate+"0000");
+            endDateFormat = formatter.parse(endDate+"2359");
         }catch (Exception e){
             throw new DateFormatErrorException();
         }
@@ -144,12 +152,12 @@ public class ReservationServiceImpl implements ReservationService{
             List<ReservationViewDto> acceptList = new ArrayList<>();
             List<ReservationCancelViewDto> cancelList = new ArrayList<>();
             for(Schedule schedule : scheduleList){
-                if(schedule.getStartDate().before(startDate) || schedule.getEndDate().after(endDate)) continue;
+                if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().after(endDateFormat)) continue;
                 if(schedule.getType().equals(Type.REQUEST)){
                     requestList.add(new ReservationViewDto(schedule));
                 }else if(schedule.getType().equals(Type.ACCEPT)){
                     acceptList.add(new ReservationViewDto(schedule));
-                }else if(schedule.getId().equals(Type.CANCEL)){
+                }else if(schedule.getType().equals(Type.CANCEL)){
                     cancelList.add(new ReservationCancelViewDto(schedule));
                 }
             }

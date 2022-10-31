@@ -6,9 +6,10 @@ public interface ReservationService {
     ReservationIdResponseDto reservationRequest(ReservationRequestDto reservationRequestDto);
     ReservationIdResponseDto reservationManage(Long id, String nickname, ReservationManageRequestDto reservationManageRequestDto);
 
+    ReservationIdResponseDto reservationDelete(Long id, String reason);
     ReservationIdResponseDto reservationBlock(ReservationBlockRequestDto reservationBlockRequestDto);
 
-    ReservationViewResponseDto reservationView(String nickname, ReservationViewRequestDto reservationViewRequestDto);
+    ReservationViewResponseDto reservationView(String nickname, String startDate, String endDate);
 
 
 }

@@ -28,19 +28,19 @@ public class ScheduleServiceImpl implements ScheduleService{
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     @Override
-    public ScheduleViewResponseDto scheduleView(String nickname, ScheduleViewRequestDto scheduleViewRequestDto) {
+    public ScheduleViewResponseDto scheduleView(String nickname, String startDate, String endDate, boolean isMyView) {
 
         //닉네임으로 유저 조회
         User user = userRepository.findUserByNickname(nickname).get();
         ScheduleViewResponseDto responseDtos;
 
-        Date startDate;
-        Date endDate;
+        Date startDateFormat;
+        Date endDateFormat;
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
         try{
-            startDate = formatter.parse(scheduleViewRequestDto.getStartDate()+"0000");
-            endDate = formatter.parse(scheduleViewRequestDto.getEndDate()+"2359");
+            startDateFormat = formatter.parse(startDate+"0000");
+            endDateFormat = formatter.parse(endDate+"2359");
         }catch (Exception e){
             throw new DateFormatErrorException();
         }
@@ -53,9 +53,9 @@ public class ScheduleServiceImpl implements ScheduleService{
             List<ScheduleCancelDto> cancelList = new ArrayList<>();
 
 
-            if(scheduleViewRequestDto.isMyView()){
+            if(isMyView){
                 for(Schedule schedule : scheduleList){
-                    if(schedule.getStartDate().before(startDate) || schedule.getEndDate().after(endDate)) continue;
+                    if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().after(endDateFormat)) continue;
                     if(schedule.getType().equals(Type.ACCEPT)){
                         acceptList.add(new ScheduleViewDto(schedule));
                     }else if(schedule.getType().equals(Type.BLOCK)){
@@ -65,7 +65,7 @@ public class ScheduleServiceImpl implements ScheduleService{
             }
             else{
                 for(Schedule schedule : scheduleList){
-                    if(schedule.getStartDate().before(startDate) || schedule.getEndDate().after(endDate)) continue;
+                    if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().after(endDateFormat)) continue;
                     if(schedule.getType().equals(Type.REQUEST)){
                         requestList.add(new ScheduleViewDto(schedule));
                     }else if(schedule.getType().equals(Type.ACCEPT)){

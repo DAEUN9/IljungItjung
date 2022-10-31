@@ -37,12 +37,10 @@ public class Schedule {
     @Column(nullable = false, name="category_name")
     private String categoryName;
 
-    @Column(nullable = false)
     private String color;
 
-    @Column(nullable = false)
     private String contents;
-    @Column(nullable = false)
+
     private String phonenum;
 
     @Column(nullable = false)
