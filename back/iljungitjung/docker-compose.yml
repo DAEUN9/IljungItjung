@@ -16,7 +16,7 @@ services:
 #        ipv4_address: 172.16.238.2
 
   redis:
-    image: redis:alpine
+    image: redis
     restart: unless-stopped
     ports:
       - 6379:6379
