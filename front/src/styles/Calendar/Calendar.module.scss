@@ -1,8 +1,155 @@
 @use "../common/utils.module" as *;
 
+$gray: #3d3d3d;
+
 .calendar-page {
   @include page-default();
 }
 
 .content {
+  width: 100%;
+}
+
+.calendar-container {
+  width: 60%;
+  height: 100%;
+}
+
+/* toolbar */
+
+.today {
+  min-width: 50px !important;
+  padding: 3px !important;
+  color: $gray !important;
+  border: 1px solid $gray !important;
+  margin-right: 10px !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+
+  & .MuiTouchRipple-root {
+    color: transparent !important;
+  }
+}
+
+.open-button {
+  color: $gray !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+
+  & .MuiTouchRipple-root {
+    color: transparent !important;
+  }
+}
+
+.navigator {
+  color: $gray !important;
+  border: 1px solid $gray !important;
+  border-radius: 4px !important;
+  padding: 3px !important;
+  margin-right: 5px !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+
+  & .MuiTouchRipple-root {
+    color: transparent !important;
+  }
+}
+
+.toolbar-right {
+  display: flex;
+}
+
+.avatar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Weekview */
+.timeTableCell {
+  &:hover, &:focus {
+    background-color: unset !important;
+  }
+}
+
+/* appointment */
+
+.appointment {
+  &-category {
+    color: black;
+    font-size: 1.2em;
+    font-weight: 900;
+    white-space: normal;
+    line-height: normal;
+    letter-spacing: normal;
+  }
+
+  &-nickname {
+    display: flex;
+    justify-content: end;
+    font-size: 0.8em;
+    color: black;
+    white-space: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    margin-bottom: 2px;
+
+    &-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-left: 2px;
+    }
+  }
+}
+
+/* tooltip */
+.tooltip-content {
+  margin-left: 20px;
+}
+
+.tooltip {
+  display: flex;
+  margin-bottom: 10px;
+
+  &-title {
+    display: flex;
+    padding-bottom: 16px;
+
+    > div {
+      & div:first-child {
+        font-size: 20px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  &-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10px;
+
+    > div > span {
+      font-weight: 500;
+    }
+
+    &:last-child {
+      max-width: 320px;
+    }
+  }
+}
+
+.svg {
+  width: 36px !important;
+  height: 36px !important;
+  margin-right: 10px;
 }
