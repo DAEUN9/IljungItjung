@@ -141,6 +141,10 @@ $gray: #3d3d3d;
     > div > span {
       font-weight: 500;
     }
+
+    &:last-child {
+      max-width: 320px;
+    }
   }
 }
 

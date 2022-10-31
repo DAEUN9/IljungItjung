@@ -4,7 +4,7 @@ import { Toolbar } from '@devexpress/dx-react-scheduler-material-ui';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import IconButton from '@mui/material/IconButton';
-import SettingsIcon from '@mui/icons-material/Settings';
+import { IoSettingsSharp } from "react-icons/io5";
 
 import styles from '@styles/Calendar/Calendar.module.scss';
 
@@ -14,7 +14,7 @@ const SettingButton = () => {
 
   return (
     <IconButton sx={{ marginLeft: '20px' }} onClick={handleClick}>
-      <SettingsIcon />
+      <IoSettingsSharp />
     </IconButton>
   );
 };

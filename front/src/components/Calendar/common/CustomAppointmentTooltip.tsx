@@ -1,9 +1,6 @@
 import { AppointmentTooltip } from '@devexpress/dx-react-scheduler-material-ui';
 import SvgIcon from '@mui/material/SvgIcon';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import PersonIcon from '@mui/icons-material/Person';
-import PhoneIcon from '@mui/icons-material/Phone';
-import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import { FaRegClock, FaUserAlt, FaPhoneAlt, FaPen } from 'react-icons/fa';
 
 import styles from '@styles/Calendar/Calendar.module.scss';
 import { days } from './util';
@@ -69,7 +66,6 @@ export default function CustomAppointmentTooltip() {
         const startDate = appointmentData?.startDate?.toString();
         const endDate = appointmentData?.endDate?.toString();
 
-        console.log(props);
         formatDate(startDate);
 
         return (
@@ -78,7 +74,10 @@ export default function CustomAppointmentTooltip() {
             children={
               <div className={styles['tooltip-content']}>
                 <div className={styles['tooltip-title']}>
-                  <SvgIcon className={styles.svg} sx={{color: appointmentData?.color}}>
+                  <SvgIcon
+                    className={styles.svg}
+                    sx={{ color: appointmentData?.color }}
+                  >
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path>
                   </SvgIcon>
                   <div>
@@ -87,25 +86,25 @@ export default function CustomAppointmentTooltip() {
                   </div>
                 </div>
                 <div className={styles.tooltip}>
-                  <AccessTimeIcon />
+                  <FaRegClock />
                   <div className={styles['tooltip-inner']}>
                     {formatTime(startDate, endDate)}
                   </div>
                 </div>
                 <div className={styles.tooltip}>
-                  <PersonIcon />
+                  <FaUserAlt />
                   <div className={styles['tooltip-inner']}>
                     {appointmentData?.nickname} 님
                   </div>
                 </div>
                 <div className={styles.tooltip}>
-                  <PhoneIcon />
+                  <FaPhoneAlt />
                   <div className={styles['tooltip-inner']}>
                     {appointmentData?.phone}
                   </div>
                 </div>
                 <div className={styles.tooltip}>
-                  <DriveFileRenameOutlineIcon />
+                  <FaPen />
                   <div className={styles['tooltip-inner']}>
                     {appointmentData?.desc}
                   </div>
