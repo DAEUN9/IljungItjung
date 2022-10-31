@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@Slf4j
 @RequestMapping(value = "/categories")
 public class CategoryController {
 
