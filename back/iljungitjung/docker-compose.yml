@@ -10,7 +10,7 @@ services:
     volumes:
       - "/home/ubuntu/docker-volume/ssl:/ssl"
     extra_hosts:
-      - host.docker.internal:host-gateway
+      - "host.docker.internal:host-gateway"
 #    networks:
 #      ijij:
 #        ipv4_address: 172.16.238.2
@@ -21,7 +21,7 @@ services:
     ports:
       - 6379:6379
     extra_hosts:
-      - host.docker.internal:host-gateway
+      - "host.docker.internal:host-gateway"
 #    networks:
 #      ijij:
 #        ipv4_address: 172.16.238.3
@@ -41,7 +41,7 @@ services:
       MARIADB_ROOT_PASSWORD: ijij
         - TZ=Asia/Seoul
       extra_hosts:
-        - host.docker.internal:host-gateway
+        - "host.docker.internal:host-gateway"
 #    networks:
 #      ijij:
 #        ipv4_address: 172.16.238.4
