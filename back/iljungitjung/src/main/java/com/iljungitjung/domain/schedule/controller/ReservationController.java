@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -21,12 +22,12 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ResponseEntity<CommonResponse> reservationRequest(@RequestBody ReservationRequestDto reservationRequestDto){
+    public ResponseEntity<CommonResponse> reservationRequest(@RequestBody @Valid ReservationRequestDto reservationRequestDto){
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationRequest(reservationRequestDto)), HttpStatus.OK);
     }
 
     @PutMapping("/{scheduleId}")
-    public ResponseEntity<CommonResponse> reservationManage(@PathVariable("scheduleId") Long id, @RequestParam String nickname, @RequestBody ReservationManageRequestDto reservationManageRequestDto){
+    public ResponseEntity<CommonResponse> reservationManage(@PathVariable("scheduleId") Long id, @RequestParam String nickname, @RequestBody @Valid ReservationManageRequestDto reservationManageRequestDto){
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationManage(id, nickname, reservationManageRequestDto)), HttpStatus.OK);
 
     }
@@ -38,7 +39,7 @@ public class ReservationController {
     }
 
     @PostMapping("/block")
-    public ResponseEntity<CommonResponse> reservationBlock(@RequestBody ReservationBlockRequestDto reservationBlockRequestDto){
+    public ResponseEntity<CommonResponse> reservationBlock(@RequestBody @Valid ReservationBlockRequestDto reservationBlockRequestDto){
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationBlock(reservationBlockRequestDto)), HttpStatus.OK);
     }
 
