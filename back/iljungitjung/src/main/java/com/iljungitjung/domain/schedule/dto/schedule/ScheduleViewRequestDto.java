@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ScheduleViewRequestDto {
 
-    private boolean isRequest;
+    private boolean isMyView;
     private String startDate;
     private String endDate;
 

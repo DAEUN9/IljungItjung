@@ -1,9 +1,6 @@
 package com.iljungitjung.domain.schedule.dto.reservation;
 
 
-import com.iljungitjung.domain.schedule.dto.schedule.ScheduleBlockDto;
-import com.iljungitjung.domain.schedule.dto.schedule.ScheduleCancelDto;
-import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDto;
 import lombok.Getter;
 
 import java.util.List;
