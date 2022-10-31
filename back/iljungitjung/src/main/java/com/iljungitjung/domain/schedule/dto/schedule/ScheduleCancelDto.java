@@ -16,6 +16,10 @@ public class ScheduleCancelDto {
 
     private final String reason;
     private final String cancelFrom;
+    private final String contents;
+
+    private final String phonenum;
+
 
     public ScheduleCancelDto(Schedule schedule){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm aa");
@@ -25,6 +29,8 @@ public class ScheduleCancelDto {
         this.endDate=simpleDateFormat.format(schedule.getEndDate());
         this.reason=schedule.getReason();
         this.cancelFrom=schedule.getCancelFrom();
+        this.contents=schedule.getContents();
+        this.phonenum=schedule.getPhonenum();
 
     }
 }

@@ -114,7 +114,7 @@ public class ReservationServiceImpl implements ReservationService{
         User user = userRepository.findUserByNickname(reservationBlockRequestDto.getUserFromNickname()).get();
 
         Schedule schedule = reservationBlockRequestDto.toScheduleEntity(reservationBlockRequestDto, startDate, endDate);
-        schedule.setScheduleRequestList(user);
+        schedule.setScheduleResponseList(user);
         schedule = scheduleRepository.save(schedule);
         return new ReservationIdResponseDto(schedule.getId());
 
@@ -149,7 +149,7 @@ public class ReservationServiceImpl implements ReservationService{
                     requestList.add(new ReservationViewDto(schedule));
                 }else if(schedule.getType().equals(Type.ACCEPT)){
                     acceptList.add(new ReservationViewDto(schedule));
-                }else{
+                }else if(schedule.getId().equals(Type.CANCEL)){
                     cancelList.add(new ReservationCancelViewDto(schedule));
                 }
             }
