@@ -25,7 +25,7 @@ public class Category {
     @JoinColumn(name="user_id")
     private User user;
 
-    @Column(nullable = false, name = "category_name")
+    @Column(nullable = false, unique = true, name = "category_name")
     private String categoryName;
 
     @Column(nullable = false)
