@@ -40,8 +40,8 @@ services:
       MARIADB_PASSWORD: ijij
       MARIADB_ROOT_PASSWORD: ijij
         - TZ=Asia/Seoul
-      extra_hosts:
-        - "host.docker.internal:host-gateway"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 #    networks:
 #      ijij:
 #        ipv4_address: 172.16.238.4
