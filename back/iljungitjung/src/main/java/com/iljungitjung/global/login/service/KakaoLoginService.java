@@ -65,7 +65,7 @@ public class KakaoLoginService implements LoginService{
         try {
             response.sendRedirect(createUri());
         }catch (Exception e){
-            e.printStackTrace();
+            log.error("sendRedirect error : {}", e.getMessage());
         }
     }
 
@@ -108,8 +108,8 @@ public class KakaoLoginService implements LoginService{
 
         try {
             response.sendRedirect(clientUri);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            log.error("sendRedirect error : {}", e.getMessage());
         }
     }
 }
