@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 
 @RequiredArgsConstructor
 @RequestMapping("/reservations")
@@ -40,7 +43,13 @@ public class ReservationController {
     }
 
     @GetMapping("/{nickname}")
-    public ResponseEntity<CommonResponse> reservationView(@PathVariable("nickname") String nickname, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate){
+    public ResponseEntity<CommonResponse> reservationView(@PathVariable("nickname") String nickname,
+                                                          @NotBlank(message = "startDate는 비워둘 수 없습니다.")
+                                                          @Size(min=8, max=8)
+                                                          @RequestParam("startDate") String startDate,
+                                                          @NotBlank(message = "endDate는 비워둘 수 없습니다.")
+                                                              @Size(min=8, max=8)
+                                                              @RequestParam("endDate") String endDate){
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationView(nickname, startDate, endDate)), HttpStatus.OK);
     }
 }
