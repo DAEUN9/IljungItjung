@@ -1,4 +1,4 @@
-version: "3"
+version: '3.0'
 
 services:
 
@@ -11,7 +11,7 @@ services:
       - "/home/ubuntu/docker-volume/ssl:/ssl"
     networks:
       ijij:
-        ipv4_address: 172.16.238.2
+        ipv4_address: 172.16.238.1
 
   redis:
     image: redis:alpine
@@ -20,7 +20,7 @@ services:
       - 6379:6379
     networks:
       ijij:
-        ipv4_address: 172.16.238.3
+        ipv4_address: 172.16.238.1
 
   database:
     image: mariadb
@@ -38,7 +38,7 @@ services:
         - TZ=Asia/Seoul
     networks:
       ijij:
-        ipv4_address: 172.16.238.4
+        ipv4_address: 172.16.238.1
 
 networks:
   ijij:

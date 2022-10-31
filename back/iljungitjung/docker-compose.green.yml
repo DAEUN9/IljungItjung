@@ -1,0 +1,10 @@
+version: '3.0'
+services:
+  iljungitjung_server:
+    image: iljungitjung_server
+    ports:
+      - "9091:8080"
+    container_name: iljungitjung_server_green
+    networks:
+      ijij:
+        ipv4_address: 172.16.238.1
