@@ -1,0 +1,79 @@
+/* calendar toolbar */
+.MainLayout-relativeContainer > .Container-container > div {
+  width: 14% !important;
+}
+
+/* calendar scroll */
+.MainLayout-container {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.MainLayout-container::-webkit-scrollbar {
+  position: fixed;
+  width: 8px;
+}
+
+.MainLayout-container::-webkit-scrollbar-thumb {
+  position: fixed;
+  background: #d4d4d4;
+  border-radius: 10px;
+}
+
+.MainLayout-container::-webkit-scrollbar-track {
+  position: fixed;
+  background: #eeeeeeaa;
+}
+
+/* day scale */
+.MainLayout-header {
+  border-bottom: 1px solid gray;
+}
+
+.day-scale {
+  border-right: 1px solid rgba(224, 224, 224, 1);
+}
+
+.Cell-dayView {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  padding: 10px 5px;
+}
+
+.Cell-dayView > .Cell-dayOfMonth,
+.Cell-dayView > .Cell-dayOfWeek {
+  font-size: 13px !important;
+  margin-left: 5px !important;
+}
+
+.Cell-highlightedText {
+  color: #6b7bb1 !important;
+}
+
+/* appointment */
+.Container-container > .MuiToolbar-root {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.VerticalAppointment-content {
+  height: calc(100% - 8px);
+  padding: 4px 5px !important;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* appointment tooltip */
+.Layout-popover > .Content-content > .Content-titleContainer,
+.Layout-popover > .Header-head {
+  display: none !important;
+}
+
+.Layout-popover > .Content-content {
+  padding: 15px 15px 15px 8px !important;
+}
+
+.Layout-popover > .Content-content > .Content-contentContainer {
+  display: none;
+}
