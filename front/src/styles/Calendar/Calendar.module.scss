@@ -1,6 +1,7 @@
 @use "../common/utils.module" as *;
 
 $gray: #3d3d3d;
+$light-gray: #f5f5f5;
 
 .calendar-page {
   @include page-default();
@@ -8,6 +9,7 @@ $gray: #3d3d3d;
 
 .content {
   width: 100%;
+  display: flex;
 }
 
 .calendar-container {
@@ -75,13 +77,13 @@ $gray: #3d3d3d;
 
 /* Weekview */
 .timeTableCell {
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background-color: unset !important;
   }
 }
 
 /* appointment */
-
 .appointment {
   &-category {
     color: black;
@@ -152,4 +154,58 @@ $gray: #3d3d3d;
   width: 36px !important;
   height: 36px !important;
   margin-right: 10px;
+}
+
+/* info */
+.info {
+  height: 100%;
+  width: 100%;
+}
+
+.profile {
+  margin: 15px;
+  height: 40%;
+
+  &-inner {
+    height: 100%;
+    background-color: $light-gray;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-title {
+    display: flex;
+    padding: 20px;
+
+    & img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+    }
+  }
+
+  &-my {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10px;
+
+    & div {
+      &:first-child {
+        font-size: 27px;
+        font-weight: 900;
+      }
+
+      &:nth-child(2) {
+        margin-top: 5px;
+        padding-left: 5px;
+      }
+    }
+  }
+
+  &-desc {
+    padding: 0 20px;
+    font-size: 0.9em;
+  }
 }

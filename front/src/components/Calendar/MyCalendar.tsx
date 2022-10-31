@@ -8,12 +8,13 @@ import { RootState } from '@modules/index';
 import { setScheduleList } from '@modules/mycalendar';
 import '@styles/Calendar/CustomCalendar.css';
 import styles from '@styles/Calendar/Calendar.module.scss';
-import CustomWeekView from './common/CustomWeekView';
-import CustomToolbar from './common/CustomToolbar';
-import CustomTodayButton from './common/CustomTodayButton';
-import CustomDateNavigator from './common/CustomDateNavigator';
-import CustomAppointments from './common/CustomAppointments';
-import CustomAppointmentTooltip from './common/CustomAppointmentTooltip';
+import CustomWeekView from '@components/Calendar/common/CustomWeekView';
+import CustomToolbar from '@components/Calendar/common/CustomToolbar';
+import CustomTodayButton from '@components/Calendar/common/CustomTodayButton';
+import CustomDateNavigator from '@components/Calendar/common/CustomDateNavigator';
+import CustomAppointments from '@components/Calendar/common/CustomAppointments';
+import CustomAppointmentTooltip from '@components/Calendar/common/CustomAppointmentTooltip';
+import Profile from '@components/Calendar/common/Profile';
 
 const data = [
   {
@@ -46,7 +47,7 @@ const data = [
     phone: '010-3333-3333',
     color: '#D7CBF4',
   },
-]
+];
 
 const MyCalendar = () => {
   const list = useSelector((state: RootState) => state.mycalendar.list);
@@ -58,20 +59,26 @@ const MyCalendar = () => {
   }, []);
 
   return (
-    <Paper className={styles['calendar-container']}>
-      <Scheduler data={list} locale="ko-KR" firstDayOfWeek={1}>
-        <ViewState
-          currentDate={currentDate}
-          onCurrentDateChange={(currentDate) => setCurrentDate(currentDate)}
-        />
-        <CustomWeekView />
-        <CustomToolbar />
-        <CustomDateNavigator />
-        <CustomTodayButton />
-        <CustomAppointments />
-        <CustomAppointmentTooltip />
-      </Scheduler>
-    </Paper>
+    <>
+      <Paper className={styles['calendar-container']}>
+        <Scheduler data={list} locale="ko-KR" firstDayOfWeek={1}>
+          <ViewState
+            currentDate={currentDate}
+            onCurrentDateChange={(currentDate) => setCurrentDate(currentDate)}
+          />
+          <CustomWeekView />
+          <CustomToolbar />
+          <CustomDateNavigator />
+          <CustomTodayButton />
+          <CustomAppointments />
+          <CustomAppointmentTooltip />
+        </Scheduler>
+      </Paper>
+      <div className={styles.info}>
+        <Profile />
+        <div>예약목록</div>
+      </div>
+    </>
   );
 };
 
