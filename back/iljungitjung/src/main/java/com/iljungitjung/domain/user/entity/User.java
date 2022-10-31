@@ -3,16 +3,15 @@ package com.iljungitjung.domain.user.entity;
 
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.schedule.entity.Schedule;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.iljungitjung.global.login.entity.TemporaryUser;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class User {
 
@@ -21,14 +20,24 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
+    @Column(unique = true)
     private String nickname;
+
+    @Column(unique = true)
     private String phonenum;
+
     private String imagePath;
+
     private String kakaoToken;
+
     private String openTime;
+
     private String closeTime;
 
+    @Column(unique = true)
     private String email;
+
+    private String description;
 
     @OneToMany(mappedBy = "userTo", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Schedule> scheduleRequestList = new ArrayList<>();
@@ -39,8 +48,13 @@ public class User {
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Category> categoryList = new ArrayList<>();
 
+    public void signUp(TemporaryUser temporaryUser){
+        this.email = temporaryUser.getEmail();
+        this.kakaoToken = temporaryUser.getRefreshToken();
+    }
+
     @Builder
-    public User(String nickname, String phonenum, String imagePath, String kakaoToken, String openTime, String closeTime, String email) {
+    public User(String nickname, String phonenum, String imagePath, String kakaoToken, String openTime, String closeTime, String email, String description) {
         this.nickname = nickname;
         this.phonenum = phonenum;
         this.imagePath = imagePath;
@@ -48,5 +62,6 @@ public class User {
         this.openTime = openTime;
         this.closeTime = closeTime;
         this.email = email;
+        this.description = description;
     }
 }

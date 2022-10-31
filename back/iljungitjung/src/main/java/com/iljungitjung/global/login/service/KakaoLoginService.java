@@ -1,8 +1,12 @@
 package com.iljungitjung.global.login.service;
 
-import com.iljungitjung.domain.user.entity.User;
+import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.service.UserService;
+import com.iljungitjung.global.login.entity.RedisUser;
+import com.iljungitjung.global.login.entity.TemporaryUser;
 import com.iljungitjung.global.login.exception.NotMemberException;
+import com.iljungitjung.global.login.repository.RedisUserRepository;
+import com.iljungitjung.global.login.repository.TemporaryUserRepository;
 import com.iljungitjung.global.oauth.dto.KakaoTokenResponseDto;
 import com.iljungitjung.global.oauth.dto.KakaoUserInfoResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +23,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 @Service
 @RequestMapping
@@ -49,6 +52,9 @@ public class KakaoLoginService implements LoginService{
     private String OAUTH_TOKEN_PATH;
 
     private final UserService userService;
+
+    private final TemporaryUserRepository temporaryUserRepository;
+    private final RedisUserRepository redisUserRepository;
 
     private String createUri(){
         return UriComponentsBuilder.newInstance().scheme("https")
@@ -102,10 +108,25 @@ public class KakaoLoginService implements LoginService{
         ResponseEntity<KakaoUserInfoResponseDto> responseEntity = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, entity, KakaoUserInfoResponseDto.class);
         log.debug("responseEntity : {}", responseEntity.getBody());
 
-        if(!userService.isExistUserByEmail(responseEntity.getBody().getKakaoAccount().getEmail())) throw new NotMemberException();
+        if(!userService.isExistUserByEmail(responseEntity.getBody().getKakaoAccount().getEmail())) {
+            TemporaryUser temporaryUser = TemporaryUser.builder()
+                    .id(session.getId())
+                    .email(responseEntity.getBody().getKakaoAccount().getEmail())
+                    .refreshToken(kakaoTokenResponse.getBody().getRefreshToken())
+                    .build();
+            temporaryUserRepository.save(temporaryUser);
+            throw new NotMemberException();
+        }
 
         log.debug("session id : {}", session.getId());
 
+        RedisUser redisUser = RedisUser.builder()
+                .id(session.getId())
+                .build();
+        redisUser.setDataFromUser(userService.findUserByEmail(
+                responseEntity.getBody().getKakaoAccount().getEmail()
+        ).orElseThrow(() -> {throw new NoExistUserException();}));
+        redisUserRepository.save(redisUser);
         try {
             response.sendRedirect(clientUri);
         } catch (Exception e) {
