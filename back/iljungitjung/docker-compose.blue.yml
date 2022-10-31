@@ -5,6 +5,9 @@ services:
     ports:
       - "9090:8080"
     container_name: iljungitjung_server_blue
-    networks:
-      ijij:
-        ipv4_address: 172.16.238.1
+    extra_hosts:
+      - host.docker.internal:host-gateway
+#    networks:
+#      ijij:
+#        ipv4_address: 172.16.238.1
+

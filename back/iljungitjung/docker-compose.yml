@@ -9,18 +9,22 @@ services:
       - 443:443
     volumes:
       - "/home/ubuntu/docker-volume/ssl:/ssl"
-    networks:
-      ijij:
-        ipv4_address: 172.16.238.2
+    extra_hosts:
+      - host.docker.internal:host-gateway
+#    networks:
+#      ijij:
+#        ipv4_address: 172.16.238.2
 
   redis:
     image: redis:alpine
     restart: unless-stopped
     ports:
       - 6379:6379
-    networks:
-      ijij:
-        ipv4_address: 172.16.238.3
+    extra_hosts:
+      - host.docker.internal:host-gateway
+#    networks:
+#      ijij:
+#        ipv4_address: 172.16.238.3
 
   database:
     image: mariadb
@@ -36,14 +40,16 @@ services:
       MARIADB_PASSWORD: ijij
       MARIADB_ROOT_PASSWORD: ijij
         - TZ=Asia/Seoul
-    networks:
-      ijij:
-        ipv4_address: 172.16.238.4
+      extra_hosts:
+        - host.docker.internal:host-gateway
+#    networks:
+#      ijij:
+#        ipv4_address: 172.16.238.4
 
-networks:
-  ijij:
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.16.238.0/24
+#networks:
+#  ijij:
+#    ipam:
+#      driver: default
+#      config:
+#        - subnet: 172.16.238.0/24
 
