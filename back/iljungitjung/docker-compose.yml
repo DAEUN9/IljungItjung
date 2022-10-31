@@ -4,7 +4,7 @@ services:
 
   webserver:
     image: nginx
-    restart: always
+    restart: unless-stopped
     ports:
       - 443:443
     volumes:
@@ -15,7 +15,7 @@ services:
 
   redis:
     image: redis:alpine
-    restart: always
+    restart: unless-stopped
     ports:
       - 6379:6379
     networks:
@@ -24,7 +24,7 @@ services:
 
   database:
     image: mariadb
-    restart: always
+    restart: unless-stopped
     ports:
       - 3306:3306
     volumes:
