@@ -4,6 +4,24 @@
   @include page-default();
 }
 
+.editmodal{
+  margin: auto;
+
+  & .picturebox{
+    display: flex;
+    justify-content: center;
+    
+    & .picture{
+      width: 50%;
+      height: 50%;
+    }
+  }
+
+  & .textbox{
+    text-align: center;
+  }
+}
+
 .left{
   width: 40%;
   display: flex;
