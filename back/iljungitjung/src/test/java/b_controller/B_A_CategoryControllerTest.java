@@ -1,13 +1,10 @@
+package b_controller;
+
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
-import com.iljungitjung.domain.category.service.CategoryService;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -17,22 +14,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.mockito.ArgumentMatchers.any;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class B_CategoryControllerTest extends AbstractControllerTest{
+@DisplayName("카테고리 컨트롤러")
+public class B_A_CategoryControllerTest extends AbstractControllerTest{
 
-    @MockBean
-    private CategoryService categoryService;
 
     @Test
-    @Order(1)
-    public void 카테고리_등록_컨트롤러() throws Exception {
+    @DisplayName("카테고리 등록")
+    public void A() throws Exception {
 
         //given
-        CategoryCreateRequestDto requestDto = new CategoryCreateRequestDto("커트", "0130", "#000000");
-        CategoryIdResponseDto responseDto = new CategoryIdResponseDto(categoryId+1);
+        String categoryName = "커트4";
+        String time = "0130";
+        String color = "#000000";
 
-        Mockito.when(categoryService.addCategory(any(CategoryCreateRequestDto.class))).thenReturn(responseDto);
+        CategoryCreateRequestDto categoryCreateRequestDto = new CategoryCreateRequestDto(categoryName, time, color);
+        CategoryIdResponseDto categoryIdResponseDto = new CategoryIdResponseDto(categoryId+1);
 
-        String requestAsString = objectMapper.writeValueAsString(requestDto);
+        Mockito.when(categoryService.addCategory(any(CategoryCreateRequestDto.class))).thenReturn(categoryIdResponseDto);
+
+        String requestAsString = objectMapper.writeValueAsString(categoryCreateRequestDto);
 
 
         //when
@@ -47,16 +47,20 @@ public class B_CategoryControllerTest extends AbstractControllerTest{
         categoryId++;
     }
     @Test
-    @Order(2)
-    public void 카테고리_수정_컨트롤러() throws Exception {
+    @DisplayName("카테고리 수정")
+    public void B() throws Exception {
 
         //given
-        CategoryEditRequestDto requestDto = new CategoryEditRequestDto(categoryId, "커트 수정", "0200", "#111111");
-        CategoryIdResponseDto responseDto = new CategoryIdResponseDto(categoryId);
+        String categoryName = "커트 수정4";
+        String time = "0200";
+        String color = "#111111";
 
-        Mockito.when(categoryService.updateCategory(any(CategoryEditRequestDto.class))).thenReturn(responseDto);
+        CategoryEditRequestDto categoryEditRequestDto = new CategoryEditRequestDto(categoryId, categoryName, time, color);
+        CategoryIdResponseDto categoryIdResponseDto = new CategoryIdResponseDto(categoryId);
 
-        String requestAsString = objectMapper.writeValueAsString(requestDto);
+        Mockito.when(categoryService.updateCategory(any(CategoryEditRequestDto.class))).thenReturn(categoryIdResponseDto);
+
+        String requestAsString = objectMapper.writeValueAsString(categoryEditRequestDto);
 
 
         //when
@@ -71,14 +75,14 @@ public class B_CategoryControllerTest extends AbstractControllerTest{
 
     }
     @Test
-    @Order(3)
+    @DisplayName("카테고리 삭제")
     public void 카테고리_삭제_컨트롤러() throws Exception {
 
 
         //given
-        CategoryIdResponseDto responseDto = new CategoryIdResponseDto(categoryId);
+        CategoryIdResponseDto categoryIdResponseDto = new CategoryIdResponseDto(categoryId);
 
-        Mockito.when(categoryService.deleteCategory(any(categoryId.getClass()))).thenReturn(responseDto);
+        Mockito.when(categoryService.deleteCategory(any(categoryId.getClass()))).thenReturn(categoryIdResponseDto);
 
         //when
         ResultActions actions = mockMvc.perform(delete("/categories/" + categoryId)

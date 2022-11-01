@@ -1,47 +1,59 @@
+package a_service;
+
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationIdResponseDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDetailResponseDto;
-import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewRequestDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
 import org.junit.jupiter.api.*;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class A_ScheduleServiceTest extends AbstractServiceTest{
+@DisplayName("스케줄 서비스")
+public class A_C_ScheduleServiceTest extends AbstractServiceTest{
 
 
 
     @Test
-    @Order(1)
-    public void 카테고리_등록_서비스() throws Exception {
+    @DisplayName("카테고리 등록")
+    public void A() throws Exception {
 
         //given
+        String categoryName = "커트3";
+        String time = "0130";
+        String color = "#000000";
+
         CategoryCreateRequestDto categoryCreateRequestDto = new CategoryCreateRequestDto(
-                "커트", "0130", "#000000");
+                categoryName, time, color);
 
         //when
         CategoryIdResponseDto categoryIdResponseDto = categoryService.addCategory(categoryCreateRequestDto);
 
         //then
         categoryId++;
-        System.out.println(categoryIdResponseDto.getId() + ", " + categoryId);
         Assertions.assertEquals(categoryIdResponseDto.getId(), categoryId);
 
     }
 
     @Test
-    @Order(2)
-    public void 일정_요청_서비스() throws Exception {
+    @DisplayName("일정 요청")
+    public void B() throws Exception {
 
         //given
-        ReservationRequestDto reservationRequestDto = new ReservationRequestDto("1", "2", "20221017", "1500", "안녕하세요", "01011111111", "커트");
+        String userFromNickname = "1";
+        String userToNickname = "2";
+        String date = "20221017";
+        String startTime = "1500";
+        String contents = "안녕하세요";
+        String phone = "01011111111";
+        String categoryName = "커트3";
 
+        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(
+                userFromNickname, userToNickname, date,
+                startTime, contents, phone,
+                categoryName);
         //when
         ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationRequest(reservationRequestDto);
 
@@ -52,11 +64,19 @@ public class A_ScheduleServiceTest extends AbstractServiceTest{
     }
 
     @Test
-    @Order(3)
-    public void 일정_차단_요청_서비스() throws Exception {
+    @DisplayName("일정 차단")
+    public void C() throws Exception {
 
         //given
-        ReservationBlockRequestDto reservationBlockRequestDto = new ReservationBlockRequestDto("1", "공휴일", "공휴일이라서 쉽니다.", "20221017", "1500", "1630");
+        String userFromNickname = "1";
+        String title = "공휴일";
+        String contents = "공휴일이라서 쉽니다.";
+        String date = "20221017";
+        String startTime = "1500";
+        String endTime = "1630";
+
+        ReservationBlockRequestDto reservationBlockRequestDto = new ReservationBlockRequestDto(
+                userFromNickname, title, contents, date, startTime, endTime);
 
         //when
         ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationBlock(reservationBlockRequestDto);
@@ -68,23 +88,27 @@ public class A_ScheduleServiceTest extends AbstractServiceTest{
     }
 
     @Test
-    @Order(4)
-    public void 일정_리스트_조회_서비스() throws Exception {
+    @DisplayName("일정 리스트 조회")
+    public void D() throws Exception {
 
         //given
-
+        String nickname = "1";
+        String startDate = "20221017";
+        String endDate = "20221018";
+        boolean isMyView = false;
         //when
-        ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView("1", new ScheduleViewRequestDto("20221017", "20221017"));
+        ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView(nickname, startDate, endDate, isMyView);
 
         //then
         int sum = scheduleViewResponseDto.getRequestList().size()+scheduleViewResponseDto.getBlockList().size()+scheduleViewResponseDto.getAcceptList().size()+scheduleViewResponseDto.getCancelList().size();
+
         Assertions.assertEquals(sum, scheduleId);
 
 
     }
     @Test
-    @Order(5)
-    public void 일정_상세_조회_서비스() throws Exception {
+    @DisplayName("일정 상세 조회")
+    public void E() throws Exception {
         //given
 
         //when
@@ -94,8 +118,8 @@ public class A_ScheduleServiceTest extends AbstractServiceTest{
         Assertions.assertEquals(scheduleViewDetailResponseDto.getId(), scheduleId);
     }
     @Test
-    @Order(6)
-    public void 카테고리_삭제_서비스() throws Exception {
+    @DisplayName("카테고리 삭제")
+    public void F() throws Exception {
         //given
 
         //when

@@ -1,3 +1,5 @@
+package a_service;
+
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
@@ -6,35 +8,43 @@ import org.junit.jupiter.api.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class A_CategoryServiceTest extends AbstractServiceTest{
+@DisplayName("카테고리 서비스")
+public class A_A_CategoryServiceTest extends AbstractServiceTest{
 
 
 
     @Test
-    @Order(1)
-    public void 카테고리_등록_서비스() throws Exception {
+    @DisplayName("카테고리 등록")
+    public void A() throws Exception {
 
         //given
+        String categoryName = "커트1";
+        String time = "0130";
+        String color = "#000000";
+
         CategoryCreateRequestDto categoryCreateRequestDto = new CategoryCreateRequestDto(
-                "커트", "0130", "#000000");
+                categoryName, time, color);
 
         //when
         CategoryIdResponseDto categoryIdResponseDto = categoryService.addCategory(categoryCreateRequestDto);
 
         //then
         categoryId++;
-        System.out.println(categoryIdResponseDto.getId() + ", " + categoryId);
         Assertions.assertEquals(categoryIdResponseDto.getId(), categoryId);
 
     }
     @Test
-    @Order(2)
-    public void 카테고리_수정_서비스() throws Exception {
+    @DisplayName("카테고리 수정")
+    public void B() throws Exception {
 
 
         //given
+        String categoryName = "커트 수정1";
+        String time = "0200";
+        String color = "#111111";
+
         CategoryEditRequestDto categoryEditRequestDto = new CategoryEditRequestDto(
-                categoryId, "커트 수정", "0200", "#111111");
+                categoryId, categoryName, time, color);
 
         //when
         CategoryIdResponseDto categoryIdResponseDto = categoryService.updateCategory(categoryEditRequestDto);
@@ -43,8 +53,8 @@ public class A_CategoryServiceTest extends AbstractServiceTest{
         Assertions.assertEquals(categoryIdResponseDto.getId(), categoryId);
     }
     @Test
-    @Order(3)
-    public void 카테고리_삭제_서비스() throws Exception {
+    @DisplayName("카테고리 삭제")
+    public void C() throws Exception {
 
         //given
 
