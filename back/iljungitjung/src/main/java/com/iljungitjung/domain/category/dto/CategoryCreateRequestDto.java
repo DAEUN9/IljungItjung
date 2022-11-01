@@ -14,12 +14,10 @@ public class CategoryCreateRequestDto {
     @NotBlank(message = "categoryName은 비워둘 수 없습니다.")
     private String categoryName;
 
-    @NotBlank(message = "time은 비워둘 수 없습니다.")
-    @Size(min=4, max=4)
+    @Size(min=4, max=4, message = "형식을 맞춰주세요 (ex.0130)")
     private String time;
 
-    @NotBlank(message = "color는 비워둘 수 없습니다.")
-    @Size(min=7, max=7)
+    @Size(min=7, max=7, message = "형식을 맞춰주세요 (ex.#000000)")
     private String color;
 
     public Category toCategoryEntity(CategoryCreateRequestDto categoryCreateRequestDto){

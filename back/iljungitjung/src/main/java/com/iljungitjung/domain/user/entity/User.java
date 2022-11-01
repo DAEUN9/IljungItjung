@@ -39,6 +39,8 @@ public class User {
 
     private String description;
 
+    private List<String> tag = new ArrayList<>();
+
     @OneToMany(mappedBy = "userTo", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Schedule> scheduleRequestList = new ArrayList<>();
 

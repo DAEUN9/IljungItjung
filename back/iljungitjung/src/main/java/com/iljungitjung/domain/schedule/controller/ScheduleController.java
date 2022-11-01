@@ -19,11 +19,9 @@ public class ScheduleController {
 
     @GetMapping("/{nickname}")
     public ResponseEntity<CommonResponse> scheduleView(@PathVariable("nickname") String nickname,
-                                                       @NotBlank(message = "startDate는 비워둘 수 없습니다.")
-                                                       @Size(min=8, max=8)
+                                                       @Size(min=8, max=8, message = "형식을 맞춰주세요 (ex.20221017)")
                                                        @RequestParam("startDate") String startDate,
-                                                       @NotBlank(message = "endDate는 비워둘 수 없습니다.")
-                                                       @Size(min=8, max=8)
+                                                       @Size(min=8, max=8, message = "형식을 맞춰주세요 (ex.20221017)")
                                                        @RequestParam("endDate") String endDate,
                                                        @NotNull(message = "isMyView는 true 또는 false 입니다.")
                                                        @RequestParam("isMyView") boolean isMyView){
