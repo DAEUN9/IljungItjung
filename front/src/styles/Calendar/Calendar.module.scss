@@ -1,6 +1,7 @@
 @use "../common/utils.module" as *;
 
 $gray: #3d3d3d;
+$light-gray: #f5f5f5;
 
 .calendar-page {
   @include page-default();
@@ -8,6 +9,8 @@ $gray: #3d3d3d;
 
 .content {
   width: 100%;
+  height: 100%;
+  display: flex;
 }
 
 .calendar-container {
@@ -75,13 +78,13 @@ $gray: #3d3d3d;
 
 /* Weekview */
 .timeTableCell {
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background-color: unset !important;
   }
 }
 
 /* appointment */
-
 .appointment {
   &-category {
     color: black;
@@ -152,4 +155,131 @@ $gray: #3d3d3d;
   width: 36px !important;
   height: 36px !important;
   margin-right: 10px;
+}
+
+/* info profile */
+.info {
+  height: 100%;
+  width: 100%;
+}
+
+.profile {
+  margin: 15px;
+  height: 270px;
+
+  &-inner {
+    height: 100%;
+    background-color: $light-gray;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-title {
+    display: flex;
+    padding: 20px;
+
+    & img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+  }
+
+  &-my {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10px;
+
+    & div {
+      &:first-child {
+        font-size: 27px;
+        font-weight: 900;
+      }
+
+      &:nth-child(2) {
+        margin-top: 5px;
+        padding-left: 5px;
+      }
+    }
+  }
+
+  &-desc {
+    padding: 0 20px;
+    font-size: 0.9em;
+  }
+}
+
+/* info tab */
+.tab {
+  $profile-height: 300px;
+  $tab-button-height: 48px;
+  $inner-padding: 25px;
+  $tab-height: calc(100vh - $tab-button-height - $profile-height - $inner-padding);
+  
+  height: $tab-height;
+  background-color: $light-gray;
+  border-radius: 15px;
+
+  overflow-y: overlay;
+  overflow-x: hidden;
+
+  @include custom-scroll();
+
+
+  &-inner {
+    padding: $inner-padding;
+    height: calc($tab-height - $inner-padding * 2);
+  }
+}
+
+.info-item {
+  padding-bottom: 15px;
+
+  &:last-child {
+    padding-bottom: 30px;
+  }
+
+  > div {
+    width: unset;
+    margin: unset;
+  }
+
+  &-inner {
+    display: flex;
+    margin-top: 10px;
+
+    & svg {
+      padding-top: 3px !important;
+    }
+  }
+
+  &-content {
+    color: #565656;
+    margin-left: 10px;
+    width: 450px;
+  }
+}
+
+.request {
+  &-buttons {
+    display: flex;
+    justify-content: end;
+  
+    > button {
+      width: 80px;
+  
+      &:last-child {
+        margin-left: 10px;
+      }
+    }
+  }
+
+  &-text-length {
+    font-size: 13px;
+    color: gray;
+    text-align: end;
+    margin-bottom: 10px;
+  }
 }

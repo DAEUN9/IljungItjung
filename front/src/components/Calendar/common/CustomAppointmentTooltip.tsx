@@ -3,7 +3,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import { FaRegClock, FaUserAlt, FaPhoneAlt, FaPen } from 'react-icons/fa';
 
 import styles from '@styles/Calendar/Calendar.module.scss';
-import { days } from './util';
+import { days, formatTime } from './util';
 
 const formatDate = (preDate: string | undefined) => {
   if (typeof preDate === 'undefined') return;
@@ -19,43 +19,6 @@ const formatDate = (preDate: string | undefined) => {
     year + '년 ' + (month + 1) + '월 ' + date + '일 ' + day + '요일';
 
   return fullDate;
-};
-
-const formatTime = (
-  startDate: string | undefined,
-  endDate: string | undefined
-) => {
-  if (typeof startDate === 'undefined' || typeof endDate === 'undefined')
-    return;
-
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-
-  let startHour = start.getHours();
-  const startMinutes =
-    start.getMinutes() < 10
-      ? '0' + start.getMinutes().toString()
-      : start.getMinutes().toString();
-
-  let endHour = end.getHours();
-  const endMinutes =
-    end.getMinutes() < 10
-      ? '0' + end.getMinutes().toString()
-      : end.getMinutes().toString();
-
-  let startTime = startHour < 12 ? '오전 ' : '오후 ';
-  if (startHour > 12) {
-    startHour -= 12;
-  }
-  startTime += startHour + ':' + startMinutes;
-
-  let endTime = endHour < 12 ? '오전 ' : '오후 ';
-  if (endHour > 12) {
-    endHour -= 12;
-  }
-  endTime += endHour + ':' + endMinutes;
-
-  return startTime + ' - ' + endTime;
 };
 
 export default function CustomAppointmentTooltip() {
