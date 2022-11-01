@@ -22,11 +22,11 @@ public class ReservationBlockRequestDto {
     @Size(min=8, max=8)
     private String date;
 
-    @NotBlank(message = "date는 비워둘 수 없습니다.")
+    @NotBlank(message = "startTime은 비워둘 수 없습니다.")
     @Size(min=4, max=4)
     private String startTime;
 
-    @NotBlank(message = "date는 비워둘 수 없습니다.")
+    @NotBlank(message = "endTime은 비워둘 수 없습니다.")
     @Size(min=4, max=4)
     private String endTime;
 
