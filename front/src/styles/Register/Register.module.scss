@@ -2,7 +2,6 @@
 
 .register-page {
   @include page-default();
-
   display: flex;
   justify-content: space-between;
 }
