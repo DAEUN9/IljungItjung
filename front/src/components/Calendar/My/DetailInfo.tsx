@@ -53,13 +53,13 @@ const DetailInfo = (props: DetailIfnoProps) => {
         상세정보
       </AccordionSummary>
       <MuiAccordionDetails>
-        <div className={styles['upcoming-item-inner']}>
+        <div className={styles['info-item-inner']}>
           <FaPhoneAlt />
-          <div className={styles['upcoming-item-content']}>{phone}</div>
+          <div className={styles['info-item-content']}>{phone}</div>
         </div>
-        <div className={styles['upcoming-item-inner']}>
+        <div className={styles['info-item-inner']}>
           <FaPen />
-          <div className={styles['upcoming-item-content']}>{desc}</div>
+          <div className={styles['info-item-content']}>{desc}</div>
         </div>
       </MuiAccordionDetails>
     </Accordion>

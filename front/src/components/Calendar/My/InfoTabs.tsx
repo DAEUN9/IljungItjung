@@ -76,9 +76,7 @@ const InfoTabs = () => {
         </CustomTabs>
       </div>
       <UpcomingTab value={value} index={0} />
-      <RequestTab value={value} index={1}>
-        요청
-      </RequestTab>
+      <RequestTab value={value} index={1} />
     </Box>
   );
 };

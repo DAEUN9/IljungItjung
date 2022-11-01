@@ -1,8 +1,13 @@
+import { useSelector } from 'react-redux';
+
 import styles from '@styles/Calendar/Calendar.module.scss';
 import { TabPanelProps } from '@components/Calendar/common/util';
+import { RootState } from '@modules/index';
+import RequestItem from './RequestItem';
 
 const RequestTab = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
+  const request = useSelector((state: RootState) => state.mycalendar.request);
 
   return (
     <div
@@ -13,7 +18,13 @@ const RequestTab = (props: TabPanelProps) => {
       aria-labelledby={`tab-${index}`}
       {...other}
     >
-      {value === index && <div className={styles['tab-inner']}>{children}</div>}
+      {value === index && (
+        <div className={styles['tab-inner']}>
+          {request?.map((item) => (
+            <RequestItem key={item.id} item={item} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
