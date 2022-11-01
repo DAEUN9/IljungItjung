@@ -8,6 +8,7 @@ import UpcomingItem from './UpcomingItem';
 const UpcomingTab = (props: TabPanelProps) => {
   const { value, index, ...other } = props;
   const list = useSelector((state: RootState) => state.mycalendar.list);
+  console.log(list);
 
   return (
     <div
@@ -20,9 +21,7 @@ const UpcomingTab = (props: TabPanelProps) => {
     >
       {value === index && (
         <div className={styles['tab-inner']}>
-          <UpcomingItem />
-          <UpcomingItem />
-          <UpcomingItem />
+          {list?.map((item) => <UpcomingItem key={item.id} item={item} />)}
         </div>
       )}
     </div>

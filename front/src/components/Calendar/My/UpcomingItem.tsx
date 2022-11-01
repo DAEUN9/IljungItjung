@@ -1,14 +1,23 @@
-import { useState } from 'react';
 import { MdExpandMore } from 'react-icons/md';
 import { FaPhoneAlt, FaPen } from 'react-icons/fa';
+import MuiAccordion from '@mui/material/Accordion';
+import MuiAccordionSummary from '@mui/material/AccordionSummary';
+import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import styled from '@emotion/styled';
 
 import styles from '@styles/Calendar/Calendar.module.scss';
 import Schedule from '@components/common/Schedule';
 import iljung from '@assets/defaultImg.png';
-import MuiAccordion from '@mui/material/Accordion';
-import MuiAccordionSummary from '@mui/material/AccordionSummary';
-import MuiAccordionDetails from '@mui/material/AccordionDetails';
+import { SchedulerDate, formatTime } from '@components/Calendar/common/util';
+
+interface UpcomingItemProps {
+  item: SchedulerDate;
+}
+
+interface DetailIfnoProps {
+  phone: string;
+  desc: string;
+}
 
 const Accordion = styled(MuiAccordion)`
   box-shadow: unset;
@@ -38,7 +47,9 @@ const AccordionSummary = styled(MuiAccordionSummary)`
   }
 `;
 
-const DetailInfo = () => {
+const DetailInfo = (props: DetailIfnoProps) => {
+  const { phone, desc } = props;
+
   return (
     <Accordion sx={{ marginTop: '10px' }}>
       <AccordionSummary
@@ -51,28 +62,31 @@ const DetailInfo = () => {
       <MuiAccordionDetails>
         <div className={styles['upcoming-item-inner']}>
           <FaPhoneAlt />
-          <div className={styles['upcoming-item-content']}>010-1111-1111</div>
+          <div className={styles['upcoming-item-content']}>{phone}</div>
         </div>
         <div className={styles['upcoming-item-inner']}>
           <FaPen />
-          <div className={styles['upcoming-item-content']}>요청사항이 너무 길어서 줄바꿈이 되면 어떻게 보일까요 요청사항이 너무 길어서 줄바꿈이 되면 어떻게 보일까요</div>
+          <div className={styles['upcoming-item-content']}>{desc}</div>
         </div>
       </MuiAccordionDetails>
     </Accordion>
   );
 };
 
-const UpcomingItem = () => {
+const UpcomingItem = ({ item }: UpcomingItemProps) => {
+  const { color, startDate, endDate, title, nickname, phone, desc } = item;
+  const time = formatTime(startDate?.toString(), endDate?.toString());
+
   return (
     <div className={styles['upcoming-item']}>
       <Schedule
-        color="blue"
-        time="시간"
+        color={color}
+        time={time ?? '-'}
         userId="유저아이디"
-        userName="유저명"
-        category="카테고리"
+        userName={nickname}
+        category={title ?? '-'}
         userImg={iljung}
-        render={DetailInfo}
+        render={() => <DetailInfo phone={phone} desc={desc} />}
       />
     </div>
   );
