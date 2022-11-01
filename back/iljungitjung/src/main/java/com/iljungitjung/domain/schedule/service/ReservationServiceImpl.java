@@ -3,14 +3,16 @@ package com.iljungitjung.domain.schedule.service;
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationIdResponseDto;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
+import com.iljungitjung.domain.schedule.dto.reservation.*;
+import com.iljungitjung.domain.schedule.dto.schedule.ScheduleBlockDto;
+import com.iljungitjung.domain.schedule.dto.schedule.ScheduleCancelDto;
+import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDto;
+import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
+import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.exception.NoExistUserException;
@@ -20,8 +22,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +72,7 @@ public class ReservationServiceImpl implements ReservationService{
 
     @Override
     @Transactional
-    public ReservationIdResponseDto reservationManage(Long id, ReservationManageRequestDto reservationManageRequestDto) {
+    public ReservationIdResponseDto reservationManage(Long id, String nickname, ReservationManageRequestDto reservationManageRequestDto) {
         //현재 아이디가 해당 예약의 주인일 때만 가능 추가 필수
         /*
 
@@ -79,9 +83,22 @@ public class ReservationServiceImpl implements ReservationService{
         if(reservationManageRequestDto.isAccept()){
             schedule.accpeted();
         }else{
-            schedule.canceled(reservationManageRequestDto.getReason());
+            String cancelFrom = "";
+            if(nickname.equals(schedule.getUserFrom().getNickname()))
+                cancelFrom="사용자";
+            else
+                cancelFrom="제공자";
+            schedule.canceled(cancelFrom, reservationManageRequestDto.getReason());
         }
         return new ReservationIdResponseDto(schedule.getId());
+    }
+
+    @Override
+    public ReservationIdResponseDto reservationDelete(Long id, String reason) {
+        Schedule schedule = scheduleRepository.findScheduleById(id).get();
+        Long scheduleId = schedule.getId();
+        scheduleRepository.delete(schedule);
+        return new ReservationIdResponseDto(scheduleId);
     }
 
     @Override
@@ -105,10 +122,51 @@ public class ReservationServiceImpl implements ReservationService{
         User user = userRepository.findUserByNickname(reservationBlockRequestDto.getUserFromNickname()).get();
 
         Schedule schedule = reservationBlockRequestDto.toScheduleEntity(reservationBlockRequestDto, startDate, endDate);
-        schedule.setScheduleRequestList(user);
+        schedule.setScheduleResponseList(user);
         schedule = scheduleRepository.save(schedule);
         return new ReservationIdResponseDto(schedule.getId());
 
+    }
+
+    @Override
+    public ReservationViewResponseDto reservationView(String nickname, String startDate, String endDate) {
+        //닉네임으로 유저 조회
+        ReservationViewResponseDto responseDtos;
+
+        Date startDateFormat;
+        Date endDateFormat;
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+        try{
+            startDateFormat = formatter.parse(startDate+"0000");
+            endDateFormat = formatter.parse(endDate+"2359");
+        }catch (Exception e){
+            throw new DateFormatErrorException();
+        }
+
+        try{
+            List<Schedule> scheduleList;
+            scheduleList = scheduleRepository.findByUserFrom_NicknameIs(nickname);
+
+            List<ReservationViewDto> requestList = new ArrayList<>();
+            List<ReservationViewDto> acceptList = new ArrayList<>();
+            List<ReservationCancelViewDto> cancelList = new ArrayList<>();
+            for(Schedule schedule : scheduleList){
+                if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().after(endDateFormat)) continue;
+                if(schedule.getType().equals(Type.REQUEST)){
+                    requestList.add(new ReservationViewDto(schedule));
+                }else if(schedule.getType().equals(Type.ACCEPT)){
+                    acceptList.add(new ReservationViewDto(schedule));
+                }else if(schedule.getType().equals(Type.CANCEL)){
+                    cancelList.add(new ReservationCancelViewDto(schedule));
+                }
+            }
+            responseDtos = new ReservationViewResponseDto(requestList, acceptList, cancelList);
+        }catch (Exception e){
+            throw new NoExistScheduleException();
+        }
+
+        return responseDtos;
     }
 
 }

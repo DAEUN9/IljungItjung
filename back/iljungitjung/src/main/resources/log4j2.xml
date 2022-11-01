@@ -13,7 +13,10 @@
         <Logger name="org.springframework" level="info" additivity="false">
             <AppenderRef ref="console"></AppenderRef>
         </Logger>
-        <Root level="debug">
+        <Logger name="com.iljungitjung.domain" level="debug" additivity="false">
+            <AppenderRef ref="console"></AppenderRef>
+        </Logger>
+        <Root level="info">
             <AppenderRef ref="console"></AppenderRef>
         </Root>
     </Loggers>

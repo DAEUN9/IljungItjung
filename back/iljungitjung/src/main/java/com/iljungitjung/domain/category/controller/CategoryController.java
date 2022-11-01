@@ -10,10 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @RequiredArgsConstructor
 @RestController
-@Slf4j
 @RequestMapping(value = "/categories")
 public class CategoryController {
 
@@ -22,14 +23,14 @@ public class CategoryController {
     // user생기면 session으로 수정
     @PostMapping
     public ResponseEntity<CommonResponse> createCategory(
-            @RequestBody CategoryCreateRequestDto requestDto
+            @RequestBody @Valid CategoryCreateRequestDto requestDto
     ) {
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.addCategory(requestDto)), HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<CommonResponse> updateCategory(
-            @RequestBody CategoryEditRequestDto requestDto
+            @RequestBody @Valid CategoryEditRequestDto requestDto
     ) {
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.updateCategory(requestDto)), HttpStatus.OK);
     }
