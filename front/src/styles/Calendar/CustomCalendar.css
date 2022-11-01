@@ -11,18 +11,17 @@
 
 .MainLayout-container::-webkit-scrollbar {
   position: fixed;
-  width: 8px;
+  width: 7px;
 }
 
 .MainLayout-container::-webkit-scrollbar-thumb {
   position: fixed;
-  background: #d4d4d4;
+  background: #6b7bb19e;
   border-radius: 10px;
 }
 
 .MainLayout-container::-webkit-scrollbar-track {
   position: fixed;
-  background: #eeeeeeaa;
 }
 
 /* day scale */
