@@ -2,7 +2,71 @@
 
 .register-page {
   @include page-default();
+
+  display: flex;
+  justify-content: space-between;
 }
 
-.content {
+.left {
+  width: 50%;
+  margin-top: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  & .iljung {
+    width: 40%;
+    height: auto;
+  }
+
+  & .logo {
+    width: 10%;
+  }
+}
+
+.right {
+  width: 50%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & .content {
+    height: 70%;
+    width: 80%;
+
+    & .text {
+      text-align: start;
+      margin-bottom: 5%;
+
+      & .nickname {
+        width: 75%;
+        height: 32px;
+        margin-right: 2%;
+        padding: 0% 2%;
+      }
+
+      & .overlap {
+        background-color: white;
+        color: blue;
+      }
+
+      & .oneline {
+        width: 95%;
+        height: 32px;
+        overflow: auto;
+        padding: 0% 2%;
+      }
+
+      & .count {
+        display: flex;
+        justify-content: right;
+      }
+    }
+
+    & .startbtn {
+      width: 50%;
+      font-size: larger;
+    }
+  }
 }
