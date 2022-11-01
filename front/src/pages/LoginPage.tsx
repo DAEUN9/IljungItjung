@@ -3,6 +3,7 @@ import CustomCarousel from "@components/Login/CustomCarousel";
 import styles from "@styles/Login/Login.module.scss";
 import iljung from "@assets/iljung.png";
 import logo from "@assets/logo.png";
+import { getKakaoLogin } from "@api/login";
 
 const LoginPage = () => {
   return (
@@ -14,7 +15,7 @@ const LoginPage = () => {
       <div className={styles["right"]}>
         <div className={styles["welcome"]}>일정있정에 오신 것을 환영합니다.</div>
         <CustomCarousel />
-        <CustomButton size="large" color="secondary" className={styles["login"]}>임시 카카오 로그인</CustomButton>
+        <CustomButton size="large" color="secondary" className={styles["login"]} onClick={getKakaoLogin}>임시 카카오 로그인</CustomButton>
       </div>
     </div>
   );
