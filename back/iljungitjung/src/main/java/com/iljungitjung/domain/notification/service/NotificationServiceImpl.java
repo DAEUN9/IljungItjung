@@ -2,16 +2,16 @@ package com.iljungitjung.domain.notification.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iljungitjung.domain.notification.dto.NotificationMessageDto;
 import com.iljungitjung.domain.notification.dto.NotificationMessageRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
+import com.iljungitjung.domain.notification.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -23,54 +23,67 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService{
 
-    private String serviceId = "ncp:sms:kr:295312521772:iljungitjung";
-    private String accessKey = "aHxToIxJrQW0FMKaPuti";
-    private String secretKey = "mdgyeLFHRy1HXZYooYonNmrbM5vOhHDm34JvPG5Z";
+    @Value("${message.ncloud.service_id}")
+    private String serviceId;
+    @Value("${message.ncloud.access_key}")
+    private String accessKey;
+    @Value("${message.ncloud.secret_key}")
+    private String secretKey;
     @Override
     @Transactional
-    public NotificationResponseDto sendMessage(NotificationRequestDto requestDto) throws JsonProcessingException, URISyntaxException, UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+    public NotificationResponseDto sendMessage(NotificationRequestDto requestDto) {
         Long time = System.currentTimeMillis();
-        List<NotificationMessageDto> messages = new ArrayList<>();
-        String recipientPhoneNumber = requestDto.getRecipientPhoneNumber();
-        String content = requestDto.getContent();
-        String title = requestDto.getTitle();
-        messages.add(new NotificationMessageDto(recipientPhoneNumber, content));
 
-        NotificationMessageRequestDto notificationMessageRequestDto = new NotificationMessageRequestDto("SMS", "COMM", "82", "01071527518", "내용", messages);
+        NotificationMessageRequestDto notificationMessageRequestDto = new NotificationMessageRequestDto(requestDto);
+        // convert object to json
+        // jackson으로 파싱하면 argument가 없는 생성자를 찾지 못함
         ObjectMapper objectMapper = new ObjectMapper();
-        String jsonBody = objectMapper.writeValueAsString(notificationMessageRequestDto);
+        String jsonBody;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("x-ncp-apigw-timestamp", time.toString());
         headers.set("x-ncp-iam-access-key", accessKey);
-        String sig = makeSignature(time); //암호화
+        String sig = makeSignature(time);
         headers.set("x-ncp-apigw-signature-v2", sig);
 
-        HttpEntity<String> body = new HttpEntity<>(jsonBody,headers);
+        try {
+            // object -> json
+            jsonBody = objectMapper.writeValueAsString(notificationMessageRequestDto);
+        } catch (JsonProcessingException e) {
+            throw new ConvertToJsonErrorException();
+        }
+
+        HttpEntity<String> body = new HttpEntity<>(jsonBody, headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-        NotificationResponseDto notificationResponseDto = restTemplate.postForObject(new URI("https://sens.apigw.ntruss.com/sms/v2/services/"+serviceId+"/messages"), body, NotificationResponseDto.class);
+        NotificationResponseDto notificationResponseDto;
+        try {
+            notificationResponseDto = restTemplate.postForObject(new URI("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/messages"), body, NotificationResponseDto.class); // 반환타입
+        } catch (URISyntaxException e) {
+            throw new MessageUriSyntaxErrorException();
+        }
+        if (!(notificationResponseDto.getStatusCode().equals("202"))) {
+            throw new FailSendMessageException();
+        }
 
         return notificationResponseDto;
     }
 
-    public String makeSignature(Long time) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
-        String space = " ";					// one space
-        String newLine = "\n";					// new line
-        String method = "POST";					// method
-        String url = "/sms/v2/services/"+ serviceId+"/messages";	// url (include query string)
-        String timestamp = time.toString();			// current timestamp (epoch)
-//        String accessKey = "{accessKey}";			// access key id (from portal or Sub Account)
-//        String secretKey = "{secretKey}";
+    public String makeSignature(Long time) {
+        String space = " ";
+        String newLine = "\n";
+        String method = "POST";
+        String url = "/sms/v2/services/"+ serviceId+"/messages";
+        String timestamp = time.toString();
+        SecretKeySpec signingKey;
+        Mac mac;
+        byte[] rawHmac = new byte[0];
 
         String message = new StringBuilder()
                 .append(method)
@@ -82,11 +95,23 @@ public class NotificationServiceImpl implements NotificationService{
                 .append(accessKey)
                 .toString();
 
-        SecretKeySpec signingKey = new SecretKeySpec(secretKey.getBytes("UTF-8"), "HmacSHA256");
-        Mac mac = Mac.getInstance("HmacSHA256");
-        mac.init(signingKey);
+        try {
+            signingKey = new SecretKeySpec(secretKey.getBytes("UTF-8"), "HmacSHA256");
+            mac = Mac.getInstance("HmacSHA256");
+            mac.init(signingKey);
+        } catch (UnsupportedEncodingException e) {
+            throw new SecretKeyEncodingException();
+        } catch (NoSuchAlgorithmException e) {
+            throw new NoExistMacInstanceException();
+        } catch (InvalidKeyException e) {
+            throw new InvalidSigningKeyException();
+        }
 
-        byte[] rawHmac = mac.doFinal(message.getBytes("UTF-8"));
+        try {
+            rawHmac = mac.doFinal(message.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new MacFinalMessageEncodingException();
+        }
         String encodeBase64String = Base64.encodeBase64String(rawHmac);
 
         return encodeBase64String;
