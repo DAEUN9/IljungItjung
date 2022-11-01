@@ -1,12 +1,9 @@
 package com.iljungitjung.global.exceptionhandler;
 
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
-<<<<<<< back/iljungitjung/src/main/java/com/iljungitjung/global/exceptionhandler/ExceptionHandlerUtil.java
 import com.iljungitjung.domain.notification.exception.*;
-=======
 import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
->>>>>>> back/iljungitjung/src/main/java/com/iljungitjung/global/exceptionhandler/ExceptionHandlerUtil.java
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
 import com.iljungitjung.global.common.CommonResponse;
 import com.iljungitjung.global.login.exception.NotMemberException;
@@ -45,7 +42,6 @@ public class ExceptionHandlerUtil {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CommonResponse.getErrorResponse(e.getMessage()));
     }
 
-<<<<<<< back/iljungitjung/src/main/java/com/iljungitjung/global/exceptionhandler/ExceptionHandlerUtil.java
     @ExceptionHandler(ConvertToJsonErrorException.class)
     ResponseEntity<CommonResponse> handleConvertToJsonErrorException(BindingResult bindingResult){
         return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
