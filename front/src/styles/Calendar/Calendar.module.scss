@@ -156,7 +156,7 @@ $light-gray: #f5f5f5;
   margin-right: 10px;
 }
 
-/* info */
+/* info profile */
 .info {
   height: 100%;
   width: 100%;
@@ -207,5 +207,23 @@ $light-gray: #f5f5f5;
   &-desc {
     padding: 0 20px;
     font-size: 0.9em;
+  }
+}
+
+/* info tab */
+.tab {
+  $tab-height: 330px;
+  $inner-padding: 25px;
+
+  @include custom-scroll();
+  
+  height: $tab-height;
+  background-color: $light-gray;
+  border-radius: 15px;
+
+
+  &-inner {
+    padding: $inner-padding;
+    height: calc($tab-height - $inner-padding * 2);
   }
 }

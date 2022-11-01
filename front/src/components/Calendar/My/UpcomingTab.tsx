@@ -1,5 +1,4 @@
-import Box from '@mui/material/Box';
-
+import styles from '@styles/Calendar/Calendar.module.scss';
 import { TabPanelProps } from '@components/Calendar/common/util';
 
 const UpcomingTab = (props: TabPanelProps) => {
@@ -7,14 +6,14 @@ const UpcomingTab = (props: TabPanelProps) => {
 
   return (
     <div
-      className="upcoming-tab"
+      className={styles.tab}
       role="tabpanel"
       hidden={value !== index}
       id={`tabpanel-${index}`}
       aria-labelledby={`tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <div className={styles['tab-inner']}>{children}</div>}
     </div>
   );
 };
