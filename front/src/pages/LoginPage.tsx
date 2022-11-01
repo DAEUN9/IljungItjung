@@ -17,14 +17,15 @@ const LoginPage = () => {
           일정있정에 오신 것을 환영합니다.
         </div>
         <CustomCarousel />
-        <CustomButton
+        {/* <CustomButton
           size="large"
           color="secondary"
           className={styles["login"]}
           onClick={getKakaoLogin}
         >
           임시 카카오 로그인
-        </CustomButton>
+        </CustomButton> */}
+        <a href="/api/login/kakao">임시 카카오 로그인</a>
       </div>
     </div>
   );
