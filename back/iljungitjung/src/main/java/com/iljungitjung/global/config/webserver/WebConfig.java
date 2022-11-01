@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
