@@ -7,7 +7,7 @@ import mycalendar from "@modules/mycalendar";
 const rootReducer = combineReducers({
   reservation,
   search,
-  mycalendar
+  mycalendar,
 });
 
 export default rootReducer;
