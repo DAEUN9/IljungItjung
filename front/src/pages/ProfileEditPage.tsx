@@ -6,9 +6,6 @@ import PictureEdit from "@assets/PictureEdit.png";
 import React, { useState } from "react";
 import CustomModal from "@components/common/CustomModal";
 
-import { ref, getDownloadURL, uploadBytes, uploadBytesResumable } from "firebase/storage"
-import { storage } from "src/firebase";
-
 const ProfileEditPage = () => {
 
   // 한 줄 소개
@@ -63,7 +60,7 @@ const ProfileEditPage = () => {
             <img className={styles["picture"]} src={defaultImg} alt="임시사진" />
           </div>
           <h1 className={styles["name"]}>임시 이름</h1>
-          <CustomButton size="large" onClick={handleOpen}>저장하기</CustomButton>
+          <CustomButton className={styles["savebtn"]} onClick={handleOpen}>저장하기</CustomButton>
         </div>
       </div>
       <div className={styles["right"]}>
@@ -71,7 +68,7 @@ const ProfileEditPage = () => {
           <h2>닉네임</h2>
           <div className={styles["nicknameinput"]}>
             <input type="text" placeholder="2~10글자의 한글, 영어 대/소문자" maxLength={10} className={styles["nickname"]}></input>
-            <CustomButton className={styles["overlap"]}>중복 확인</CustomButton>
+            <CustomButton variant="outlined">중복 확인</CustomButton>
           </div>
           <br/><br/>
           <h2>한 줄 소개</h2>
@@ -82,7 +79,7 @@ const ProfileEditPage = () => {
           <textarea className={styles["explain"]} value={explain} onChange={count2} placeholder="상세 설명을 입력해주세요" maxLength={300}  />
           <span className={styles["count"]}>{explain.length}/300</span>
           <br/><br/>
-          <div className={styles["withdrow"]}>회원탈퇴</div>
+          <div className={styles["withdrow"]}>회원 탈퇴</div>
         </div>
       </div>
     </div>
