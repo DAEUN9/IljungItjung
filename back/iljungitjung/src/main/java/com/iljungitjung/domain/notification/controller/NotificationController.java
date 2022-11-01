@@ -20,6 +20,6 @@ public class NotificationController {
     public ResponseEntity<CommonResponse> createNotification(
             @RequestBody NotificationRequestDto requestDto
     ) {
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(notificationService.sendMessage(requestDto)), HttpStatus.OK);
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(""), HttpStatus.OK);
     }
 }

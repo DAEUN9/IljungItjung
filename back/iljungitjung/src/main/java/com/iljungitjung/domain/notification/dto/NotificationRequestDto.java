@@ -6,7 +6,6 @@ import java.util.List;
 
 @Getter
 public class NotificationRequestDto {
-    private String recipientPhoneNumber;
     private String content;
     private List<NotificationMessageDto> messages;
 }
