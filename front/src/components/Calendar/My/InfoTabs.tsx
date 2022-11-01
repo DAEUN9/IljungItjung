@@ -75,9 +75,7 @@ const InfoTabs = () => {
           <CustomTab label={getLabel()} {...a11yProps(1)} />
         </CustomTabs>
       </div>
-      <UpcomingTab value={value} index={0}>
-        다음 일정
-      </UpcomingTab>
+      <UpcomingTab value={value} index={0} />
       <RequestTab value={value} index={1}>
         요청
       </RequestTab>

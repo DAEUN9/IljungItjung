@@ -9,6 +9,7 @@ $light-gray: #f5f5f5;
 
 .content {
   width: 100%;
+  height: 100%;
   display: flex;
 }
 
@@ -214,16 +215,47 @@ $light-gray: #f5f5f5;
 .tab {
   $tab-height: 330px;
   $inner-padding: 25px;
-
-  @include custom-scroll();
   
   height: $tab-height;
   background-color: $light-gray;
   border-radius: 15px;
 
+  overflow-y: overlay;
+  overflow-x: hidden;
+
+  @include custom-scroll();
+
 
   &-inner {
     padding: $inner-padding;
     height: calc($tab-height - $inner-padding * 2);
+  }
+}
+
+.upcoming-item {
+  padding-bottom: 15px;
+
+  &:last-child {
+    padding-bottom: 30px;
+  }
+
+  > div {
+    width: unset;
+    margin: unset;
+  }
+
+  &-inner {
+    display: flex;
+    margin-top: 10px;
+
+    & svg {
+      padding-top: 3px !important;
+    }
+  }
+
+  &-content {
+    color: #565656;
+    margin-left: 10px;
+    width: 450px;
   }
 }
