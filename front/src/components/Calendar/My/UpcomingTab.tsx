@@ -1,14 +1,39 @@
 import { useSelector } from 'react-redux';
 
 import styles from '@styles/Calendar/Calendar.module.scss';
-import { TabPanelProps } from '@components/Calendar/common/util';
-import { RootState } from '@modules/index';
 import UpcomingItem from './UpcomingItem';
+import { SchedulerDate, TabPanelProps } from '@components/Calendar/common/util';
+import { RootState } from '@modules/index';
+
+const parseList = (list: SchedulerDate[] | undefined) => {
+  if(!list) return;
+
+  const today = new Date();
+  let parsed: SchedulerDate[] = [];
+
+  for(let item of list) {
+    const {startDate} = item;
+    if(!startDate) continue;
+
+    const start = new Date(startDate);
+    
+    if(start.getMonth() >= today.getMonth() && start.getDate() > today.getDate()) {
+      parsed.push(item);
+    }
+    else if(start.getDate() === today.getDate()) {
+      if(start.getHours() >= today.getHours() && start.getMinutes() >= today.getHours()) {
+        parsed.push(item);
+      }
+    }
+  }
+
+  return parsed;
+}
 
 const UpcomingTab = (props: TabPanelProps) => {
   const { value, index, ...other } = props;
   const list = useSelector((state: RootState) => state.mycalendar.list);
-  console.log(list);
+  const parsed = parseList(list);
 
   return (
     <div
@@ -21,7 +46,7 @@ const UpcomingTab = (props: TabPanelProps) => {
     >
       {value === index && (
         <div className={styles['tab-inner']}>
-          {list?.map((item) => <UpcomingItem key={item.id} item={item} />)}
+          {parsed?.map((item) => <UpcomingItem key={item.id} item={item} />)}
         </div>
       )}
     </div>
