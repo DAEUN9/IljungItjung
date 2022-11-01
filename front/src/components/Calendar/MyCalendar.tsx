@@ -15,6 +15,7 @@ import CustomDateNavigator from '@components/Calendar/common/CustomDateNavigator
 import CustomAppointments from '@components/Calendar/common/CustomAppointments';
 import CustomAppointmentTooltip from '@components/Calendar/common/CustomAppointmentTooltip';
 import Profile from '@components/Calendar/common/Profile';
+import InfoTabs from './My/InfoTabs';
 
 const data = [
   {
@@ -76,7 +77,7 @@ const MyCalendar = () => {
       </Paper>
       <div className={styles.info}>
         <Profile />
-        <div>예약목록</div>
+        <InfoTabs />
       </div>
     </>
   );
