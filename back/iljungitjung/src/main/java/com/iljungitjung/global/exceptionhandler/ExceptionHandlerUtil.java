@@ -1,6 +1,8 @@
 package com.iljungitjung.global.exceptionhandler;
 
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
+import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
+import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
 import com.iljungitjung.global.common.CommonResponse;
 import com.iljungitjung.global.login.exception.NotMemberException;
@@ -20,8 +22,16 @@ public class ExceptionHandlerUtil {
     ResponseEntity<CommonResponse> handleNoExistScheduleException(BindingResult bindingResult){
         return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
     }
+    @ExceptionHandler(NoExistScheduleDetailException.class)
+    ResponseEntity<CommonResponse> v(BindingResult bindingResult) {
+        return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
+    }
+    @ExceptionHandler(DateFormatErrorException.class)
+    ResponseEntity<CommonResponse> handleDateFormatErrorException(BindingResult bindingResult) {
+        return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
+    }
 
-    @ExceptionHandler(value={NoExistCategoryException.class})
+    @ExceptionHandler(NoExistCategoryException.class)
     ResponseEntity<CommonResponse> handleNoExistCategoryException(BindingResult bindingResult) {
         return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
     }
@@ -30,4 +40,5 @@ public class ExceptionHandlerUtil {
     ResponseEntity<CommonResponse> handleNotMemberException(NotMemberException e){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CommonResponse.getErrorResponse(e.getMessage()));
     }
+
 }
