@@ -1,36 +1,12 @@
 import { useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Badge from '@mui/material/Badge';
 import styled from '@emotion/styled';
-import { Badge } from '@mui/material';
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`tabpanel-${index}`}
-      aria-labelledby={`tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
+import UpcomingTab from './UpcomingTab';
+import RequestTab from './RequestTab';
 
 function a11yProps(index: number) {
   return {
@@ -80,7 +56,7 @@ const InfoTabs = () => {
       return '요청';
     } else {
       return (
-        <Badge color="warning" variant="dot" sx={{ padding: '2px' }}>
+        <Badge color="warning" variant="dot" sx={{ paddingRight: '3px' }}>
           요청
         </Badge>
       );
@@ -89,7 +65,7 @@ const InfoTabs = () => {
 
   return (
     <Box sx={{ margin: '15px' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <div>
         <CustomTabs
           value={value}
           onChange={handleChange}
@@ -98,13 +74,13 @@ const InfoTabs = () => {
           <CustomTab label="다음 일정" {...a11yProps(0)} />
           <CustomTab label={getLabel()} {...a11yProps(1)} />
         </CustomTabs>
-      </Box>
-      <TabPanel value={value} index={0}>
+      </div>
+      <UpcomingTab value={value} index={0}>
         다음 일정
-      </TabPanel>
-      <TabPanel value={value} index={1}>
+      </UpcomingTab>
+      <RequestTab value={value} index={1}>
         요청
-      </TabPanel>
+      </RequestTab>
     </Box>
   );
 };

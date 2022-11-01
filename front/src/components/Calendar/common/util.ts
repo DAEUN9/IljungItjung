@@ -24,6 +24,12 @@ export interface Resource {
   instances: Array<ResourceInstance>;
 };
 
+export interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
 export const days = ['일', '월', '화', '수', '목', '금', '토'];
 
 export const getDay = (nextDate: SchedulerDateTime | undefined, nextOptions: any) => {
