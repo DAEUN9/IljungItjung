@@ -2,29 +2,32 @@
 
 .login-page {
   @include page-default();
-  display: flex;
-  justify-content: space-between;
 }
 
 .left {
-	width: 50%;
-	margin-top: 10%;
+	width: 55%;
 	display: flex;
 	justify-content: center;
-	align-items: flex-start;
-
-	& .iljung{
-		width: 40%;
-		height: auto;
-	}
-
-	& .logo {
-		width: 10%;
+	align-items: center;
+  
+	& .picturebox{
+	  display: flex;
+	  justify-content: center;
+	  align-items: flex-start;
+  
+	  & .iljung{
+			width: 35%;
+			height: auto;
+	  }
+  
+	  & .logo {
+			width: 10%;	
+	  }
 	}
 }
 
 .right {
-	width: 50%;
+	width: 45%;
 	text-align: center;
 
 	& .welcome {
@@ -34,13 +37,7 @@
 	}
 
 	& .carousel {
-		margin: 0% 3%;
-	}
-
-	& .login {
-		background-color: yellow;
-		font-weight: bolder;
-		margin-top: 10%;
+		margin: 0% 3% 10%;
 	}
 
 }
