@@ -1,3 +1,4 @@
+/* type, interface */
 export declare type SchedulerDateTime = Date | number | string;
 
 export interface SchedulerDate {
@@ -30,8 +31,14 @@ export interface TabPanelProps {
   value: number;
 }
 
+export interface InfoItemProps {
+  item: SchedulerDate;
+}
+
+/* variables */
 export const days = ['일', '월', '화', '수', '목', '금', '토'];
 
+/* function */
 export const getDay = (nextDate: SchedulerDateTime | undefined, nextOptions: any) => {
   const date =
     typeof nextDate === 'object'
