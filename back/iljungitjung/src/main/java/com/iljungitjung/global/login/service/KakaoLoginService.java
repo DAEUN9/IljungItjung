@@ -51,6 +51,9 @@ public class KakaoLoginService implements LoginService{
     @Value("${oauth.kakao.token.path}")
     private String OAUTH_TOKEN_PATH;
 
+    @Value("${login.kakao.user_info_server_uri}")
+    private String USER_INFO_SERVER_URI;
+
     private final UserService userService;
 
     private final TemporaryUserRepository temporaryUserRepository;
@@ -97,36 +100,45 @@ public class KakaoLoginService implements LoginService{
         httpHeaders.setBearerAuth(accessToken);
         return httpHeaders;
     }
-    @Override
-    public void sendRedirectToClientUriWithEmail(String clientUri, String code, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+
+    private ResponseEntity<KakaoUserInfoResponseDto> getUserInfoFromKakaoServer(String code){
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<KakaoTokenResponseDto> kakaoTokenResponse = restTemplate.postForEntity(createTokenRequestUri(), createTokenRequestBody(code), KakaoTokenResponseDto.class);
         log.debug("kakaoTokenReponse : {}", kakaoTokenResponse.getBody());
 
         HttpEntity<String> entity = new HttpEntity<>(null, createUserInfoRequestHeader(kakaoTokenResponse.getBody().getAccessToken()));
+        return restTemplate.exchange(USER_INFO_SERVER_URI, HttpMethod.GET, entity, KakaoUserInfoResponseDto.class);
+    }
 
-        ResponseEntity<KakaoUserInfoResponseDto> responseEntity = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, entity, KakaoUserInfoResponseDto.class);
-        log.debug("responseEntity : {}", responseEntity.getBody());
-
+    private void checkIsUserEmailExistAtDatabase(ResponseEntity<KakaoUserInfoResponseDto> responseEntity, HttpSession session){
         if(!userService.isExistUserByEmail(responseEntity.getBody().getKakaoAccount().getEmail())) {
             TemporaryUser temporaryUser = TemporaryUser.builder()
                     .id(session.getId())
                     .email(responseEntity.getBody().getKakaoAccount().getEmail())
-                    .refreshToken(kakaoTokenResponse.getBody().getRefreshToken())
+                    .profileImg(responseEntity.getBody().getKakaoAccount().getKakaoUserProfile().getProfile_image_url())
                     .build();
             temporaryUserRepository.save(temporaryUser);
             throw new NotMemberException();
         }
+    }
 
-        log.debug("session id : {}", session.getId());
-
+    private RedisUser makeRedisUser(ResponseEntity<KakaoUserInfoResponseDto> responseEntity, HttpSession session){
         RedisUser redisUser = RedisUser.builder()
                 .id(session.getId())
                 .build();
-        redisUser.setDataFromUser(userService.findUserByEmail(
-                responseEntity.getBody().getKakaoAccount().getEmail()
-        ).orElseThrow(() -> {throw new NoExistUserException();}));
-        redisUserRepository.save(redisUser);
+        redisUser.setDataFromUserAndKakaoUserInfo(userService.findUserByEmail(responseEntity.getBody().getKakaoAccount().getEmail()).orElseThrow(() -> {throw new NoExistUserException();}), responseEntity.getBody());
+        return redisUser;
+    }
+
+    @Override
+    public void sendRedirectToClientUriWithEmail(String clientUri, String code, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        ResponseEntity<KakaoUserInfoResponseDto> responseEntity = getUserInfoFromKakaoServer(code);
+        log.debug("responseEntity : {}", responseEntity.getBody());
+
+        if(!userService.isExistUserByEmail(responseEntity.getBody().getKakaoAccount().getEmail())) throw new NotMemberException();
+
+        log.debug("session id : {}", session.getId());
+
         try {
             response.sendRedirect(clientUri);
         } catch (Exception e) {
