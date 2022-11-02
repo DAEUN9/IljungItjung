@@ -4,6 +4,7 @@ import com.iljungitjung.domain.user.dto.SignUpDto;
 import com.iljungitjung.domain.user.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 public interface UserService {
@@ -12,4 +13,6 @@ public interface UserService {
     boolean isExistUserByEmail(String email);
 
     void signUpUser(SignUpDto signUpDto, HttpServletRequest request);
+
+    User findUserBySessionId(HttpSession session);
 }
