@@ -3,7 +3,6 @@ import { WeekView } from '@devexpress/dx-react-scheduler-material-ui';
 import { getDay } from '@components/Calendar/common/util';
 import styles from '@styles/Calendar/Calendar.module.scss';
 
-
 export default function OtherWeekView() {
   return (
     <WeekView
@@ -17,10 +16,13 @@ export default function OtherWeekView() {
         />
       )}
       timeTableCellComponent={(props) => {
-        console.log(props);
         return (
-          <WeekView.TimeTableCell {...props} className={styles['other-timeTableCell']}/>
-        )
+          <WeekView.TimeTableCell
+            {...props}
+            className={styles['other-timeTableCell']}
+            onDoubleClick={() => console.log(props)}
+          />
+        );
       }}
     />
   );

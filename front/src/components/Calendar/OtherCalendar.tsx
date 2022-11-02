@@ -5,19 +5,15 @@ import Paper from '@mui/material/Paper';
 
 import '@styles/Calendar/CustomCalendar.css';
 import styles from '@styles/Calendar/Calendar.module.scss';
-import CustomWeekView from '@components/Calendar/common/CustomWeekView';
-import CustomToolbar from '@components/Calendar/common/CustomToolbar';
 import CustomTodayButton from '@components/Calendar/common/CustomTodayButton';
 import CustomDateNavigator from '@components/Calendar/common/CustomDateNavigator';
-import CustomAppointments from '@components/Calendar/common/CustomAppointments';
-import CustomAppointmentTooltip from '@components/Calendar/common/CustomAppointmentTooltip';
 import OtherAppointments from './Other/OtherAppointments';
 import OtherWeekView from './Other/OtherWeekView';
 
 const next = [
   {
     id: 1,
-    startDate: '2022-10-31T09:45',
+    startDate: '2022-10-31T09:30',
     endDate: '2022-10-31T11:00',
     title: '목욕',
     nickname: '곰고구마',

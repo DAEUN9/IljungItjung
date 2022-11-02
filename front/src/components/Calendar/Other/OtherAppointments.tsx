@@ -1,3 +1,4 @@
+import CustomTooltip from '@components/common/CustomTooltip';
 import { Appointments } from '@devexpress/dx-react-scheduler-material-ui';
 
 export default function OtherAppointments() {
@@ -11,7 +12,14 @@ export default function OtherAppointments() {
       )}
       appointmentContentComponent={(props) => {
         return (
-          <Appointments.AppointmentContent {...props} children={<div></div>} />
+          <Appointments.AppointmentContent
+            {...props}
+            children={
+              <CustomTooltip title="선택할 수 없는 시간대입니다." placement="top">
+                <div style={{ height: '100%' }}></div>
+              </CustomTooltip>
+            }
+          />
         );
       }}
     />
