@@ -5,31 +5,44 @@ import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
+import com.iljungitjung.domain.category.exception.NoGrantCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.user.entity.User;
+import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
+import com.iljungitjung.global.login.entity.RedisUser;
+import com.iljungitjung.global.login.exception.NotMemberException;
+import com.iljungitjung.global.login.repository.RedisUserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService{
 
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
 
+    private final RedisUserRepository redisUserRepository;
+
+
     @Override
     @Transactional
-    public CategoryIdResponseDto addCategory(CategoryCreateRequestDto requestDto) {
+    public CategoryIdResponseDto addCategory(CategoryCreateRequestDto requestDto, HttpSession httpSession) {
         Category category = requestDto.toCategoryEntity(requestDto);
 
-        User user = userRepository.findUserByNickname("1").get();
-        //세션 유저가 카테고리의 유저인지 검증
-        /*
+        RedisUser redisUser = redisUserRepository.findById(httpSession.getId()).orElseThrow(() -> {
+            throw new NotMemberException();
+        });;
+        User user = userRepository.findUserByEmail(redisUser.getEmail()).orElseThrow(() -> {
+            throw new NoExistUserException();
+        });
 
-         */
         category.setCategoryList(user);
         category = categoryRepository.save(category);
         return new CategoryIdResponseDto(category.getId());
@@ -37,32 +50,50 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     @Transactional
-    public CategoryIdResponseDto updateCategory(CategoryEditRequestDto requestDto) {
+    public CategoryIdResponseDto updateCategory(CategoryEditRequestDto requestDto, HttpSession httpSession) {
 
         Long categoryId = requestDto.getId();
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });
-        //세션 유저가 카테고리의 유저인지 검증
-        /*
 
-         */
-        Category updateCategory = requestDto.toCategoryEntity(requestDto);
-        category.change(updateCategory);
+        RedisUser redisUser = redisUserRepository.findById(httpSession.getId()).orElseThrow(() -> {
+            throw new NotMemberException();
+        });;
+        User user = userRepository.findUserByEmail(redisUser.getEmail()).orElseThrow(() -> {
+            throw new NoExistUserException();
+        });
+
+        if(category.getUser().getId()==user.getId()){
+            Category updateCategory = requestDto.toCategoryEntity(requestDto);
+            category.change(updateCategory);
+        }else{
+            throw new NoGrantCategoryException();
+        }
+
         return new CategoryIdResponseDto(categoryId);
     }
 
     @Override
     @Transactional
-    public CategoryIdResponseDto deleteCategory(Long categoryId) {
+    public CategoryIdResponseDto deleteCategory(Long categoryId, HttpSession httpSession) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });
-        //세션 유저가 카테고리의 유저인지 검증
-        /*
 
-         */
-       categoryRepository.delete(category);
+        RedisUser redisUser = redisUserRepository.findById(httpSession.getId()).orElseThrow(() -> {
+            throw new NotMemberException();
+        });;
+        User user = userRepository.findUserByEmail(redisUser.getEmail()).orElseThrow(() -> {
+            throw new NoExistUserException();
+        });
+
+        if(category.getUser().getId()==user.getId()){
+            categoryRepository.delete(category);
+        }else{
+            throw new NoGrantCategoryException();
+        }
+
         return new CategoryIdResponseDto(categoryId);
     }
 }
