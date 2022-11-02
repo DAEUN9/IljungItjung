@@ -27,7 +27,7 @@ public class User {
     private String phonenum;
 
     private String imagePath;
-    private String kakaoToken;
+
     private String openTime;
 
     private String closeTime;
@@ -46,8 +46,12 @@ public class User {
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Category> categoryList = new ArrayList<>();
 
+    public void signUp(TemporaryUser temporaryUser){
+        this.email = temporaryUser.getEmail();
+    }
+
     @Builder
-    public User(String nickname, String phonenum, String imagePath, String kakaoToken, String openTime, String closeTime, String email) {
+    public User(String nickname, String phonenum, String imagePath, String openTime, String closeTime, String email, String description) {
         this.nickname = nickname;
         this.phonenum = phonenum;
         this.imagePath = imagePath;
