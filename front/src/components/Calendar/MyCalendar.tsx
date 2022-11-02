@@ -20,7 +20,7 @@ import InfoTabs from './My/InfoTabs';
 const next = [
   {
     id: 1,
-    startDate: '2022-10-31T09:45',
+    startDate: '2022-10-31T09:30',
     endDate: '2022-10-31T11:00',
     title: '목욕',
     nickname: '곰고구마',

@@ -1,5 +1,5 @@
-import { AppointmentTooltip } from '@devexpress/dx-react-scheduler-material-ui';
 import SvgIcon from '@mui/material/SvgIcon';
+import { AppointmentTooltip } from '@devexpress/dx-react-scheduler-material-ui';
 import { FaRegClock, FaUserAlt, FaPhoneAlt, FaPen } from 'react-icons/fa';
 
 import styles from '@styles/Calendar/Calendar.module.scss';

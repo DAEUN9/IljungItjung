@@ -283,3 +283,17 @@ $light-gray: #f5f5f5;
     margin-bottom: 10px;
   }
 }
+
+/* other */
+.other-timeTableCell {
+  &:focus {
+    background-color: #6B7BB1 !important;
+  }
+
+  &-disabled {
+    &:hover,
+    &:focus {
+      background-color: unset !important;
+    } 
+  }
+}

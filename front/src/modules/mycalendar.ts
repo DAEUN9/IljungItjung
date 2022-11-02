@@ -1,4 +1,4 @@
-import { SchedulerDate } from '@components/Calendar/common/util';
+import { SchedulerDate } from '@components/types/types';
 
 /* action type */
 const SET_SCHEDULE_LIST = 'mycalendar/SET_SCHEDULE_LIST' as const;
