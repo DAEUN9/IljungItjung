@@ -2,6 +2,7 @@ package com.iljungitjung.domain.user.service;
 
 import com.iljungitjung.domain.user.dto.SignUpDto;
 import com.iljungitjung.domain.user.entity.User;
+import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.global.login.entity.TemporaryUser;
 import com.iljungitjung.global.login.exception.ExpireTemporaryUserException;
@@ -40,6 +41,9 @@ public class UserServiceImpl implements UserService{
         });
         User user = signUpDto.toEntity();
         user.signUp(temporaryUser);
+        if(userRepository.existsUserByEmail(user.getEmail())){
+            throw new AlreadyExistUserException();
+        }
         log.debug("user : {}", user);
         temporaryUserRepository.deleteById(request.getSession().getId());
         userRepository.save(user);
