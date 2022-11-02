@@ -15,8 +15,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class ReservationRequestDto {
 
-    private String userFromNickname;
-
     @NotBlank(message = "userToNickname은 비워둘 수 없습니다.")
     private String userToNickname;
 
