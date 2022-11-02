@@ -2,24 +2,23 @@ package com.iljungitjung.domain.schedule.service;
 
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
+import com.iljungitjung.domain.category.exception.NoGrantDeleteCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.schedule.dto.reservation.*;
-import com.iljungitjung.domain.schedule.dto.schedule.ScheduleBlockDto;
-import com.iljungitjung.domain.schedule.dto.schedule.ScheduleCancelDto;
-import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDto;
-import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
-import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
-import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
-import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
+import com.iljungitjung.domain.schedule.exception.*;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
+import com.iljungitjung.domain.user.service.UserService;
+import com.iljungitjung.global.login.repository.RedisUserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService{
 
@@ -36,10 +36,17 @@ public class ReservationServiceImpl implements ReservationService{
 
     private final UserRepository userRepository;
 
+    private final RedisUserRepository redisUserRepository;
+
+    private final UserService userService;
+
     @Override
     @Transactional
-    public ReservationIdResponseDto reservationRequest(ReservationRequestDto reservationRequestDto) {
-        Category category = categoryRepository.findByCategoryName(reservationRequestDto.getCategoryName()).orElseThrow(() -> {
+    public ReservationIdResponseDto reservationRequest(ReservationRequestDto reservationRequestDto, HttpSession httpSession) {
+
+        User user = userService.findUserBySessionId(httpSession);
+
+        Category category = categoryRepository.findByCategoryNameAndUser_Email(reservationRequestDto.getCategoryName(), user.getEmail()).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
@@ -57,45 +64,57 @@ public class ReservationServiceImpl implements ReservationService{
         cal.add(Calendar.HOUR, Integer.parseInt(date.substring(0, 2)));
 
         Date endDate = cal.getTime();
-        User userFrom = userRepository.findUserByNickname(reservationRequestDto.getUserFromNickname()).orElseThrow(() -> {
-            throw new NoExistUserException();
-        });
         User userTo= userRepository.findUserByNickname(reservationRequestDto.getUserToNickname()).orElseThrow(() -> {
             throw new NoExistUserException();
         });
         Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, startDate, endDate, category.getColor(), Type.REQUEST);
-        schedule.setScheduleRequestList(userTo);
-        schedule.setScheduleResponseList(userFrom);
+        schedule.setScheduleRequestList(user);
+        schedule.setScheduleResponseList(userTo);
         schedule = scheduleRepository.save(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
     @Override
     @Transactional
-    public ReservationIdResponseDto reservationManage(Long id, String nickname, ReservationManageRequestDto reservationManageRequestDto) {
-        //현재 아이디가 해당 예약의 주인일 때만 가능 추가 필수
-        /*
+    public ReservationIdResponseDto reservationManage(Long id, ReservationManageRequestDto reservationManageRequestDto, HttpSession httpSession) {
 
-         */
+        User user = userService.findUserBySessionId(httpSession);
+
         Schedule schedule = scheduleRepository.findScheduleById(id).orElseThrow(()->{
             throw new NoExistScheduleDetailException();
         });
-        if(reservationManageRequestDto.isAccept()){
-            schedule.accpeted();
-        }else{
-            String cancelFrom = "";
-            if(nickname.equals(schedule.getUserFrom().getNickname()))
-                cancelFrom="사용자";
-            else
+
+        String cancelFrom = "";
+        if(user.getId()==schedule.getUserTo().getId()){
+            if(reservationManageRequestDto.isAccept()){
+                schedule.accpeted();
+            }else{
                 cancelFrom="제공자";
-            schedule.canceled(cancelFrom, reservationManageRequestDto.getReason());
+                schedule.canceled(cancelFrom, reservationManageRequestDto.getReason());
+            }
+        }else if(user.getId()==schedule.getUserFrom().getId()){
+            if(reservationManageRequestDto.isAccept()){
+                throw new NoGrantAccessScheduleException();
+            }else{
+                cancelFrom="사용자";
+                schedule.canceled(cancelFrom, reservationManageRequestDto.getReason());
+            }
+        }else{
+            throw new NoGrantAcceptScheduleException();
         }
+
         return new ReservationIdResponseDto(schedule.getId());
     }
 
     @Override
-    public ReservationIdResponseDto reservationDelete(Long id, String reason) {
+    public ReservationIdResponseDto reservationDelete(Long id, String reason, HttpSession httpSession) {
+
+        User user = userService.findUserBySessionId(httpSession);
+
         Schedule schedule = scheduleRepository.findScheduleById(id).get();
+
+        if(user.getId() != schedule.getUserTo().getId()) throw new NoGrantDeleteScheduleException();
+
         Long scheduleId = schedule.getId();
         scheduleRepository.delete(schedule);
         return new ReservationIdResponseDto(scheduleId);
@@ -103,12 +122,8 @@ public class ReservationServiceImpl implements ReservationService{
 
     @Override
     @Transactional
-    public ReservationIdResponseDto reservationBlock(ReservationBlockRequestDto reservationBlockRequestDto) {
-        //현재 아이디가 해당 예약의 주인일 때만 가능 추가 필수
-        /*
-
-        */
-
+    public ReservationIdResponseDto reservationBlock(ReservationBlockRequestDto reservationBlockRequestDto, HttpSession httpSession) {
+        User user = userService.findUserBySessionId(httpSession);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
         Date startDate;
@@ -119,7 +134,6 @@ public class ReservationServiceImpl implements ReservationService{
         }catch (Exception e){
             throw new DateFormatErrorException();
         }
-        User user = userRepository.findUserByNickname(reservationBlockRequestDto.getUserFromNickname()).get();
 
         Schedule schedule = reservationBlockRequestDto.toScheduleEntity(reservationBlockRequestDto, startDate, endDate);
         schedule.setScheduleResponseList(user);
@@ -129,8 +143,10 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     @Override
-    public ReservationViewResponseDto reservationView(String nickname, String startDate, String endDate) {
-        //닉네임으로 유저 조회
+    public ReservationViewResponseDto reservationView(String startDate, String endDate, HttpSession httpSession) {
+
+        User user = userService.findUserBySessionId(httpSession);
+
         ReservationViewResponseDto responseDtos;
 
         Date startDateFormat;
@@ -146,7 +162,7 @@ public class ReservationServiceImpl implements ReservationService{
 
         try{
             List<Schedule> scheduleList;
-            scheduleList = scheduleRepository.findByUserFrom_NicknameIs(nickname);
+            scheduleList = scheduleRepository.findByUserFrom_IdIs(user.getId());
 
             List<ReservationViewDto> requestList = new ArrayList<>();
             List<ReservationViewDto> acceptList = new ArrayList<>();
