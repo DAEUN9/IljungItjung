@@ -39,7 +39,6 @@ public class Schedule {
 
     private String color;
 
-    @Column(nullable = false)
     private String contents;
 
     private String phonenum;
@@ -47,6 +46,7 @@ public class Schedule {
     @Column(nullable = false)
     private Type type;
 
+    private String cancelFrom;
     private String reason;
 
     public void setScheduleRequestList(User user){
@@ -75,7 +75,8 @@ public class Schedule {
     public void accpeted() {
         this.type= Type.ACCEPT;
     }
-    public void canceled(String reason){
+    public void canceled(String cancelFrom, String reason){
+        this.cancelFrom=cancelFrom;
         this.reason=reason;
         this.type=Type.CANCEL;
     }

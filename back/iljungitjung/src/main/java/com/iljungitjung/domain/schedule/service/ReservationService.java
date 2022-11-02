@@ -1,13 +1,15 @@
 package com.iljungitjung.domain.schedule.service;
 
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationIdResponseDto;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
+import com.iljungitjung.domain.schedule.dto.reservation.*;
 
 public interface ReservationService {
     ReservationIdResponseDto reservationRequest(ReservationRequestDto reservationRequestDto);
-    ReservationIdResponseDto reservationManage(Long id, ReservationManageRequestDto reservationManageRequestDto);
+    ReservationIdResponseDto reservationManage(Long id, String nickname, ReservationManageRequestDto reservationManageRequestDto);
 
+    ReservationIdResponseDto reservationDelete(Long id, String reason);
     ReservationIdResponseDto reservationBlock(ReservationBlockRequestDto reservationBlockRequestDto);
+
+    ReservationViewResponseDto reservationView(String nickname, String startDate, String endDate);
+
+
 }
