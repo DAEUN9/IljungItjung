@@ -1,6 +1,7 @@
 package com.iljungitjung.global.login.entity;
 
 import com.iljungitjung.domain.user.entity.User;
+import com.iljungitjung.global.oauth.dto.KakaoUserInfoResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
@@ -17,15 +18,19 @@ public class RedisUser {
 
     private String email;
 
-    public void setDataFromUser(User user){
+    private String profileImg;
+
+    public void setDataFromUserAndKakaoUserInfo(User user, KakaoUserInfoResponseDto kakaoUserInfo){
         this.nickname = user.getNickname();
-        this.email = user.getEmail();
+        this.email = kakaoUserInfo.getKakaoAccount().getEmail();
+        this.profileImg = kakaoUserInfo.getKakaoAccount().getKakaoUserProfile().getProfile_image_url();
     }
 
     @Builder
-    public RedisUser(String id, String nickname, String email){
+    public RedisUser(String id, String nickname, String email, String profileImg){
         this.id = id;
         this.nickname = nickname;
+        this.profileImg = profileImg;
         this.email = email;
     }
 }

@@ -11,10 +11,7 @@ import com.iljungitjung.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -65,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService{
         /*
 
          */
-       categoryRepository.delete(category);
+        categoryRepository.delete(category);
         return new CategoryIdResponseDto(categoryId);
     }
 }

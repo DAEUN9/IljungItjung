@@ -39,7 +39,6 @@ public class Schedule {
 
     private String color;
 
-    @Column(nullable = false)
     private String contents;
 
     private String phonenum;
