@@ -8,4 +8,12 @@ interface SearchState {
   categories: string[];
 }
 
-export type { SearchState };
+// 카테고리 관련 타입
+interface CategoryState {
+  name: string;
+  color: string;
+  hour: string;
+  min: string;
+}
+
+export type { SearchState, CategoryState };
