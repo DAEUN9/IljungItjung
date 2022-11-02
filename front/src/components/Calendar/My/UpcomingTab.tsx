@@ -5,30 +5,35 @@ import UpcomingItem from './UpcomingItem';
 import { SchedulerDate, TabPanelProps } from '@components/Calendar/common/util';
 import { RootState } from '@modules/index';
 
+// 이번주 일정 중에서 오늘 날짜보다 큰 것만 표시
+const plus = [0, 6, 5, 4, 3, 2, 1];
+
 const parseList = (list: SchedulerDate[] | undefined) => {
-  if(!list) return;
+  if (!list) return;
 
-  const today = new Date();
   let parsed: SchedulerDate[] = [];
+  const today = new Date();
+  const lastDay = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() + plus[today.getDay()]
+  );
+  lastDay.setHours(23);
+  lastDay.setMinutes(59);
 
-  for(let item of list) {
-    const {startDate} = item;
-    if(!startDate) continue;
+  for (let item of list) {
+    const { startDate } = item;
+    if (!startDate) continue;
 
     const start = new Date(startDate);
-    
-    if(start.getMonth() >= today.getMonth() && start.getDate() > today.getDate()) {
+
+    if (start >= today && start <= lastDay) {
       parsed.push(item);
-    }
-    else if(start.getDate() === today.getDate()) {
-      if(start.getHours() >= today.getHours() && start.getMinutes() >= today.getHours()) {
-        parsed.push(item);
-      }
     }
   }
 
   return parsed;
-}
+};
 
 const UpcomingTab = (props: TabPanelProps) => {
   const { value, index, ...other } = props;
@@ -46,7 +51,9 @@ const UpcomingTab = (props: TabPanelProps) => {
     >
       {value === index && (
         <div className={styles['tab-inner']}>
-          {parsed?.map((item) => <UpcomingItem key={item.id} item={item} />)}
+          {parsed?.map((item) => (
+            <UpcomingItem key={item.id} item={item} />
+          ))}
         </div>
       )}
     </div>
