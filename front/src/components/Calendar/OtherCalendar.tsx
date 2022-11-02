@@ -8,6 +8,8 @@ import '@styles/Calendar/CustomCalendar.css';
 import styles from '@styles/Calendar/Calendar.module.scss';
 import CustomTodayButton from '@components/Calendar/common/CustomTodayButton';
 import CustomDateNavigator from '@components/Calendar/common/CustomDateNavigator';
+import Profile from '@components/Calendar/common/Profile';
+import Reservation from './Other/Reservation';
 import OtherAppointments from './Other/OtherAppointments';
 import OtherWeekView from './Other/OtherWeekView';
 import { RootState } from '@modules/index';
@@ -72,7 +74,8 @@ const OtherCalendar = () => {
         </Scheduler>
       </Paper>
       <div className={styles.info}>
-
+        <Profile />
+        <Reservation /> 
       </div>
     </>
   );
