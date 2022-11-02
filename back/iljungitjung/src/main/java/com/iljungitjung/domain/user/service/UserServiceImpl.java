@@ -1,7 +1,9 @@
 package com.iljungitjung.domain.user.service;
 
 import com.iljungitjung.domain.user.dto.SignUpDto;
+import com.iljungitjung.domain.user.dto.UserInfo;
 import com.iljungitjung.domain.user.entity.User;
+import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.global.login.entity.RedisUser;
@@ -56,6 +58,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+<<<<<<< back/iljungitjung/src/main/java/com/iljungitjung/domain/user/service/UserServiceImpl.java
+    public UserInfo getUserInfo(String nickname) {
+        User user = userRepository.findUserByNickname(nickname).orElseThrow(() -> {
+            throw new NoExistUserException();
+        });
+        return new UserInfo(user);
+    }
+
+    @Override
+    public UserInfo getUserInfo(HttpSession session) {
+        RedisUser redisUser = redisUserRepository.findById(session.getId()).orElseThrow(() -> {
+            throw new ExpireRedisUserException();
+        });
+        return new UserInfo(redisUser);
+=======
     public User findUserBySessionId(HttpSession session) {
         RedisUser redisUser = redisUserRepository.findById(session.getId()).orElseThrow(() -> {
             throw new ExpireLoginUserException();
@@ -65,5 +82,6 @@ public class UserServiceImpl implements UserService{
         });
 
         return user;
+>>>>>>> back/iljungitjung/src/main/java/com/iljungitjung/domain/user/service/UserServiceImpl.java
     }
 }
