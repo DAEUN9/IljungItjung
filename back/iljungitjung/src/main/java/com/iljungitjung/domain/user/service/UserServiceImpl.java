@@ -2,13 +2,13 @@ package com.iljungitjung.domain.user.service;
 
 import com.iljungitjung.domain.user.dto.SignUpDto;
 import com.iljungitjung.domain.user.entity.User;
+import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
 import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.global.login.entity.RedisUser;
 import com.iljungitjung.global.login.entity.TemporaryUser;
 import com.iljungitjung.global.login.exception.ExpireLoginUserException;
 import com.iljungitjung.global.login.exception.ExpireTemporaryUserException;
-import com.iljungitjung.global.login.exception.NotMemberException;
 import com.iljungitjung.global.login.repository.RedisUserRepository;
 import com.iljungitjung.global.login.repository.TemporaryUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +48,9 @@ public class UserServiceImpl implements UserService{
         });
         User user = signUpDto.toEntity();
         user.signUp(temporaryUser);
+        if(userRepository.existsUserByEmail(user.getEmail())){
+            throw new AlreadyExistUserException();
+        }
         log.debug("user : {}", user);
         temporaryUserRepository.deleteById(request.getSession().getId());
         userRepository.save(user);
