@@ -317,4 +317,23 @@ $light-gray: #f5f5f5;
   margin: 15px;
   background-color: $light-gray;
   border-radius: 15px;
+
+  &-inner {
+    $inner-padding: 20px;
+    
+    height: calc(100% - $inner-padding * 2);
+    padding: $inner-padding;
+  }
+
+  &-item {
+    padding: 5px;
+  }
+
+  &-request {
+    padding: 5px;
+  }
+
+  > button {
+    width: 100%;
+  }
 }

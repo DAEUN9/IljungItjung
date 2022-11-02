@@ -18,24 +18,24 @@ const Reservation = () => {
     <div className={styles.reservation}>
       {/* {!current && <div className={styles.center}>시간대를 선택해주세요</div>}
       {current && <div>예약 요청 어쩌구</div>} */}
-      <div>
-        <div>
+      <div className={styles['reservation-inner']}>
+        <div className={styles['reservation-item']}>
           <FaThList /> 카테고리 선택
         </div>
-        <div>
+        <div className={styles['reservation-item']}>
           <FaRegCalendar /> 날짜
         </div>
-        <div>
+        <div className={styles['reservation-item']}>
           <FaRegClock /> 시간
         </div>
-        <div>
+        <div className={styles['reservation-item']}>
           <FaPhoneAlt /> 폰번호
         </div>
-        <div>
+        <div className={styles['reservation-request']}>
           <div>요청사항</div>
-          <TextField />
+          <TextField fullWidth multiline rows={2}/>
         </div>
-        <CustomButton>확인</CustomButton>
+        <CustomButton style={{width:'calc(100% - 10px)', margin: '0 5px'}}>확인</CustomButton>
       </div>
     </div>
   );
