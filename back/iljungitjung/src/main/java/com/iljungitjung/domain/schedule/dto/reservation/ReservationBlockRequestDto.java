@@ -14,20 +14,16 @@ import java.util.Date;
 @AllArgsConstructor
 public class ReservationBlockRequestDto {
 
-    private String userFromNickname;
     private String title;
     private String contents;
 
-    @NotBlank(message = "date는 비워둘 수 없습니다.")
-    @Size(min=8, max=8)
+    @Size(min=8, max=8, message = "형식을 맞춰주세요 (ex.20221017)")
     private String date;
 
-    @NotBlank(message = "startTime은 비워둘 수 없습니다.")
-    @Size(min=4, max=4)
+    @Size(min=4, max=4, message = "형식을 맞춰주세요 (ex.1500)")
     private String startTime;
 
-    @NotBlank(message = "endTime은 비워둘 수 없습니다.")
-    @Size(min=4, max=4)
+    @Size(min=4, max=4, message = "형식을 맞춰주세요 (ex.1500)")
     private String endTime;
 
     public Schedule toScheduleEntity(ReservationBlockRequestDto reservationBlockRequestDto, Date startDate, Date endDate) {

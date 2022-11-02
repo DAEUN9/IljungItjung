@@ -15,11 +15,12 @@ public class TemporaryUser {
     @Id
     private String id;
     private String email;
-    private String refreshToken;
+
+    private String profileImg;
     @Builder
-    public TemporaryUser(String id, String email, String refreshToken){
+    public TemporaryUser(String id, String email, String profileImg){
         this.id = id;
         this.email = email;
-        this.refreshToken = refreshToken;
+        this.profileImg = profileImg;
     }
 }

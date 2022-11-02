@@ -5,31 +5,38 @@ import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
+import com.iljungitjung.domain.category.exception.NoGrantDeleteCategoryException;
+import com.iljungitjung.domain.category.exception.NoGrantUpdateCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.repository.UserRepository;
+import com.iljungitjung.domain.user.service.UserService;
+import com.iljungitjung.global.login.repository.RedisUserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService{
 
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
 
+    private final RedisUserRepository redisUserRepository;
+
+    private final UserService userService;
     @Override
     @Transactional
-    public CategoryIdResponseDto addCategory(CategoryCreateRequestDto requestDto) {
+    public CategoryIdResponseDto addCategory(CategoryCreateRequestDto requestDto, HttpSession httpSession) {
         Category category = requestDto.toCategoryEntity(requestDto);
 
-        User user = userRepository.findUserByNickname("1").get();
-        //세션 유저가 카테고리의 유저인지 검증
-        /*
+        User user = userService.findUserBySessionId(httpSession);
 
-         */
         category.setCategoryList(user);
         category = categoryRepository.save(category);
         return new CategoryIdResponseDto(category.getId());
@@ -37,16 +44,17 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     @Transactional
-    public CategoryIdResponseDto updateCategory(CategoryEditRequestDto requestDto) {
+    public CategoryIdResponseDto updateCategory(CategoryEditRequestDto requestDto, HttpSession httpSession) {
 
         Long categoryId = requestDto.getId();
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });
-        //세션 유저가 카테고리의 유저인지 검증
-        /*
 
-         */
+        User user = userService.findUserBySessionId(httpSession);
+
+        if(category.getUser().getId()!=user.getId()) throw new NoGrantUpdateCategoryException();
+
         Category updateCategory = requestDto.toCategoryEntity(requestDto);
         category.change(updateCategory);
         return new CategoryIdResponseDto(categoryId);
@@ -54,15 +62,16 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     @Transactional
-    public CategoryIdResponseDto deleteCategory(Long categoryId) {
+    public CategoryIdResponseDto deleteCategory(Long categoryId, HttpSession httpSession) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });
-        //세션 유저가 카테고리의 유저인지 검증
-        /*
 
-         */
-       categoryRepository.delete(category);
+        User user = userService.findUserBySessionId(httpSession);
+
+        if(category.getUser().getId()!=user.getId()) throw new NoGrantDeleteCategoryException();
+
+        categoryRepository.delete(category);
         return new CategoryIdResponseDto(categoryId);
     }
 }
