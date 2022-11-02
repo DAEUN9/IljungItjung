@@ -1,30 +1,6 @@
+import { SchedulerDate, SchedulerDateTime } from '@components/types/types';
+
 /* type, interface */
-export declare type SchedulerDateTime = Date | number | string;
-
-export interface SchedulerDate {
-  startDate: SchedulerDateTime;
-  endDate?: SchedulerDateTime;
-  title?: string;
-  allDay?: boolean;
-  id?: number | string;
-  rRule?: string | undefined;
-  exDate?: string | undefined;
-  [propertyName: string]: any;
-}
-
-export interface ResourceInstance {
-  id: number | string;
-  color?: string;
-  text?: string;
-};
-
-export interface Resource {
-  fieldName: string;
-  title?: string;
-  allowMultiple?: boolean;
-  instances: Array<ResourceInstance>;
-};
-
 export interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -39,7 +15,10 @@ export interface InfoItemProps {
 export const days = ['일', '월', '화', '수', '목', '금', '토'];
 
 /* function */
-export const getDay = (nextDate: SchedulerDateTime | undefined, nextOptions: any) => {
+export const getDay = (
+  nextDate: SchedulerDateTime | undefined,
+  nextOptions: any
+) => {
   const date =
     typeof nextDate === 'object'
       ? nextDate

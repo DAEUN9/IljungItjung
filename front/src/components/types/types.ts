@@ -8,4 +8,17 @@ interface SearchState {
   categories: string[];
 }
 
-export type { SearchState };
+declare type SchedulerDateTime = Date | number | string;
+
+interface SchedulerDate {
+  startDate: SchedulerDateTime;
+  endDate?: SchedulerDateTime;
+  title?: string;
+  allDay?: boolean;
+  id?: number | string;
+  rRule?: string | undefined;
+  exDate?: string | undefined;
+  [propertyName: string]: any;
+}
+
+export type { SearchState, SchedulerDateTime, SchedulerDate };
