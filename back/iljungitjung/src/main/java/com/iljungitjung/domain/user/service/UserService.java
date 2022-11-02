@@ -15,7 +15,10 @@ public interface UserService {
 
     void signUpUser(SignUpDto signUpDto, HttpServletRequest request);
 
+
     UserInfo getUserInfo(String nickname);
 
     UserInfo getUserInfo(HttpSession session);
+
+    User findUserBySessionId(HttpSession session);
 }

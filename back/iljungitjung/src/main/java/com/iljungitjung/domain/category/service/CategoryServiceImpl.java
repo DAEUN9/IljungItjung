@@ -5,13 +5,12 @@ import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
-import com.iljungitjung.domain.category.exception.NoGrantCategoryException;
+import com.iljungitjung.domain.category.exception.NoGrantDeleteCategoryException;
+import com.iljungitjung.domain.category.exception.NoGrantUpdateCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.user.entity.User;
-import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
-import com.iljungitjung.global.login.entity.RedisUser;
-import com.iljungitjung.global.login.exception.NotMemberException;
+import com.iljungitjung.domain.user.service.UserService;
 import com.iljungitjung.global.login.repository.RedisUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,18 +29,13 @@ public class CategoryServiceImpl implements CategoryService{
 
     private final RedisUserRepository redisUserRepository;
 
-
+    private final UserService userService;
     @Override
     @Transactional
     public CategoryIdResponseDto addCategory(CategoryCreateRequestDto requestDto, HttpSession httpSession) {
         Category category = requestDto.toCategoryEntity(requestDto);
 
-        RedisUser redisUser = redisUserRepository.findById(httpSession.getId()).orElseThrow(() -> {
-            throw new NotMemberException();
-        });;
-        User user = userRepository.findUserByEmail(redisUser.getEmail()).orElseThrow(() -> {
-            throw new NoExistUserException();
-        });
+        User user = userService.findUserBySessionId(httpSession);
 
         category.setCategoryList(user);
         category = categoryRepository.save(category);
@@ -57,20 +51,12 @@ public class CategoryServiceImpl implements CategoryService{
             throw new NoExistCategoryException();
         });
 
-        RedisUser redisUser = redisUserRepository.findById(httpSession.getId()).orElseThrow(() -> {
-            throw new NotMemberException();
-        });;
-        User user = userRepository.findUserByEmail(redisUser.getEmail()).orElseThrow(() -> {
-            throw new NoExistUserException();
-        });
+        User user = userService.findUserBySessionId(httpSession);
 
-        if(category.getUser().getId()==user.getId()){
-            Category updateCategory = requestDto.toCategoryEntity(requestDto);
-            category.change(updateCategory);
-        }else{
-            throw new NoGrantCategoryException();
-        }
+        if(category.getUser().getId()!=user.getId()) throw new NoGrantUpdateCategoryException();
 
+        Category updateCategory = requestDto.toCategoryEntity(requestDto);
+        category.change(updateCategory);
         return new CategoryIdResponseDto(categoryId);
     }
 
@@ -81,19 +67,11 @@ public class CategoryServiceImpl implements CategoryService{
             throw new NoExistCategoryException();
         });
 
-        RedisUser redisUser = redisUserRepository.findById(httpSession.getId()).orElseThrow(() -> {
-            throw new NotMemberException();
-        });;
-        User user = userRepository.findUserByEmail(redisUser.getEmail()).orElseThrow(() -> {
-            throw new NoExistUserException();
-        });
+        User user = userService.findUserBySessionId(httpSession);
 
-        if(category.getUser().getId()==user.getId()){
-            categoryRepository.delete(category);
-        }else{
-            throw new NoGrantCategoryException();
-        }
+        if(category.getUser().getId()!=user.getId()) throw new NoGrantDeleteCategoryException();
 
+        categoryRepository.delete(category);
         return new CategoryIdResponseDto(categoryId);
     }
 }

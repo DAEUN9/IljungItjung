@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -22,33 +23,37 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ResponseEntity<CommonResponse> reservationRequest(@RequestBody @Valid ReservationRequestDto reservationRequestDto){
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationRequest(reservationRequestDto)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> reservationRequest(@RequestBody @Valid ReservationRequestDto reservationRequestDto
+            , HttpSession httpSession){
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationRequest(reservationRequestDto, httpSession)), HttpStatus.OK);
     }
 
     @PutMapping("/{scheduleId}")
-    public ResponseEntity<CommonResponse> reservationManage(@PathVariable("scheduleId") Long id, @RequestParam String nickname, @RequestBody @Valid ReservationManageRequestDto reservationManageRequestDto){
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationManage(id, nickname, reservationManageRequestDto)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> reservationManage(@PathVariable("scheduleId") Long id, @RequestBody @Valid ReservationManageRequestDto reservationManageRequestDto
+            , HttpSession httpSession){
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationManage(id, reservationManageRequestDto, httpSession)), HttpStatus.OK);
 
     }
 
     @DeleteMapping("/{scheduleId}")
-    public ResponseEntity<CommonResponse> reservationDelete(@PathVariable("scheduleId") Long id, @RequestParam String reason){
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationDelete(id,reason)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> reservationDelete(@PathVariable("scheduleId") Long id, @RequestParam String reason
+            , HttpSession httpSession){
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationDelete(id,reason, httpSession)), HttpStatus.OK);
 
     }
 
     @PostMapping("/block")
-    public ResponseEntity<CommonResponse> reservationBlock(@RequestBody @Valid ReservationBlockRequestDto reservationBlockRequestDto){
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationBlock(reservationBlockRequestDto)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> reservationBlock(@RequestBody @Valid ReservationBlockRequestDto reservationBlockRequestDto
+            , HttpSession httpSession){
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationBlock(reservationBlockRequestDto, httpSession)), HttpStatus.OK);
     }
 
-    @GetMapping("/{nickname}")
-    public ResponseEntity<CommonResponse> reservationView(@PathVariable("nickname") String nickname,
-                                                          @Size(min=8, max=8, message = "형식을 맞춰주세요 (ex.20221017)")
+    @GetMapping
+    public ResponseEntity<CommonResponse> reservationView(@Size(min=8, max=8, message = "형식을 맞춰주세요 (ex.20221017)")
                                                           @RequestParam("startDate") String startDate,
                                                               @Size(min=8, max=8, message = "형식을 맞춰주세요 (ex.20221017)")
-                                                              @RequestParam("endDate") String endDate){
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationView(nickname, startDate, endDate)), HttpStatus.OK);
+                                                              @RequestParam("endDate") String endDate
+                                                              , HttpSession httpSession){
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationView(startDate, endDate, httpSession)), HttpStatus.OK);
     }
 }

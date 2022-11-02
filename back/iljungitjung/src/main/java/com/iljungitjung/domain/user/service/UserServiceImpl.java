@@ -4,10 +4,11 @@ import com.iljungitjung.domain.user.dto.SignUpDto;
 import com.iljungitjung.domain.user.dto.UserInfo;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.exception.NoExistUserException;
+import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.global.login.entity.RedisUser;
 import com.iljungitjung.global.login.entity.TemporaryUser;
-import com.iljungitjung.global.login.exception.ExpireRedisUserException;
+import com.iljungitjung.global.login.exception.ExpireLoginUserException;
 import com.iljungitjung.global.login.exception.ExpireTemporaryUserException;
 import com.iljungitjung.global.login.repository.RedisUserRepository;
 import com.iljungitjung.global.login.repository.TemporaryUserRepository;
@@ -48,12 +49,16 @@ public class UserServiceImpl implements UserService{
         });
         User user = signUpDto.toEntity();
         user.signUp(temporaryUser);
+        if(userRepository.existsUserByEmail(user.getEmail())){
+            throw new AlreadyExistUserException();
+        }
         log.debug("user : {}", user);
         temporaryUserRepository.deleteById(request.getSession().getId());
         userRepository.save(user);
     }
 
     @Override
+<<<<<<< back/iljungitjung/src/main/java/com/iljungitjung/domain/user/service/UserServiceImpl.java
     public UserInfo getUserInfo(String nickname) {
         User user = userRepository.findUserByNickname(nickname).orElseThrow(() -> {
             throw new NoExistUserException();
@@ -67,5 +72,16 @@ public class UserServiceImpl implements UserService{
             throw new ExpireRedisUserException();
         });
         return new UserInfo(redisUser);
+=======
+    public User findUserBySessionId(HttpSession session) {
+        RedisUser redisUser = redisUserRepository.findById(session.getId()).orElseThrow(() -> {
+            throw new ExpireLoginUserException();
+        });
+        User user = userRepository.findUserByEmail(redisUser.getEmail()).orElseThrow(() -> {
+            throw new NoExistUserException();
+        });
+
+        return user;
+>>>>>>> back/iljungitjung/src/main/java/com/iljungitjung/domain/user/service/UserServiceImpl.java
     }
 }

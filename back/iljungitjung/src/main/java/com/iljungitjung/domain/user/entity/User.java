@@ -48,6 +48,7 @@ public class User {
 
     public void signUp(TemporaryUser temporaryUser){
         this.email = temporaryUser.getEmail();
+        this.imagePath = temporaryUser.getProfileImg();
     }
 
     @Builder
