@@ -135,9 +135,12 @@ public class KakaoLoginService implements LoginService{
         ResponseEntity<KakaoUserInfoResponseDto> responseEntity = getUserInfoFromKakaoServer(code);
         log.debug("responseEntity : {}", responseEntity.getBody());
 
-        if(!userService.isExistUserByEmail(responseEntity.getBody().getKakaoAccount().getEmail())) throw new NotMemberException();
+        checkIsUserEmailExistAtDatabase(responseEntity, session);
 
         log.debug("session id : {}", session.getId());
+
+        RedisUser redisUser = makeRedisUser(responseEntity, session);
+        redisUserRepository.save(redisUser);
 
         try {
             response.sendRedirect(clientUri);
