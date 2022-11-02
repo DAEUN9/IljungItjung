@@ -3,7 +3,6 @@ package com.iljungitjung.domain.user.service;
 import com.iljungitjung.domain.user.dto.SignUpDto;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
-import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.global.login.entity.RedisUser;
 import com.iljungitjung.global.login.entity.TemporaryUser;
