@@ -1,9 +1,13 @@
 import { combineReducers } from "redux";
 
-import mycalendar from "./mycalendar";
+import reservation from "@modules/reservation";
+import search from "@modules/search";
+import mycalendar from "@modules/mycalendar";
 
 const rootReducer = combineReducers({
-  mycalendar
+  reservation,
+  search,
+  mycalendar,
 });
 
 export default rootReducer;
