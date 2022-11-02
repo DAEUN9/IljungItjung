@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import { Scheduler, Toolbar } from '@devexpress/dx-react-scheduler-material-ui';
 import Paper from '@mui/material/Paper';
@@ -9,6 +9,9 @@ import CustomTodayButton from '@components/Calendar/common/CustomTodayButton';
 import CustomDateNavigator from '@components/Calendar/common/CustomDateNavigator';
 import OtherAppointments from './Other/OtherAppointments';
 import OtherWeekView from './Other/OtherWeekView';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@modules/index';
+import { setBlockList } from '@modules/othercalendar';
 
 const next = [
   {
@@ -45,11 +48,18 @@ const next = [
 
 const OtherCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const block = useSelector((state: RootState) => state.othercalendar.block);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setBlockList(next));
+  }, [])
+  
 
   return (
     <>
       <Paper className={styles['calendar-container']}>
-        <Scheduler data={next} locale="ko-KR" firstDayOfWeek={1}>
+        <Scheduler data={block} locale="ko-KR" firstDayOfWeek={1}>
           <ViewState
             currentDate={currentDate}
             onCurrentDateChange={(currentDate) => setCurrentDate(currentDate)}
