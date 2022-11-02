@@ -1,7 +1,5 @@
-import { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { WeekView } from '@devexpress/dx-react-scheduler-material-ui';
-import cn from 'classnames';
 
 import styles from '@styles/Calendar/Calendar.module.scss';
 import { getDay } from '@components/Calendar/common/util';
@@ -12,7 +10,6 @@ import { RootState } from '@modules/index';
 export default function OtherWeekView() {
   const time = useSelector((state: RootState) => state.othercalendar.time);
   const dispatch = useDispatch();
-  const ref = useRef<any>();
 
   const handleClick = (startDate: SchedulerDateTime) => {
     dispatch(setSelectedTime({ startDate }));
@@ -36,7 +33,11 @@ export default function OtherWeekView() {
             className={styles.timeTableCell}
             children={
               <div
-                className={styles['timeTableCell-inner']}
+                className={
+                  time?.startDate === props.startDate
+                    ? styles['timeTableCell-selected']
+                    : styles['timeTableCell-inner']
+                }
                 onClick={(e) => {
                   if (props.startDate) {
                     handleClick(props.startDate);
