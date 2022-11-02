@@ -14,7 +14,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class ReservationBlockRequestDto {
 
-    private String userFromNickname;
     private String title;
     private String contents;
 
