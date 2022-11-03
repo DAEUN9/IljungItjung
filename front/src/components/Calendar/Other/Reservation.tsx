@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import styled from '@emotion/styled';
 import MenuItem from '@mui/material/MenuItem';
@@ -17,13 +17,15 @@ import {
 
 import styles from '@styles/Calendar/Calendar.module.scss';
 import CustomButton from '@components/common/CustomButton';
-import { SchedulerDateTime } from '@components/types/types';
+import { SchedulerDate, SchedulerDateTime } from '@components/types/types';
 import { RootState } from '@modules/index';
+import { setSelectedTime } from '@modules/othercalendar';
 
 interface RequestData {
   category: string;
   phone: string;
-  request?: string;
+  request: string;
+  time: string;
 }
 
 const TextField = styled(MuiTextField)`
@@ -71,17 +73,73 @@ const getFullDate = (date: SchedulerDateTime | undefined) => {
   }
 };
 
+const getTime = (time: string) => {
+  const hours = parseInt(time.slice(0, 2));
+  const minutes = parseInt(time.slice(2));
+  let fullTime = '';
+
+  if (hours !== 0) fullTime += hours + '시간 ';
+  if (minutes !== 0) fullTime += minutes + '분';
+
+  return fullTime;
+};
+
+const getMinutes = (time: string) => {
+  const hours = parseInt(time.slice(0, 2));
+  const minutes = parseInt(time.slice(2));
+
+  return hours * 60 + minutes;
+};
+
+const items = [
+  {
+    categoryName: '예쁜 그림',
+    time: '0100',
+  },
+  {
+    categoryName: '멋진 그림',
+    time: '0130',
+  },
+  {
+    categoryName: '예쁘고 멋진 그림',
+    time: '0300',
+  },
+];
+
 const Reservation = () => {
-  const { handleSubmit, control } = useForm<RequestData>();
-  const current = useSelector((state: RootState) => state.othercalendar.time);
-  const time = useMemo(() => getFullDate(current?.startDate), [current]);
+  const { handleSubmit, control, watch, setValue, getValues } =
+    useForm<RequestData>();
+  const watchCategory = watch('category', '');
+  const selected = useSelector((state: RootState) => state.othercalendar.time);
+  const dispatch = useDispatch();
+  const fullDate = useMemo(() => getFullDate(selected?.startDate), [selected]);
 
   const onSubmit: SubmitHandler<RequestData> = (data) => console.log(data);
 
+  // 카테고리가 선택됐을 때 이벤트
+  useEffect(() => {
+    if (watchCategory !== '' && selected?.startDate) {
+      const newSelected: SchedulerDate = { startDate: selected?.startDate };
+      
+      if(newSelected.startDate) {
+        const time = items.filter(
+          (item) => item.categoryName === watchCategory
+        )[0].time;
+
+        const endDate = new Date(newSelected.startDate.toString());
+        endDate.setMinutes(getMinutes(time));
+
+        newSelected.endDate = endDate;
+
+        dispatch(setSelectedTime(newSelected));
+      }
+    }
+  }, [watchCategory]);
+
   return (
     <div className={styles.reservation}>
-      {!current && <div className={styles.center}>시간대를 선택해주세요</div>}
-      {current && (
+      {!selected && <div className={styles.center}>시간대를 선택해주세요</div>}
+      {selected && (
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles['reservation-inner']}>
             <div className={styles['reservation-item']}>
@@ -110,24 +168,14 @@ const Reservation = () => {
                       size="small"
                       {...field}
                     >
-                      <MenuItem value={10}>
-                        <div className={styles.menu}>
-                          <div>예쁜 그림</div>
-                          <div>1시간</div>
-                        </div>
-                      </MenuItem>
-                      <MenuItem value={20}>
-                        <div className={styles.menu}>
-                          <div>멋진 그림</div>
-                          <div>1시간 30분</div>
-                        </div>
-                      </MenuItem>
-                      <MenuItem value={30}>
-                        <div className={styles.menu}>
-                          <div>예쁘고 멋진 그림</div>
-                          <div>3시간</div>
-                        </div>
-                      </MenuItem>
+                      {items.map((item) => (
+                        <MenuItem value={item.categoryName}>
+                          <div className={styles.menu}>
+                            <div>{item.categoryName}</div>
+                            <div>{getTime(item.time)}</div>
+                          </div>
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 )}
@@ -137,7 +185,7 @@ const Reservation = () => {
               <div className={styles.center}>
                 <FaRegCalendar />
               </div>
-              {time}
+              {fullDate}
             </div>
             <div className={styles['reservation-item']}>
               <div className={styles.center}>
