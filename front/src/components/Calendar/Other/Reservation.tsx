@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import styled from '@emotion/styled';
+import MuiInputLabel from '@mui/material/InputLabel';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import MuiTextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -16,7 +18,6 @@ import {
 import styles from '@styles/Calendar/Calendar.module.scss';
 import CustomButton from '@components/common/CustomButton';
 import { RootState } from '@modules/index';
-import { InputLabel } from '@mui/material';
 
 interface RequestData {
   category: string;
@@ -40,17 +41,13 @@ const Select = styled(MuiSelect)`
   &.Mui-focused > fieldset {
     border-color: #6b7bb1 !important;
   }
-
-  > fieldset > legend > span {
-    display: none;
-  }
-
-  > .MuiSelect-select {
-    padding-top: 7px;
-    padding-bottom: 7px;
-    padding-left: 7px;
-  }
 `;
+
+const InputLabel = styled(MuiInputLabel)`
+  &.Mui-focused {
+    color: #6b7bb1;
+  }
+`
 
 const Reservation = () => {
   const { handleSubmit, control } = useForm();
@@ -74,11 +71,16 @@ const Reservation = () => {
                 <FaThList />
               </div>
               <FormControl fullWidth>
+                <InputLabel id="select-label" size="small">카테고리 선택</InputLabel>
                 <Select
                   labelId="select-label"
                   id="select"
                   value={age}
-                  label="Age"
+                  label="카테고리 선택"
+                  input={
+                    <OutlinedInput id="select-category" label="카테고리 선택" />
+                  }
+                  size="small"
                 >
                   <MenuItem value={10}>Ten</MenuItem>
                   <MenuItem value={20}>Twenty</MenuItem>
