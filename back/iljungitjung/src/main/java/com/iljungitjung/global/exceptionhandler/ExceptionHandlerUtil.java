@@ -7,10 +7,10 @@ import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
 import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
 import com.iljungitjung.global.common.CommonResponse;
+import com.iljungitjung.global.login.exception.ExpireRedisUserException;
 import com.iljungitjung.global.login.exception.NotMemberException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -88,5 +88,10 @@ public class ExceptionHandlerUtil {
     @ExceptionHandler(AlreadyExistUserException.class)
     ResponseEntity<CommonResponse> handleAlreadyExistUserException(AlreadyExistUserException e){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(CommonResponse.getErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(ExpireRedisUserException.class)
+    ResponseEntity<CommonResponse> handleExpireRedisUserException(ExpireRedisUserException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CommonResponse.getErrorResponse(e.getMessage()));
     }
 }
