@@ -2,6 +2,7 @@ package com.iljungitjung.domain.user.controller;
 
 import com.iljungitjung.domain.user.dto.SignUpDto;
 import com.iljungitjung.domain.user.service.UserService;
+import com.iljungitjung.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

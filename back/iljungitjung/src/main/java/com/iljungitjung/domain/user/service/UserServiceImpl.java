@@ -9,6 +9,7 @@ import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.global.login.entity.RedisUser;
 import com.iljungitjung.global.login.entity.TemporaryUser;
 import com.iljungitjung.global.login.exception.ExpireLoginUserException;
+import com.iljungitjung.global.login.exception.ExpireRedisUserException;
 import com.iljungitjung.global.login.exception.ExpireTemporaryUserException;
 import com.iljungitjung.global.login.repository.RedisUserRepository;
 import com.iljungitjung.global.login.repository.TemporaryUserRepository;
@@ -58,12 +59,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-<<<<<<< back/iljungitjung/src/main/java/com/iljungitjung/domain/user/service/UserServiceImpl.java
     public UserInfo getUserInfo(String nickname) {
         User user = userRepository.findUserByNickname(nickname).orElseThrow(() -> {
             throw new NoExistUserException();
         });
-        return new UserInfo(user);
+        UserInfo userInfo = new UserInfo(user);
+        userInfo.convertCategories(user.getCategoryList());
+        return userInfo;
     }
 
     @Override
@@ -71,8 +73,9 @@ public class UserServiceImpl implements UserService{
         RedisUser redisUser = redisUserRepository.findById(session.getId()).orElseThrow(() -> {
             throw new ExpireRedisUserException();
         });
-        return new UserInfo(redisUser);
-=======
+        return getUserInfo(redisUser.getNickname());
+    }
+
     public User findUserBySessionId(HttpSession session) {
         RedisUser redisUser = redisUserRepository.findById(session.getId()).orElseThrow(() -> {
             throw new ExpireLoginUserException();
@@ -82,6 +85,5 @@ public class UserServiceImpl implements UserService{
         });
 
         return user;
->>>>>>> back/iljungitjung/src/main/java/com/iljungitjung/domain/user/service/UserServiceImpl.java
     }
 }
