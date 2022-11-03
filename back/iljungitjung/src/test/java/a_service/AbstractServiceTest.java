@@ -11,16 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 public class AbstractServiceTest extends AbstractTest {
 
-    @Autowired
-    ReservationService reservationService;
-
-    @Autowired
-    CategoryService categoryService;
-
-    @Autowired
-    ScheduleService scheduleService;
-    public static Long categoryId=0L;
-    public static Long scheduleId=0L;
 
 
 }

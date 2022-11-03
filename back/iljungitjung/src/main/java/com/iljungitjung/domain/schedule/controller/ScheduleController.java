@@ -28,9 +28,9 @@ public class ScheduleController {
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(scheduleService.scheduleView(nickname, startDate, endDate, isMyView)), HttpStatus.OK);
     }
 
-    @GetMapping("/detail/{id}")
-    public ResponseEntity<CommonResponse> scheduleViewDetail(@PathVariable("id") Long id){
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(scheduleService.scheduleViewDetail(id)), HttpStatus.OK);
+    @GetMapping("/detail/{scheduleId}")
+    public ResponseEntity<CommonResponse> scheduleViewDetail(@PathVariable("scheduleId") Long scheduleId){
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(scheduleService.scheduleViewDetail(scheduleId)), HttpStatus.OK);
     }
 
 }

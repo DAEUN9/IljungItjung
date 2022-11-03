@@ -75,6 +75,7 @@ jacocoTestCoverageVerification {
 				value = 'TOTALCOUNT'
 				maximum = 200
 			}
+			excludes = ['*.login']
 		}
 	}
 
