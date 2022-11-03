@@ -14,9 +14,10 @@ public class NotificationMessageRequestDto {
 
     @Builder
     public NotificationMessageRequestDto(NotificationRequestDto requestDto, String phone) {
+        // 추후 LMS으로 변경
         this.type = "SMS";
         this.from = phone;
-        this.content = requestDto.getContent();
+        this.content = "기본메시지";
         this.messages = requestDto.getMessages();
     }
 }
