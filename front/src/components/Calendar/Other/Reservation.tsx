@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import styled from '@emotion/styled';
-import MuiInputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MuiTextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import MuiSelect, { SelectChangeEvent } from '@mui/material/Select';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import MuiInputLabel from '@mui/material/InputLabel';
+import MuiTextField from '@mui/material/TextField';
+import MuiSelect from '@mui/material/Select';
 import {
   FaThList,
   FaRegCalendar,
@@ -17,6 +17,7 @@ import {
 
 import styles from '@styles/Calendar/Calendar.module.scss';
 import CustomButton from '@components/common/CustomButton';
+import { SchedulerDateTime } from '@components/types/types';
 import { RootState } from '@modules/index';
 
 interface RequestData {
@@ -52,11 +53,30 @@ const InputLabel = styled(MuiInputLabel)`
   }
 `;
 
-const Reservation = () => {
-  const { handleSubmit, control } = useForm();
-  const current = useSelector((state: RootState) => state.othercalendar.time);
+const getFullDate = (date: SchedulerDateTime | undefined) => {
+  switch (typeof date) {
+    case 'undefined':
+      return '-';
+    case 'string':
+      return date;
+    case 'object':
+      return (
+        date.getFullYear() +
+        '년 ' +
+        (date.getMonth() + 1) +
+        '월 ' +
+        date.getDate() +
+        '일'
+      );
+  }
+};
 
-  const onSubmit: SubmitHandler<RequestData> = data => console.log(data);
+const Reservation = () => {
+  const { handleSubmit, control } = useForm<RequestData>();
+  const current = useSelector((state: RootState) => state.othercalendar.time);
+  const time = useMemo(() => getFullDate(current?.startDate), [current]);
+
+  const onSubmit: SubmitHandler<RequestData> = (data) => console.log(data);
 
   return (
     <div className={styles.reservation}>
@@ -90,9 +110,24 @@ const Reservation = () => {
                       size="small"
                       {...field}
                     >
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      <MenuItem value={10}>
+                        <div className={styles.menu}>
+                          <div>예쁜 그림</div>
+                          <div>1시간</div>
+                        </div>
+                      </MenuItem>
+                      <MenuItem value={20}>
+                        <div className={styles.menu}>
+                          <div>멋진 그림</div>
+                          <div>1시간 30분</div>
+                        </div>
+                      </MenuItem>
+                      <MenuItem value={30}>
+                        <div className={styles.menu}>
+                          <div>예쁘고 멋진 그림</div>
+                          <div>3시간</div>
+                        </div>
+                      </MenuItem>
                     </Select>
                   </FormControl>
                 )}
@@ -102,7 +137,7 @@ const Reservation = () => {
               <div className={styles.center}>
                 <FaRegCalendar />
               </div>
-              -
+              {time}
             </div>
             <div className={styles['reservation-item']}>
               <div className={styles.center}>

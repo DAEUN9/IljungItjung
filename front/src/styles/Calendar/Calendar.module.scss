@@ -342,6 +342,10 @@ $light-gray: #f5f5f5;
       margin-right: 15px;
       height: unset;
     }
+
+    &:nth-child(2), &:nth-child(3) {
+      padding: 10px 5px;
+    }
   }
 
   &-request {
@@ -357,4 +361,11 @@ $light-gray: #f5f5f5;
   > button {
     width: 100%;
   }
+}
+
+.menu {
+  width: 100%;
+  padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
 }
