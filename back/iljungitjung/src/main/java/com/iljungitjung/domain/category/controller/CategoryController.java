@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 
@@ -19,26 +21,28 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    // user생기면 session으로 수정
     @PostMapping
     public ResponseEntity<CommonResponse> createCategory(
             @RequestBody @Valid CategoryCreateRequestDto requestDto
+            , HttpSession httpSession
     ) {
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.addCategory(requestDto)), HttpStatus.OK);
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.addCategory(requestDto, httpSession)), HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<CommonResponse> updateCategory(
             @RequestBody @Valid CategoryEditRequestDto requestDto
+            , HttpSession httpSession
     ) {
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.updateCategory(requestDto)), HttpStatus.OK);
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.updateCategory(requestDto, httpSession)), HttpStatus.OK);
     }
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<CommonResponse> deleteCategory(
             @PathVariable("categoryId") Long categoryId
+            , HttpSession httpSession
     ) {
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.deleteCategory(categoryId)), HttpStatus.OK);
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.deleteCategory(categoryId, httpSession)), HttpStatus.OK);
     }
 
 

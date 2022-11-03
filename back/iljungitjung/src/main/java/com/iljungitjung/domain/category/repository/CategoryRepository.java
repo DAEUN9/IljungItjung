@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    List<Category> findByUser_Nickname(String nickname);
+    Optional<Category> findByCategoryNameAndUser_Email(String categoryName, String email);
     Optional<Category> findById(Long id);
     Optional<Category> findByCategoryName(String categoryName);
 }

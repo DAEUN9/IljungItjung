@@ -46,7 +46,10 @@ public class ScheduleServiceImpl implements ScheduleService{
         }
 
         try{
-            List<Schedule> scheduleList = scheduleRepository.findByUserFrom_NicknameIs(nickname);
+
+            List<Schedule> scheduleList = new ArrayList<>();
+            //List<Schedule> scheduleList = scheduleRepository.findByUserFrom_NicknameIs(nickname);
+
             List<ScheduleViewDto> requestList = new ArrayList<>();
             List<ScheduleViewDto> acceptList = new ArrayList<>();
             List<ScheduleBlockDto> blockList = new ArrayList<>();
