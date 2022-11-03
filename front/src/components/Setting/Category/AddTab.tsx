@@ -1,16 +1,14 @@
 import {
   FormControl,
-  Input,
   MenuItem,
   Select,
-  SelectChangeEvent,
+  Snackbar,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import { CirclePicker } from "react-color";
 import { ThemeProvider } from "@emotion/react";
 import { useDispatch } from "react-redux";
-import { Controller, useForm } from "react-hook-form";
 
 import styles from "@styles/Setting/Tab.module.scss";
 import CustomButton from "@components/common/CustomButton";
@@ -53,26 +51,33 @@ const colorList = [
   "#D8DFF1",
 ];
 
-interface FormValue {
-  name: string;
-  hour: string;
-  min: string;
-}
-
 const AddTab = () => {
-  const { register, handleSubmit, watch, control } = useForm();
   const [color, setColor] = useState("#D5EAEF");
+  const [name, setName] = useState("");
+  const [hour, setHour] = useState("1");
+  const [min, setMin] = useState("00");
+  const [snackbar, setSnackbar] = useState(false);
 
   const dispatch = useDispatch();
   const onAddCategory = (category: CategoryState) =>
     dispatch(addCategory(category));
 
-  const handleClickSubmit = (data: FormValue) => {
-    console.log(data);
-    // if (category.name || category.name !== "") {
-    //   onAddCategory(category);
-    //   setCategory;
-    // }
+  const handleSubmitForm = () => {
+    if (name.trim().length > 0) {
+      onAddCategory({
+        name: name,
+        hour: hour,
+        min: min,
+        color: color,
+      });
+
+      setName("");
+      setHour("1");
+      setMin("00");
+      setColor("#D5EAEF");
+    } else {
+      setSnackbar(true);
+    }
   };
 
   return (
@@ -80,88 +85,57 @@ const AddTab = () => {
       <ThemeProvider theme={theme}>
         <div className={styles["category-name"]}>
           <h3>카테고리명</h3>
-          <Controller
-            name="name"
-            control={control}
-            rules={{ required: "카테고리명을 입력해 주세요." }}
-            render={({
-              field: { onChange, value },
-              fieldState: { isDirty, error },
-            }) => (
-              <TextField
-                size="small"
-                variant="standard"
-                placeholder="카테고리명을 입력해주세요."
-                inputProps={{ maxLength: 15 }}
-                fullWidth
-                value={value}
-                onChange={onChange}
-                error={!!error}
-                helperText={isDirty && `${value.length}/15`}
-              />
-            )}
-          />
-          {/* <TextField
+          <TextField
             size="small"
             variant="standard"
-            error={isSubmitted && (!categoryName || categoryName === "")}
-            inputProps={{ maxLength: 15 }}
             placeholder="카테고리명을 입력해주세요."
-            onChange={handleChangeCategory}
-            className={styles["text-field"]}
-            helperText={
-              isSubmitted &&
-              (!categoryName || categoryName === "") &&
-              "카테고리명을 입력해주세요."
-            }
-          /> */}
+            inputProps={{ maxLength: 15 }}
+            fullWidth
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            helperText={`${name.length}/15`}
+          />
         </div>
+        <Snackbar
+          open={snackbar}
+          autoHideDuration={6000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          onClose={() => setSnackbar(false)}
+          message="카테고리 이름을 입력해주세요."
+        />
         <div className={styles["time-taken"]}>
           <div className={styles["title"]}>
             <h3>소요시간</h3>
             <span>* 30분 단위로 입력</span>
           </div>
           <div className={styles["dropdown"]}>
-            <Controller
-              name="hour"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <FormControl className={styles["hour"]} size="small">
-                  <Select
-                    label=""
-                    className={styles["select"]}
-                    value={value}
-                    onChange={onChange}
-                    displayEmpty
-                  >
-                    {hours.map((hour, index) => (
-                      <MenuItem key={index} value={hour}>
-                        {hour}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
-            />
+            <FormControl className={styles["hour"]} size="small">
+              <Select
+                label=""
+                className={styles["select"]}
+                value={hour}
+                onChange={(e) => setHour(e.target.value)}
+                displayEmpty
+              >
+                {hours.map((hour, index) => (
+                  <MenuItem key={index} value={hour}>
+                    {hour}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <span>시간</span>
-            <Controller
-              name="min"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <FormControl className={styles["min"]} size="small">
-                  <Select
-                    className={styles["select"]}
-                    value={value}
-                    onChange={onChange}
-                    displayEmpty
-                  >
-                    <MenuItem value={"00"}>00</MenuItem>
-                    <MenuItem value={"30"}>30</MenuItem>
-                  </Select>
-                </FormControl>
-              )}
-            />
-
+            <FormControl className={styles["min"]} size="small">
+              <Select
+                className={styles["select"]}
+                value={min}
+                onChange={(e) => setMin(e.target.value)}
+                displayEmpty
+              >
+                <MenuItem value={"00"}>00</MenuItem>
+                <MenuItem value={"30"}>30</MenuItem>
+              </Select>
+            </FormControl>
             <span>분</span>
           </div>
         </div>
@@ -177,10 +151,7 @@ const AddTab = () => {
           />
         </div>
         <div className={styles["submit-button"]}>
-          <CustomButton
-            children="완료"
-            onSubmit={handleSubmit(handleClickSubmit)}
-          />
+          <CustomButton children="완료" onClick={handleSubmitForm} />
         </div>
       </ThemeProvider>
     </div>
