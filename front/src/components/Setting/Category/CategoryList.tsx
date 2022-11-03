@@ -4,7 +4,12 @@ import { Snackbar } from "@mui/material";
 
 import CustomChip from "@components/common/CustomChip";
 import styles from "@styles/Setting/CategoryList.module.scss";
-import { addCategory, delCategory, setCategory } from "@modules/setting";
+import {
+  addCategory,
+  delCategory,
+  selectCategory,
+  setCategory,
+} from "@modules/setting";
 import { CategoryState } from "@components/types/types";
 import { RootState } from "@modules/index";
 
@@ -22,10 +27,10 @@ const CategoryList = () => {
   const dispatch = useDispatch();
   const onSetCategory = (categories: CategoryState[]) =>
     dispatch(setCategory(categories));
-  const onAddCategory = (category: CategoryState) =>
-    dispatch(addCategory(category));
   const onDelCategory = (category: CategoryState) =>
     dispatch(delCategory(category));
+  const onSelectCategory = (category: CategoryState) =>
+    dispatch(selectCategory(category));
 
   const [delSnackbar, setDelSnackbar] = useState(false);
 
@@ -64,7 +69,7 @@ const CategoryList = () => {
           >
             <CustomChip
               label={category.name}
-              onClick={() => {}}
+              onClick={() => onSelectCategory(category)}
               onDelete={() => handleDeleteCategory(category)}
             />
           </div>

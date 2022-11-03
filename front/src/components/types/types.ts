@@ -10,6 +10,7 @@ interface SearchState {
 
 // 카테고리 관련 타입
 interface CategoryState {
+  id: number;
   name: string;
   color: string;
   hour: string;
