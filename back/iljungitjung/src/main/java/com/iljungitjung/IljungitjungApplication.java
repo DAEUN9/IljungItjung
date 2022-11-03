@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @SpringBootApplication
+@EnableWebMvc
 public class IljungitjungApplication {
 
 	public static void main(String[] args){
