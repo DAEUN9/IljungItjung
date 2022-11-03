@@ -1,21 +1,13 @@
-package b_controller;
+package controller;
 
-import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
-import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
-import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
 import org.junit.jupiter.api.*;
-import org.mockito.Mockito;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.ArgumentMatchers.any;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("카테고리 컨트롤러")
-public class B_A_CategoryControllerTest extends AbstractControllerTest{
+public class CategoryControllerTest extends AbstractControllerTest{
 
 
 //    @Test

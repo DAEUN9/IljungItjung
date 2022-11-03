@@ -1,25 +1,15 @@
-package b_controller;
+package controller;
 
-import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
-import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationIdResponseDto;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import org.junit.jupiter.api.*;
-import org.mockito.Mockito;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("스케줄 컨트롤러")
-public class B_C_ScheduleControllerTest extends AbstractControllerTest{
+public class ScheduleControllerTest extends AbstractControllerTest{
 
 
 

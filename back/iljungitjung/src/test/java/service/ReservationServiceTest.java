@@ -1,4 +1,4 @@
-package a_service;
+package service;
 
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,8 +32,7 @@ import static org.mockito.Mockito.when;
 public class ReservationServiceTest extends AbstractServiceTest{
 
     private ReservationService reservationService;
-    @MockBean
-    private HttpSession httpSession;
+
     @MockBean
     private UserService userService;
     @MockBean

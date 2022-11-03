@@ -1,4 +1,4 @@
-package a_service;
+package service;
 
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDetailResponseDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
@@ -14,8 +14,6 @@ import com.iljungitjung.domain.user.service.UserService;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import javax.servlet.http.HttpSession;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,9 +28,6 @@ import static org.mockito.Mockito.when;
 public class ScheduleServiceTest extends AbstractServiceTest {
 
     private ScheduleService scheduleService;
-
-    @MockBean
-    private HttpSession httpSession;
 
     @MockBean
     private ScheduleRepository scheduleRepository;
