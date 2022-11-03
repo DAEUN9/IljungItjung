@@ -318,19 +318,39 @@ $light-gray: #f5f5f5;
   background-color: $light-gray;
   border-radius: 15px;
 
+  > form {
+    height: 100%;
+  }
+
   &-inner {
     $inner-padding: 20px;
     
     height: calc(100% - $inner-padding * 2);
     padding: $inner-padding;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
   }
 
   &-item {
     padding: 5px;
+    display: flex;
+
+    > div {
+      color: black;
+      margin-right: 15px;
+      height: unset;
+    }
   }
 
   &-request {
     padding: 5px;
+
+    > div {
+      font-weight: 600;
+      font-size: 17px;
+      margin-bottom: 5px;
+    }
   }
 
   > button {
