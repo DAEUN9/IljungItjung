@@ -1,9 +1,11 @@
-package com.iljungitjung.domain.notification.service;
+package com.iljungitjung.global.scheduler;
 
 import com.iljungitjung.domain.notification.dto.NotificationMessageDto;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationSchedulerDto;
+import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.schedule.entity.Schedule;
+import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -22,10 +24,10 @@ import java.util.*;
 public class NotificationScheduler {
     private final ScheduleRepository scheduleRepository;
     private final NotificationService notificationService;
+    final String BASE_MESSAGE = "일정있정에서 안내드립니다.\n";
 
-//    @Scheduled(cron=" 0 0/1 * * * * ")
     @Scheduled(cron=" 0 0 10 ? * * ")
-    public void searchTodaySchedules() {
+    private void searchTodaySchedules() {
         LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
         LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
         Date startToday = java.sql.Timestamp.valueOf(startDatetime);
@@ -33,9 +35,12 @@ public class NotificationScheduler {
         List<Schedule> todayScheduleList = scheduleRepository.findByStartDateBetween(startToday, endToday);
         HashMap<String, List<NotificationSchedulerDto>> phoneHashMap = new HashMap<>();
         List<NotificationSchedulerDto> emptyScheduleList = new ArrayList<>();
-        for (Schedule schedlue : todayScheduleList) {
-            String phone = schedlue.getPhonenum();
-            NotificationSchedulerDto todaySchedule = new NotificationSchedulerDto(schedlue);
+        for (Schedule schedule : todayScheduleList) {
+            if (!(schedule.getType().equals(Type.ACCEPT))) {
+                continue;
+            }
+            String phone = schedule.getPhonenum();
+            NotificationSchedulerDto todaySchedule = new NotificationSchedulerDto(schedule);
             List<NotificationSchedulerDto> tempScheduleList = phoneHashMap.getOrDefault(phone, emptyScheduleList);
             tempScheduleList.add(todaySchedule);
             phoneHashMap.put(phone, tempScheduleList);
@@ -45,10 +50,9 @@ public class NotificationScheduler {
         }
     }
 
-    public void sendTodaySchedules(String phone, List<NotificationSchedulerDto> scheduleList) {
+    private void sendTodaySchedules(String phone, List<NotificationSchedulerDto> scheduleList) {
         StringBuilder stringBuilder = new StringBuilder();
-        String content = "일정있정에서 안내드립니다.\n";
-        stringBuilder.append(content);
+        stringBuilder.append(BASE_MESSAGE);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("a hh:mm");
         for (NotificationSchedulerDto schedule : scheduleList) {
             String time = simpleDateFormat.format(schedule.getStartDate());
@@ -57,14 +61,14 @@ public class NotificationScheduler {
         }
         List<NotificationMessageDto> messageList = new ArrayList<>();
         NotificationMessageDto message = NotificationMessageDto.builder()
-                                        .to(phone)
-                                        .content(stringBuilder.toString())
-                                        .build();
+                .to(phone)
+                .content(stringBuilder.toString())
+                .build();
         messageList.add(message);
         NotificationRequestDto requestDto = NotificationRequestDto.builder()
-                                            .messages(messageList)
-                                            .content("필수")
-                                            .build();
+                .messages(messageList)
+                .content("필수")
+                .build();
         notificationService.sendMessage(requestDto);
     }
 }

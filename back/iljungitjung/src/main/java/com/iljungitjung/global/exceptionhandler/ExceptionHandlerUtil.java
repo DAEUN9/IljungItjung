@@ -52,28 +52,14 @@ public class ExceptionHandlerUtil {
         return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
     }
 
-    @ExceptionHandler(InvalidSigningKeyException.class)
-    ResponseEntity<CommonResponse> handleInvalidSigningKeyException(BindingResult bindingResult){
-        return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
-    }
-
-    @ExceptionHandler(MacFinalMessageEncodingException.class)
-    ResponseEntity<CommonResponse> handleMacFinalMessageEncodingException(BindingResult bindingResult){
-        return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
-    }
-
     @ExceptionHandler(MessageUriSyntaxErrorException.class)
     ResponseEntity<CommonResponse> handleMessageUriSyntaxErrorException(BindingResult bindingResult){
         return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
     }
 
-    @ExceptionHandler(NoExistMacInstanceException.class)
-    ResponseEntity<CommonResponse> handleNoExistMacInstanceException(BindingResult bindingResult){
+    @ExceptionHandler(FailSignatureKeyErrorException.class)
+    ResponseEntity<CommonResponse> FailSignatureKeyErrorException(BindingResult bindingResult){
         return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
     }
 
-    @ExceptionHandler(SecretKeyEncodingException.class)
-    ResponseEntity<CommonResponse> handleSecretKeyEncodingException(BindingResult bindingResult){
-        return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
-    }
 }

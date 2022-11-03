@@ -12,7 +12,7 @@ public class NotificationRequestDto {
 
     @Builder
     public NotificationRequestDto (List<NotificationMessageDto> messages, String content) {
-        this.content = content;
+        this.content = "content";
         this.messages = messages;
     }
 }
