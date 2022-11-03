@@ -51,12 +51,12 @@ public class Schedule {
 
     public void setScheduleRequestList(User user){
         user.getScheduleRequestList().add(this);
-        this.userTo = user;
+        this.userFrom = user;
     }
 
     public void setScheduleResponseList(User user){
         user.getScheduleResponseList().add(this);
-        this.userFrom = user;
+        this.userTo = user;
     }
 
 
