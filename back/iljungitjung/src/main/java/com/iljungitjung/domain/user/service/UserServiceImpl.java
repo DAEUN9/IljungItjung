@@ -63,7 +63,9 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findUserByNickname(nickname).orElseThrow(() -> {
             throw new NoExistUserException();
         });
-        return new UserInfo(user);
+        UserInfo userInfo = new UserInfo(user);
+        userInfo.convertCategories(user.getCategoryList());
+        return userInfo;
     }
 
     @Override
@@ -71,10 +73,9 @@ public class UserServiceImpl implements UserService{
         RedisUser redisUser = redisUserRepository.findById(session.getId()).orElseThrow(() -> {
             throw new ExpireRedisUserException();
         });
-        return new UserInfo(redisUser);
+        return getUserInfo(redisUser.getNickname());
     }
 
-    @Override
     public User findUserBySessionId(HttpSession session) {
         RedisUser redisUser = redisUserRepository.findById(session.getId()).orElseThrow(() -> {
             throw new ExpireLoginUserException();
