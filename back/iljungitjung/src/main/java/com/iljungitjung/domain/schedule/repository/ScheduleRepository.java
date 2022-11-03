@@ -3,6 +3,7 @@ package com.iljungitjung.domain.schedule.repository;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -13,5 +14,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findByUserTo_IdIs(Long id);
 
     List<Schedule> findByUserFrom_IdIs(Long id);
+
+    List<Schedule> findByStartDateBetween(Date startToday, Date endToday);
 
 }

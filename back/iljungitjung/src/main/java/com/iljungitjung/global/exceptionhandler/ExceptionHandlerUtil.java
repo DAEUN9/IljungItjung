@@ -7,18 +7,27 @@ import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
 import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
 import com.iljungitjung.global.common.CommonResponse;
+import com.iljungitjung.global.login.exception.ExpireRedisUserException;
 import com.iljungitjung.global.login.exception.NotMemberException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 
 @RestControllerAdvice
 public class ExceptionHandlerUtil {
+
+    @Value("${login.kakao.register_client_uri}")
+    private String KAKAO_REGISTER_CLIENT_URI;
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<CommonResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
 
@@ -46,8 +55,12 @@ public class ExceptionHandlerUtil {
     }
 
     @ExceptionHandler(NotMemberException.class)
-    ResponseEntity<CommonResponse> handleNotMemberException(NotMemberException e){
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CommonResponse.getErrorResponse(e.getMessage()));
+    void handleNotMemberException(NotMemberException e, HttpServletResponse response){
+        try {
+            response.sendRedirect(KAKAO_REGISTER_CLIENT_URI);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @ExceptionHandler(ConvertToJsonErrorException.class)
@@ -60,33 +73,24 @@ public class ExceptionHandlerUtil {
         return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
     }
 
-    @ExceptionHandler(InvalidSigningKeyException.class)
-    ResponseEntity<CommonResponse> handleInvalidSigningKeyException(BindingResult bindingResult){
-        return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
-    }
-
-    @ExceptionHandler(MacFinalMessageEncodingException.class)
-    ResponseEntity<CommonResponse> handleMacFinalMessageEncodingException(BindingResult bindingResult){
-        return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
-    }
-
     @ExceptionHandler(MessageUriSyntaxErrorException.class)
     ResponseEntity<CommonResponse> handleMessageUriSyntaxErrorException(BindingResult bindingResult){
         return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
     }
 
-    @ExceptionHandler(NoExistMacInstanceException.class)
-    ResponseEntity<CommonResponse> handleNoExistMacInstanceException(BindingResult bindingResult){
+    @ExceptionHandler(FailSignatureKeyErrorException.class)
+    ResponseEntity<CommonResponse> FailSignatureKeyErrorException(BindingResult bindingResult){
         return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
     }
 
-    @ExceptionHandler(SecretKeyEncodingException.class)
-    ResponseEntity<CommonResponse> handleSecretKeyEncodingException(BindingResult bindingResult){
-        return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
-    }
 
     @ExceptionHandler(AlreadyExistUserException.class)
     ResponseEntity<CommonResponse> handleAlreadyExistUserException(AlreadyExistUserException e){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(CommonResponse.getErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(ExpireRedisUserException.class)
+    ResponseEntity<CommonResponse> handleExpireRedisUserException(ExpireRedisUserException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CommonResponse.getErrorResponse(e.getMessage()));
     }
 }
