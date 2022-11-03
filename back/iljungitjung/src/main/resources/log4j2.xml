@@ -16,6 +16,9 @@
         <Logger name="com.iljungitjung.domain" level="debug" additivity="false">
             <AppenderRef ref="console"></AppenderRef>
         </Logger>
+        <Logger name="com.iljungitjung.global" level="debug" additivity="false">
+            <AppenderRef ref="console"></AppenderRef>
+        </Logger>
         <Root level="info">
             <AppenderRef ref="console"></AppenderRef>
         </Root>
