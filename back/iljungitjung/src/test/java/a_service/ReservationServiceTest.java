@@ -58,6 +58,7 @@ public class ReservationServiceTest extends AbstractServiceTest{
         String color = "#000000";
         String time = "0130";
 
+        Long scheduleId=1L;
         String userFromNickname = "1";
         String userToNickname = "2";
         String date = "20221017";
@@ -72,7 +73,7 @@ public class ReservationServiceTest extends AbstractServiceTest{
 
         ReservationRequestDto reservationRequestDto = new ReservationRequestDto(userToNickname, date, startTime, contents, phone, categoryName);
         Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, new Date(), new Date(), category.get().getColor(), Type.REQUEST);
-        schedule.setId(1L);
+        schedule.setId(scheduleId);
 
         //when
         when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
@@ -97,10 +98,11 @@ public class ReservationServiceTest extends AbstractServiceTest{
         String reason = "가능합니다. 잘부탁드려요";
 
         Long scheduleId=1L;
-        Long userToId = 2L;
 
+        Long userToId = 2L;
         User userTo = User.builder().build();
         userTo.setId(userToId);
+
         Optional<Schedule> schedule = Optional.of(Schedule.builder().userTo(userTo).build());
         schedule.get().setId(scheduleId);
 
@@ -117,7 +119,7 @@ public class ReservationServiceTest extends AbstractServiceTest{
     }
 
     @Test
-    @DisplayName("일정 신청자가 일정 조회")
+    @DisplayName("일정 신청자가 예약 리스트 조회")
     public void C() throws Exception {
 
         //given
@@ -162,15 +164,13 @@ public class ReservationServiceTest extends AbstractServiceTest{
     public void D() throws Exception {
 
         //given
-        Long scheduleId=1L;
-        Long userToId = 2L;
-
         String reason = "가능합니다. 잘부탁드려요";
 
+        Long userToId = 2L;
         User userTo = User.builder().build();
         userTo.setId(userToId);
 
-
+        Long scheduleId=1L;
         Optional<Schedule> schedule = Optional.of(Schedule.builder().userTo(userTo).build());
         schedule.get().setId(scheduleId);
 
@@ -190,15 +190,13 @@ public class ReservationServiceTest extends AbstractServiceTest{
     public void E() throws Exception {
 
         //given
-        Long scheduleId = 1L;
         Long userToId = 2L;
-
         User userTo = User.builder().build();
         userTo.setId(userToId);
 
+        Long scheduleId = 1L;
         String title = "공휴일";
         String contents = "공휴일이라서 쉽니다.";
-
         String date="20221017";
         String startTime = "1500";
         String endTime = "1630";

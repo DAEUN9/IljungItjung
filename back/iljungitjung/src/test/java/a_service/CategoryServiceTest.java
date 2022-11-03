@@ -49,7 +49,6 @@ public class CategoryServiceTest{
     public void A() throws Exception {
         //given
         Long categoryId = 1L;
-
         String categoryName = "커트";
         String time = "0130";
         String color = "#000000";
@@ -81,18 +80,17 @@ public class CategoryServiceTest{
 
         //given
         Long categoryId = 1L;
-        Long userId = 1L;
-
         String categoryName = "커트";
         String time = "0130";
         String color = "#000000";
 
+        Long userId = 1L;
         User user = User.builder().build();
+        user.setId(userId);
 
         Optional<Category> category = Optional.of(new Category(categoryName, color, time));
         category.get().setId(categoryId);
         category.get().setUser(user);
-        category.get().getUser().setId(userId);
 
         CategoryEditRequestDto categoryEditRequestDto = new CategoryEditRequestDto(
                 categoryId, categoryName, time, color);
@@ -113,18 +111,17 @@ public class CategoryServiceTest{
 
         //given
         Long categoryId = 1L;
-        Long userId = 1L;
-
         String categoryName = "커트";
         String time = "0130";
         String color = "#000000";
 
+        Long userId = 1L;
         User user = User.builder().build();
+        user.setId(userId);
 
         Optional<Category> category = Optional.of(new Category(categoryName, color, time));
         category.get().setId(categoryId);
         category.get().setUser(user);
-        category.get().getUser().setId(userId);
 
         //when
         when(userService.findUserBySessionId(httpSession)).thenReturn(user);

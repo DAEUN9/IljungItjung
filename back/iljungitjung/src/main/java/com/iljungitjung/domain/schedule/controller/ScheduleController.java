@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -22,10 +23,8 @@ public class ScheduleController {
                                                        @Size(min=8, max=8, message = "형식을 맞춰주세요 (ex.20221017)")
                                                        @RequestParam("startDate") String startDate,
                                                        @Size(min=8, max=8, message = "형식을 맞춰주세요 (ex.20221017)")
-                                                       @RequestParam("endDate") String endDate,
-                                                       @NotNull(message = "isMyView는 true 또는 false 입니다.")
-                                                       @RequestParam("isMyView") boolean isMyView){
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(scheduleService.scheduleView(nickname, startDate, endDate, isMyView)), HttpStatus.OK);
+                                                       @RequestParam("endDate") String endDate, HttpSession httpSession){
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(scheduleService.scheduleView(nickname, startDate, endDate, httpSession)), HttpStatus.OK);
     }
 
     @GetMapping("/detail/{scheduleId}")

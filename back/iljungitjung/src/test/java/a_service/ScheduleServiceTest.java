@@ -1,32 +1,27 @@
 package a_service;
 
-import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
-import com.iljungitjung.domain.category.dto.CategoryIdResponseDto;
-import com.iljungitjung.domain.category.entity.Category;
-import com.iljungitjung.domain.category.repository.CategoryRepository;
-import com.iljungitjung.domain.category.service.CategoryService;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationIdResponseDto;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
+import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDetailResponseDto;
+import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
+import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
-import com.iljungitjung.domain.schedule.service.ReservationService;
-import com.iljungitjung.domain.schedule.service.ReservationServiceImpl;
 import com.iljungitjung.domain.schedule.service.ScheduleService;
 import com.iljungitjung.domain.schedule.service.ScheduleServiceImpl;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
-import com.iljungitjung.global.login.repository.RedisUserRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.servlet.http.HttpSession;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
@@ -36,165 +31,103 @@ public class ScheduleServiceTest extends AbstractServiceTest {
 
     private ScheduleService scheduleService;
 
-    private ReservationService reservationService;
-
     @MockBean
-    private UserRepository userRepository;
+    private HttpSession httpSession;
 
     @MockBean
     private ScheduleRepository scheduleRepository;
 
     @MockBean
-    private CategoryRepository categoryRepository;
-
-    @MockBean
-    private HttpSession session;
-
-    @MockBean
-    private CategoryService categoryService;
-
-    @MockBean
-    private RedisUserRepository redisUserRepository;
+    private UserRepository userRepository;
 
     @MockBean
     private UserService userService;
 
+
     @BeforeEach
     public void init(){
-        scheduleService = new ScheduleServiceImpl(scheduleRepository, categoryRepository, userRepository);
-        reservationService = new ReservationServiceImpl(scheduleRepository, categoryRepository, userRepository,userService);
+        scheduleService = new ScheduleServiceImpl(scheduleRepository, userRepository, userService);
     }
 
-//    @Test
-//    @DisplayName("카테고리 등록")
-//    public void A() throws Exception {
-//        //given
-//        String categoryName = "커트3";
-//        String time = "0130";
-//        String color = "#000000";
-//
-//        CategoryCreateRequestDto categoryCreateRequestDto = new CategoryCreateRequestDto(
-//                categoryName, time, color);
-//        CategoryIdResponseDto resultCategoryIdResponseDto = new CategoryIdResponseDto(1L);
-//
-//        //when
-//        when(categoryService.addCategory(categoryCreateRequestDto, session)).thenReturn(resultCategoryIdResponseDto);
-//
-//        CategoryIdResponseDto categoryIdResponseDto = categoryService.addCategory(categoryCreateRequestDto, session);
-//
-//        //then
-//        Assertions.assertEquals(categoryIdResponseDto.getId(), 1L);
-//    }
-
     @Test
-    @DisplayName("일정 요청")
+    @DisplayName("타인의 일정 리스트 조회")
+    public void A() throws Exception {
+
+        //given
+        Long scheduleId = 1L;
+        String date="20221017";
+        String startTime = "1500";
+        String endTime = "1630";
+        Date startDateFormat;
+        Date endDateFormat;
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+        try{
+            startDateFormat = formatter.parse(date+startTime);
+            endDateFormat = formatter.parse(date+endTime);
+        }catch (Exception e){
+            throw new DateFormatErrorException();
+        }
+
+        Long userFromId=1L;
+        User userFrom = User.builder().build();
+        userFrom.setId(userFromId);
+
+        Long userToId=2L;
+        String nickname="2";
+        Optional<User> userTo = Optional.of(User.builder().nickname(nickname).build());
+        userTo.get().setId(userToId);
+
+        Schedule schedule = Schedule.builder().userFrom(userFrom).userTo(userTo.get()).startDate(startDateFormat).endDate(endDateFormat).type(Type.ACCEPT).build();
+        schedule.setId(scheduleId);
+
+        List<Schedule> scheduleList = new ArrayList<>();
+        scheduleList.add(schedule);
+
+        //when
+        when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
+        when(userRepository.findUserByNickname(nickname)).thenReturn(userTo);
+        when(scheduleRepository.findByUserTo_IdIs(userTo.get().getId())).thenReturn(scheduleList);
+
+        ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView(nickname, date, date, httpSession);
+
+        //then
+        Assertions.assertEquals(scheduleViewResponseDto.getAcceptList().get(0).getId(), 1L);
+
+
+    }
+    @Test
+    @DisplayName("일정 상세 조회")
     public void B() throws Exception {
 
         //given
-        String userToNickname = "2";
-        String date = "20221017";
-        String startTime = "1500";
+        Long scheduleId = 1L;
+        String categoryName = "커트";
         String contents = "안녕하세요";
         String phone = "01011111111";
-        String categoryName = "커트";
-        String userEmail = "eamil@naver.com";
+        String date="20221017";
+        String startTime = "1500";
+        String endTime = "1630";
+        Date startDateFormat;
+        Date endDateFormat;
 
-        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(userToNickname, date, startTime, contents, phone, categoryName);
-        User user = User.builder()
-                        .nickname("1")
-                .email(userEmail)
-                .build();
-        Optional<User> user2 = Optional.ofNullable(User.builder()
-                .nickname("2")
-                .build());
-        Optional<Category> category = Optional.of(new Category(categoryName, "#000130", "0130"));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+        try{
+            startDateFormat = formatter.parse(date+startTime);
+            endDateFormat = formatter.parse(date+endTime);
+        }catch (Exception e){
+            throw new DateFormatErrorException();
+        }
 
-        Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, new Date(), new Date(), category.get().getColor(), Type.REQUEST);
-        schedule.setId(1L);
-
-        ReservationIdResponseDto result = new ReservationIdResponseDto(1L);
-
-//        ReservationIdResponseDto reservationIdResponseDto = new ReservationIdResponseDto(1L);
-
+        Optional<Schedule> schedule = Optional.of(Schedule.builder().categoryName(categoryName).contents(contents).startDate(startDateFormat).endDate(endDateFormat).phonenum(phone).build());
+        schedule.get().setId(scheduleId);
 
         //when
-        when(userService.findUserBySessionId(session)).thenReturn(user);
-        when(categoryRepository.findByCategoryNameAndUser_Email(categoryName, userEmail)).thenReturn(category);
-        when(userRepository.findUserByNickname(userToNickname)).thenReturn(user2);
-        when(scheduleRepository.save(any(Schedule.class))).thenReturn(schedule);
+        when(scheduleRepository.findScheduleById(scheduleId)).thenReturn(schedule);
 
-        ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationRequest(reservationRequestDto, session);
+        ScheduleViewDetailResponseDto scheduleViewDetailResponseDto = scheduleService.scheduleViewDetail(scheduleId);
 
         //then
-        Assertions.assertEquals(reservationIdResponseDto.getId(), 1L);
-
+        Assertions.assertEquals(scheduleViewDetailResponseDto.getId(), scheduleId);
     }
-//
-//    @Test
-//    @DisplayName("일정 차단")
-//    public void C() throws Exception {
-//
-//        //given
-//        String userFromNickname = "1";
-//        String title = "공휴일";
-//        String contents = "공휴일이라서 쉽니다.";
-//        String date = "20221017";
-//        String startTime = "1500";
-//        String endTime = "1630";
-//
-//        ReservationBlockRequestDto reservationBlockRequestDto = new ReservationBlockRequestDto(
-//                userFromNickname, title, contents, date, startTime, endTime);
-//
-//        //when
-//        ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationBlock(reservationBlockRequestDto);
-//
-//        //then
-//        scheduleId++;
-//        Assertions.assertEquals(reservationIdResponseDto.getId(), scheduleId);
-//
-//    }
-//
-//    @Test
-//    @DisplayName("일정 리스트 조회")
-//    public void D() throws Exception {
-//
-//        //given
-//        String nickname = "1";
-//        String startDate = "20221017";
-//        String endDate = "20221018";
-//        boolean isMyView = false;
-//
-//        //when
-//        ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView(nickname, startDate, endDate, isMyView);
-//
-//        //then
-//        int sum = scheduleViewResponseDto.getRequestList().size()+scheduleViewResponseDto.getBlockList().size()+scheduleViewResponseDto.getAcceptList().size()+scheduleViewResponseDto.getCancelList().size();
-//
-//        Assertions.assertEquals(sum, scheduleId);
-//
-//
-//    }
-//    @Test
-//    @DisplayName("일정 상세 조회")
-//    public void E() throws Exception {
-//        //given
-//
-//        //when
-//        ScheduleViewDetailResponseDto scheduleViewDetailResponseDto = scheduleService.scheduleViewDetail(scheduleId);
-//
-//        //then
-//        Assertions.assertEquals(scheduleViewDetailResponseDto.getId(), scheduleId);
-//    }
-//    @Test
-//    @DisplayName("카테고리 삭제")
-//    public void F() throws Exception {
-//        //given
-//
-//        //when
-//        CategoryIdResponseDto categoryIdResponseDto = categoryService.deleteCategory(categoryId);
-//
-//        //then
-//        Assertions.assertEquals(categoryIdResponseDto.getId(), categoryId);
-//
-//    }
 }
