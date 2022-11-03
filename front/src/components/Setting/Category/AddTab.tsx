@@ -52,10 +52,10 @@ const colorList = [
 ];
 
 const AddTab = () => {
-  const [color, setColor] = useState("#D5EAEF");
   const [name, setName] = useState("");
   const [hour, setHour] = useState("1");
   const [min, setMin] = useState("00");
+  const [color, setColor] = useState("#D5EAEF");
   const [snackbar, setSnackbar] = useState(false);
 
   const dispatch = useDispatch();
@@ -63,7 +63,7 @@ const AddTab = () => {
     dispatch(addCategory(category));
 
   const handleSubmitForm = () => {
-    if (name.trim().length > 0) {
+    if (name.length > 0) {
       onAddCategory({
         name: name,
         hour: hour,
@@ -74,7 +74,7 @@ const AddTab = () => {
       setName("");
       setHour("1");
       setMin("00");
-      setColor("#D5EAEF");
+      setColor("#d5eaef");
     } else {
       setSnackbar(true);
     }
@@ -86,6 +86,7 @@ const AddTab = () => {
         <div className={styles["category-name"]}>
           <h3>카테고리명</h3>
           <TextField
+            FormHelperTextProps={{ className: styles["helper-text"] }}
             size="small"
             variant="standard"
             placeholder="카테고리명을 입력해주세요."
@@ -93,7 +94,7 @@ const AddTab = () => {
             fullWidth
             value={name}
             onChange={(e) => setName(e.target.value)}
-            helperText={`${name.length}/15`}
+            helperText={`${name.length} / 15`}
           />
         </div>
         <Snackbar
@@ -115,7 +116,6 @@ const AddTab = () => {
                 className={styles["select"]}
                 value={hour}
                 onChange={(e) => setHour(e.target.value)}
-                displayEmpty
               >
                 {hours.map((hour, index) => (
                   <MenuItem key={index} value={hour}>
@@ -130,7 +130,6 @@ const AddTab = () => {
                 className={styles["select"]}
                 value={min}
                 onChange={(e) => setMin(e.target.value)}
-                displayEmpty
               >
                 <MenuItem value={"00"}>00</MenuItem>
                 <MenuItem value={"30"}>30</MenuItem>
