@@ -9,6 +9,7 @@ import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
 import com.iljungitjung.global.common.CommonResponse;
 import com.iljungitjung.global.login.exception.ExpireRedisUserException;
 import com.iljungitjung.global.login.exception.NotMemberException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -16,9 +17,17 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 
 @RestControllerAdvice
 public class ExceptionHandlerUtil {
+
+    @Value("${login.kakao.register_client_uri}")
+    private String KAKAO_REGISTER_CLIENT_URI;
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<CommonResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
 
@@ -46,8 +55,12 @@ public class ExceptionHandlerUtil {
     }
 
     @ExceptionHandler(NotMemberException.class)
-    ResponseEntity<CommonResponse> handleNotMemberException(NotMemberException e){
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CommonResponse.getErrorResponse(e.getMessage()));
+    void handleNotMemberException(NotMemberException e, HttpServletResponse response){
+        try {
+            response.sendRedirect(KAKAO_REGISTER_CLIENT_URI);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @ExceptionHandler(ConvertToJsonErrorException.class)
