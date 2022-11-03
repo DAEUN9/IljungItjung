@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RestController
 public class NotificationController {
@@ -18,7 +20,7 @@ public class NotificationController {
 
     @PostMapping("/notifications")
     public ResponseEntity<CommonResponse> createNotification(
-            @RequestBody NotificationRequestDto requestDto
+            @RequestBody @Valid NotificationRequestDto requestDto
     ) {
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(notificationService.sendMessage(requestDto)), HttpStatus.OK);
     }
