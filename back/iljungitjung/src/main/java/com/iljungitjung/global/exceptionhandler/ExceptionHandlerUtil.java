@@ -70,10 +70,6 @@ public class ExceptionHandlerUtil {
         return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
     }
 
-    @ExceptionHandler(SecretKeyEncodingException.class)
-    ResponseEntity<CommonResponse> handleSecretKeyEncodingException(BindingResult bindingResult){
-        return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
-    }
 
     @ExceptionHandler(AlreadyExistUserException.class)
     ResponseEntity<CommonResponse> handleAlreadyExistUserException(AlreadyExistUserException e){
