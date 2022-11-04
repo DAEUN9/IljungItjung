@@ -1,0 +1,44 @@
+@use "../common/utils.module" as *;
+
+.login-page {
+  @include page-default();
+}
+
+.left {
+	width: 55%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  
+	& .picturebox{
+	  display: flex;
+	  justify-content: center;
+	  align-items: flex-start;
+  
+	  & .iljung{
+			width: 35%;
+			height: auto;
+	  }
+  
+	  & .logo {
+			width: 10%;	
+	  }
+	}
+}
+
+.right {
+	width: 45%;
+	text-align: center;
+
+	& .welcome {
+		font-size: 150%;
+		font-weight: bolder;
+		margin: 15% 0% 5%;
+	}
+
+	& .carousel {
+		margin: 0% 3% 10%;
+	}
+
+}
+  
