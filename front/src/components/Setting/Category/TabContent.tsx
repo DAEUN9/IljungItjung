@@ -80,6 +80,7 @@ const TabContent = ({ flag }: TabContentProps) => {
   });
   const [edit, setEdit] = useState(selectedCategory);
   const [snackbar, setSnackbar] = useState(false);
+  const [overSnackbar, setOverSnackbar] = useState(false);
 
   const init = { name: "", hour: "1", min: "00", color: "#D5EAEF" };
 
@@ -90,6 +91,11 @@ const TabContent = ({ flag }: TabContentProps) => {
   const handleSubmitForm = () => {
     // flag가 false인 경우 추가, true인 경우 변경
     if (!flag) {
+      if (categories.length === 15) {
+        setOverSnackbar(true);
+        return;
+      }
+
       if (add.name.length > 0) {
         onAddCategory(add);
         setAdd(init);
@@ -141,7 +147,14 @@ const TabContent = ({ flag }: TabContentProps) => {
             autoHideDuration={6000}
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             onClose={() => setSnackbar(false)}
-            message="카테고리 이름을 입력해주세요."
+            message="카테고리 이름을 입력해 주세요."
+          />
+          <Snackbar
+            open={overSnackbar}
+            autoHideDuration={6000}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            onClose={() => setOverSnackbar(false)}
+            message="카테고리는 최대 15개까지 등록 가능합니다."
           />
           <div className={styles["time-taken"]}>
             <div className={styles["title"]}>
