@@ -1,5 +1,7 @@
 package com.iljungitjung.global.login.interceptor;
 
+import com.iljungitjung.domain.user.entity.User;
+import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.global.login.entity.RedisUser;
 import com.iljungitjung.global.login.repository.RedisUserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +23,9 @@ class LoginInterceptorTest {
 
     @Autowired
     RedisUserRepository redisUserRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Test
     @DisplayName("카카오 로그인 요청시 interceptor에 걸리지 않고 카카오 로그인 페이지로 redirect 시켜줌")
@@ -44,6 +49,13 @@ class LoginInterceptorTest {
         String email = "email";
         String nickname = "nickname";
         String profileImg = "profileImg";
+        User user = User.builder()
+                .email(email)
+                .nickname(nickname)
+                .imagePath(profileImg)
+                .build();
+        userRepository.save(user);
+
         RedisUser redisUser = RedisUser.builder()
                 .id(session.getId())
                 .email(email)
