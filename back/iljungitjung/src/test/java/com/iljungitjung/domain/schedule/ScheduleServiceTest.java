@@ -1,4 +1,4 @@
-package service;
+package com.iljungitjung.domain.schedule;
 
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDetailResponseDto;

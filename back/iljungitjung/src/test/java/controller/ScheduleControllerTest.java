@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("스케줄 컨트롤러")
-public class ScheduleControllerTest extends AbstractControllerTest{
+public class ScheduleControllerTest{
 
 
 

@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("상담예약 컨트롤러")
-public class ReservationControllerTest extends AbstractControllerTest{
+public class ReservationControllerTest{
 
 //
 //

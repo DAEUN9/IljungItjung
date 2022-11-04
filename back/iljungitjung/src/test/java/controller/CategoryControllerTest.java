@@ -7,7 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("카테고리 컨트롤러")
-public class CategoryControllerTest extends AbstractControllerTest{
+public class CategoryControllerTest{
 
 
 //    @Test

@@ -1,4 +1,4 @@
-package service;
+package com.iljungitjung.domain.user;
 
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.user.dto.SignUpDto;
@@ -59,7 +59,7 @@ public class UserServiceTest {
 
         String id = "1";
         String email = "email@naver.com";
-        String profileImg = "image_path";
+        String profileImg = "profile_img";
 
         Long userId = 1L;
 
