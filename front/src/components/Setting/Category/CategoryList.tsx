@@ -4,12 +4,7 @@ import { Snackbar } from "@mui/material";
 
 import CustomChip from "@components/common/CustomChip";
 import styles from "@styles/Setting/CategoryList.module.scss";
-import {
-  addCategory,
-  delCategory,
-  selectCategory,
-  setCategory,
-} from "@modules/setting";
+import { delCategory, selectCategory, setCategory } from "@modules/setting";
 import { CategoryState } from "@components/types/types";
 import { RootState } from "@modules/index";
 
@@ -23,6 +18,9 @@ const CategoryList = () => {
   const categories = useSelector(
     (state: RootState) => state.setting.categories
   );
+  const selectedCategory = useSelector(
+    (state: RootState) => state.setting.selectedCategory
+  );
 
   const dispatch = useDispatch();
   const onSetCategory = (categories: CategoryState[]) =>
@@ -34,22 +32,13 @@ const CategoryList = () => {
 
   const [delSnackbar, setDelSnackbar] = useState(false);
 
-  // const colorRef = useRef<HTMLDivElement[]>([]);
-
-  useEffect(() => {
-    if (data.length > 0) onSetCategory(data);
-    // colorRef.current.map((curr) => {
-    //   const index = curr.className.lastIndexOf("#");
-    //   const color = curr.className.substring(index);
-    //   const el = curr.childNodes[0] as HTMLDivElement;
-    //   el.style.backgroundColor = color;
-    // });
-  }, []);
-
   const handleDeleteCategory = (category: CategoryState) => {
     if (categories.length < 2) {
       setDelSnackbar(true);
     } else {
+      if (category.name === selectedCategory.name) {
+        onSelectCategory({ name: "", hour: "", min: "", color: "" });
+      }
       onDelCategory(category);
     }
   };
@@ -63,11 +52,11 @@ const CategoryList = () => {
       <div className={styles["content"]}>
         {categories.map((category, index) => (
           <div
-            className={`${styles["chip"]} ${category.color}`}
+            className={`${styles["chip"]} ${category.color} chip${category.name}`}
             key={index}
-            // ref={(el) => (colorRef.current[index] = el as HTMLDivElement)}
           >
             <CustomChip
+              active={selectedCategory.name === category.name ? true : false}
               label={category.name}
               onClick={() => onSelectCategory(category)}
               onDelete={() => handleDeleteCategory(category)}

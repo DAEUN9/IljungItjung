@@ -3,6 +3,12 @@
   border-radius: 15px;
   padding: 2rem 2.5rem;
 
+  // 변경 탭에서 선택한 카테고리가 없는 경우
+  & .no-selected-category {
+    text-align: center;
+    color: #525252;
+  }
+
   & .category-name {
     display: flex;
 

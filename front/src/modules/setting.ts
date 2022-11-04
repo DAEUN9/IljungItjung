@@ -45,8 +45,8 @@ interface SettingState {
 }
 
 const initialState: SettingState = {
-  categories: [{ id: 0, name: "기본", color: "#D5EAEF", hour: "1", min: "00" }],
-  selectedCategory: { id: 0, name: "", color: "", hour: "", min: "" },
+  categories: [{ name: "기본", color: "#D5EAEF", hour: "1", min: "00" }],
+  selectedCategory: { name: "", color: "", hour: "", min: "" },
 };
 
 function setting(
@@ -68,14 +68,15 @@ function setting(
       return {
         ...state,
         categories: state.categories.filter(
-          (category) => category.id !== action.payload.id
+          (category) => category.name !== action.payload.name
         ),
       };
     case EDIT_CATEGORY:
       return {
         ...state,
         categories: state.categories.map((category) => {
-          if (category.id === action.payload.id) return action.payload;
+          if (category.name === state.selectedCategory.name)
+            return action.payload;
           return category;
         }),
       };

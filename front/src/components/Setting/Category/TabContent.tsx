@@ -73,7 +73,6 @@ const TabContent = ({ flag }: TabContentProps) => {
     dispatch(selectCategory(category));
 
   const [add, setAdd] = useState({
-    id: categories.length,
     name: "",
     hour: "1",
     min: "00",
@@ -85,9 +84,11 @@ const TabContent = ({ flag }: TabContentProps) => {
 
   useEffect(() => {
     setEdit(selectedCategory);
-    console.log(categories.length);
-    console.log(categories);
   }, [selectedCategory]);
+
+  useEffect(() => {
+    console.log(categories);
+  });
 
   const handleSubmitForm = () => {
     // flag가 false인 경우 추가, true인 경우 변경
@@ -96,7 +97,6 @@ const TabContent = ({ flag }: TabContentProps) => {
         onAddCategory(add);
         // input 초기화
         setAdd({
-          id: categories.length,
           name: "",
           hour: "1",
           min: "00",
@@ -106,10 +106,8 @@ const TabContent = ({ flag }: TabContentProps) => {
         setSnackbar(true);
       }
     } else {
-      console.log("변경");
       onEditCategory(edit);
       onSelectCategory({
-        id: 0,
         name: "",
         hour: "1",
         min: "00",
