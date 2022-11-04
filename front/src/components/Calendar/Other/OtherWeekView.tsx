@@ -1,21 +1,30 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { WeekView } from '@devexpress/dx-react-scheduler-material-ui';
-import cn from 'classnames';
 
 import styles from '@styles/Calendar/Calendar.module.scss';
 import { getDay, getStringFromDate } from '@components/Calendar/common/util';
-import { SchedulerDateTime } from '@components/types/types';
+import { SchedulerDate, SchedulerDateTime } from '@components/types/types';
 import { RootState } from '@modules/index';
+import { setSelectedTime } from '@modules/othercalendar';
 
 export default function OtherWeekView() {
-  const map = useSelector((state: RootState) => state.othercalendar.map);
-  const selected = useSelector(
-    (state: RootState) => state.othercalendar.selected
+  const { map, selected, minutes } = useSelector(
+    (state: RootState) => state.othercalendar
   );
   const dispatch = useDispatch();
   const now = new Date();
 
-  const handleClick = (startDate: SchedulerDateTime) => {};
+  const handleClick = (startDate: SchedulerDateTime) => {
+    const newSelected: SchedulerDate = { startDate };
+
+    if (selected?.endDate) {
+      const newEndDate = new Date(selected.endDate.toString());
+      newEndDate.setMinutes(newEndDate.getMinutes() + minutes);
+      newSelected.endDate = newEndDate;
+    }
+
+    dispatch(setSelectedTime(newSelected));
+  };
 
   return (
     <WeekView

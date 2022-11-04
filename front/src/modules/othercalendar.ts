@@ -18,9 +18,9 @@ export const setCurrent = () => ({
   type: SET_CURRENT,
 });
 
-export const setSelectedTime = (time: SchedulerDate) => ({
+export const setSelectedTime = (selected: SchedulerDate) => ({
   type: SET_SELECTED_TIME,
-  payload: time,
+  payload: selected,
 });
 
 export const addSelectedTime = () => ({
@@ -70,7 +70,7 @@ export default function reducer(
 
       return state;
     case SET_SELECTED_TIME:
-      return state;
+      return { ...state, selected: action.payload };
     case ADD_SELECTED_TIME:
       return state;
     case DELETE_SELECTED_TIME:
