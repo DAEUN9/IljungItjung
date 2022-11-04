@@ -1,0 +1,17 @@
+.Cell-dayView {
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  align-items: center;
+}
+
+.lock {
+  margin-left: 1rem;
+  color: rgba($color: #000000, $alpha: 0.3);
+  cursor: pointer;
+}
+
+.unlock {
+  margin-left: 1rem;
+  color: #6b7bb1;
+  cursor: pointer;
+}

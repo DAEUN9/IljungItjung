@@ -5,6 +5,7 @@ const ADD_CATEGORY = "setting/ADD_CATEGORY" as const;
 const DEL_CATEGORY = "setting/DEL_CATEGORY" as const;
 const EDIT_CATEGORY = "setting/EDIT_CATEGORY" as const;
 const SELECT_CATEGORY = "setting/SELECT_CATEGORY" as const;
+const TOGGLE_LOCK = "setting/TOGGLE_LOCK" as const;
 
 export const setCategory = (categories: CategoryState[]) => ({
   type: SET_CATEGORY,
@@ -31,22 +32,31 @@ export const selectCategory = (category: CategoryState) => ({
   payload: category,
 });
 
+export const toggleLock = (index: number) => ({
+  type: TOGGLE_LOCK,
+  payload: index,
+});
+
 type SettingAction =
   | ReturnType<typeof setCategory>
   | ReturnType<typeof addCategory>
   | ReturnType<typeof delCategory>
   | ReturnType<typeof editCategory>
-  | ReturnType<typeof selectCategory>;
+  | ReturnType<typeof selectCategory>
+  | ReturnType<typeof toggleLock>;
 
 interface SettingState {
+  // 카테고리 관련 상태
   categories: CategoryState[];
   selectedCategory: CategoryState;
-  // 기타 달력 정보
+  // 달력 관련 상태
+  lock: boolean[];
 }
 
 const initialState: SettingState = {
   categories: [{ name: "기본", color: "#D5EAEF", hour: "1", min: "00" }],
   selectedCategory: { name: "", color: "", hour: "", min: "" },
+  lock: [false, false, false, false, false, false, false],
 };
 
 function setting(
@@ -84,6 +94,14 @@ function setting(
       return {
         ...state,
         selectedCategory: action.payload,
+      };
+    case TOGGLE_LOCK:
+      return {
+        ...state,
+        lock: state.lock.map((day, index) => {
+          if (index === action.payload) return !day;
+          return day;
+        }),
       };
     default:
       return state;
