@@ -10,7 +10,6 @@ import com.iljungitjung.domain.category.service.CategoryServiceImpl;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,7 +27,6 @@ import static org.mockito.Mockito.when;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("카테고리 서비스")
 @ExtendWith(SpringExtension.class)
-@Slf4j
 public class CategoryServiceTest {
 
     private CategoryService categoryService;
@@ -63,7 +61,7 @@ public class CategoryServiceTest {
         CategoryCreateRequestDto categoryCreateRequestDto = new CategoryCreateRequestDto(
                 categoryName, time, color);
 
-        Category category = categoryCreateRequestDto.toCategoryEntity(categoryCreateRequestDto);
+        Category category = categoryCreateRequestDto.toEntity();
         category.setId(categoryId);
 
         //when

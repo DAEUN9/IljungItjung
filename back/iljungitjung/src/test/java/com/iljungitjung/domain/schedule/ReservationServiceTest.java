@@ -72,7 +72,7 @@ public class ReservationServiceTest{
         Optional<Category> category = Optional.of(new Category(categoryName, color, time));
 
         ReservationRequestDto reservationRequestDto = new ReservationRequestDto(userToNickname, date, startTime, contents, phone, categoryName);
-        Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, new Date(), new Date(), category.get().getColor(), Type.REQUEST);
+        Schedule schedule = reservationRequestDto.toEntity(new Date(), new Date(), category.get().getColor(), Type.REQUEST);
         schedule.setId(scheduleId);
 
         //when
@@ -281,7 +281,7 @@ public class ReservationServiceTest{
 
         ReservationBlockRequestDto reservationBlockRequestDto = new ReservationBlockRequestDto(title, contents, date, startTime, endTime);
 
-        Schedule schedule = reservationBlockRequestDto.toScheduleEntity(reservationBlockRequestDto, startDateFormat, endDateFormat);
+        Schedule schedule = reservationBlockRequestDto.toEntity(startDateFormat, endDateFormat);
         schedule.setId(scheduleId);
 
         //when
