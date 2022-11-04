@@ -5,8 +5,7 @@ import { getStringFromDate } from '@components/Calendar/common/util';
 const SET_DISABLED_MAP = 'othercalendar/SET_DISABLED_MAP' as const;
 const SET_CURRENT = 'othercalendar/SET_CURRENT' as const;
 const SET_SELECTED_TIME = 'othercalendar/SET_SELECTED_TIME' as const;
-const ADD_SELECTED_TIME = 'othercalendar/ADD_SELECTED_TIME' as const;
-const DELETE_SELECTED_TIME = 'othercalendar/DELETE_SELECTED_TIME' as const;
+const SET_MINUTES = 'othercalendar/SET_MINUTES' as const;
 
 /* action creator */
 export const setDisabledMap = (list: SchedulerDate[]) => ({
@@ -23,20 +22,16 @@ export const setSelectedTime = (selected: SchedulerDate) => ({
   payload: selected,
 });
 
-export const addSelectedTime = () => ({
-  type: ADD_SELECTED_TIME,
-});
-
-export const deleteSelectedTime = () => ({
-  type: DELETE_SELECTED_TIME,
+export const setMinutes = (minutes: number) => ({
+  type: SET_MINUTES,
+  payload: minutes,
 });
 
 type OtherCalenderActions =
   | ReturnType<typeof setDisabledMap>
   | ReturnType<typeof setCurrent>
   | ReturnType<typeof setSelectedTime>
-  | ReturnType<typeof addSelectedTime>
-  | ReturnType<typeof deleteSelectedTime>;
+  | ReturnType<typeof setMinutes>;
 
 export interface OtherCalenderState {
   current: SchedulerDate[];
@@ -69,12 +64,13 @@ export default function reducer(
       }
 
       return state;
+    case SET_CURRENT:
+      if (state.selected) return { ...state, current: [state.selected] };
+      else return state;
     case SET_SELECTED_TIME:
       return { ...state, selected: action.payload };
-    case ADD_SELECTED_TIME:
-      return state;
-    case DELETE_SELECTED_TIME:
-      return state;
+    case SET_MINUTES:
+      return { ...state, minutes: action.payload };
     default:
       return state;
   }

@@ -60,6 +60,7 @@ const next = [
 
 const OtherCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const current = useSelector((state:RootState) => state.othercalendar.current);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -71,7 +72,7 @@ const OtherCalendar = () => {
   return (
     <>
       <Paper className={styles['calendar-container']}>
-        <Scheduler locale="ko-KR" firstDayOfWeek={1}>
+        <Scheduler data={current} locale="ko-KR" firstDayOfWeek={1}>
           <ViewState
             currentDate={currentDate}
             onCurrentDateChange={(currentDate) => setCurrentDate(currentDate)}

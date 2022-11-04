@@ -18,9 +18,10 @@ export default function OtherWeekView() {
     const newSelected: SchedulerDate = { startDate };
 
     if (selected?.endDate) {
-      const newEndDate = new Date(selected.endDate.toString());
+      const newEndDate = new Date(startDate.toString());
       newEndDate.setMinutes(newEndDate.getMinutes() + minutes);
       newSelected.endDate = newEndDate;
+      console.log(newSelected);
     }
 
     dispatch(setSelectedTime(newSelected));
@@ -69,7 +70,8 @@ export default function OtherWeekView() {
                 className={
                   isDisabled
                     ? styles['timeTableCell-disabled']
-                    : selected?.startDate === props.startDate
+                    : selected?.startDate === props.startDate &&
+                      !selected?.endDate
                     ? styles['timeTableCell-selected']
                     : styles['timeTableCell-inner']
                 }
