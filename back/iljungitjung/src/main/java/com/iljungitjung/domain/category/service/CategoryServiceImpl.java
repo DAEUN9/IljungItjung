@@ -23,11 +23,7 @@ import javax.transaction.Transactional;
 @Slf4j
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService{
-
-    private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-
-    private final RedisUserRepository redisUserRepository;
 
     private final UserService userService;
     @Override
