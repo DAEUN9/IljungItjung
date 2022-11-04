@@ -1,6 +1,7 @@
 package a_service;
 
 import com.iljungitjung.domain.category.service.CategoryService;
+import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.schedule.service.ReservationService;
 import com.iljungitjung.domain.schedule.service.ScheduleService;
 import main.AbstractTest;
@@ -19,6 +20,9 @@ public class AbstractServiceTest extends AbstractTest {
 
     @Autowired
     ScheduleService scheduleService;
+
+    @Autowired
+    NotificationService notificationService;
     public static Long categoryId=0L;
     public static Long scheduleId=0L;
 

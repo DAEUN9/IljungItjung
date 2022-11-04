@@ -60,15 +60,10 @@ public class NotificationScheduler {
             stringBuilder.append(extraContent);
         }
         List<NotificationMessageDto> messageList = new ArrayList<>();
-        NotificationMessageDto message = NotificationMessageDto.builder()
-                .to(phone)
-                .content(stringBuilder.toString())
-                .build();
+        NotificationMessageDto message = new NotificationMessageDto(phone, stringBuilder.toString());
+
         messageList.add(message);
-        NotificationRequestDto requestDto = NotificationRequestDto.builder()
-                .messages(messageList)
-                .content("필수")
-                .build();
+        NotificationRequestDto requestDto = new NotificationRequestDto(messageList);
         notificationService.sendMessage(requestDto);
     }
 }

@@ -75,6 +75,10 @@ public class Schedule {
     public void accpeted() {
         this.type= Type.ACCEPT;
     }
+    // 추가
+    public void deleted() {
+        this.type= Type.BLOCK;
+    }
     public void canceled(String cancelFrom, String reason){
         this.cancelFrom=cancelFrom;
         this.reason=reason;

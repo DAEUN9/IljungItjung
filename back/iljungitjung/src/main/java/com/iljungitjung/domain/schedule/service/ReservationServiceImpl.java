@@ -2,7 +2,6 @@ package com.iljungitjung.domain.schedule.service;
 
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
-import com.iljungitjung.domain.category.exception.NoGrantDeleteCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.schedule.dto.reservation.*;
 import com.iljungitjung.domain.schedule.entity.Schedule;
@@ -14,6 +13,7 @@ import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
 import com.iljungitjung.global.login.repository.RedisUserRepository;
+import com.iljungitjung.global.scheduler.AutoNotification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,6 +40,7 @@ public class ReservationServiceImpl implements ReservationService{
 
     private final UserService userService;
 
+    private final AutoNotification testNotification;
     @Override
     @Transactional
     public ReservationIdResponseDto reservationRequest(ReservationRequestDto reservationRequestDto, HttpSession httpSession) {
@@ -71,6 +72,7 @@ public class ReservationServiceImpl implements ReservationService{
         schedule.setScheduleRequestList(user);
         schedule.setScheduleResponseList(userTo);
         schedule = scheduleRepository.save(schedule);
+        testNotification.buildTemplate(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -92,6 +94,7 @@ public class ReservationServiceImpl implements ReservationService{
                 cancelFrom="제공자";
                 schedule.canceled(cancelFrom, reservationManageRequestDto.getReason());
             }
+
         }else if(user.getId()==schedule.getUserFrom().getId()){
             if(reservationManageRequestDto.isAccept()){
                 throw new NoGrantAccessScheduleException();
@@ -102,7 +105,8 @@ public class ReservationServiceImpl implements ReservationService{
         }else{
             throw new NoGrantAcceptScheduleException();
         }
-
+        // 추가
+        testNotification.buildTemplate(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -117,6 +121,9 @@ public class ReservationServiceImpl implements ReservationService{
 
         Long scheduleId = schedule.getId();
         scheduleRepository.delete(schedule);
+        // 추가
+        schedule.deleted();
+        testNotification.buildTemplate(schedule);
         return new ReservationIdResponseDto(scheduleId);
     }
 
