@@ -44,10 +44,25 @@ dependencies {
 tasks.named('test') {
 	finalizedBy 'jacocoTestReport'
 	useJUnitPlatform()
+
 }
 
-tasks.named('jacocoTestReport') {
+jacocoTestReport {
 	finalizedBy("jacocoTestCoverageVerification")
+
+	dependsOn test // tests are required to run before generating the report
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					 "com/iljungitjung/IljungitjungApplication.class",
+					 "com/iljungitjung/global/**",
+					 "com/iljungitjung/domain/notification/**",
+					 "com/iljungitjung/domain/**/dto/**",
+					 "com/iljungitjung/domain/**/exception/**",
+			])
+		}))
+	}
 }
 jacoco {
 	toolVersion = "0.8.5"
@@ -58,7 +73,7 @@ jacocoTestCoverageVerification {
 	violationRules {
 		rule {
 			limit {
-				minimum = 0.4.toBigDecimal()
+				//minimum = 0.4.toBigDecimal()
 			}
 		}
 		rule {
@@ -75,7 +90,6 @@ jacocoTestCoverageVerification {
 				value = 'TOTALCOUNT'
 				maximum = 200
 			}
-			excludes = ['*.login']
 		}
 	}
 

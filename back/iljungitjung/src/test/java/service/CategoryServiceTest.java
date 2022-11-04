@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,10 +27,11 @@ import static org.mockito.Mockito.when;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("카테고리 서비스")
 @ExtendWith(SpringExtension.class)
-public class CategoryServiceTest extends AbstractServiceTest {
+public class CategoryServiceTest {
 
     private CategoryService categoryService;
-
+    @MockBean
+    protected HttpSession httpSession;
     @MockBean
     private CategoryRepository categoryRepository;
     @MockBean
