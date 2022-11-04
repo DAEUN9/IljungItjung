@@ -79,40 +79,30 @@ const TabContent = ({ flag }: TabContentProps) => {
     color: "#D5EAEF",
   });
   const [edit, setEdit] = useState(selectedCategory);
-
   const [snackbar, setSnackbar] = useState(false);
+
+  const init = { name: "", hour: "1", min: "00", color: "#D5EAEF" };
 
   useEffect(() => {
     setEdit(selectedCategory);
   }, [selectedCategory]);
-
-  useEffect(() => {
-    console.log(categories);
-  });
 
   const handleSubmitForm = () => {
     // flag가 false인 경우 추가, true인 경우 변경
     if (!flag) {
       if (add.name.length > 0) {
         onAddCategory(add);
-        // input 초기화
-        setAdd({
-          name: "",
-          hour: "1",
-          min: "00",
-          color: "#D5EAEF",
-        });
+        setAdd(init);
       } else {
         setSnackbar(true);
       }
     } else {
-      onEditCategory(edit);
-      onSelectCategory({
-        name: "",
-        hour: "1",
-        min: "00",
-        color: "#D5EAEF",
-      });
+      if (edit.name.length > 0) {
+        onEditCategory(edit);
+        onSelectCategory(init);
+      } else {
+        setSnackbar(true);
+      }
     }
   };
 
