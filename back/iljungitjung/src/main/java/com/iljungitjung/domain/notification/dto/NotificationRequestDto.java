@@ -11,7 +11,7 @@ import java.util.List;
 public class NotificationRequestDto {
     private String content;
     @Valid
-    @NotNull(message = "메시지 리스트(messages)는 필수로 입력해야 합니다.")
+    @NotNull(message = "message list는 필수로 입력해야 합니다.")
     private List<NotificationMessageDto> messages;
 
     @Builder

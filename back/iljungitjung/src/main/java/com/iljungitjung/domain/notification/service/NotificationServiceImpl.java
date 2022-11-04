@@ -1,7 +1,5 @@
 package com.iljungitjung.domain.notification.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iljungitjung.domain.notification.dto.NotificationMessageRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
@@ -9,16 +7,12 @@ import com.iljungitjung.domain.notification.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 @Service
 @RequiredArgsConstructor
@@ -40,34 +34,14 @@ public class NotificationServiceImpl implements NotificationService{
     public NotificationResponseDto sendMessage(NotificationRequestDto requestDto) {
         Long time = System.currentTimeMillis();
         RestTemplate restTemplate = new RestTemplate();
-        NotificationResponseDto notificationResponseDto;
 
         HttpHeaders headers = makeHeaders(time);
-        String jsonBody = makeJsonBody(requestDto);
-        HttpEntity<String> body = new HttpEntity<>(jsonBody, headers);
+        NotificationMessageRequestDto jsonBody = new NotificationMessageRequestDto(requestDto, SENDER_PHONE);
+        HttpEntity<NotificationMessageRequestDto> body = new HttpEntity<>(jsonBody, headers);
 
-        try {
-            notificationResponseDto = restTemplate.postForObject(new URI(MESSAGE_REQUEST_URL + NCLOUD_SERVICE_ID + "/messages"), body, NotificationResponseDto.class);
-        } catch (URISyntaxException e) {
-            throw new MessageUriSyntaxErrorException();
-        }
-        checkStatus(notificationResponseDto.getStatusCode());
-        return notificationResponseDto;
-    }
-
-    private String makeJsonBody(NotificationRequestDto requestDto) {
-        String jsonBody;
-        ObjectMapper objectMapper = new ObjectMapper();
-        NotificationMessageRequestDto notificationMessageRequestDto = NotificationMessageRequestDto.builder()
-                .requestDto(requestDto)
-                .phone(SENDER_PHONE)
-                .build();
-        try {
-            jsonBody = objectMapper.writeValueAsString(notificationMessageRequestDto);
-        } catch (JsonProcessingException e) {
-            throw new ConvertToJsonErrorException();
-        }
-        return jsonBody;
+        ResponseEntity<NotificationResponseDto> responseEntity = restTemplate.exchange(MESSAGE_REQUEST_URL + NCLOUD_SERVICE_ID + "/messages", HttpMethod.POST, body, NotificationResponseDto.class);
+        checkStatus(responseEntity.getStatusCode());
+        return responseEntity.getBody();
     }
 
     private HttpHeaders makeHeaders(Long time) {
@@ -109,8 +83,8 @@ public class NotificationServiceImpl implements NotificationService{
         return encodeBase64String;
     }
 
-    private void checkStatus (String status) {
-        if (!(status.equals("202"))) {
+    private void checkStatus (HttpStatus status) {
+        if (!(status.is2xxSuccessful())) {
             throw new FailSendMessageException();
         }
     }

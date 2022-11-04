@@ -24,7 +24,7 @@ import java.util.*;
 public class NotificationScheduler {
     private final ScheduleRepository scheduleRepository;
     private final NotificationService notificationService;
-    final String BASE_MESSAGE = "일정있정에서 안내드립니다.\n";
+    final private String BASE_MESSAGE = "일정있정에서 안내드립니다.\n";
 
     @Scheduled(cron=" 0 0 10 ? * * ")
     private void searchTodaySchedules() {
