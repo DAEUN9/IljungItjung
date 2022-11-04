@@ -1,3 +1,5 @@
+import React from 'react';
+
 import styles from '@styles/Calendar/Calendar.module.scss';
 import iljung from '@assets/defaultImg.png';
 
@@ -18,4 +20,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default React.memo(Profile);

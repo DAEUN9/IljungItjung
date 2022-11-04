@@ -1,19 +1,21 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { WeekView } from '@devexpress/dx-react-scheduler-material-ui';
+import cn from 'classnames';
 
 import styles from '@styles/Calendar/Calendar.module.scss';
-import { getDay } from '@components/Calendar/common/util';
-import { setSelectedTime } from '@modules/othercalendar';
+import { getDay, getStringFromDate } from '@components/Calendar/common/util';
 import { SchedulerDateTime } from '@components/types/types';
 import { RootState } from '@modules/index';
 
 export default function OtherWeekView() {
-  const time = useSelector((state: RootState) => state.othercalendar.time);
+  const map = useSelector((state: RootState) => state.othercalendar.map);
+  const selected = useSelector(
+    (state: RootState) => state.othercalendar.selected
+  );
   const dispatch = useDispatch();
+  const now = new Date();
 
-  const handleClick = (startDate: SchedulerDateTime) => {
-    dispatch(setSelectedTime({ startDate }));
-  };
+  const handleClick = (startDate: SchedulerDateTime) => {};
 
   return (
     <WeekView
@@ -27,6 +29,28 @@ export default function OtherWeekView() {
         />
       )}
       timeTableCellComponent={(props) => {
+        let isDisabled = false;
+
+        if (props.startDate && props.endDate) {
+          const str = getStringFromDate(props.startDate);
+          const list = map.get(str);
+
+          if (list) {
+            for (let item of list) {
+              if (
+                props.startDate >= new Date(item.startDate) &&
+                item.endDate &&
+                props.endDate <= new Date(item.endDate)
+              ) {
+                isDisabled = true;
+                break;
+              }
+            }
+          } else if (props.startDate && props.startDate <= now) {
+            isDisabled = true;
+          }
+        }
+
         return (
           <WeekView.TimeTableCell
             {...props}
@@ -34,12 +58,16 @@ export default function OtherWeekView() {
             children={
               <div
                 className={
-                  time?.startDate === props.startDate
+                  isDisabled
+                    ? styles['timeTableCell-disabled']
+                    : selected?.startDate === props.startDate
                     ? styles['timeTableCell-selected']
                     : styles['timeTableCell-inner']
                 }
                 onClick={(e) => {
-                  if (props.startDate) {
+                  const className = e.currentTarget.className;
+
+                  if (props.startDate && !className.includes('disabled')) {
                     handleClick(props.startDate);
                   }
                 }}

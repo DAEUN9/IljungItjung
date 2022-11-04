@@ -13,7 +13,7 @@ import Reservation from './Other/Reservation';
 import OtherAppointments from './Other/OtherAppointments';
 import OtherWeekView from './Other/OtherWeekView';
 import { RootState } from '@modules/index';
-import { setBlockList } from '@modules/othercalendar';
+import { setDisabledMap } from '@modules/othercalendar';
 
 const next = [
   {
@@ -46,27 +46,37 @@ const next = [
     phone: '010-3333-3333',
     color: '#D7CBF4',
   },
+  {
+    id: 4,
+    startDate: '2022-11-06T13:00',
+    endDate: '2022-11-06T14:30',
+    title: '카테고리',
+    nickname: '닉네임',
+    desc: '요청사항',
+    phone: '010-3333-3333',
+    color: '#D7CBF4',
+  },
 ];
 
 const OtherCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const block = useSelector((state: RootState) => state.othercalendar.block);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setBlockList(next));
-  }, [])
-  
+    const now = new Date();
+    const filter = next.filter((item) => new Date(item.startDate) >= now);
+    dispatch(setDisabledMap(filter));
+  }, []);
 
   return (
     <>
       <Paper className={styles['calendar-container']}>
-        <Scheduler data={block} locale="ko-KR" firstDayOfWeek={1}>
+        <Scheduler locale="ko-KR" firstDayOfWeek={1}>
           <ViewState
             currentDate={currentDate}
             onCurrentDateChange={(currentDate) => setCurrentDate(currentDate)}
           />
-          <OtherWeekView  />
+          <OtherWeekView />
           <Toolbar />
           <CustomDateNavigator />
           <CustomTodayButton />
@@ -75,10 +85,10 @@ const OtherCalendar = () => {
       </Paper>
       <div className={styles.info}>
         <Profile />
-        <Reservation /> 
+        <Reservation />
       </div>
     </>
   );
-}
+};
 
 export default OtherCalendar;

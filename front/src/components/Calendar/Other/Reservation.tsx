@@ -17,9 +17,9 @@ import {
 
 import styles from '@styles/Calendar/Calendar.module.scss';
 import CustomButton from '@components/common/CustomButton';
+import { formatTime } from '@components/Calendar/common/util';
 import { SchedulerDate, SchedulerDateTime } from '@components/types/types';
 import { RootState } from '@modules/index';
-import { setSelectedTime } from '@modules/othercalendar';
 
 interface RequestData {
   category: string;
@@ -111,39 +111,35 @@ const items = [
 ];
 
 const Reservation = () => {
-  const { handleSubmit, control, watch, setValue, getValues } =
-    useForm<RequestData>();
+  const { handleSubmit, control, watch } = useForm<RequestData>();
   const watchCategory = watch('category', '');
-  const selected = useSelector((state: RootState) => state.othercalendar.time);
+  const selected = useSelector(
+    (state: RootState) => state.othercalendar.selected
+  );
   const dispatch = useDispatch();
   const fullDate = useMemo(() => getFullDate(selected?.startDate), [selected]);
 
   const onSubmit: SubmitHandler<RequestData> = (data) => console.log(data);
 
-  // 카테고리가 선택됐을 때 이벤트
+  // 카테고리가 선택됐을 때
   useEffect(() => {
-    if (watchCategory !== '' && selected?.startDate) {
-      const newSelected: SchedulerDate = { startDate: selected?.startDate };
-      
-      if(newSelected.startDate) {
-        const time = items.filter(
-          (item) => item.categoryName === watchCategory
-        )[0].time;
-
-        const endDate = new Date(newSelected.startDate.toString());
-        endDate.setMinutes(getMinutes(time));
-
-        newSelected.endDate = endDate;
-
-        dispatch(setSelectedTime(newSelected));
-      }
-    }
+    // if (watchCategory !== '' && selected?.startDate) {
+    //   const newSelected: SchedulerDate = { startDate: selected?.startDate };
+    //   if (newSelected.startDate) {
+    //     const time = items.filter(
+    //       (item) => item.categoryName === watchCategory
+    //     )[0].time;
+    //     const endDate = new Date(newSelected.startDate.toString());
+    //     endDate.setMinutes(endDate.getMinutes() + getMinutes(time));
+    //     newSelected.endDate = endDate;
+    //     newSelected.title = 'selected';
+    //   }
+    // }
   }, [watchCategory]);
 
-  // selectedTime이 변경됐을 때 이벤트
+  // selectedTime이 변경됐을 때
   useEffect(() => {
-    if(selected && selected.endDate) {
-      console.log(selected.endDate);
+    if (selected && selected.endDate) {
     }
   }, [selected]);
 
@@ -180,7 +176,7 @@ const Reservation = () => {
                       {...field}
                     >
                       {items.map((item) => (
-                        <MenuItem value={item.categoryName}>
+                        <MenuItem key={item.categoryName} value={item.categoryName}>
                           <div className={styles.menu}>
                             <div>{item.categoryName}</div>
                             <div>{getTime(item.time)}</div>
@@ -202,7 +198,12 @@ const Reservation = () => {
               <div className={styles.center}>
                 <FaRegClock />
               </div>
-              -
+              {selected.endDate
+                ? formatTime(
+                    selected.startDate.toString(),
+                    selected.endDate.toString()
+                  )
+                : '-'}
             </div>
             <div className={styles['reservation-item']}>
               <div className={styles.center}>

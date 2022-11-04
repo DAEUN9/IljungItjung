@@ -98,7 +98,7 @@ $light-gray: #f5f5f5;
     cursor: pointer;
 
     &:hover {
-      background-color: $light-gray !important;
+      background-color: #6b7bb1 !important;
     }
   }
 
@@ -109,6 +109,11 @@ $light-gray: #f5f5f5;
     &:hover {
       background-color: #6b7bb1 !important;
     }
+  }
+
+  &-disabled {
+    background-color: $light-gray !important;
+    height: 100%;
   }
 }
 
@@ -244,8 +249,10 @@ $light-gray: #f5f5f5;
   $profile-height: 300px;
   $tab-button-height: 48px;
   $inner-padding: 25px;
-  $tab-height: calc(100vh - $tab-button-height - $profile-height - $inner-padding);
-  
+  $tab-height: calc(
+    100vh - $tab-button-height - $profile-height - $inner-padding
+  );
+
   height: $tab-height;
   background-color: $light-gray;
   border-radius: 15px;
@@ -254,7 +261,6 @@ $light-gray: #f5f5f5;
   overflow-x: hidden;
 
   @include custom-scroll();
-
 
   &-inner {
     padding: $inner-padding;
@@ -294,10 +300,10 @@ $light-gray: #f5f5f5;
   &-buttons {
     display: flex;
     justify-content: end;
-  
+
     > button {
       width: 80px;
-  
+
       &:last-child {
         margin-left: 10px;
       }
@@ -325,7 +331,7 @@ $light-gray: #f5f5f5;
 
   &-inner {
     $inner-padding: 20px;
-    
+
     height: calc(100% - $inner-padding * 2);
     padding: $inner-padding;
     display: flex;
@@ -343,7 +349,8 @@ $light-gray: #f5f5f5;
       height: unset;
     }
 
-    &:nth-child(2), &:nth-child(3) {
+    &:nth-child(2),
+    &:nth-child(3) {
       padding: 10px 5px;
     }
   }
