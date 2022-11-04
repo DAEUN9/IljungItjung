@@ -35,9 +35,6 @@ public class ReservationServiceImpl implements ReservationService{
     private final CategoryRepository categoryRepository;
 
     private final UserRepository userRepository;
-
-    private final RedisUserRepository redisUserRepository;
-
     private final UserService userService;
 
     @Override
@@ -138,6 +135,7 @@ public class ReservationServiceImpl implements ReservationService{
         Schedule schedule = reservationBlockRequestDto.toEntity(startDate, endDate);
         schedule.setScheduleResponseList(user);
         schedule = scheduleRepository.save(schedule);
+
         return new ReservationIdResponseDto(schedule.getId());
 
     }

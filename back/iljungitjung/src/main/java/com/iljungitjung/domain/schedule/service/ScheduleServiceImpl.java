@@ -11,10 +11,13 @@ import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
 import com.iljungitjung.domain.user.entity.User;
+import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
+import com.iljungitjung.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,13 +28,17 @@ import java.util.List;
 public class ScheduleServiceImpl implements ScheduleService{
 
     private final ScheduleRepository scheduleRepository;
-    private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
     @Override
-    public ScheduleViewResponseDto scheduleView(String nickname, String startDate, String endDate, boolean isMyView) {
+    public ScheduleViewResponseDto scheduleView(String nickname, String startDate, String endDate, HttpSession httpSession) {
 
+        User userFrom = userService.findUserBySessionId(httpSession);
         //닉네임으로 유저 조회
-        User user = userRepository.findUserByNickname(nickname).get();
+        User userTo = userRepository.findUserByNickname(nickname).orElseThrow(()->{
+            throw new NoExistUserException();
+        });;
+
         ScheduleViewResponseDto responseDtos;
 
         Date startDateFormat;
@@ -47,16 +54,14 @@ public class ScheduleServiceImpl implements ScheduleService{
 
         try{
 
-            List<Schedule> scheduleList = new ArrayList<>();
-            //List<Schedule> scheduleList = scheduleRepository.findByUserFrom_NicknameIs(nickname);
+            List<Schedule> scheduleList = scheduleRepository.findByUserTo_IdIs(userTo.getId());
 
             List<ScheduleViewDto> requestList = new ArrayList<>();
             List<ScheduleViewDto> acceptList = new ArrayList<>();
             List<ScheduleBlockDto> blockList = new ArrayList<>();
             List<ScheduleCancelDto> cancelList = new ArrayList<>();
 
-
-            if(isMyView){
+            if(userFrom.getId()==userTo.getId()){
                 for(Schedule schedule : scheduleList){
                     if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().after(endDateFormat)) continue;
                     if(schedule.getType().equals(Type.ACCEPT)){
@@ -81,7 +86,7 @@ public class ScheduleServiceImpl implements ScheduleService{
                 }
             }
             List<CategoryViewResponseDto> categoryList = new ArrayList<>();
-            for(Category category :user.getCategoryList()){
+            for(Category category :userTo.getCategoryList()){
                 categoryList.add(new CategoryViewResponseDto(category));
             }
             responseDtos = new ScheduleViewResponseDto(categoryList, requestList, acceptList, blockList, cancelList);
