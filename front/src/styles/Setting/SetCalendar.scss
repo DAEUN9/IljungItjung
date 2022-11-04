@@ -4,14 +4,24 @@
   align-items: center;
 }
 
-.lock {
+.day-lock {
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
   margin-left: 1rem;
-  color: rgba($color: #000000, $alpha: 0.3);
+}
+
+@mixin lock-default() {
+  margin-left: 0.3rem;
   cursor: pointer;
 }
 
-.unlock {
-  margin-left: 1rem;
+.lock {
+  @include lock-default();
   color: #6b7bb1;
-  cursor: pointer;
+}
+
+.unlock {
+  @include lock-default();
+  color: rgba($color: #000000, $alpha: 0.3);
 }

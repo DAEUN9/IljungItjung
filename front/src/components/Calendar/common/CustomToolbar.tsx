@@ -12,6 +12,7 @@ import { IoSettingsSharp } from "react-icons/io5";
 import styles from "@styles/Calendar/Calendar.module.scss";
 import { RootState } from "@modules/index";
 import { toggleLock } from "@modules/setting";
+import { days } from "@components/Calendar/common/util";
 
 const SettingButton = () => {
   const navigate = useNavigate();
@@ -70,19 +71,25 @@ export default function CustomToolbar() {
               {isLocked.map((lock, index) => {
                 if (lock)
                   return (
-                    <FontAwesomeIcon
-                      className="lock"
-                      icon={faLock}
-                      onClick={() => onToggleLock(index)}
-                    />
+                    <div className="day-lock">
+                      <span>{days[(index + 1) % 7]}</span>
+                      <FontAwesomeIcon
+                        className="lock"
+                        icon={faLock}
+                        onClick={() => onToggleLock(index)}
+                      />
+                    </div>
                   );
                 else
                   return (
-                    <FontAwesomeIcon
-                      className="unlock"
-                      icon={faUnlock}
-                      onClick={() => onToggleLock(index)}
-                    />
+                    <div className="day-lock">
+                      <span>{days[(index + 1) % 7]}</span>
+                      <FontAwesomeIcon
+                        className="unlock"
+                        icon={faUnlock}
+                        onClick={() => onToggleLock(index)}
+                      />
+                    </div>
                   );
               })}
             </>
