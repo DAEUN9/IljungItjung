@@ -45,6 +45,10 @@ const Select = styled(MuiSelect)`
   &.Mui-focused > fieldset {
     border-color: #6b7bb1 !important;
   }
+
+  & .MuiSelect-select > div {
+    padding: 0;
+  }
 `;
 
 const InputLabel = styled(MuiInputLabel)`
@@ -135,6 +139,13 @@ const Reservation = () => {
       }
     }
   }, [watchCategory]);
+
+  // selectedTime이 변경됐을 때 이벤트
+  useEffect(() => {
+    if(selected && selected.endDate) {
+      console.log(selected.endDate);
+    }
+  }, [selected]);
 
   return (
     <div className={styles.reservation}>
