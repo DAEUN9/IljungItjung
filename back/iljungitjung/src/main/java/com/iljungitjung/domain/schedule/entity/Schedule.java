@@ -58,7 +58,9 @@ public class Schedule {
         user.getScheduleResponseList().add(this);
         this.userTo = user;
     }
-
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     @Builder
     public Schedule(User userFrom, User userTo, Date startDate, Date endDate, String categoryName, String color, String contents, String phonenum, Type type) {

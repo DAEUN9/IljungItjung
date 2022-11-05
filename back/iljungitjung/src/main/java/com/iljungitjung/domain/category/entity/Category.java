@@ -1,11 +1,8 @@
 package com.iljungitjung.domain.category.entity;
 
-//import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -32,6 +29,14 @@ public class Category {
     private String color;
     @Column(nullable = false)
     private String time;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public void setCategoryList(User user){
         user.getCategoryList().add(this);
