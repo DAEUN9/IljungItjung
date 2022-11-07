@@ -2,18 +2,17 @@ import { ViewState } from "@devexpress/dx-react-scheduler";
 import { Scheduler } from "@devexpress/dx-react-scheduler-material-ui";
 import { useEffect, useState } from "react";
 import { faLock, faUnlock } from "@fortawesome/free-solid-svg-icons";
-import { renderToStaticMarkup } from "react-dom/server";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
 
 import CustomDateNavigator from "@components/Calendar/common/CustomDateNavigator";
 import CustomTodayButton from "@components/Calendar/common/CustomTodayButton";
 import CustomToolbar from "@components/Calendar/common/CustomToolbar";
-import CustomWeekView from "@components/Calendar/common/CustomWeekView";
 import SettingAppointments from "@components/Setting/SettingAppointments";
 import "@styles/Setting/SetCalendar.scss";
 import { RootState } from "@modules/index";
 import { toggleLock } from "@modules/setting";
+import SettingWeekView from "@components/Setting/SettingWeekView";
 
 const data = [
   {
@@ -97,7 +96,7 @@ const SetCalendar = () => {
         currentDate={currentDate}
         onCurrentDateChange={(currentDate) => setCurrentDate(currentDate)}
       />
-      <CustomWeekView />
+      <SettingWeekView />
       <CustomToolbar />
       <CustomDateNavigator />
       <CustomTodayButton />

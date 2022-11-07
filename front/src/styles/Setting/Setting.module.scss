@@ -67,3 +67,19 @@
     }
   }
 }
+
+.time-table-cell {
+  &:focus {
+    background-color: #f2f2f2 !important;
+  }
+
+  & .cell {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+}
+
+.shade {
+  background-color: #f2f2f2 !important;
+}
