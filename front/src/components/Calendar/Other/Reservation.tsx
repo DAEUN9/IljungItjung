@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import styled from '@emotion/styled';
@@ -8,6 +8,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import MuiInputLabel from '@mui/material/InputLabel';
 import MuiTextField from '@mui/material/TextField';
 import MuiSelect from '@mui/material/Select';
+import Snackbar from '@mui/material/Snackbar';
 import {
   FaThList,
   FaRegCalendar,
@@ -17,10 +18,17 @@ import {
 
 import styles from '@styles/Calendar/Calendar.module.scss';
 import CustomButton from '@components/common/CustomButton';
-import { formatTime } from '@components/Calendar/common/util';
+import {
+  formatTime,
+  getStringFromDate,
+} from '@components/Calendar/common/util';
 import { SchedulerDate, SchedulerDateTime } from '@components/types/types';
 import { RootState } from '@modules/index';
-import { setCurrent, setSelectedTime, setMinutes } from '@modules/othercalendar';
+import {
+  setCurrent,
+  setSelectedTime,
+  setMinutes,
+} from '@modules/othercalendar';
 
 interface RequestData {
   category: string;
@@ -112,28 +120,47 @@ const items = [
 ];
 
 const Reservation = () => {
-  const { handleSubmit, control, watch } = useForm<RequestData>();
+  const { handleSubmit, control, watch, setValue } = useForm<RequestData>();
   const watchCategory = watch('category', '');
-  const { selected } = useSelector(
+  const { selected, map } = useSelector(
     (state: RootState) => state.othercalendar
   );
   const dispatch = useDispatch();
   const fullDate = useMemo(() => getFullDate(selected?.startDate), [selected]);
+  const [open, setOpen] = useState(false);
 
   const onSubmit: SubmitHandler<RequestData> = (data) => console.log(data);
+  const handleClose = () => setOpen(false);
 
   // 카테고리가 선택됐을 때
   useEffect(() => {
     if (watchCategory && selected) {
-      const newSelected: SchedulerDate = { startDate: selected.startDate };
-      const time = items.filter((item) => item.categoryName === watchCategory)[0].time;
-      const endDate = new Date(newSelected.startDate.toString());
+      const endDate = new Date(selected.startDate.toString());
+      const list = map.get(getStringFromDate(endDate));
+      const time = items.filter(
+        (item) => item.categoryName === watchCategory
+      )[0].time;
       const minutes = getMinutes(time);
 
       endDate.setMinutes(endDate.getMinutes() + minutes);
+
+      if (list) {
+        for (let item of list) {
+          const itemDate = new Date(item.startDate.toString());
+
+          if (endDate >= itemDate) {
+            setOpen(true);
+            setValue('category', '');
+            return;
+          }
+        }
+      }
+
+      const newSelected: SchedulerDate = { startDate: selected.startDate };
+
       newSelected.endDate = endDate;
       newSelected.title = 'selected';
-      
+
       dispatch(setSelectedTime(newSelected));
       dispatch(setMinutes(minutes));
     }
@@ -242,6 +269,12 @@ const Reservation = () => {
               신청하기
             </CustomButton>
           </div>
+          <Snackbar
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            open={open}
+            onClose={handleClose}
+            message="카테고리를 선택할 수 없습니다."
+          />
         </form>
       )}
     </div>
