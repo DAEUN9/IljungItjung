@@ -26,16 +26,17 @@ public class LoginInterceptor implements HandlerInterceptor {
         if(isSignUpRequest(request)) return true;
 
         String sessionId = request.getSession().getId();
+        log.debug("session Id : {}", sessionId);
         if(!redisUserRepository.existsById(sessionId)){
             throw new ExpireRedisUserException();
         }
-        log.debug("session Id : {}", request.getSession().getId());
+        log.debug("session Id : {}", sessionId);
         return true;
     }
 
     private boolean isSignUpRequest(HttpServletRequest request) {
-        if(request.getMethod().equals(HttpMethod.POST) && request.getRequestURL().equals("/api/users")) return true;
-        if(request.getMethod().equals(HttpMethod.POST) && request.getRequestURL().equals("/users")) return true;
+        if(request.getMethod().equals(HttpMethod.POST) && request.getRequestURI().equals("/api/users")) return true;
+        if(request.getMethod().equals(HttpMethod.POST) && request.getRequestURI().equals("/users")) return true;
         return false;
     }
 }
