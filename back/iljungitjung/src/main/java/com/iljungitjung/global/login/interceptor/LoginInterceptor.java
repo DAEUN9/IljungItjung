@@ -23,10 +23,11 @@ public class LoginInterceptor implements HandlerInterceptor {
         log.debug("request path : {}", request.getRequestURL());
         if(request.getMethod().equals(HttpMethod.OPTIONS)) return true;
         String sessionId = request.getSession().getId();
+        log.debug("session Id : {}", sessionId);
         if(!redisUserRepository.existsById(sessionId)){
             throw new ExpireRedisUserException();
         }
-        log.debug("session Id : {}", request.getSession().getId());
+        log.debug("session Id : {}", sessionId);
         return true;
     }
 }
