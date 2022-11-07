@@ -1,10 +1,9 @@
 import { apiInstance } from "@api/index";
-import { SearchState } from "@components/types/types";
 
 const api = apiInstance();
 
-function getMyInfo() {
-  api.get<SearchState>(`/users`).then((data) => data);
+function getMyInfo(success: any) {
+  api.get(`/users`).then(success);
 }
 
 // 프로필 수정 요청

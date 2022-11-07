@@ -1,53 +1,97 @@
+import TextField from "@mui/material/TextField";
 import CustomButton from "@components/common/CustomButton";
 import Sidebar from "@components/common/Sidebar";
 import styles from "@styles/ProfileEdit/ProfileEdit.module.scss";
 import defaultImg from "@assets/defaultImg.png";
-import PictureEdit from "@assets/PictureEdit.png";
-import PictureEdit2 from "@assets/PictureEdit2.png";
 import React, { useState } from "react";
 import CustomModal from "@components/common/CustomModal";
 import { getMyInfo, putProfile } from "@api/profile";
+import { delWithdraw } from "@api/register";
+import { useNavigate } from "react-router-dom";
+import { SearchState } from "@components/types/types";
 
 const ProfileEditPage = () => {
-  // 내 데이터 불러오는 요청 - 아직 api 미구현
-  // getMyInfo;
-  // 불러온 데이터와 저장된 데이터 비교하여 차이가 없으면 저장하기 버튼 비활성화
-  // const [able, setAble] = useState(false);
+  // 세션 ID 확인 하고 없으면 로그인 화면으로 내보냄
+  // onLoad 이용해서 페이지 로드될 때 작동하도록 설정
+  // 잘못된 접근임을 알리는 alert 출력후 이동되도록
+  const cookieRegex = /JSESSIONID/;
+  const checkLogin = () => {
+    if (cookieRegex.test(document.cookie)) {
+      console.log("ㅇㅋ 있으셈");
+    } else {
+      console.log("너 나가");
+      alert("비정상적인 접근입니다. 로그인 페이지로 이동합니다.");
+      navigate(`/`);
+    }
+  };
 
-  const [name, setName] = useState("");
-  const [intro, setIntro] = useState("");
-  const [description, setDescription] = useState("");
-
-  var overlap = "";
-  // 중복 확인 버튼 누르면 중복검사 API로 확인하고 결과값 출력
-  const checkOverlap = () => {
-    fetch(`http://k7d106.p.ssafy.io/api/nicknames/${name}`).then((res) => {
-      console.log(res.status);
-      if (res.status === 200) {
-        overlap = "사용 가능한 닉네임 입니다.";
-        // 시작하기 버튼 활성화
-        // setAble(false)
-      } else res.status === 409;
-      {
-        overlap = "이미 등록된 닉네임 입니다.";
-        // 시작하기 버튼 비활성화
-        // setAble(true)
-      }
+  // 내 데이터 불러오는 요청
+  interface SearchApiData {
+    status: string;
+    data: {
+      users: SearchState[];
+    };
+  }
+  const loadMyInfo = () => {
+    getMyInfo((res: SearchApiData) => {
+      console.log(res.data);
     });
   };
 
+  // 불러온 데이터와 저장된 데이터 비교하여 차이가 없으면 저장하기 버튼 비활성화
+  const [able, setAble] = useState(false);
+
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  // 닉네임 체크 후 출력할 문자
+  const [check, setcheck] = useState("");
+  // 닉네임 중복검사 버튼 활성화 상태
+  const [ableName, setAbleName] = useState(true);
+  const [intro, setIntro] = useState("");
+  const [description, setDescription] = useState("");
+
+  // 중복 확인 버튼 누르면 중복검사 API로 확인하고 결과값 출력
+  const checkOverlap = () => {
+    setcheck("사용 가능한 닉네임 입니다.");
+    // fetch(`http://k7d106.p.ssafy.io/api/nicknames/${name}`).then((res) => {
+    //   console.log(res.status);
+    //   if (res.status === 200) {
+    //     overlap = "사용 가능한 닉네임 입니다.";
+    //     // 시작하기 버튼 활성화
+    //     // setAble(false)
+    //   } else res.status === 409;
+    //   {
+    //     overlap = "이미 등록된 닉네임 입니다.";
+    //     // 시작하기 버튼 비활성화
+    //     // setAble(true)
+    //   }
+    // });
+  };
+
   // 닉네임
-  const inputName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
+  const regex = /^[가-힣|a-z|A-Z|]{2,10}$/;
+  const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (regex.test(event.target.value)) {
+      setName(event.target.value);
+      setcheck("");
+      setAbleName(false);
+    } else if (event.target.value === "") {
+      setName(event.target.value);
+      setcheck("");
+    } else {
+      setName(event.target.value);
+      setcheck("공백을 제외한 한글과 영어만 입력해주세요.");
+      setAbleName(true);
+    }
   };
 
   // 한 줄 소개
-  const inputIntro = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleIntro = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIntro(event.target.value);
   };
 
   // 설명
-  const inputDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(event.target.value);
   };
 
@@ -65,10 +109,19 @@ const ProfileEditPage = () => {
   const handleOpenWithdrow = () => setOpenWithdrow(true);
   const handleConfirmWithdrow = () => {
     // 회원 탈퇴 요청
-    console.log("탈퇴");
+    delWithdraw(() => {
+      // 탈퇴 후 로그인 화면으로 이동
+      alert("회원 탈퇴 되었습니다. 로그인 페이지로 이동합니다.");
+      navigate(`/`);
+    });
   };
+
   return (
-    <div className={styles["profile-edit-page"]}>
+    <div
+      className={styles["profile-edit-page"]}
+      // onLoad={checkLogin}
+      onLoad={loadMyInfo}
+    >
       <Sidebar />
       <CustomModal
         open={open}
@@ -119,41 +172,54 @@ const ProfileEditPage = () => {
       <div className={styles["right"]}>
         <div className={styles["content"]}>
           <h2>닉네임</h2>
-          <div className={styles["nicknameinput"]}>
-            <input
-              value={name}
-              onChange={inputName}
-              type="text"
-              placeholder="2~10글자의 한글, 영어 대/소문자"
-              maxLength={10}
+          <div className={styles["nicknamebox"]}>
+            <TextField
               className={styles["nickname"]}
-            ></input>
-            <CustomButton variant="outlined" onClick={checkOverlap}>
+              onChange={handleName}
+              placeholder="2~10글자의 한글, 영어 대/소문자"
+              inputProps={{ maxLength: 10, minLength: 2 }}
+              focused={check === "사용 가능한 닉네임 입니다." ? true : false}
+              error={
+                check === "공백을 제외한 한글과 영어만 입력해주세요."
+                  ? true
+                  : false
+              }
+              color={
+                check === "사용 가능한 닉네임 입니다." ? "success" : "info"
+              }
+              label={check}
+              value={name}
+            />
+            <CustomButton
+              variant="outlined"
+              onClick={checkOverlap}
+              disabled={ableName}
+            >
               중복 확인
             </CustomButton>
           </div>
-          <span>{overlap}</span>
-          <br />
           <br />
           <h2>한 줄 소개</h2>
-          <input
+          <TextField
             className={styles["intro"]}
             value={intro}
-            onChange={inputIntro}
-            type="text"
+            onChange={handleIntro}
+            multiline
+            minRows={2}
             placeholder="한 줄 소개를 입력해주세요"
-            maxLength={50}
+            inputProps={{ maxLength: 50 }}
           />
           <span className={styles["count"]}>{intro.length}/50</span>
           <br />
-          <br />
           <h2>설명</h2>
-          <textarea
+          <TextField
             className={styles["description"]}
+            multiline
+            minRows={9}
             value={description}
-            onChange={inputDescription}
+            onChange={handleDescription}
             placeholder="상세 설명을 입력해주세요"
-            maxLength={300}
+            inputProps={{ maxLength: 300 }}
           />
           <span className={styles["count"]}>{description.length}/300</span>
           <br />

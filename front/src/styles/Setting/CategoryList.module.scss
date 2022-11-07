@@ -1,0 +1,25 @@
+/* 카테고리 목록 */
+.category-list {
+  & .title {
+    display: flex;
+    align-items: center;
+
+    & span {
+      color: #f00;
+      font-size: 0.8rem;
+      margin-left: 1rem;
+    }
+  }
+
+  & .content {
+    display: flex;
+    flex-wrap: wrap;
+    height: 80px;
+    overflow-y: auto;
+
+    & .chip {
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
