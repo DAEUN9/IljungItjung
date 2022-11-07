@@ -2,7 +2,6 @@ package com.iljungitjung.domain.schedule;
 
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
-import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.schedule.dto.reservation.*;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
@@ -13,7 +12,6 @@ import com.iljungitjung.domain.schedule.service.ReservationServiceImpl;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
-import com.iljungitjung.global.scheduler.AutoNotification;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
