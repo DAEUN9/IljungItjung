@@ -4,7 +4,7 @@ const apiInstance = () => {
   const instance = axios.create({
     baseURL: "https://k7d106.p.ssafy.io/api",
     headers: {
-      "Content-type": "",
+      Accept: "application/json",
     },
   });
 
