@@ -25,10 +25,6 @@ public class AutoNotification {
     public void buildTemplate(Schedule schedule) {
         NotificationMessageDto message = makeMessage(schedule);
         List<NotificationMessageDto> messageList = new ArrayList<>();
-//        NotificationMessageDto message = NotificationMessageDto.builder()
-//                .to(schedule.getPhonenum())
-//                .content(content)
-//                .build();
         messageList.add(message);
         NotificationRequestDto requestDto = new NotificationRequestDto(messageList);
         notificationService.sendMessage(requestDto);
