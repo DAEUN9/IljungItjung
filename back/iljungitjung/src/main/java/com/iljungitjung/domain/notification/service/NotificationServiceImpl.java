@@ -69,9 +69,9 @@ public class NotificationServiceImpl implements NotificationService{
                 .append(NEWLINE)
                 .append(NCLOUD_ACCESS_KEY)
                 .toString();
-
         try {
             signingKey = new SecretKeySpec(NCLOUD_SECRET_KEY.getBytes("UTF-8"), "HmacSHA256");
+
             mac = Mac.getInstance("HmacSHA256");
             mac.init(signingKey);
             rawHmac = mac.doFinal(message.getBytes("UTF-8"));

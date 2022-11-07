@@ -13,7 +13,6 @@ import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
 import com.iljungitjung.global.login.repository.RedisUserRepository;
-import com.iljungitjung.global.scheduler.AutoNotification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,7 +36,6 @@ public class ReservationServiceImpl implements ReservationService{
     private final UserRepository userRepository;
     private final UserService userService;
 
-    private final AutoNotification testNotification;
     @Override
     @Transactional
     public ReservationIdResponseDto reservationRequest(ReservationRequestDto reservationRequestDto, HttpSession httpSession) {
@@ -69,7 +67,6 @@ public class ReservationServiceImpl implements ReservationService{
         schedule.setScheduleRequestList(user);
         schedule.setScheduleResponseList(userTo);
         schedule = scheduleRepository.save(schedule);
-        testNotification.buildTemplate(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -102,8 +99,6 @@ public class ReservationServiceImpl implements ReservationService{
         }else{
             throw new NoGrantAcceptScheduleException();
         }
-        // 추가
-        testNotification.buildTemplate(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -118,9 +113,7 @@ public class ReservationServiceImpl implements ReservationService{
 
         Long scheduleId = schedule.getId();
         scheduleRepository.delete(schedule);
-        // 추가
         schedule.deleted();
-        testNotification.buildTemplate(schedule);
         return new ReservationIdResponseDto(scheduleId);
     }
 
