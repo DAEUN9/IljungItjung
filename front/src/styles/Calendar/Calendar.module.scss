@@ -216,8 +216,10 @@ $light-gray: #f5f5f5;
   $profile-height: 300px;
   $tab-button-height: 48px;
   $inner-padding: 25px;
-  $tab-height: calc(100vh - $tab-button-height - $profile-height - $inner-padding);
-  
+  $tab-height: calc(
+    100vh - $tab-button-height - $profile-height - $inner-padding
+  );
+
   height: $tab-height;
   background-color: $light-gray;
   border-radius: 15px;
@@ -226,7 +228,6 @@ $light-gray: #f5f5f5;
   overflow-x: hidden;
 
   @include custom-scroll();
-
 
   &-inner {
     padding: $inner-padding;
@@ -266,10 +267,10 @@ $light-gray: #f5f5f5;
   &-buttons {
     display: flex;
     justify-content: end;
-  
+
     > button {
       width: 80px;
-  
+
       &:last-child {
         margin-left: 10px;
       }
@@ -287,13 +288,13 @@ $light-gray: #f5f5f5;
 /* other */
 .other-timeTableCell {
   &:focus {
-    background-color: #6B7BB1 !important;
+    background-color: #6b7bb1 !important;
   }
 
   &-disabled {
     &:hover,
     &:focus {
       background-color: unset !important;
-    } 
+    }
   }
 }

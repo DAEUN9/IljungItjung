@@ -9,7 +9,7 @@ const rootReducer = combineReducers({
   reservation,
   search,
   mycalendar,
-  othercalendar
+  othercalendar,
 });
 
 export default rootReducer;
