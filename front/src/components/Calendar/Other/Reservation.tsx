@@ -119,6 +119,11 @@ const items = [
   },
 ];
 
+const messages = [
+  '카테고리를 선택할 수 없습니다.',
+  '예약 요청이 완료되었습니다.'
+]
+
 const Reservation = () => {
   const {
     handleSubmit,
@@ -135,8 +140,13 @@ const Reservation = () => {
   const dispatch = useDispatch();
   const fullDate = useMemo(() => getFullDate(selected?.startDate), [selected]);
   const [open, setOpen] = useState(false);
+  const [id, setId] = useState(0);
 
-  const onSubmit: SubmitHandler<RequestData> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<RequestData> = (data) => {
+    console.log(data);
+    setId(1);
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
 
   // 카테고리가 선택됐을 때
@@ -156,6 +166,7 @@ const Reservation = () => {
           const itemDate = new Date(item.startDate.toString());
 
           if (endDate >= itemDate) {
+            setId(0);
             setOpen(true);
             setValue('category', '');
             return;
@@ -306,7 +317,7 @@ const Reservation = () => {
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             open={open}
             onClose={handleClose}
-            message="카테고리를 선택할 수 없습니다."
+            message={messages[id]}
           />
         </form>
       )}

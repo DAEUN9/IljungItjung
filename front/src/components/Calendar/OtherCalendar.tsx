@@ -28,8 +28,8 @@ const next = [
   },
   {
     id: 2,
-    startDate: '2022-11-02T12:00',
-    endDate: '2022-11-02T13:30',
+    startDate: '2022-11-09T12:00',
+    endDate: '2022-11-09T13:30',
     title: '손발톱관리',
     nickname: '신봉선',
     desc: '예쁘게 해주세용',
@@ -38,8 +38,8 @@ const next = [
   },
   {
     id: 3,
-    startDate: '2022-11-05T12:00',
-    endDate: '2022-11-05T13:30',
+    startDate: '2022-11-10T12:00',
+    endDate: '2022-11-10T13:30',
     title: '커트',
     nickname: '퍼플독',
     desc: '멋지게 해주십쇼',
@@ -48,8 +48,8 @@ const next = [
   },
   {
     id: 4,
-    startDate: '2022-11-06T13:00',
-    endDate: '2022-11-06T14:30',
+    startDate: '2022-11-11T13:00',
+    endDate: '2022-11-11T14:30',
     title: '카테고리',
     nickname: '닉네임',
     desc: '요청사항',
