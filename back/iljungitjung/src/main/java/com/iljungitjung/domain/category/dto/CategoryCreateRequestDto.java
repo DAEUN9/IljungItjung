@@ -22,11 +22,11 @@ public class CategoryCreateRequestDto {
     @Size(min=7, max=7, message = "형식을 맞춰주세요 (ex.#000000)")
     private String color;
 
-    public Category toCategoryEntity(CategoryCreateRequestDto categoryCreateRequestDto){
+    public Category toEntity(){
         return Category.builder()
-                .categoryName(categoryCreateRequestDto.categoryName)
-                .time(categoryCreateRequestDto.time)
-                .color(categoryCreateRequestDto.color)
+                .categoryName(this.categoryName)
+                .time(this.time)
+                .color(this.color)
                 .build();
 
     }

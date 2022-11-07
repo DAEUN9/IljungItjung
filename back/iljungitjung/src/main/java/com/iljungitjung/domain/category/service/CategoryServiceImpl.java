@@ -29,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     @Transactional
     public CategoryIdResponseDto addCategory(CategoryCreateRequestDto requestDto, HttpSession httpSession) {
-        Category category = requestDto.toCategoryEntity(requestDto);
+        Category category = requestDto.toEntity();
 
         User user = userService.findUserBySessionId(httpSession);
 
@@ -51,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService{
 
         if(category.getUser().getId()!=user.getId()) throw new NoGrantUpdateCategoryException();
 
-        Category updateCategory = requestDto.toCategoryEntity(requestDto);
+        Category updateCategory = requestDto.toEntity();
         category.change(updateCategory);
         return new CategoryIdResponseDto(categoryId);
     }

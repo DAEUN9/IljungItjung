@@ -44,6 +44,7 @@ public class Schedule {
     private String phonenum;
 
     @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
     private Type type;
 
     private String cancelFrom;

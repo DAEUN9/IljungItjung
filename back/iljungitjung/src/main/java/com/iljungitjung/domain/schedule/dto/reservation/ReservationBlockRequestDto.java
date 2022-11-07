@@ -28,10 +28,10 @@ public class ReservationBlockRequestDto {
     @Size(min=4, max=4, message = "형식을 맞춰주세요 (ex.1500)")
     private String endTime;
 
-    public Schedule toScheduleEntity(ReservationBlockRequestDto reservationBlockRequestDto, Date startDate, Date endDate) {
+    public Schedule toEntity(Date startDate, Date endDate) {
         return Schedule.builder()
-                .categoryName(reservationBlockRequestDto.getTitle())
-                .contents(reservationBlockRequestDto.getContents())
+                .categoryName(this.title)
+                .contents(this.contents)
                 .startDate(startDate)
                 .endDate(endDate)
                 .type(Type.BLOCK)
