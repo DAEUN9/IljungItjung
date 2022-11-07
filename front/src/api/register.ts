@@ -13,7 +13,6 @@ function postRegister(nickname: string, description: string, success: any) {
     .post(`/users`, {
       nickname: nickname,
       description: description,
-      phonenum: "01012341234",
     })
     .then(success);
 }
