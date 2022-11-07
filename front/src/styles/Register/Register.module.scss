@@ -2,70 +2,75 @@
 
 .register-page {
   @include page-default();
-  display: flex;
-  justify-content: space-between;
 }
 
 .left {
-  width: 50%;
-  margin-top: 10%;
+  width: 55%;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
 
-  & .iljung {
-    width: 40%;
-    height: auto;
-  }
+  & .picturebox{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 
-  & .logo {
-    width: 10%;
+    & .iljung{
+      width: 35%;
+      height: auto;
+    }
+
+    & .logo {
+      width: 10%;
+    }
   }
 }
 
 .right {
-  width: 50%;
+  width: 45%;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
 
   & .content {
-    height: 70%;
+    text-align: start;
+    margin-bottom: 5%;
     width: 80%;
 
-    & .text {
-      text-align: start;
-      margin-bottom: 5%;
-
+    & .nicknamebox {
+      display: flex;
+      justify-content: space-between;
+    }
       & .nickname {
-        width: 75%;
-        height: 32px;
-        margin-right: 2%;
-        padding: 0% 2%;
+        width: 78%;
+        padding: 0% 1%;
       }
 
-      & .overlap {
-        background-color: white;
-        color: blue;
-      }
-
-      & .oneline {
-        width: 95%;
-        height: 32px;
-        overflow: auto;
-        padding: 0% 2%;
-      }
-
-      & .count {
-        display: flex;
-        justify-content: right;
-      }
+    & .oneline {
+      width: 97%;
+      height: 32px;
+      overflow: auto;
+      padding: 0% 1%;
     }
 
+    & .count {
+      display: flex;
+      justify-content: flex-end;
+      color: #757575;
+    }
+  }
+
+  & .startbox{
+    display: flex;
+    justify-content: center;
+    margin-top: 10%;
+
     & .startbtn {
-      width: 50%;
-      font-size: larger;
+      width: 70%;
+      font-size: 20px;
+      font-weight: bolder;
+      box-shadow: none;
     }
   }
 }

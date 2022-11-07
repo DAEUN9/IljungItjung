@@ -44,6 +44,7 @@ const CustomCarousel = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    autoplay : true,
     nextArrow: (
       <NextTo>
         <img src={caroR} />
@@ -58,6 +59,12 @@ const CustomCarousel = () => {
   return (
     <div className={styles["carousel"]}>
       <StyledSlider {...settings}>
+        <div>
+          <Image src={defaultImg} />
+        </div>
+        <div>
+          <Image src={defaultImg} />
+        </div>
         <div>
           <Image src={defaultImg} />
         </div>

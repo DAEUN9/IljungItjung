@@ -1,0 +1,96 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.4'
+	id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+	id 'java'
+	id 'jacoco'
+}
+
+group = 'com'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+
+	all {
+		exclude group : 'org.springframework.boot', module : 'spring-boot-starter-logging'
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+
+	implementation 'org.apache.httpcomponents:httpclient'
+	implementation 'org.apache.httpcomponents:httpcore'
+}
+
+tasks.named('test') {
+	finalizedBy 'jacocoTestReport'
+	useJUnitPlatform()
+
+}
+
+jacocoTestReport {
+	finalizedBy("jacocoTestCoverageVerification")
+
+	dependsOn test // tests are required to run before generating the report
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					 "com/iljungitjung/IljungitjungApplication.class",
+					 "com/iljungitjung/global/**",
+					 "com/iljungitjung/domain/notification/**",
+					 "com/iljungitjung/domain/**/dto/**",
+					 "com/iljungitjung/domain/**/exception/**",
+			])
+		}))
+	}
+}
+jacoco {
+	toolVersion = "0.8.5"
+}
+
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				//minimum = 0.4.toBigDecimal()
+			}
+		}
+		rule {
+			// 룰을 간단히 켜고 끌 수 있습니다.
+			enabled = true
+
+			// 룰을 체크할 단위는 클래스 단위
+			element = 'CLASS'
+
+			// 빈 줄을 제외한 코드의 라인수를 최대 200라인으로 제한합니다.
+
+			limit {
+				counter = 'LINE'
+				value = 'TOTALCOUNT'
+				maximum = 200
+			}
+		}
+	}
+
+}
