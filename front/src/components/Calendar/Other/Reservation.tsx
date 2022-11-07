@@ -21,6 +21,7 @@ import CustomButton from '@components/common/CustomButton';
 import {
   formatTime,
   getStringFromDate,
+  getFullDate
 } from '@components/Calendar/common/util';
 import { SchedulerDate, SchedulerDateTime } from '@components/types/types';
 import { RootState } from '@modules/index';
@@ -67,24 +68,6 @@ const InputLabel = styled(MuiInputLabel)`
     color: #6b7bb1;
   }
 `;
-
-const getFullDate = (date: SchedulerDateTime | undefined) => {
-  switch (typeof date) {
-    case 'undefined':
-      return '-';
-    case 'string':
-      return date;
-    case 'object':
-      return (
-        date.getFullYear() +
-        '년 ' +
-        (date.getMonth() + 1) +
-        '월 ' +
-        date.getDate() +
-        '일'
-      );
-  }
-};
 
 const getTime = (time: string) => {
   const hours = parseInt(time.slice(0, 2));
