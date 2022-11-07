@@ -35,6 +35,8 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     private boolean isSignUpRequest(HttpServletRequest request) {
+        log.debug("request Method : {}" , request.getMethod());
+        log.debug("request URl : {}" , request.getRequestURL());
         if(request.getMethod().equals(HttpMethod.POST) && request.getRequestURL().equals("/api/users")) return true;
         if(request.getMethod().equals(HttpMethod.POST) && request.getRequestURL().equals("/users")) return true;
         return false;
