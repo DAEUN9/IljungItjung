@@ -22,11 +22,20 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.debug("request path : {}", request.getRequestURL());
         if(request.getMethod().equals(HttpMethod.OPTIONS)) return true;
+
+        if(isSignUpRequest(request)) return true;
+
         String sessionId = request.getSession().getId();
         if(!redisUserRepository.existsById(sessionId)){
             throw new ExpireRedisUserException();
         }
         log.debug("session Id : {}", request.getSession().getId());
         return true;
+    }
+
+    private boolean isSignUpRequest(HttpServletRequest request) {
+        if(request.getMethod().equals(HttpMethod.POST) && request.getRequestURL().equals("/api/users")) return true;
+        if(request.getMethod().equals(HttpMethod.POST) && request.getRequestURL().equals("/users")) return true;
+        return false;
     }
 }
