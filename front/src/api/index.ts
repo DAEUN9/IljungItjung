@@ -2,7 +2,7 @@ import axios from "axios";
 
 const apiInstance = () => {
   const instance = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
+    baseURL: "https://k7d106.p.ssafy.io/api",
     headers: {
       "Content-type": "application/json",
     },
