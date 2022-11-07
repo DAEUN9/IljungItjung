@@ -51,7 +51,7 @@ public class ReservationServiceTest{
 
     @Test
     @DisplayName("일정 요청")
-    public void A() throws Exception {
+    public void requestSchedule() throws Exception {
 
         //given
         String categoryName = "커트";
@@ -91,7 +91,7 @@ public class ReservationServiceTest{
 
     @Test
     @DisplayName("일정 주인이 일정 수락")
-    public void B() throws Exception {
+    public void acceptScheduleFromOwner() throws Exception {
 
         //given
         boolean accept = true;
@@ -119,7 +119,7 @@ public class ReservationServiceTest{
     }
     @Test
     @DisplayName("일정 주인이 일정 취소")
-    public void C() throws Exception {
+    public void cancelScheduleFromOwner() throws Exception {
 
         //given
         boolean accept = false;
@@ -148,7 +148,7 @@ public class ReservationServiceTest{
 
     @Test
     @DisplayName("일정 신청자가 일정 취소")
-    public void D() throws Exception {
+    public void cancelScheduleFromApplicant() throws Exception {
         //given
         boolean accept = false;
         String reason = "가능합니다. 잘부탁드려요";
@@ -179,7 +179,7 @@ public class ReservationServiceTest{
     }
     @Test
     @DisplayName("일정 신청자가 예약 리스트 조회")
-    public void E() throws Exception {
+    public void viewScheduleFromApplicant() throws Exception {
 
         //given
         Long userFromId = 1L;
@@ -228,7 +228,7 @@ public class ReservationServiceTest{
 
     @Test
     @DisplayName("일정 주인이 일정 삭제")
-    public void F() throws Exception {
+    public void deleteScheduleFromOwner() throws Exception {
 
         //given
         String reason = "가능합니다. 잘부탁드려요";
@@ -254,7 +254,7 @@ public class ReservationServiceTest{
 
     @Test
     @DisplayName("일정 차단")
-    public void G() throws Exception {
+    public void blockSchedule() throws Exception {
 
         //given
         Long userToId = 2L;

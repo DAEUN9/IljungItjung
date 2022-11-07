@@ -91,13 +91,13 @@ public class ReservationServiceImpl implements ReservationService{
             }
         }else if(user.getId()==schedule.getUserFrom().getId()){
             if(reservationManageRequestDto.isAccept()){
-                throw new NoGrantAccessScheduleException();
+                throw new NoGrantAcceptScheduleException();
             }else{
                 cancelFrom="사용자";
                 schedule.canceled(cancelFrom, reservationManageRequestDto.getReason());
             }
         }else{
-            throw new NoGrantAcceptScheduleException();
+            throw new NoGrantAccessScheduleException();
         }
 
         return new ReservationIdResponseDto(schedule.getId());
@@ -158,27 +158,25 @@ public class ReservationServiceImpl implements ReservationService{
             throw new DateFormatErrorException();
         }
 
-        try{
-            List<Schedule> scheduleList;
-            scheduleList = scheduleRepository.findByUserFrom_IdIs(user.getId());
 
-            List<ReservationViewDto> requestList = new ArrayList<>();
-            List<ReservationViewDto> acceptList = new ArrayList<>();
-            List<ReservationCancelViewDto> cancelList = new ArrayList<>();
-            for(Schedule schedule : scheduleList){
-                if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().after(endDateFormat)) continue;
-                if(schedule.getType().equals(Type.REQUEST)){
-                    requestList.add(new ReservationViewDto(schedule));
-                }else if(schedule.getType().equals(Type.ACCEPT)){
-                    acceptList.add(new ReservationViewDto(schedule));
-                }else if(schedule.getType().equals(Type.CANCEL)){
-                    cancelList.add(new ReservationCancelViewDto(schedule));
-                }
+        List<Schedule> scheduleList;
+        scheduleList = scheduleRepository.findByUserFrom_IdIs(user.getId());
+
+        List<ReservationViewDto> requestList = new ArrayList<>();
+        List<ReservationViewDto> acceptList = new ArrayList<>();
+        List<ReservationCancelViewDto> cancelList = new ArrayList<>();
+        for(Schedule schedule : scheduleList){
+            if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().after(endDateFormat)) continue;
+            if(schedule.getType().equals(Type.REQUEST)){
+                requestList.add(new ReservationViewDto(schedule));
+            }else if(schedule.getType().equals(Type.ACCEPT)){
+                acceptList.add(new ReservationViewDto(schedule));
+            }else if(schedule.getType().equals(Type.CANCEL)){
+                cancelList.add(new ReservationCancelViewDto(schedule));
             }
-            responseDtos = new ReservationViewResponseDto(requestList, acceptList, cancelList);
-        }catch (Exception e){
-            throw new NoExistScheduleException();
         }
+        responseDtos = new ReservationViewResponseDto(requestList, acceptList, cancelList);
+
 
         return responseDtos;
     }

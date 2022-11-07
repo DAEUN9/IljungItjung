@@ -44,7 +44,6 @@ dependencies {
 tasks.named('test') {
 	finalizedBy 'jacocoTestReport'
 	useJUnitPlatform()
-
 }
 
 jacocoTestReport {
@@ -60,6 +59,8 @@ jacocoTestReport {
 					 "com/iljungitjung/domain/notification/**",
 					 "com/iljungitjung/domain/**/dto/**",
 					 "com/iljungitjung/domain/**/exception/**",
+					 "**/lambda\$*.*",
+					 "**/R\$*.*"
 			])
 		}))
 	}
@@ -73,7 +74,7 @@ jacocoTestCoverageVerification {
 	violationRules {
 		rule {
 			limit {
-				//minimum = 0.4.toBigDecimal()
+				minimum = 0.4.toBigDecimal()
 			}
 		}
 		rule {
