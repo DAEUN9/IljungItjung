@@ -72,5 +72,18 @@ export const formatTime = (
   }
   endTime += endHour + ":" + endMinutes;
 
-  return startTime + " - " + endTime;
+  return startTime + ' - ' + endTime;
 };
+
+export const getStringFromDate = (time: Date | string | undefined) => {
+  if(!time) return '';
+  
+  let date = new Date();
+  
+  if(typeof time === 'string') date = new Date(time);
+  else date = time;
+
+  const str = date.getFullYear().toString() + date.getMonth().toString() + date.getDate().toString();
+  
+  return str;
+}
