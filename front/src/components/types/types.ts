@@ -8,6 +8,14 @@ interface SearchState {
   categories: string[];
 }
 
+// 카테고리 관련 타입
+interface CategoryState {
+  name: string;
+  color: string;
+  hour: string;
+  min: string;
+}
+
 declare type SchedulerDateTime = Date | number | string;
 
 interface SchedulerDate {
@@ -21,4 +29,4 @@ interface SchedulerDate {
   [propertyName: string]: any;
 }
 
-export type { SearchState, SchedulerDateTime, SchedulerDate };
+export type { SearchState, CategoryState, SchedulerDateTime, SchedulerDate };
