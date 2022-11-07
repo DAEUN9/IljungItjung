@@ -3,10 +3,13 @@ package com.iljungitjung.domain.schedule.controller;
 import com.iljungitjung.domain.schedule.service.ScheduleService;
 import com.iljungitjung.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.utility.nullability.AlwaysNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.util.annotation.Nullable;
 
+import javax.persistence.Column;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -20,10 +23,8 @@ public class ScheduleController {
 
     @GetMapping("/{nickname}")
     public ResponseEntity<CommonResponse> scheduleView(@PathVariable("nickname") String nickname,
-                                                       @Size(min=8, max=8, message = "형식을 맞춰주세요 (ex.20221017)")
-                                                       @RequestParam("startDate") String startDate,
-                                                       @Size(min=8, max=8, message = "형식을 맞춰주세요 (ex.20221017)")
-                                                       @RequestParam("endDate") String endDate, HttpSession httpSession){
+                                                       @RequestParam(value = "startDate", required = false) String startDate,
+                                                       @RequestParam(value = "endDate", required = false) String endDate, HttpSession httpSession){
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(scheduleService.scheduleView(nickname, startDate, endDate, httpSession)), HttpStatus.OK);
     }
 

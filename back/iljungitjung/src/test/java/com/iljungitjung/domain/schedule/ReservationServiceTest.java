@@ -51,7 +51,7 @@ public class ReservationServiceTest{
 
     @Test
     @DisplayName("일정 요청")
-    public void A() throws Exception {
+    public void requestSchedule() throws Exception {
 
         //given
         String categoryName = "커트";
@@ -72,7 +72,7 @@ public class ReservationServiceTest{
         Optional<Category> category = Optional.of(new Category(categoryName, color, time));
 
         ReservationRequestDto reservationRequestDto = new ReservationRequestDto(userToNickname, date, startTime, contents, phone, categoryName);
-        Schedule schedule = reservationRequestDto.toEntity(new Date(), new Date(), category.get().getColor(), Type.REQUEST);
+        Schedule schedule = reservationRequestDto.toScheduleEntity(reservationRequestDto, new Date(), new Date(), category.get().getColor(), Type.REQUEST);
         schedule.setId(scheduleId);
 
         //when
@@ -91,7 +91,7 @@ public class ReservationServiceTest{
 
     @Test
     @DisplayName("일정 주인이 일정 수락")
-    public void B() throws Exception {
+    public void acceptScheduleFromOwner() throws Exception {
 
         //given
         boolean accept = true;
@@ -119,7 +119,7 @@ public class ReservationServiceTest{
     }
     @Test
     @DisplayName("일정 주인이 일정 취소")
-    public void C() throws Exception {
+    public void cancelScheduleFromOwner() throws Exception {
 
         //given
         boolean accept = false;
@@ -148,7 +148,7 @@ public class ReservationServiceTest{
 
     @Test
     @DisplayName("일정 신청자가 일정 취소")
-    public void D() throws Exception {
+    public void cancelScheduleFromApplicant() throws Exception {
         //given
         boolean accept = false;
         String reason = "가능합니다. 잘부탁드려요";
@@ -179,7 +179,7 @@ public class ReservationServiceTest{
     }
     @Test
     @DisplayName("일정 신청자가 예약 리스트 조회")
-    public void E() throws Exception {
+    public void viewScheduleFromApplicant() throws Exception {
 
         //given
         Long userFromId = 1L;
@@ -201,10 +201,10 @@ public class ReservationServiceTest{
 
         User userFrom = User.builder().build();
         userFrom.setId(userFromId);
-        Schedule schedule = Schedule.builder().userFrom(userFrom).startDate(startDateFormat).endDate(endDateFormat).type(Type.REQUEST).build();
-        schedule.setId(scheduleId);
 
         List<Schedule> scheduleList = new ArrayList<>();
+        Schedule schedule = Schedule.builder().userFrom(userFrom).startDate(startDateFormat).endDate(endDateFormat).type(Type.REQUEST).build();
+        schedule.setId(scheduleId);
         scheduleList.add(schedule);
 
         schedule = Schedule.builder().userFrom(userFrom).startDate(startDateFormat).endDate(endDateFormat).type(Type.ACCEPT).build();
@@ -213,6 +213,10 @@ public class ReservationServiceTest{
 
         schedule = Schedule.builder().userFrom(userFrom).startDate(startDateFormat).endDate(endDateFormat).type(Type.CANCEL).build();
         schedule.setId(scheduleId+2);
+        scheduleList.add(schedule);
+
+        schedule = Schedule.builder().userFrom(userFrom).startDate(new Date()).endDate(new Date()).type(Type.CANCEL).build();
+        schedule.setId(scheduleId+3);
         scheduleList.add(schedule);
 
         //when
@@ -228,7 +232,7 @@ public class ReservationServiceTest{
 
     @Test
     @DisplayName("일정 주인이 일정 삭제")
-    public void F() throws Exception {
+    public void deleteScheduleFromOwner() throws Exception {
 
         //given
         String reason = "가능합니다. 잘부탁드려요";
@@ -254,7 +258,7 @@ public class ReservationServiceTest{
 
     @Test
     @DisplayName("일정 차단")
-    public void G() throws Exception {
+    public void blockSchedule() throws Exception {
 
         //given
         Long userToId = 2L;
@@ -281,7 +285,7 @@ public class ReservationServiceTest{
 
         ReservationBlockRequestDto reservationBlockRequestDto = new ReservationBlockRequestDto(title, contents, date, startTime, endTime);
 
-        Schedule schedule = reservationBlockRequestDto.toEntity(startDateFormat, endDateFormat);
+        Schedule schedule = reservationBlockRequestDto.toScheduleEntity(reservationBlockRequestDto, startDateFormat, endDateFormat);
         schedule.setId(scheduleId);
 
         //when
