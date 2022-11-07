@@ -1,10 +1,9 @@
-import { useEffect } from "react";
 import { WeekView } from "@devexpress/dx-react-scheduler-material-ui";
 
+import { getDay } from "@components/Calendar/common/util";
 import styles from "@styles/Calendar/Calendar.module.scss";
-import { getDay } from "./util";
 
-export default function CustomWeekView() {
+export default function SettingWeekView() {
   return (
     <WeekView
       startDayHour={9}
@@ -17,7 +16,13 @@ export default function CustomWeekView() {
         />
       )}
       timeTableCellComponent={(props) => (
-        <WeekView.TimeTableCell {...props} className={styles.timeTableCell} />
+        <WeekView.TimeTableCell
+          onDoubleClick={() => {
+            console.log("cell_double_click", props.startDate);
+          }}
+          {...props}
+          className={styles.timeTableCell}
+        />
       )}
     />
   );
