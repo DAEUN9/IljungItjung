@@ -23,7 +23,7 @@ public class ReservationCancelViewDto {
     private final String cancelFrom;
 
     public ReservationCancelViewDto(Schedule schedule){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm aa");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
         this.id=schedule.getId();
         this.categoryName=schedule.getCategoryName();
         this.startDate=simpleDateFormat.format(schedule.getStartDate());
