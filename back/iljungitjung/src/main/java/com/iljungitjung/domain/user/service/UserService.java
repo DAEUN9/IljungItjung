@@ -22,4 +22,6 @@ public interface UserService {
     UserInfo getUserInfo(HttpSession session);
 
     User findUserBySessionId(HttpSession session);
+
+    void deleteUserByEmail(String email);
 }
