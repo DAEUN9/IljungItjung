@@ -20,7 +20,7 @@ public class ScheduleViewDto {
     private final String phonenum;
 
     public ScheduleViewDto(Schedule schedule){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm aa");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm");
         this.id=schedule.getId();
         this.categoryName=schedule.getCategoryName();
         this.color= schedule.getColor();
