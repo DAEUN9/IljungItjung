@@ -3,13 +3,15 @@ package com.iljungitjung.domain.user.dto;
 import com.iljungitjung.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Getter
-//@AllArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class SignUpDto {
 
     @NotBlank(message = "닉네임은 필수 입력 값입니다.")
