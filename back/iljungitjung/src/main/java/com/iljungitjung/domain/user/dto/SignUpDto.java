@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Getter
-@AllArgsConstructor
+//@AllArgsConstructor
 public class SignUpDto {
 
     @NotBlank(message = "닉네임은 필수 입력 값입니다.")

@@ -23,8 +23,10 @@ public class LoginInterceptor implements HandlerInterceptor {
         log.debug("request path : {}", request.getRequestURL());
         if(request.getMethod().equals(HttpMethod.OPTIONS)) return true;
 
-        if(isSignUpRequest(request)) return true;
-
+        if(isSignUpRequest(request)) {
+            log.debug("signup");
+            return true;
+        }
         String sessionId = request.getSession().getId();
         log.debug("session Id : {}", sessionId);
         if(!redisUserRepository.existsById(sessionId)){
@@ -35,8 +37,8 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     private boolean isSignUpRequest(HttpServletRequest request) {
-        if(request.getMethod().equals(HttpMethod.POST) && request.getRequestURI().equals("/api/users")) return true;
-        if(request.getMethod().equals(HttpMethod.POST) && request.getRequestURI().equals("/users")) return true;
+        if(request.getMethod().equals("POST") && request.getRequestURI().equals("/api/users")) return true;
+        if(request.getMethod().equals("POST") && request.getRequestURI().equals("/users")) return true;
         return false;
     }
 }
