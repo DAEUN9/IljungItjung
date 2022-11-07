@@ -10,11 +10,11 @@ function getOverlap(nickname: string, success: any) {
 // 회원가입 api
 function postRegister(nickname: string, description: string, success: any) {
   api
-    .post(
-      `/users`,
-      { nickname: nickname, description: description },
-      { headers: { "Content-Type": `application/json` } }
-    )
+    .post(`/users`, {
+      nickname: nickname,
+      description: description,
+      phonenum: "01012341234",
+    })
     .then(success);
 }
 
