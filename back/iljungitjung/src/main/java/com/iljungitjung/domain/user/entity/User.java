@@ -46,6 +46,14 @@ public class User {
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Category> categoryList = new ArrayList<>();
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setCategoryList(List<Category> categoryList) {
+        this.categoryList = categoryList;
+    }
+
     public void signUp(TemporaryUser temporaryUser){
         this.email = temporaryUser.getEmail();
         this.imagePath = temporaryUser.getProfileImg();
