@@ -26,58 +26,58 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @DisplayName("알림 컨트롤러")
-@SpringBootTest(classes = IljungitjungApplication.class)
+//@SpringBootTest(classes = IljungitjungApplication.class)
 @AutoConfigureMockMvc
 public class NotificationControllerTest {
-    @Autowired
-    public MockMvc mockMvc;
-    @Autowired
-    RedisUserRepository redisUserRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private MockHttpSession session;
-
-    @BeforeEach
-    public void before() {
-        String email = "email22";
-        String nickname = "nickname22";
-        String profileImg = "profileImg22";
-        User user = User.builder()
-                .email(email)
-                .nickname(nickname)
-                .imagePath(profileImg)
-                .build();
-        userRepository.save(user);
-
-        RedisUser redisUser = RedisUser.builder()
-                .id(session.getId())
-                .email(email)
-                .nickname(nickname)
-                .profileImg(profileImg)
-                .build();
-        redisUserRepository.save(redisUser);
-    }
-
-    @Test
-    @DisplayName("메시지 전송")
-    public void A() throws Exception {
-        //given
-        String message = "하이";
-        String phone = "01071527518";
-
-        NotificationMessageDto notificationMessageDto = new NotificationMessageDto(phone, message);
-        List<NotificationMessageDto> messageList = new ArrayList<>();
-        messageList.add(notificationMessageDto);
-        String content = objectMapper.writeValueAsString(new NotificationRequestDto(messageList));
-
-        //then
-        mockMvc.perform(post("/notifications")
-                .content(content).session(session)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
+//    @Autowired
+//    public MockMvc mockMvc;
+//    @Autowired
+//    RedisUserRepository redisUserRepository;
+//    @Autowired
+//    UserRepository userRepository;
+//    @Autowired
+//    private ObjectMapper objectMapper;
+//    @Autowired
+//    private MockHttpSession session;
+//
+//    @BeforeEach
+//    public void before() {
+//        String email = "email22";
+//        String nickname = "nickname22";
+//        String profileImg = "profileImg22";
+//        User user = User.builder()
+//                .email(email)
+//                .nickname(nickname)
+//                .imagePath(profileImg)
+//                .build();
+//        userRepository.save(user);
+//
+//        RedisUser redisUser = RedisUser.builder()
+//                .id(session.getId())
+//                .email(email)
+//                .nickname(nickname)
+//                .profileImg(profileImg)
+//                .build();
+//        redisUserRepository.save(redisUser);
+//    }
+//
+//    @Test
+//    @DisplayName("메시지 전송")
+//    public void A() throws Exception {
+//        //given
+//        String message = "하이";
+//        String phone = "01071527518";
+//
+//        NotificationMessageDto notificationMessageDto = new NotificationMessageDto(phone, message);
+//        List<NotificationMessageDto> messageList = new ArrayList<>();
+//        messageList.add(notificationMessageDto);
+//        String content = objectMapper.writeValueAsString(new NotificationRequestDto(messageList));
+//
+//        //then
+//        mockMvc.perform(post("/notifications")
+//                .content(content).session(session)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk());
+//    }
 }

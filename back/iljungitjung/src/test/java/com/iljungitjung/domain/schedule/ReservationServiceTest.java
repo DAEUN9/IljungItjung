@@ -45,8 +45,6 @@ public class ReservationServiceTest{
     private CategoryRepository categoryRepository;
     @MockBean
     private ScheduleRepository scheduleRepository;
-    @MockBean
-    private AutoNotification autoNotification;
 
     @BeforeEach
     public void init(){
