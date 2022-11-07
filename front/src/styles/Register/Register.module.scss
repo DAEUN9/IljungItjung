@@ -4,5 +4,73 @@
   @include page-default();
 }
 
-.content {
+.left {
+  width: 55%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & .picturebox{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    & .iljung{
+      width: 35%;
+      height: auto;
+    }
+
+    & .logo {
+      width: 10%;
+    }
+  }
+}
+
+.right {
+  width: 45%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & .content {
+    text-align: start;
+    margin-bottom: 5%;
+    width: 80%;
+
+    & .nicknamebox {
+      display: flex;
+      justify-content: space-between;
+    }
+      & .nickname {
+        width: 78%;
+        padding: 0% 1%;
+      }
+
+    & .oneline {
+      width: 97%;
+      height: 32px;
+      overflow: auto;
+      padding: 0% 1%;
+    }
+
+    & .count {
+      display: flex;
+      justify-content: flex-end;
+      color: #757575;
+    }
+  }
+
+  & .startbox{
+    display: flex;
+    justify-content: center;
+    margin-top: 10%;
+
+    & .startbtn {
+      width: 70%;
+      font-size: 20px;
+      font-weight: bolder;
+      box-shadow: none;
+    }
+  }
 }

@@ -1,9 +1,10 @@
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 
-import styles from '@styles/Calendar/Calendar.module.scss';
-import UpcomingItem from './UpcomingItem';
-import { SchedulerDate, TabPanelProps } from '@components/Calendar/common/util';
-import { RootState } from '@modules/index';
+import styles from "@styles/Calendar/Calendar.module.scss";
+import UpcomingItem from "./UpcomingItem";
+import { TabPanelProps } from "@components/Calendar/common/util";
+import { RootState } from "@modules/index";
+import { SchedulerDate } from "@components/types/types";
 
 // 이번주 일정 중에서 오늘 날짜보다 큰 것만 표시
 const plus = [0, 6, 5, 4, 3, 2, 1];
@@ -50,7 +51,7 @@ const UpcomingTab = (props: TabPanelProps) => {
       {...other}
     >
       {value === index && (
-        <div className={styles['tab-inner']}>
+        <div className={styles["tab-inner"]}>
           {parsed?.map((item) => (
             <UpcomingItem key={item.id} item={item} />
           ))}
