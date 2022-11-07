@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -88,5 +89,11 @@ public class UserServiceImpl implements UserService{
         });
 
         return user;
+    }
+
+    @Override
+    @Transactional
+    public void deleteUserByEmail(String email) {
+        userRepository.deleteUserByEmail(email);
     }
 }
