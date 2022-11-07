@@ -6,7 +6,7 @@ import styles from '@styles/Calendar/Calendar.module.scss';
 import Schedule from '@components/common/Schedule';
 import iljung from '@assets/defaultImg.png';
 import DetailInfo from './DetailInfo';
-import { formatTime, InfoItemProps } from '@components/Calendar/common/util';
+import { formatTime, getFullDate, InfoItemProps } from '@components/Calendar/common/util';
 import CustomButton from '@components/common/CustomButton';
 
 const TextField = styled(MuiTextField)`
@@ -79,6 +79,7 @@ const RequestItem = ({ item }: InfoItemProps) => {
     <div className={styles['info-item']}>
       <Schedule
         color={color}
+        date={getFullDate(new Date(startDate.toString()))}
         time={time ?? '-'}
         userId="유저아이디"
         userName={nickname}
