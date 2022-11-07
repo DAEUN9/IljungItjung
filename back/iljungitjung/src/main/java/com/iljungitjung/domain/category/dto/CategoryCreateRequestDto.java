@@ -3,12 +3,14 @@ package com.iljungitjung.domain.category.dto;
 import com.iljungitjung.domain.category.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class CategoryCreateRequestDto {
 
     @NotBlank(message = "categoryName은 비워둘 수 없습니다.")

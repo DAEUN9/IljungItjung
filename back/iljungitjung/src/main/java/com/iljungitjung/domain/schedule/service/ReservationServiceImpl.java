@@ -165,15 +165,18 @@ public class ReservationServiceImpl implements ReservationService{
         List<ReservationViewDto> requestList = new ArrayList<>();
         List<ReservationViewDto> acceptList = new ArrayList<>();
         List<ReservationCancelViewDto> cancelList = new ArrayList<>();
+
         for(Schedule schedule : scheduleList){
-            if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().after(endDateFormat)) continue;
-            if(schedule.getType().equals(Type.REQUEST)){
-                requestList.add(new ReservationViewDto(schedule));
-            }else if(schedule.getType().equals(Type.ACCEPT)){
-                acceptList.add(new ReservationViewDto(schedule));
-            }else if(schedule.getType().equals(Type.CANCEL)){
-                cancelList.add(new ReservationCancelViewDto(schedule));
+            if(startDateFormat.before(schedule.getStartDate()) && startDateFormat.before(schedule.getEndDate()) && endDateFormat.after(schedule.getStartDate()) && endDateFormat.after(schedule.getEndDate())){
+                if(schedule.getType().equals(Type.REQUEST)){
+                    requestList.add(new ReservationViewDto(schedule));
+                }else if(schedule.getType().equals(Type.ACCEPT)){
+                    acceptList.add(new ReservationViewDto(schedule));
+                }else if(schedule.getType().equals(Type.CANCEL)){
+                    cancelList.add(new ReservationCancelViewDto(schedule));
+                }
             }
+
         }
         responseDtos = new ReservationViewResponseDto(requestList, acceptList, cancelList);
 

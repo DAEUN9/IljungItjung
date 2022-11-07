@@ -55,8 +55,8 @@ class ScheduleServiceTest{
     }
 
     @Test
-    @DisplayName("타인의 일정 리스트 조회")
-    void viewScheduleByOthers() throws Exception {
+    @DisplayName("타인의 일정 리스트 조회(startDate, endDate 입력)")
+    void viewScheduleByOthersGivenDate() throws Exception {
 
         //given
         Long scheduleId = 1L;
@@ -132,7 +132,72 @@ class ScheduleServiceTest{
         //then
         Assertions.assertEquals(scheduleViewResponseDto.getRequestList().get(0).getId(), 5L);
     }
+    @Test
+    @DisplayName("타인의 일정 리스트 조회(startDate, endDate 미입력)")
+    void viewScheduleByOthers() throws Exception {
 
+        //given
+        Long scheduleId = 1L;
+        String date="20221017";
+        String startTime = "1500";
+        String endTime = "1630";
+        Date startDateFormat;
+        Date endDateFormat;
+
+        String categoryName = "커트";
+        String color = "#000000";
+        String time = "0130";
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+        try{
+            startDateFormat = formatter.parse(date+startTime);
+            endDateFormat = formatter.parse(date+endTime);
+        }catch (Exception e){
+            throw new DateFormatErrorException();
+        }
+
+        Long userFromId=1L;
+        User userFrom = User.builder().build();
+        userFrom.setId(userFromId);
+
+        Long userToId=2L;
+        String nickname="2";
+        Optional<User> userTo = Optional.of(User.builder().nickname(nickname).build());
+        userTo.get().setId(userToId);
+
+        List<Category> categoryList = new ArrayList<>();
+        categoryList.add(new Category(categoryName, color, time));
+        userTo.get().setCategoryList(categoryList);
+
+        List<Schedule> scheduleList = new ArrayList<>();
+        Schedule schedule = Schedule.builder().userFrom(userFrom).startDate(startDateFormat).endDate(endDateFormat).type(Type.REQUEST).build();
+        schedule.setId(scheduleId);
+        scheduleList.add(schedule);
+
+        schedule = Schedule.builder().userFrom(userFrom).startDate(startDateFormat).endDate(endDateFormat).type(Type.ACCEPT).build();
+        schedule.setId(scheduleId+1);
+        scheduleList.add(schedule);
+
+        schedule = Schedule.builder().userFrom(userFrom).startDate(startDateFormat).endDate(endDateFormat).type(Type.CANCEL).build();
+        schedule.setId(scheduleId+2);
+        scheduleList.add(schedule);
+
+        schedule = Schedule.builder().userFrom(userFrom).startDate(new Date()).endDate(new Date()).type(Type.CANCEL).build();
+        schedule.setId(scheduleId+3);
+        scheduleList.add(schedule);
+
+        date=null;
+
+        //when
+        when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
+        when(userRepository.findUserByNickname(nickname)).thenReturn(userTo);
+        when(scheduleRepository.findByUserTo_IdIs(userTo.get().getId())).thenReturn(scheduleList);
+
+        ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView(nickname, date, date, httpSession);
+
+        //then
+        Assertions.assertEquals(scheduleViewResponseDto.getRequestList().get(0).getId(), 1L);
+    }
     @Test
     @DisplayName("일정 리스트 조회시 닉네임에 해당하는 유저의 일정이 없음")
     void noExistScheduleByNicknameWhenViewSchedule(){
@@ -177,8 +242,65 @@ class ScheduleServiceTest{
         });
     }
 
+
     @Test
-    @DisplayName("본인의 일정 리스트 조회")
+    @DisplayName("본인의 일정 리스트 조회(startDate, endDate 입력)")
+    void viewScheduleListByMeGivenDate() {
+
+        //given
+        Long scheduleId = 1L;
+        String date="20221017";
+        String startTime = "1500";
+        String endTime = "1630";
+        Date startDateFormat;
+        Date endDateFormat;
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+        try{
+            startDateFormat = formatter.parse(date+startTime);
+            endDateFormat = formatter.parse(date+endTime);
+        }catch (Exception e){
+            throw new DateFormatErrorException();
+        }
+
+        Long userFromId=1L;
+        User userFrom = User.builder().build();
+        userFrom.setId(userFromId);
+
+        Long userToId=1L;
+        String nickname="1";
+        Optional<User> userTo = Optional.of(User.builder().nickname(nickname).build());
+        userTo.get().setId(userToId);
+
+
+
+        List<Schedule> scheduleList = new ArrayList<>();
+        Schedule schedule = Schedule.builder().userFrom(userFrom).userTo(userTo.get()).startDate(startDateFormat).endDate(endDateFormat).type(Type.ACCEPT).build();
+        schedule.setId(scheduleId);
+        scheduleList.add(schedule);
+
+        schedule = Schedule.builder().userFrom(userFrom).userTo(userTo.get()).startDate(startDateFormat).endDate(endDateFormat).type(Type.BLOCK).build();
+        schedule.setId(scheduleId+1);
+        scheduleList.add(schedule);
+
+        schedule = Schedule.builder().userFrom(userFrom).startDate(new Date()).endDate(new Date()).type(Type.BLOCK).build();
+        schedule.setId(scheduleId+2);
+        scheduleList.add(schedule);
+
+        //when
+        when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
+        when(userRepository.findUserByNickname(nickname)).thenReturn(userTo);
+        when(scheduleRepository.findByUserTo_IdIs(userTo.get().getId())).thenReturn(scheduleList);
+
+        ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView(nickname, date, date, httpSession);
+
+        //then
+        Assertions.assertEquals(scheduleViewResponseDto.getAcceptList().get(0).getId(), 1L);
+
+    }
+
+    @Test
+    @DisplayName("본인의 일정 리스트 조회(startDate, endDate 미입력)")
     void viewScheduleListByMe() {
 
         //given
@@ -216,6 +338,8 @@ class ScheduleServiceTest{
         schedule.setId(scheduleId+1);
         scheduleList.add(schedule);
 
+        date=null;
+
         //when
         when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
         when(userRepository.findUserByNickname(nickname)).thenReturn(userTo);
@@ -226,8 +350,8 @@ class ScheduleServiceTest{
         //then
         Assertions.assertEquals(scheduleViewResponseDto.getAcceptList().get(0).getId(), 1L);
 
-
     }
+
     @Test
     @DisplayName("일정 상세 조회")
     void viewScheduleDetail() throws Exception {

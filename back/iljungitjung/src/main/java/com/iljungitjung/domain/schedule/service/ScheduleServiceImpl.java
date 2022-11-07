@@ -13,6 +13,7 @@ import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService{
 
@@ -34,20 +36,26 @@ public class ScheduleServiceImpl implements ScheduleService{
         User userFrom = userService.findUserBySessionId(httpSession);
         User userTo = userRepository.findUserByNickname(nickname).orElseThrow(()->{
             throw new NoExistUserException();
-        });;
+        });
 
         ScheduleViewResponseDto responseDtos;
+        boolean dateCheck = true;
 
-        Date startDateFormat;
-        Date endDateFormat;
+        Date startDateFormat = new Date();
+        Date endDateFormat = new Date();
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-        try{
-            startDateFormat = formatter.parse(startDate+"0000");
-            endDateFormat = formatter.parse(endDate+"2359");
-        }catch (Exception e){
-            throw new DateFormatErrorException();
+        if(startDate==null || endDate == null) dateCheck=false;
+        else{
+            try{
+                startDateFormat = formatter.parse(startDate+"0000");
+                endDateFormat = formatter.parse(endDate+"2359");
+            }catch (Exception e){
+                throw new DateFormatErrorException();
+            }
         }
+
+
 
         List<Schedule> scheduleList = scheduleRepository.findByUserTo_IdIs(userTo.getId());
 
@@ -58,17 +66,21 @@ public class ScheduleServiceImpl implements ScheduleService{
 
         if(userFrom.getId()==userTo.getId()){
             for(Schedule schedule : scheduleList){
-                if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().after(endDateFormat)) continue;
-                if(schedule.getType().equals(Type.ACCEPT)){
+                if(dateCheck){
+                    if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().before(startDateFormat) || schedule.getStartDate().after(endDateFormat) || schedule.getEndDate().after(endDateFormat)) continue;
+                }
+                if (schedule.getType().equals(Type.ACCEPT)) {
                     acceptList.add(new ScheduleViewDto(schedule));
-                }else if(schedule.getType().equals(Type.BLOCK)){
+                } else if (schedule.getType().equals(Type.BLOCK)) {
                     blockList.add(new ScheduleBlockDto(schedule));
                 }
             }
         }
         else{
             for(Schedule schedule : scheduleList){
-                if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().after(endDateFormat)) continue;
+                if(dateCheck){
+                    if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().before(startDateFormat) || schedule.getStartDate().after(endDateFormat) || schedule.getEndDate().after(endDateFormat)) continue;
+                }
                 if(schedule.getType().equals(Type.REQUEST)){
                     requestList.add(new ScheduleViewDto(schedule));
                 }else if(schedule.getType().equals(Type.ACCEPT)){

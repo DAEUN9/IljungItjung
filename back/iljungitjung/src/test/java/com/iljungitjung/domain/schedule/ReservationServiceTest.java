@@ -201,10 +201,10 @@ public class ReservationServiceTest{
 
         User userFrom = User.builder().build();
         userFrom.setId(userFromId);
-        Schedule schedule = Schedule.builder().userFrom(userFrom).startDate(startDateFormat).endDate(endDateFormat).type(Type.REQUEST).build();
-        schedule.setId(scheduleId);
 
         List<Schedule> scheduleList = new ArrayList<>();
+        Schedule schedule = Schedule.builder().userFrom(userFrom).startDate(startDateFormat).endDate(endDateFormat).type(Type.REQUEST).build();
+        schedule.setId(scheduleId);
         scheduleList.add(schedule);
 
         schedule = Schedule.builder().userFrom(userFrom).startDate(startDateFormat).endDate(endDateFormat).type(Type.ACCEPT).build();
@@ -213,6 +213,10 @@ public class ReservationServiceTest{
 
         schedule = Schedule.builder().userFrom(userFrom).startDate(startDateFormat).endDate(endDateFormat).type(Type.CANCEL).build();
         schedule.setId(scheduleId+2);
+        scheduleList.add(schedule);
+
+        schedule = Schedule.builder().userFrom(userFrom).startDate(new Date()).endDate(new Date()).type(Type.CANCEL).build();
+        schedule.setId(scheduleId+3);
         scheduleList.add(schedule);
 
         //when
