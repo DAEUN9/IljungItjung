@@ -87,3 +87,21 @@ export const getStringFromDate = (time: Date | string | undefined) => {
   
   return str;
 }
+
+export const getFullDate = (date: SchedulerDateTime | undefined) => {
+  switch (typeof date) {
+    case 'undefined':
+      return '-';
+    case 'string':
+      return date;
+    case 'object':
+      return (
+        date.getFullYear() +
+        '년 ' +
+        (date.getMonth() + 1) +
+        '월 ' +
+        date.getDate() +
+        '일'
+      );
+  }
+};
