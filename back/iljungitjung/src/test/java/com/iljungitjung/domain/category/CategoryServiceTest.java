@@ -64,7 +64,7 @@ class CategoryServiceTest {
         CategoryCreateRequestDto categoryCreateRequestDto = new CategoryCreateRequestDto(
                 categoryName, time, color);
 
-        Category category = categoryCreateRequestDto.toCategoryEntity(categoryCreateRequestDto);
+        Category category = categoryCreateRequestDto.toEntity();
         category.setId(categoryId);
 
         //when
