@@ -120,7 +120,14 @@ const items = [
 ];
 
 const Reservation = () => {
-  const { handleSubmit, control, watch, setValue } = useForm<RequestData>();
+  const {
+    handleSubmit,
+    control,
+    watch,
+    setValue,
+    register,
+    formState: { errors },
+  } = useForm<RequestData>();
   const watchCategory = watch('category', '');
   const { selected, map } = useSelector(
     (state: RootState) => state.othercalendar
@@ -180,55 +187,63 @@ const Reservation = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles['reservation-inner']}>
             <div className={styles['reservation-item']}>
-              <div className={styles.center}>
+              <div className={styles['icon-long']}>
                 <FaThList />
               </div>
-              <Controller
-                control={control}
-                name="category"
-                defaultValue=""
-                render={({ field }) => (
-                  <FormControl fullWidth>
-                    <InputLabel id="select-label" size="small">
-                      카테고리 선택
-                    </InputLabel>
-                    <Select
-                      labelId="select-label"
-                      id="select"
-                      label="카테고리 선택"
-                      input={
-                        <OutlinedInput
-                          id="select-category"
-                          label="카테고리 선택"
-                        />
-                      }
-                      size="small"
-                      {...field}
-                    >
-                      {items.map((item) => (
-                        <MenuItem
-                          key={item.categoryName}
-                          value={item.categoryName}
-                        >
-                          <div className={styles.menu}>
-                            <div>{item.categoryName}</div>
-                            <div>{getTime(item.time)}</div>
-                          </div>
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )}
-              />
+              <div style={{ width: '100%' }}>
+                <Controller
+                  control={control}
+                  name="category"
+                  defaultValue=""
+                  render={({ field }) => (
+                    <FormControl fullWidth>
+                      <InputLabel id="select-label" size="small">
+                        카테고리 선택
+                      </InputLabel>
+                      <Select
+                        labelId="select-label"
+                        id="select"
+                        label="카테고리 선택"
+                        input={
+                          <OutlinedInput
+                            id="select-category"
+                            label="카테고리 선택"
+                          />
+                        }
+                        size="small"
+                        {...field}
+                        {...register('category', {
+                          required: '카테고리를 선택해주세요',
+                        })}
+                      >
+                        {items.map((item) => (
+                          <MenuItem
+                            key={item.categoryName}
+                            value={item.categoryName}
+                          >
+                            <div className={styles.menu}>
+                              <div>{item.categoryName}</div>
+                              <div>{getTime(item.time)}</div>
+                            </div>
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                />
+                <div className={styles.error}>
+                  {errors.category && errors.category.message}
+                </div>
+              </div>
             </div>
             <div className={styles['reservation-item']}>
-              <div className={styles.center}>
+              <div className={styles['icon-short']}>
                 <FaRegCalendar />
               </div>
               {fullDate}
             </div>
             <div className={styles['reservation-item']}>
-              <div className={styles.center}>
+              <div className={styles['icon-short']}>
                 <FaRegClock />
               </div>
               {selected.endDate
@@ -239,17 +254,26 @@ const Reservation = () => {
                 : '-'}
             </div>
             <div className={styles['reservation-item']}>
-              <div className={styles.center}>
+              <div className={styles['icon-long']}>
                 <FaPhoneAlt />
               </div>
-              <Controller
-                control={control}
-                name="phone"
-                defaultValue=""
-                render={({ field }) => (
-                  <PhoneTextField placeholder="연락처" {...field} />
-                )}
-              />
+              <div style={{width: '100%'}}>
+                <Controller
+                  control={control}
+                  name="phone"
+                  defaultValue=""
+                  render={({ field }) => (
+                    <PhoneTextField
+                      placeholder="연락처"
+                      {...field}
+                      {...register('phone', {
+                        required: '* 연락처를 입력해주세요',
+                      })}
+                    />
+                  )}
+                />
+                <div className={styles.error}>{errors.phone && errors.phone.message}</div>
+              </div>
             </div>
             <div className={styles['reservation-request']}>
               <div>요청사항</div>
@@ -258,9 +282,18 @@ const Reservation = () => {
                 name="request"
                 defaultValue=""
                 render={({ field }) => (
-                  <TextField fullWidth multiline rows={2} {...field} />
+                  <TextField
+                    fullWidth
+                    multiline
+                    rows={2}
+                    {...field}
+                    {...register('request', {
+                      maxLength: 100,
+                    })}
+                  />
                 )}
               />
+              <div></div>
             </div>
             <CustomButton
               style={{ width: 'calc(100% - 10px)', margin: '0 5px' }}
