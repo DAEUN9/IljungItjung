@@ -36,6 +36,7 @@ public class NotificationServiceImpl implements NotificationService{
     private final String METHOD = "POST";
     private final String SIGNATURE_URL = "/sms/v2/services/";
     private final String MESSAGE_REQUEST_URL = "https://sens.apigw.ntruss.com/sms/v2/services/";
+
     @Override
     public NotificationResponseDto sendMessage(NotificationRequestDto requestDto) {
         Long time = System.currentTimeMillis();

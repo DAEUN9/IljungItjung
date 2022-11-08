@@ -3,13 +3,18 @@ package com.iljungitjung.domain.notification;
 import com.iljungitjung.domain.notification.dto.NotificationMessageDto;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
-import com.iljungitjung.domain.notification.service.NotificationService;
+import com.iljungitjung.domain.notification.service.NotificationServiceImpl;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.user.entity.User;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,14 +24,15 @@ import java.util.List;
 @DisplayName("알림 서비스")
 @SpringBootTest
 public class NotificationServiceTest {
+
     @Autowired
-    private NotificationService notificationService;
+    private NotificationServiceImpl notificationService;
 
     @Test
-    @DisplayName("메시지 전송 성공")
+    @DisplayName("메시지 전송")
     public void A() throws Exception {
         String message = "하이";
-        String phone = "01071527518";
+        String phone = "01000000000";
 
         NotificationMessageDto notificationMessageDto = new NotificationMessageDto(phone, message);
         List<NotificationMessageDto> messageList = new ArrayList<>();
@@ -45,12 +51,12 @@ public class NotificationServiceTest {
         String categoryName = "파마";
         String color = "#000000";
 
-        Long scheduleId=2L;
+        Long scheduleId = 2L;
         Long userToId = 1L;
         Long userFromId = 2L;
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01071527518";
+        String phone = "01000000000";
         String email = "email";
 
         User userFrom = User.builder().nickname(userFromNickname).email(email).build();
@@ -70,12 +76,12 @@ public class NotificationServiceTest {
         String categoryName = "파마";
         String color = "#000000";
 
-        Long scheduleId=2L;
+        Long scheduleId = 2L;
         Long userToId = 1L;
         Long userFromId = 2L;
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01071527518";
+        String phone = "01000000000";
         String email = "email";
 
         User userFrom = User.builder().nickname(userFromNickname).email(email).build();
@@ -96,12 +102,12 @@ public class NotificationServiceTest {
         String categoryName = "파마";
         String color = "#000000";
 
-        Long scheduleId=2L;
+        Long scheduleId = 2L;
         Long userToId = 1L;
         Long userFromId = 2L;
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01071527518";
+        String phone = "01000000000";
         String email = "email";
 
         User userFrom = User.builder().nickname(userFromNickname).email(email).build();
@@ -124,12 +130,12 @@ public class NotificationServiceTest {
         String categoryName = "파마";
         String color = "#000000";
 
-        Long scheduleId=2L;
+        Long scheduleId = 2L;
         Long userToId = 1L;
         Long userFromId = 2L;
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01071527518";
+        String phone = "01000000000";
         String email = "email";
 
         User userFrom = User.builder().nickname(userFromNickname).email(email).build();
@@ -151,12 +157,12 @@ public class NotificationServiceTest {
         String categoryName = "파마";
         String color = "#000000";
 
-        Long scheduleId=2L;
+        Long scheduleId = 2L;
         Long userToId = 1L;
         Long userFromId = 2L;
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01071527518";
+        String phone = "01000000000";
         String email = "email";
 
         User userFrom = User.builder().nickname(userFromNickname).email(email).build();
