@@ -9,9 +9,7 @@ import com.iljungitjung.domain.category.exception.NoGrantDeleteCategoryException
 import com.iljungitjung.domain.category.exception.NoGrantUpdateCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.user.entity.User;
-import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
-import com.iljungitjung.global.login.repository.RedisUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -58,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     @Transactional
-    public CategoryIdResponseDto deleteCategory(Long categoryId, HttpSession httpSession) {
+    public void deleteCategory(Long categoryId, HttpSession httpSession) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });
@@ -68,6 +66,5 @@ public class CategoryServiceImpl implements CategoryService{
         if(category.getUser().getId()!=user.getId()) throw new NoGrantDeleteCategoryException();
 
         categoryRepository.delete(category);
-        return new CategoryIdResponseDto(categoryId);
     }
 }
