@@ -1,11 +1,15 @@
 // 검색 관련 타입
+interface CategoryState {
+  categoryName: string;
+}
+
 interface SearchState {
-  id: number;
-  name: string;
-  imgUrl: string;
+  nickname: string;
+  email: string;
+  imagePath: string;
   desc: string;
   detail: string;
-  categories: string[];
+  categories: CategoryState[];
 }
 
 export type { SearchState };
