@@ -10,5 +10,5 @@ import javax.servlet.http.HttpSession;
 public interface CategoryService {
     CategoryIdResponseDto addCategory(CategoryCreateRequestDto requestDto, HttpSession httpSession);
     CategoryIdResponseDto updateCategory(CategoryEditRequestDto requestDto, HttpSession httpSession);
-    CategoryIdResponseDto deleteCategory(Long id, HttpSession httpSession);
+    void deleteCategory(Long id, HttpSession httpSession);
 }
