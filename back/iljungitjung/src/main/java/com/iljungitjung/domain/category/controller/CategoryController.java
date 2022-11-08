@@ -7,16 +7,19 @@ import com.iljungitjung.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/categories")
+@Validated
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -38,12 +41,12 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<CommonResponse> deleteCategory(
-            @PathVariable("categoryId") Long categoryId
+    public void deleteCategory(
+            @Pattern(regexp = "^[0-9]+$", message = "categoryId는 숫자만 입력가능합니다.") @PathVariable("categoryId") Long categoryId
             , HttpSession httpSession
     ) {
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.deleteCategory(categoryId, httpSession)), HttpStatus.OK);
-    }
+        categoryService.deleteCategory(categoryId, httpSession);
+        }
 
 
 }
