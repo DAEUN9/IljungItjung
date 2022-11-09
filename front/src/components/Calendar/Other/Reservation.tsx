@@ -1,34 +1,35 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useForm, Controller, SubmitHandler } from 'react-hook-form';
-import styled from '@emotion/styled';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MuiInputLabel from '@mui/material/InputLabel';
-import MuiTextField from '@mui/material/TextField';
-import MuiSelect from '@mui/material/Select';
-import Snackbar from '@mui/material/Snackbar';
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import styled from "@emotion/styled";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import MuiInputLabel from "@mui/material/InputLabel";
+import MuiTextField from "@mui/material/TextField";
+import MuiSelect from "@mui/material/Select";
+import Snackbar from "@mui/material/Snackbar";
 import {
   FaThList,
   FaRegCalendar,
   FaRegClock,
   FaPhoneAlt,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
-import styles from '@styles/Calendar/Calendar.module.scss';
-import CustomButton from '@components/common/CustomButton';
+import styles from "@styles/Calendar/Calendar.module.scss";
+import CustomButton from "@components/common/CustomButton";
 import {
   formatTime,
   getStringFromDate,
-} from '@components/Calendar/common/util';
-import { SchedulerDate, SchedulerDateTime } from '@components/types/types';
-import { RootState } from '@modules/index';
+  getFullDate,
+} from "@components/Calendar/common/util";
+import { SchedulerDate, SchedulerDateTime } from "@components/types/types";
+import { RootState } from "@modules/index";
 import {
   setCurrent,
   setSelectedTime,
   setMinutes,
-} from '@modules/othercalendar';
+} from "@modules/othercalendar";
 
 interface RequestData {
   category: string;
@@ -68,31 +69,13 @@ const InputLabel = styled(MuiInputLabel)`
   }
 `;
 
-const getFullDate = (date: SchedulerDateTime | undefined) => {
-  switch (typeof date) {
-    case 'undefined':
-      return '-';
-    case 'string':
-      return date;
-    case 'object':
-      return (
-        date.getFullYear() +
-        '년 ' +
-        (date.getMonth() + 1) +
-        '월 ' +
-        date.getDate() +
-        '일'
-      );
-  }
-};
-
 const getTime = (time: string) => {
   const hours = parseInt(time.slice(0, 2));
   const minutes = parseInt(time.slice(2));
-  let fullTime = '';
+  let fullTime = "";
 
-  if (hours !== 0) fullTime += hours + '시간 ';
-  if (minutes !== 0) fullTime += minutes + '분';
+  if (hours !== 0) fullTime += hours + "시간 ";
+  if (minutes !== 0) fullTime += minutes + "분";
 
   return fullTime;
 };
@@ -106,23 +89,23 @@ const getMinutes = (time: string) => {
 
 const items = [
   {
-    categoryName: '예쁜 그림',
-    time: '0100',
+    categoryName: "예쁜 그림",
+    time: "0100",
   },
   {
-    categoryName: '멋진 그림',
-    time: '0130',
+    categoryName: "멋진 그림",
+    time: "0130",
   },
   {
-    categoryName: '예쁘고 멋진 그림',
-    time: '0300',
+    categoryName: "예쁘고 멋진 그림",
+    time: "0300",
   },
 ];
 
 const messages = [
-  '카테고리를 선택할 수 없습니다.',
-  '예약 요청이 완료되었습니다.'
-]
+  "카테고리를 선택할 수 없습니다.",
+  "예약 요청이 완료되었습니다.",
+];
 
 const Reservation = () => {
   const {
@@ -133,7 +116,7 @@ const Reservation = () => {
     register,
     formState: { errors },
   } = useForm<RequestData>();
-  const watchCategory = watch('category', '');
+  const watchCategory = watch("category", "");
   const { selected, map } = useSelector(
     (state: RootState) => state.othercalendar
   );
@@ -168,7 +151,7 @@ const Reservation = () => {
           if (endDate >= itemDate) {
             setId(0);
             setOpen(true);
-            setValue('category', '');
+            setValue("category", "");
             return;
           }
         }
@@ -177,7 +160,7 @@ const Reservation = () => {
       const newSelected: SchedulerDate = { startDate: selected.startDate };
 
       newSelected.endDate = endDate;
-      newSelected.title = 'selected';
+      newSelected.title = "selected";
 
       dispatch(setSelectedTime(newSelected));
       dispatch(setMinutes(minutes));
@@ -196,12 +179,12 @@ const Reservation = () => {
       {!selected && <div className={styles.center}>시간대를 선택해주세요</div>}
       {selected && (
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className={styles['reservation-inner']}>
-            <div className={styles['reservation-item']}>
-              <div className={styles['icon-long']}>
+          <div className={styles["reservation-inner"]}>
+            <div className={styles["reservation-item"]}>
+              <div className={styles["icon-long"]}>
                 <FaThList />
               </div>
-              <div style={{ width: '100%' }}>
+              <div style={{ width: "100%" }}>
                 <Controller
                   control={control}
                   name="category"
@@ -223,8 +206,8 @@ const Reservation = () => {
                         }
                         size="small"
                         {...field}
-                        {...register('category', {
-                          required: '카테고리를 선택해주세요',
+                        {...register("category", {
+                          required: "카테고리를 선택해주세요",
                         })}
                       >
                         {items.map((item) => (
@@ -247,14 +230,14 @@ const Reservation = () => {
                 </div>
               </div>
             </div>
-            <div className={styles['reservation-item']}>
-              <div className={styles['icon-short']}>
+            <div className={styles["reservation-item"]}>
+              <div className={styles["icon-short"]}>
                 <FaRegCalendar />
               </div>
               {fullDate}
             </div>
-            <div className={styles['reservation-item']}>
-              <div className={styles['icon-short']}>
+            <div className={styles["reservation-item"]}>
+              <div className={styles["icon-short"]}>
                 <FaRegClock />
               </div>
               {selected.endDate
@@ -262,13 +245,13 @@ const Reservation = () => {
                     selected.startDate.toString(),
                     selected.endDate.toString()
                   )
-                : '-'}
+                : "-"}
             </div>
-            <div className={styles['reservation-item']}>
-              <div className={styles['icon-long']}>
+            <div className={styles["reservation-item"]}>
+              <div className={styles["icon-long"]}>
                 <FaPhoneAlt />
               </div>
-              <div style={{width: '100%'}}>
+              <div style={{ width: "100%" }}>
                 <Controller
                   control={control}
                   name="phone"
@@ -277,16 +260,18 @@ const Reservation = () => {
                     <PhoneTextField
                       placeholder="연락처"
                       {...field}
-                      {...register('phone', {
-                        required: '* 연락처를 입력해주세요',
+                      {...register("phone", {
+                        required: "* 연락처를 입력해주세요",
                       })}
                     />
                   )}
                 />
-                <div className={styles.error}>{errors.phone && errors.phone.message}</div>
+                <div className={styles.error}>
+                  {errors.phone && errors.phone.message}
+                </div>
               </div>
             </div>
-            <div className={styles['reservation-request']}>
+            <div className={styles["reservation-request"]}>
               <div>요청사항</div>
               <Controller
                 control={control}
@@ -298,7 +283,7 @@ const Reservation = () => {
                     multiline
                     rows={2}
                     {...field}
-                    {...register('request', {
+                    {...register("request", {
                       maxLength: 100,
                     })}
                   />
@@ -307,14 +292,14 @@ const Reservation = () => {
               <div></div>
             </div>
             <CustomButton
-              style={{ width: 'calc(100% - 10px)', margin: '0 5px' }}
+              style={{ width: "calc(100% - 10px)", margin: "0 5px" }}
               type="submit"
             >
               신청하기
             </CustomButton>
           </div>
           <Snackbar
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             open={open}
             onClose={handleClose}
             message={messages[id]}

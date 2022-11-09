@@ -1,23 +1,27 @@
-import { useState, useCallback } from 'react';
-import MuiTextField from '@mui/material/TextField';
-import styled from '@emotion/styled';
+import { useState, useCallback } from "react";
+import MuiTextField from "@mui/material/TextField";
+import styled from "@emotion/styled";
 
-import styles from '@styles/Calendar/Calendar.module.scss';
-import Schedule from '@components/common/Schedule';
-import iljung from '@assets/defaultImg.png';
-import DetailInfo from './DetailInfo';
-import { formatTime, InfoItemProps } from '@components/Calendar/common/util';
-import CustomButton from '@components/common/CustomButton';
+import styles from "@styles/Calendar/Calendar.module.scss";
+import Schedule from "@components/common/Schedule";
+import iljung from "@assets/defaultImg.png";
+import DetailInfo from "./DetailInfo";
+import {
+  formatTime,
+  getFullDate,
+  InfoItemProps,
+} from "@components/Calendar/common/util";
+import CustomButton from "@components/common/CustomButton";
 
 const TextField = styled(MuiTextField)`
   > .Mui-focused > fieldset {
-    border-color: #6B7BB1 !important;
+    border-color: #6b7bb1 !important;
   }
-`
+`;
 
 const RequestButtons = () => {
   const [open, setOpen] = useState(false);
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
 
   const handleDeny = useCallback(() => {
     setOpen(true);
@@ -27,7 +31,7 @@ const RequestButtons = () => {
 
   const handleCancle = useCallback(() => {
     setOpen(false);
-    setText('');
+    setText("");
   }, []);
 
   const handleConfirm = () => {};
@@ -35,7 +39,7 @@ const RequestButtons = () => {
   return (
     <div>
       {!open && (
-        <div className={styles['request-buttons']}>
+        <div className={styles["request-buttons"]}>
           <CustomButton variant="outlined" onClick={handleDeny}>
             거절
           </CustomButton>
@@ -47,23 +51,25 @@ const RequestButtons = () => {
           <TextField
             fullWidth
             multiline
-            sx={{ marginBottom: '10px' }}
+            sx={{ marginBottom: "10px" }}
             placeholder="거절 사유를 입력해주세요"
             rows={3}
             value={text}
             onChange={(e) => {
               const current = e.currentTarget.value;
-              if(current.length <= 100) {
+              if (current.length <= 100) {
                 setText(current);
               }
             }}
           />
-          <div className={styles['request-text-length']}>{text.length}/100</div>
-          <div className={styles['request-buttons']}>
+          <div className={styles["request-text-length"]}>{text.length}/100</div>
+          <div className={styles["request-buttons"]}>
             <CustomButton variant="outlined" onClick={handleCancle}>
               취소
             </CustomButton>
-            <CustomButton disabled={text.length > 0 ? false : true}>확인</CustomButton>
+            <CustomButton disabled={text.length > 0 ? false : true}>
+              확인
+            </CustomButton>
           </div>
         </div>
       )}
@@ -76,13 +82,14 @@ const RequestItem = ({ item }: InfoItemProps) => {
   const time = formatTime(startDate?.toString(), endDate?.toString());
 
   return (
-    <div className={styles['info-item']}>
+    <div className={styles["info-item"]}>
       <Schedule
         color={color}
-        time={time ?? '-'}
+        date={getFullDate(new Date(startDate.toString()))}
+        time={time ?? "-"}
         userId="유저아이디"
         userName={nickname}
-        category={title ?? '-'}
+        category={title ?? "-"}
         userImg={iljung}
         render={() => (
           <>

@@ -1,19 +1,23 @@
-// 검색 관련 타입
-interface SearchState {
-  id: number;
-  name: string;
-  imgUrl: string;
-  desc: string;
-  detail: string;
-  categories: string[];
-}
-
 // 카테고리 관련 타입
-interface CategoryState {
+interface SettingCategoryState {
   name: string;
   color: string;
   hour: string;
   min: string;
+}
+
+interface SearchCategoryState {
+  categoryName: string;
+}
+
+// 검색 관련 타입
+interface SearchState {
+  nickname: string;
+  email: string;
+  imagePath: string;
+  desc: string;
+  detail: string;
+  categories: SearchCategoryState[];
 }
 
 declare type SchedulerDateTime = Date | number | string;
@@ -29,4 +33,10 @@ interface SchedulerDate {
   [propertyName: string]: any;
 }
 
-export type { SearchState, CategoryState, SchedulerDateTime, SchedulerDate };
+export type {
+  SearchState,
+  SettingCategoryState,
+  SearchCategoryState,
+  SchedulerDateTime,
+  SchedulerDate,
+};
