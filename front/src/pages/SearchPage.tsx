@@ -56,6 +56,7 @@ const SearchPage = () => {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === "Enter") {
       getSearchList(search, (res: SearchState[]) => {
+        console.log(res);
         setSearchList(res);
       });
     }
