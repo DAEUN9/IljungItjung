@@ -3,9 +3,9 @@ import { SearchState } from "@components/types/types";
 const SELECT_USER = "search/SELECT_USER" as const;
 
 const initialState: SearchState = {
-  id: 0,
-  name: "",
-  imgUrl: "",
+  nickname: "",
+  email: "",
+  imagePath: "",
   desc: "",
   detail: "",
   categories: [],
