@@ -1,5 +1,4 @@
-
-import { SchedulerDate, SchedulerDateTime } from '@components/types/types';
+import { SchedulerDate, SchedulerDateTime } from "@components/types/types";
 
 /* type, interface */
 export interface TabPanelProps {
@@ -13,7 +12,7 @@ export interface InfoItemProps {
 }
 
 /* variables */
-export const days = ['일', '월', '화', '수', '목', '금', '토'];
+export const days = ["일", "월", "화", "수", "목", "금", "토"];
 
 /* function */
 export const getDay = (
@@ -21,14 +20,14 @@ export const getDay = (
   nextOptions: any
 ) => {
   const date =
-    typeof nextDate === 'object'
+    typeof nextDate === "object"
       ? nextDate
-      : typeof nextDate === 'string'
+      : typeof nextDate === "string"
       ? new Date(nextDate)
       : new Date();
   const { day } = nextOptions;
 
-  let value = '';
+  let value = "";
 
   if (day) {
     value = date.getDate().toString();
@@ -43,7 +42,7 @@ export const formatTime = (
   startDate: string | undefined,
   endDate: string | undefined
 ) => {
-  if (typeof startDate === 'undefined' || typeof endDate === 'undefined')
+  if (typeof startDate === "undefined" || typeof endDate === "undefined")
     return;
 
   const start = new Date(startDate);
@@ -52,39 +51,60 @@ export const formatTime = (
   let startHour = start.getHours();
   const startMinutes =
     start.getMinutes() < 10
-      ? '0' + start.getMinutes().toString()
+      ? "0" + start.getMinutes().toString()
       : start.getMinutes().toString();
 
   let endHour = end.getHours();
   const endMinutes =
     end.getMinutes() < 10
-      ? '0' + end.getMinutes().toString()
+      ? "0" + end.getMinutes().toString()
       : end.getMinutes().toString();
 
-  let startTime = startHour < 12 ? '오전 ' : '오후 ';
+  let startTime = startHour < 12 ? "오전 " : "오후 ";
   if (startHour > 12) {
     startHour -= 12;
   }
-  startTime += startHour + ':' + startMinutes;
+  startTime += startHour + ":" + startMinutes;
 
-  let endTime = endHour < 12 ? '오전 ' : '오후 ';
+  let endTime = endHour < 12 ? "오전 " : "오후 ";
   if (endHour > 12) {
     endHour -= 12;
   }
-  endTime += endHour + ':' + endMinutes;
+  endTime += endHour + ":" + endMinutes;
 
-  return startTime + ' - ' + endTime;
+  return startTime + " - " + endTime;
 };
 
 export const getStringFromDate = (time: Date | string | undefined) => {
-  if(!time) return '';
-  
+  if (!time) return "";
+
   let date = new Date();
-  
-  if(typeof time === 'string') date = new Date(time);
+
+  if (typeof time === "string") date = new Date(time);
   else date = time;
 
-  const str = date.getFullYear().toString() + date.getMonth().toString() + date.getDate().toString();
-  
+  const str =
+    date.getFullYear().toString() +
+    date.getMonth().toString() +
+    date.getDate().toString();
+
   return str;
-}
+};
+
+export const getFullDate = (date: SchedulerDateTime | undefined) => {
+  switch (typeof date) {
+    case "undefined":
+      return "-";
+    case "string":
+      return date;
+    case "object":
+      return (
+        date.getFullYear() +
+        "년 " +
+        (date.getMonth() + 1) +
+        "월 " +
+        date.getDate() +
+        "일"
+      );
+  }
+};

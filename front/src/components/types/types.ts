@@ -1,4 +1,8 @@
 // 검색 관련 타입
+interface CategoryState {
+  categoryName: string;
+}
+
 interface SearchState {
   id: number;
   name: string;

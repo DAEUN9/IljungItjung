@@ -17,10 +17,10 @@ const SearchItem = (props: SearchState) => {
     <div className={styles["search-item"]} onClick={handleClick}>
       <div className={styles["content"]}>
         <div className={styles["img"]}>
-          <img src={props.imgUrl} />
+          <img src={props.imagePath} />
         </div>
         <div className={styles["right"]}>
-          <div className={styles["name"]}>{props.name}</div>
+          <div className={styles["name"]}>{props.nickname}</div>
           <div className={styles["desc"]}>{props.desc}</div>
         </div>
       </div>

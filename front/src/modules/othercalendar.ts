@@ -1,12 +1,12 @@
-import { SchedulerDate } from '@components/types/types';
-import { getStringFromDate } from '@components/Calendar/common/util';
+import { SchedulerDate } from "@components/types/types";
+import { getStringFromDate } from "@components/Calendar/common/util";
 
 /* action type */
-const SET_DISABLED_MAP = 'othercalendar/SET_DISABLED_MAP' as const;
-const SET_CURRENT = 'othercalendar/SET_CURRENT' as const;
-const DELETE_CURRENT = 'othercalendar/DELETE_CURRENT' as const;
-const SET_SELECTED_TIME = 'othercalendar/SET_SELECTED_TIME' as const;
-const SET_MINUTES = 'othercalendar/SET_MINUTES' as const;
+const SET_DISABLED_MAP = "othercalendar/SET_DISABLED_MAP" as const;
+const SET_CURRENT = "othercalendar/SET_CURRENT" as const;
+const DELETE_CURRENT = "othercalendar/DELETE_CURRENT" as const;
+const SET_SELECTED_TIME = "othercalendar/SET_SELECTED_TIME" as const;
+const SET_MINUTES = "othercalendar/SET_MINUTES" as const;
 
 /* action creator */
 export const setDisabledMap = (list: SchedulerDate[]) => ({
