@@ -30,6 +30,7 @@ import {
 import ReservationCategory from "@components/Calendar/Other/ReservationCategory";
 import ReservationDate from "./ReservationDate";
 import ReservationTime from "./ReservationTime";
+import ReservationPhone from "./ReservationPhone";
 
 interface RequestData {
   category: string;
@@ -224,30 +225,7 @@ const Reservation = () => {
               <ReservationCategory />
               <ReservationDate />
               <ReservationTime />
-              <div className={styles["reservation-item"]}>
-                <div className={styles["icon-long"]}>
-                  <FaPhoneAlt />
-                </div>
-                <div style={{ width: "100%" }}>
-                  <Controller
-                    control={control}
-                    name="phone"
-                    defaultValue=""
-                    render={({ field }) => (
-                      <PhoneTextField
-                        placeholder="연락처"
-                        {...field}
-                        {...register("phone", {
-                          required: "* 연락처를 입력해주세요",
-                        })}
-                      />
-                    )}
-                  />
-                  <div className={styles.error}>
-                    {errors.phone && errors.phone.message}
-                  </div>
-                </div>
-              </div>
+              <ReservationPhone />
               <div className={styles["reservation-request"]}>
                 <div>요청사항</div>
                 <Controller
