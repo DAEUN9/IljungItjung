@@ -25,7 +25,7 @@ const items = [
   },
 ];
 
-const Category = () => {
+const ReservationCategory = () => {
   const {
     control,
     register,
@@ -91,4 +91,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default ReservationCategory;

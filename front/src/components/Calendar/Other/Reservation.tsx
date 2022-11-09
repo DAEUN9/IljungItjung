@@ -27,7 +27,7 @@ import {
   setMinutes,
   deleteCurrent,
 } from "@modules/othercalendar";
-import Category from "./Category";
+import ReservationCategory from "@components/Calendar/Other/ReservationCategory";
 
 interface RequestData {
   category: string;
@@ -219,7 +219,7 @@ const Reservation = () => {
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className={styles["reservation-inner"]}>
-              <Category />
+              <ReservationCategory />
               <div className={styles["reservation-item"]}>
                 <div className={styles["icon-short"]}>
                   <FaRegCalendar />
