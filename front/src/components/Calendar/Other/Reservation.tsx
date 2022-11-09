@@ -63,6 +63,8 @@ const Select = styled(MuiSelect)`
 
 const InputLabel = styled(MuiInputLabel)`
   color: rgba(0, 0, 0, 0.5);
+  background: #f5f5f5;
+  padding: 0 5px;
 
   &.Mui-focused {
     color: #6b7bb1;
@@ -179,6 +181,13 @@ const Reservation = () => {
     return isOverlap;
   };
 
+  const unsetSelected = (id: number = 0, startDate: SchedulerDateTime) => {
+    dispatch(deleteCurrent());
+    dispatch(setSelectedTime({ startDate }));
+    openSnackbar(id);
+    setValue("category", "");
+  };
+
   const openSnackbar = (id: number = 0) => {
     setId(id);
     setOpen(true);
@@ -192,8 +201,7 @@ const Reservation = () => {
       );
 
       if (isOverlapWithSchedule(endDate)) {
-        openSnackbar(0);
-        setValue("category", "");
+        unsetSelected(0, selected.startDate);
       } else {
         const newSelected: SchedulerDate = { startDate: selected.startDate };
 
@@ -209,10 +217,7 @@ const Reservation = () => {
   useEffect(() => {
     if (selected && selected.endDate) {
       if (isOverlapWithSchedule(selected.endDate)) {
-        dispatch(deleteCurrent());
-        dispatch(setSelectedTime({ startDate: selected.startDate }));
-        openSnackbar(1);
-        setValue("category", "");
+        unsetSelected(1, selected.startDate);
       } else {
         dispatch(setCurrent());
       }
