@@ -27,7 +27,7 @@ public class NotificationServiceImpl implements NotificationService{
     private String NCLOUD_SERVICE_ID;
     @Value("${message.ncloud.access_key}")
     private String NCLOUD_ACCESS_KEY;
-    @Value("${message.ncloud.secret_key}")
+    @Value("${message.ncloud.secret_key:default}")
     private String NCLOUD_SECRET_KEY;
     @Value("${message.ncloud.phone}")
     private String SENDER_PHONE;
@@ -39,16 +39,42 @@ public class NotificationServiceImpl implements NotificationService{
 
     @Override
     public NotificationResponseDto sendMessage(NotificationRequestDto requestDto) {
-        Long time = System.currentTimeMillis();
-        RestTemplate restTemplate = new RestTemplate();
+        checkNull();
+        HttpEntity<NotificationMessageRequestDto> body = makeBody(requestDto);
+        NotificationResponseDto response = sendNcloud(body);
+        checkStatus(response.getStatusCode());
+        return response;
+    }
 
+    @Override
+    public HttpEntity<NotificationMessageRequestDto> makeBody(NotificationRequestDto requestDto) {
+        Long time = System.currentTimeMillis();
         HttpHeaders headers = makeHeaders(time);
         NotificationMessageRequestDto jsonBody = new NotificationMessageRequestDto(requestDto, SENDER_PHONE);
-        HttpEntity<NotificationMessageRequestDto> body = new HttpEntity<>(jsonBody, headers);
+        return new HttpEntity<>(jsonBody, headers);
+    }
 
-        ResponseEntity<NotificationResponseDto> responseEntity = restTemplate.exchange(MESSAGE_REQUEST_URL + NCLOUD_SERVICE_ID + "/messages", HttpMethod.POST, body, NotificationResponseDto.class);
-        checkStatus(responseEntity.getStatusCode());
-        return responseEntity.getBody();
+    private void checkNull() {
+        if (NCLOUD_SERVICE_ID == null) {
+            this.NCLOUD_SERVICE_ID = "default";
+        }
+        if (NCLOUD_ACCESS_KEY == null) {
+            this.NCLOUD_ACCESS_KEY = "default";
+        }
+        if (NCLOUD_SECRET_KEY == null) {
+            this.NCLOUD_SECRET_KEY = "default";
+        }
+        if (SENDER_PHONE == null) {
+            this.SENDER_PHONE = "default";
+        }
+    }
+
+    @Override
+    public NotificationResponseDto sendNcloud(HttpEntity<NotificationMessageRequestDto> body) {
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.exchange(MESSAGE_REQUEST_URL + NCLOUD_SERVICE_ID + "/messages",
+                HttpMethod.POST, body, NotificationResponseDto.class)
+                .getBody();
     }
 
     private HttpHeaders makeHeaders(Long time) {
@@ -61,7 +87,7 @@ public class NotificationServiceImpl implements NotificationService{
         return headers;
     }
 
-    private String makeSignature(Long time) {
+    public String makeSignature(Long time) {
         String timeStamp = time.toString();
         SecretKeySpec signingKey;
         Mac mac;
@@ -90,8 +116,8 @@ public class NotificationServiceImpl implements NotificationService{
         return encodeBase64String;
     }
 
-    private void checkStatus (HttpStatus status) {
-        if (!(status.is2xxSuccessful())) {
+    private void checkStatus (String status) {
+        if (!status.equals("202")) {
             throw new FailSendMessageException();
         }
     }
