@@ -25,23 +25,23 @@ const items = [
   },
 ];
 
+const getTime = (time: string) => {
+  const hours = parseInt(time.slice(0, 2));
+  const minutes = parseInt(time.slice(2));
+  let fullTime = "";
+
+  if (hours !== 0) fullTime += hours + "시간 ";
+  if (minutes !== 0) fullTime += minutes + "분";
+
+  return fullTime;
+};
+
 const ReservationCategory = () => {
   const {
     control,
     register,
     formState: { errors },
   } = useFormContext();
-
-  const getTime = (time: string) => {
-    const hours = parseInt(time.slice(0, 2));
-    const minutes = parseInt(time.slice(2));
-    let fullTime = "";
-
-    if (hours !== 0) fullTime += hours + "시간 ";
-    if (minutes !== 0) fullTime += minutes + "분";
-
-    return fullTime;
-  };
 
   return (
     <div className={styles["reservation-item"]}>
