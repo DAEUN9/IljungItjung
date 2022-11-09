@@ -15,16 +15,16 @@ const SearchItem = (props: SearchState) => {
 
   return (
     <div className={styles["search-item"]} onClick={handleClick}>
-      <div className={styles["content"]}>
-        <div className={styles["img"]}>
+      <div className={styles.content}>
+        <div className={styles.img}>
           <img src={props.imagePath} />
         </div>
-        <div className={styles["right"]}>
-          <div className={styles["name"]}>{props.nickname}</div>
-          <div className={styles["desc"]}>{props.desc}</div>
+        <div className={styles.right}>
+          <div className={styles.name}>{props.nickname}</div>
+          {/* <div className={styles.desc}>{props.desc}</div> */}
         </div>
       </div>
-      <Divider className={styles["divider"]} />
+      <Divider className={styles.divider} />
     </div>
   );
 };

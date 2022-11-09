@@ -43,6 +43,11 @@ const data = [
   },
 ];
 
+interface SearchApiData {
+  status: string;
+  data: SearchState[];
+}
+
 const SearchPage = () => {
   const [search, setSearch] = useState("");
   const [searchList, setSearchList] = useState<SearchState[]>([]);
@@ -55,8 +60,8 @@ const SearchPage = () => {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === "Enter") {
-      getSearchList(search, (res: SearchState[]) => {
-        setSearchList(res);
+      getSearchList(search, (res: SearchApiData) => {
+        setSearchList(res.data);
       });
     }
   };
@@ -85,8 +90,8 @@ const SearchPage = () => {
                   nickname={item.nickname}
                   email={item.email}
                   imagePath={item.imagePath}
-                  desc={item.desc}
-                  detail={item.detail}
+                  // desc={item.desc}
+                  // detail={item.detail}
                   categories={item.categories}
                 />
               ))

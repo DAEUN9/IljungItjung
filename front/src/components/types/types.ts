@@ -7,8 +7,8 @@ interface SearchState {
   nickname: string;
   email: string;
   imagePath: string;
-  desc: string;
-  detail: string;
+  // desc: string;
+  // detail: string;
   categories: CategoryState[];
 }
 
