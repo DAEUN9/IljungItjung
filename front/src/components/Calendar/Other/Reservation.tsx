@@ -1,24 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  useForm,
-  Controller,
-  SubmitHandler,
-  FormProvider,
-} from "react-hook-form";
-import styled from "@emotion/styled";
-import MuiInputLabel from "@mui/material/InputLabel";
-import MuiTextField from "@mui/material/TextField";
-import MuiSelect from "@mui/material/Select";
+import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import Snackbar from "@mui/material/Snackbar";
-import { FaRegCalendar, FaRegClock, FaPhoneAlt } from "react-icons/fa";
 
 import styles from "@styles/Calendar/Calendar.module.scss";
 import CustomButton from "@components/common/CustomButton";
-import {
-  formatTime,
-  getStringFromDate,
-} from "@components/Calendar/common/util";
+import { getStringFromDate } from "@components/Calendar/common/util";
 import { SchedulerDate, SchedulerDateTime } from "@components/types/types";
 import { RootState } from "@modules/index";
 import {
@@ -31,6 +18,7 @@ import ReservationCategory from "@components/Calendar/Other/ReservationCategory"
 import ReservationDate from "./ReservationDate";
 import ReservationTime from "./ReservationTime";
 import ReservationPhone from "./ReservationPhone";
+import ReservationRequest from "./ReservationRequest";
 
 interface RequestData {
   category: string;
@@ -38,57 +26,6 @@ interface RequestData {
   request: string;
   time: string;
 }
-
-const TextField = styled(MuiTextField)`
-  > .Mui-focused > fieldset {
-    border-color: #6b7bb1 !important;
-  }
-`;
-
-const PhoneTextField = styled(TextField)`
-  > .MuiInputBase-root > input {
-    padding: 7px;
-    padding-left: 12px;
-  }
-`;
-
-const Select = styled(MuiSelect)`
-  &.Mui-focused > fieldset {
-    border-color: #6b7bb1 !important;
-  }
-
-  & .MuiSelect-select > div {
-    padding: 0;
-  }
-`;
-
-const InputLabel = styled(MuiInputLabel)`
-  color: rgba(0, 0, 0, 0.5);
-  background: #f5f5f5;
-  padding: 0 5px;
-
-  &.Mui-focused {
-    color: #6b7bb1;
-  }
-`;
-
-const getFullDate = (date: SchedulerDateTime | undefined) => {
-  switch (typeof date) {
-    case "undefined":
-      return "-";
-    case "string":
-      return date;
-    case "object":
-      return (
-        date.getFullYear() +
-        "년 " +
-        (date.getMonth() + 1) +
-        "월 " +
-        date.getDate() +
-        "일"
-      );
-  }
-};
 
 const getMinutes = (time: string) => {
   const hours = parseInt(time.slice(0, 2));
@@ -119,21 +56,13 @@ const messages = [
 ];
 
 const Reservation = () => {
-  const {
-    handleSubmit,
-    control,
-    watch,
-    setValue,
-    register,
-    formState: { errors },
-  } = useForm<RequestData>();
   const methods = useForm<RequestData>();
+  const { handleSubmit, watch, setValue } = methods;
   const watchCategory = watch("category", "");
   const { selected, map } = useSelector(
     (state: RootState) => state.othercalendar
   );
   const dispatch = useDispatch();
-  const fullDate = useMemo(() => getFullDate(selected?.startDate), [selected]);
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(0);
 
@@ -179,10 +108,10 @@ const Reservation = () => {
     setValue("category", "");
   };
 
-  const openSnackbar = (id: number = 0) => {
+  const openSnackbar = useCallback((id: number = 0) => {
     setId(id);
     setOpen(true);
-  };
+  }, []);
 
   // 카테고리가 선택됐을 때
   useEffect(() => {
@@ -226,26 +155,7 @@ const Reservation = () => {
               <ReservationDate />
               <ReservationTime />
               <ReservationPhone />
-              <div className={styles["reservation-request"]}>
-                <div>요청사항</div>
-                <Controller
-                  control={control}
-                  name="request"
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      fullWidth
-                      multiline
-                      rows={2}
-                      {...field}
-                      {...register("request", {
-                        maxLength: 100,
-                      })}
-                    />
-                  )}
-                />
-                <div></div>
-              </div>
+              <ReservationRequest />
               <CustomButton
                 style={{ width: "calc(100% - 10px)", margin: "0 5px" }}
                 type="submit"

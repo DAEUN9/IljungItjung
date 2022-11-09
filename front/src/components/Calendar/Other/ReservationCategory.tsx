@@ -67,9 +67,7 @@ const ReservationCategory = () => {
                 }
                 size="small"
                 {...field}
-                {...register("category", {
-                  required: "카테고리를 선택해주세요",
-                })}
+                {...register("category")}
               >
                 {items.map((item) => (
                   <MenuItem key={item.categoryName} value={item.categoryName}>
@@ -84,7 +82,7 @@ const ReservationCategory = () => {
           )}
         />
         {errors?.category && (
-          <div className={styles.error}>errors.category.message</div>
+          <div className={styles.error}>카테고리를 선택해주세요</div>
         )}
       </div>
     </div>

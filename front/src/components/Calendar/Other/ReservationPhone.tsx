@@ -25,14 +25,12 @@ const ReservationPhone = () => {
             <PhoneTextField
               placeholder="연락처"
               {...field}
-              {...register("phone", {
-                required: "* 연락처를 입력해주세요",
-              })}
+              {...register("phone")}
             />
           )}
         />
         {errors?.phone && (
-          <div className={styles.error}>errors.phone.message</div>
+          <div className={styles.error}>연락처를 입력해주세요</div>
         )}
       </div>
     </div>
