@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iljungitjung.IljungitjungApplication;
 import com.iljungitjung.domain.notification.dto.NotificationMessageDto;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
+import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
+import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.global.login.entity.RedisUser;
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -31,6 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class NotificationControllerTest {
     @Autowired
     public MockMvc mockMvc;
+    @MockBean
+    private NotificationService notificationService;
     @Autowired
     RedisUserRepository redisUserRepository;
     @Autowired
@@ -73,6 +79,7 @@ public class NotificationControllerTest {
         messageList.add(notificationMessageDto);
         String content = objectMapper.writeValueAsString(new NotificationRequestDto(messageList));
 
+        when(notificationService.sendMessage(new NotificationRequestDto(messageList))).thenReturn(new NotificationResponseDto());
         //then
         mockMvc.perform(post("/notifications")
                 .content(content).session(session)
