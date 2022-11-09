@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import styled from '@emotion/styled';
@@ -28,6 +28,7 @@ import {
   setCurrent,
   setSelectedTime,
   setMinutes,
+  deleteCurrent,
 } from '@modules/othercalendar';
 
 interface RequestData {
@@ -121,8 +122,9 @@ const items = [
 
 const messages = [
   '카테고리를 선택할 수 없습니다.',
-  '예약 요청이 완료되었습니다.'
-]
+  '해당 시간대는 선택할 수 없습니다.',
+  '예약 요청이 완료되었습니다.',
+];
 
 const Reservation = () => {
   const {
@@ -142,52 +144,78 @@ const Reservation = () => {
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(0);
 
-  const onSubmit: SubmitHandler<RequestData> = (data) => {
+  const onSubmit: SubmitHandler<RequestData> = useCallback((data) => {
     console.log(data);
-    setId(1);
+    openSnackbar(2);
+  }, []);
+
+  const handleClose = useCallback(() => setOpen(false), []);
+
+  const getScheduleEndDate = (startDate: string) => {
+    const endDate = new Date(startDate);
+    const time = items.filter((item) => item.categoryName === watchCategory)[0]
+      .time;
+    const minutes = getMinutes(time);
+
+    endDate.setMinutes(endDate.getMinutes() + minutes);
+
+    return { endDate, minutes };
+  };
+
+  const isOverlapWithSchedule = (endDate: SchedulerDateTime) => {
+    const list = map.get(getStringFromDate(endDate.toString()));
+    let isOverlap = false;
+
+    if (list) {
+      for (let item of list) {
+        const itemDate = new Date(item.startDate.toString());
+
+        if (endDate > itemDate) {
+          isOverlap = true;
+        }
+      }
+    }
+
+    return isOverlap;
+  };
+
+  const openSnackbar = (id: number = 0) => {
+    setId(id);
     setOpen(true);
   };
-  const handleClose = () => setOpen(false);
 
   // 카테고리가 선택됐을 때
   useEffect(() => {
     if (watchCategory && selected) {
-      const endDate = new Date(selected.startDate.toString());
-      const list = map.get(getStringFromDate(endDate));
-      const time = items.filter(
-        (item) => item.categoryName === watchCategory
-      )[0].time;
-      const minutes = getMinutes(time);
+      const { endDate, minutes } = getScheduleEndDate(
+        selected.startDate.toString()
+      );
 
-      endDate.setMinutes(endDate.getMinutes() + minutes);
+      if (isOverlapWithSchedule(endDate)) {
+        openSnackbar(0);
+        setValue('category', '');
+      } else {
+        const newSelected: SchedulerDate = { startDate: selected.startDate };
 
-      if (list) {
-        for (let item of list) {
-          const itemDate = new Date(item.startDate.toString());
+        newSelected.endDate = endDate;
 
-          if (endDate >= itemDate) {
-            setId(0);
-            setOpen(true);
-            setValue('category', '');
-            return;
-          }
-        }
+        dispatch(setSelectedTime(newSelected));
+        dispatch(setMinutes(minutes));
       }
-
-      const newSelected: SchedulerDate = { startDate: selected.startDate };
-
-      newSelected.endDate = endDate;
-      newSelected.title = 'selected';
-
-      dispatch(setSelectedTime(newSelected));
-      dispatch(setMinutes(minutes));
     }
   }, [watchCategory]);
 
   // selectedTime이 변경됐을 때
   useEffect(() => {
     if (selected && selected.endDate) {
-      dispatch(setCurrent());
+      if (isOverlapWithSchedule(selected.endDate)) {
+        dispatch(deleteCurrent());
+        dispatch(setSelectedTime({ startDate: selected.startDate }));
+        openSnackbar(1);
+        setValue('category', '');
+      } else {
+        dispatch(setCurrent());
+      }
     }
   }, [selected]);
 
@@ -268,7 +296,7 @@ const Reservation = () => {
               <div className={styles['icon-long']}>
                 <FaPhoneAlt />
               </div>
-              <div style={{width: '100%'}}>
+              <div style={{ width: '100%' }}>
                 <Controller
                   control={control}
                   name="phone"
@@ -283,7 +311,9 @@ const Reservation = () => {
                     />
                   )}
                 />
-                <div className={styles.error}>{errors.phone && errors.phone.message}</div>
+                <div className={styles.error}>
+                  {errors.phone && errors.phone.message}
+                </div>
               </div>
             </div>
             <div className={styles['reservation-request']}>
@@ -315,6 +345,7 @@ const Reservation = () => {
           </div>
           <Snackbar
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            autoHideDuration={6000}
             open={open}
             onClose={handleClose}
             message={messages[id]}
