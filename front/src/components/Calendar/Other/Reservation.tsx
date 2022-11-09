@@ -29,6 +29,7 @@ import {
 } from "@modules/othercalendar";
 import ReservationCategory from "@components/Calendar/Other/ReservationCategory";
 import ReservationDate from "./ReservationDate";
+import ReservationTime from "./ReservationTime";
 
 interface RequestData {
   category: string;
@@ -222,17 +223,7 @@ const Reservation = () => {
             <div className={styles["reservation-inner"]}>
               <ReservationCategory />
               <ReservationDate />
-              <div className={styles["reservation-item"]}>
-                <div className={styles["icon-short"]}>
-                  <FaRegClock />
-                </div>
-                {selected.endDate
-                  ? formatTime(
-                      selected.startDate.toString(),
-                      selected.endDate.toString()
-                    )
-                  : "-"}
-              </div>
+              <ReservationTime />
               <div className={styles["reservation-item"]}>
                 <div className={styles["icon-long"]}>
                   <FaPhoneAlt />
