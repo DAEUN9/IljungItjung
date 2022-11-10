@@ -1,4 +1,4 @@
-import { CategoryState } from "@components/types/types";
+import { SettingCategoryState } from "@components/types/types";
 
 const SET_CATEGORY = "setting/SET_CATEGORY" as const;
 const ADD_CATEGORY = "setting/ADD_CATEGORY" as const;
@@ -7,27 +7,27 @@ const EDIT_CATEGORY = "setting/EDIT_CATEGORY" as const;
 const SELECT_CATEGORY = "setting/SELECT_CATEGORY" as const;
 const TOGGLE_LOCK = "setting/TOGGLE_LOCK" as const;
 
-export const setCategory = (categories: CategoryState[]) => ({
+export const setCategory = (categories: SettingCategoryState[]) => ({
   type: SET_CATEGORY,
   payload: categories,
 });
 
-export const addCategory = (category: CategoryState) => ({
+export const addCategory = (category: SettingCategoryState) => ({
   type: ADD_CATEGORY,
   payload: category,
 });
 
-export const delCategory = (category: CategoryState) => ({
+export const delCategory = (category: SettingCategoryState) => ({
   type: DEL_CATEGORY,
   payload: category,
 });
 
-export const editCategory = (category: CategoryState) => ({
+export const editCategory = (category: SettingCategoryState) => ({
   type: EDIT_CATEGORY,
   payload: category,
 });
 
-export const selectCategory = (category: CategoryState) => ({
+export const selectCategory = (category: SettingCategoryState) => ({
   type: SELECT_CATEGORY,
   payload: category,
 });
@@ -47,8 +47,8 @@ type SettingAction =
 
 interface SettingState {
   // 카테고리 관련 상태
-  categories: CategoryState[];
-  selectedCategory: CategoryState;
+  categories: SettingCategoryState[];
+  selectedCategory: SettingCategoryState;
   // 달력 관련 상태
   lock: boolean[];
 }

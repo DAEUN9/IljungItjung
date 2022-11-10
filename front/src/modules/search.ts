@@ -6,8 +6,8 @@ const initialState: SearchState = {
   nickname: "",
   email: "",
   imagePath: "",
-  desc: "",
-  detail: "",
+  // desc: "",
+  // detail: "",
   categories: [],
 };
 

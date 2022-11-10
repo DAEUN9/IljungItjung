@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "@styles/Setting/TabContent.module.scss";
 import CustomButton from "@components/common/CustomButton";
 import theme from "@components/common/theme";
-import { CategoryState } from "@components/types/types";
+import { SettingCategoryState } from "@components/types/types";
 import { addCategory, editCategory, selectCategory } from "@modules/setting";
 import { RootState } from "@modules/index";
 
@@ -65,11 +65,11 @@ const TabContent = ({ flag }: TabContentProps) => {
   );
 
   const dispatch = useDispatch();
-  const onAddCategory = (category: CategoryState) =>
+  const onAddCategory = (category: SettingCategoryState) =>
     dispatch(addCategory(category));
-  const onEditCategory = (category: CategoryState) =>
+  const onEditCategory = (category: SettingCategoryState) =>
     dispatch(editCategory(category));
-  const onSelectCategory = (category: CategoryState) =>
+  const onSelectCategory = (category: SettingCategoryState) =>
     dispatch(selectCategory(category));
 
   const [add, setAdd] = useState({
