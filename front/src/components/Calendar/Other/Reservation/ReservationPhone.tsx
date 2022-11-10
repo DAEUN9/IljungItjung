@@ -25,7 +25,9 @@ const ReservationPhone = () => {
             <PhoneTextField
               placeholder="연락처"
               {...field}
-              {...register("phone")}
+              {...register("phone", {
+                required: "연락처를 입력해주세요",
+              })}
             />
           )}
         />
