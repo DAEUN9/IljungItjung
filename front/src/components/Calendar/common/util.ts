@@ -72,36 +72,39 @@ export const formatTime = (
   }
   endTime += endHour + ":" + endMinutes;
 
-  return startTime + ' - ' + endTime;
+  return startTime + " - " + endTime;
 };
 
 export const getStringFromDate = (time: Date | string | undefined) => {
-  if(!time) return '';
-  
+  if (!time) return "";
+
   let date = new Date();
-  
-  if(typeof time === 'string') date = new Date(time);
+
+  if (typeof time === "string") date = new Date(time);
   else date = time;
 
-  const str = date.getFullYear().toString() + date.getMonth().toString() + date.getDate().toString();
-  
+  const str =
+    date.getFullYear().toString() +
+    date.getMonth().toString() +
+    date.getDate().toString();
+
   return str;
-}
+};
 
 export const getFullDate = (date: SchedulerDateTime | undefined) => {
   switch (typeof date) {
-    case 'undefined':
-      return '-';
-    case 'string':
+    case "undefined":
+      return "-";
+    case "string":
       return date;
-    case 'object':
+    case "object":
       return (
         date.getFullYear() +
-        '년 ' +
+        "년 " +
         (date.getMonth() + 1) +
-        '월 ' +
+        "월 " +
         date.getDate() +
-        '일'
+        "일"
       );
   }
 };

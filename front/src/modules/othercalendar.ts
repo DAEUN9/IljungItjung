@@ -1,11 +1,12 @@
-import { SchedulerDate } from '@components/types/types';
-import { getStringFromDate } from '@components/Calendar/common/util';
+import { SchedulerDate } from "@components/types/types";
+import { getStringFromDate } from "@components/Calendar/common/util";
 
 /* action type */
-const SET_DISABLED_MAP = 'othercalendar/SET_DISABLED_MAP' as const;
-const SET_CURRENT = 'othercalendar/SET_CURRENT' as const;
-const SET_SELECTED_TIME = 'othercalendar/SET_SELECTED_TIME' as const;
-const SET_MINUTES = 'othercalendar/SET_MINUTES' as const;
+const SET_DISABLED_MAP = "othercalendar/SET_DISABLED_MAP" as const;
+const SET_CURRENT = "othercalendar/SET_CURRENT" as const;
+const DELETE_CURRENT = "othercalendar/DELETE_CURRENT" as const;
+const SET_SELECTED_TIME = "othercalendar/SET_SELECTED_TIME" as const;
+const SET_MINUTES = "othercalendar/SET_MINUTES" as const;
 
 /* action creator */
 export const setDisabledMap = (list: SchedulerDate[]) => ({
@@ -15,6 +16,10 @@ export const setDisabledMap = (list: SchedulerDate[]) => ({
 
 export const setCurrent = () => ({
   type: SET_CURRENT,
+});
+
+export const deleteCurrent = () => ({
+  type: DELETE_CURRENT,
 });
 
 export const setSelectedTime = (selected: SchedulerDate) => ({
@@ -30,6 +35,7 @@ export const setMinutes = (minutes: number) => ({
 type OtherCalenderActions =
   | ReturnType<typeof setDisabledMap>
   | ReturnType<typeof setCurrent>
+  | ReturnType<typeof deleteCurrent>
   | ReturnType<typeof setSelectedTime>
   | ReturnType<typeof setMinutes>;
 
@@ -65,8 +71,13 @@ export default function reducer(
 
       return state;
     case SET_CURRENT:
-      if (state.selected) return { ...state, current: [state.selected] };
-      else return state;
+      if (state.selected) {
+        return { ...state, current: [state.selected] };
+      } else {
+        return state;
+      }
+    case DELETE_CURRENT:
+      return { ...state, current: [] };
     case SET_SELECTED_TIME:
       return { ...state, selected: action.payload };
     case SET_MINUTES:

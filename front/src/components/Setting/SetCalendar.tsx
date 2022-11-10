@@ -2,7 +2,6 @@ import { ViewState } from "@devexpress/dx-react-scheduler";
 import { Scheduler } from "@devexpress/dx-react-scheduler-material-ui";
 import { useEffect, useState } from "react";
 import { faLock, faUnlock } from "@fortawesome/free-solid-svg-icons";
-import { renderToStaticMarkup } from "react-dom/server";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
 
