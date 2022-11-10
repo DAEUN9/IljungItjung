@@ -67,7 +67,9 @@ const ReservationCategory = () => {
                 }
                 size="small"
                 {...field}
-                {...register("category")}
+                {...register("category", {
+                  required: "카테고리를 선택해주세요",
+                })}
               >
                 {items.map((item) => (
                   <MenuItem key={item.categoryName} value={item.categoryName}>
