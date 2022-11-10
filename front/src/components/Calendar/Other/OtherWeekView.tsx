@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-import { useDispatch, useSelector } from 'react-redux';
-import { WeekView } from '@devexpress/dx-react-scheduler-material-ui';
-
-import styles from '@styles/Calendar/Calendar.module.scss';
-import { getDay, getStringFromDate } from '@components/Calendar/common/util';
-import { SchedulerDate, SchedulerDateTime } from '@components/types/types';
-import { RootState } from '@modules/index';
-import { setSelectedTime } from '@modules/othercalendar';
-=======
 import { useDispatch, useSelector } from "react-redux";
 import { WeekView } from "@devexpress/dx-react-scheduler-material-ui";
 
@@ -29,7 +19,6 @@ const isSameTime = (
 
   return _date1.getTime() === date2.getTime();
 };
->>>>>>> front-develop
 
 export default function OtherWeekView() {
   const { map, selected, minutes } = useSelector(
@@ -93,28 +82,16 @@ export default function OtherWeekView() {
               <div
                 className={
                   isDisabled
-<<<<<<< HEAD
-                    ? styles['timeTableCell-disabled']
-                    : selected?.startDate === props.startDate &&
-                      !selected?.endDate
-                    ? styles['timeTableCell-selected']
-                    : styles['timeTableCell-inner']
-=======
                     ? styles["timeTableCell-disabled"]
                     : isSameTime(selected?.startDate, props.startDate) &&
                       !selected?.endDate
                     ? styles["timeTableCell-selected"]
                     : styles["timeTableCell-inner"]
->>>>>>> front-develop
                 }
                 onClick={(e) => {
                   const className = e.currentTarget.className;
 
-<<<<<<< HEAD
-                  if (props.startDate && !className.includes('disabled')) {
-=======
                   if (props.startDate && !className.includes("disabled")) {
->>>>>>> front-develop
                     handleClick(props.startDate);
                   }
                 }}
