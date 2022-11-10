@@ -84,16 +84,26 @@ const Reservation = () => {
     return { endDate, minutes };
   };
 
-  const isOverlapWithSchedule = (endDate: SchedulerDateTime) => {
+  const isOverlapWithSchedule = (
+    startDate: SchedulerDateTime,
+    endDate: SchedulerDateTime
+  ) => {
     const list = map.get(getStringFromDate(endDate.toString()));
     let isOverlap = false;
 
     if (list) {
       for (let item of list) {
-        const itemDate = new Date(item.startDate.toString());
+        if (item.endDate) {
+          const itemStartDate = new Date(item.startDate.toString());
+          const itemEndDate = new Date(item.endDate.toString());
 
-        if (endDate > itemDate) {
-          isOverlap = true;
+          if (
+            (endDate > itemStartDate && endDate <= itemEndDate) ||
+            (startDate <= itemStartDate && endDate >= itemEndDate)
+          ) {
+            isOverlap = true;
+            break;
+          }
         }
       }
     }
@@ -120,7 +130,7 @@ const Reservation = () => {
         selected.startDate.toString()
       );
 
-      if (isOverlapWithSchedule(endDate)) {
+      if (isOverlapWithSchedule(selected.startDate, endDate)) {
         unsetSelected(0, selected.startDate);
       } else {
         const newSelected: SchedulerDate = { startDate: selected.startDate };
@@ -136,7 +146,7 @@ const Reservation = () => {
   // selectedTime이 변경됐을 때
   useEffect(() => {
     if (selected && selected.endDate) {
-      if (isOverlapWithSchedule(selected.endDate)) {
+      if (isOverlapWithSchedule(selected.startDate, selected.endDate)) {
         unsetSelected(1, selected.startDate);
       } else {
         dispatch(setCurrent());
