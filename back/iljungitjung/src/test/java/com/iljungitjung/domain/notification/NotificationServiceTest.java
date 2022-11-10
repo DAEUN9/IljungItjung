@@ -1,27 +1,46 @@
 package com.iljungitjung.domain.notification;
 
+import com.iljungitjung.domain.category.service.CategoryServiceImpl;
 import com.iljungitjung.domain.notification.dto.NotificationMessageDto;
+import com.iljungitjung.domain.notification.dto.NotificationMessageRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
+import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.notification.service.NotificationServiceImpl;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.user.entity.User;
+import com.iljungitjung.global.scheduler.NotificationNcloud;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.mockito.Mockito.when;
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("알림 서비스")
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 public class NotificationServiceTest {
 
-    @Autowired
-    private NotificationServiceImpl notificationService;
+    private NotificationService notificationService;
+
+    @MockBean
+    private NotificationNcloud notificationNcloud;
+
+    @BeforeEach
+    public void init(){
+        notificationService = new NotificationServiceImpl(notificationNcloud);
+    }
 
     @Test
     @DisplayName("메시지 전송")
@@ -33,6 +52,9 @@ public class NotificationServiceTest {
         List<NotificationMessageDto> messageList = new ArrayList<>();
         messageList.add(notificationMessageDto);
         NotificationRequestDto notificationRequestDto = new NotificationRequestDto(messageList);
+        HttpEntity<NotificationMessageRequestDto> body = notificationService.makeBody(notificationRequestDto);
+
+        when(notificationNcloud.sendNcloud(body)).thenReturn(new NotificationResponseDto("202"));
 
         NotificationResponseDto responseDto = notificationService.sendMessage(notificationRequestDto);
 

@@ -11,6 +11,5 @@ import org.springframework.http.ResponseEntity;
 public interface NotificationService {
     NotificationResponseDto sendMessage(NotificationRequestDto requestDto);
     void buildTemplate(Schedule schedule);
-    NotificationResponseDto sendNcloud(HttpEntity<NotificationMessageRequestDto> body);
     HttpEntity<NotificationMessageRequestDto> makeBody(NotificationRequestDto requestDto);
 }

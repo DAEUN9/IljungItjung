@@ -79,7 +79,7 @@ public class NotificationControllerTest {
         messageList.add(notificationMessageDto);
         String content = objectMapper.writeValueAsString(new NotificationRequestDto(messageList));
 
-        when(notificationService.sendMessage(new NotificationRequestDto(messageList))).thenReturn(new NotificationResponseDto());
+        when(notificationService.sendMessage(new NotificationRequestDto(messageList))).thenReturn(new NotificationResponseDto("202"));
         //then
         mockMvc.perform(post("/notifications")
                 .content(content).session(session)
