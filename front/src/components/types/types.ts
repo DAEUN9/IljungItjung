@@ -15,8 +15,8 @@ interface SearchState {
   nickname: string;
   email: string;
   imagePath: string;
-  desc: string;
-  detail: string;
+  // desc: string;
+  // detail: string;
   categories: SearchCategoryState[];
 }
 
@@ -34,9 +34,9 @@ interface SchedulerDate {
 }
 
 export type {
-  SearchState,
   SettingCategoryState,
   SearchCategoryState,
+  SearchState,
   SchedulerDateTime,
   SchedulerDate,
 };
