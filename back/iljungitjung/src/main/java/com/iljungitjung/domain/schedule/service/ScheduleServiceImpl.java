@@ -13,7 +13,6 @@ import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -23,7 +22,6 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService{
 
@@ -34,18 +32,22 @@ public class ScheduleServiceImpl implements ScheduleService{
     public ScheduleViewResponseDto scheduleView(String nickname, String startDate, String endDate, HttpSession httpSession) {
 
         User userFrom = userService.findUserBySessionId(httpSession);
+
         User userTo = userRepository.findUserByNickname(nickname).orElseThrow(()->{
             throw new NoExistUserException();
         });
 
-        ScheduleViewResponseDto responseDtos;
-        boolean dateCheck = true;
+        boolean myScheduleView = false;
+
+        if(userFrom.getId()==userTo.getId()) myScheduleView = true;
+
+        boolean validDate = true;
 
         Date startDateFormat = new Date();
         Date endDateFormat = new Date();
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-        if(startDate==null || endDate == null) dateCheck=false;
+        if(startDate==null || endDate == null) validDate=false;
         else{
             try{
                 startDateFormat = formatter.parse(startDate+"0000");
@@ -55,8 +57,6 @@ public class ScheduleServiceImpl implements ScheduleService{
             }
         }
 
-
-
         List<Schedule> scheduleList = scheduleRepository.findByUserTo_IdIs(userTo.getId());
 
         List<ScheduleViewDto> requestList = new ArrayList<>();
@@ -64,40 +64,25 @@ public class ScheduleServiceImpl implements ScheduleService{
         List<ScheduleBlockDto> blockList = new ArrayList<>();
         List<ScheduleCancelDto> cancelList = new ArrayList<>();
 
-        if(userFrom.getId()==userTo.getId()){
-            for(Schedule schedule : scheduleList){
-                if(dateCheck){
-                    if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().before(startDateFormat) || schedule.getStartDate().after(endDateFormat) || schedule.getEndDate().after(endDateFormat)) continue;
-                }
-                if (schedule.getType().equals(Type.ACCEPT)) {
-                    acceptList.add(new ScheduleViewDto(schedule));
-                } else if (schedule.getType().equals(Type.BLOCK)) {
-                    blockList.add(new ScheduleBlockDto(schedule));
-                }
+        for(Schedule schedule : scheduleList){
+            if(validDate && checkDate(schedule, startDateFormat, endDateFormat)) continue;
+
+            if(!myScheduleView){
+                if(schedule.getType().equals(Type.REQUEST)) requestList.add(new ScheduleViewDto(schedule));
+                else if(schedule.getType().equals(Type.CANCEL)) cancelList.add(new ScheduleCancelDto(schedule));
             }
+
+            if (schedule.getType().equals(Type.ACCEPT)) acceptList.add(new ScheduleViewDto(schedule));
+            else if (schedule.getType().equals(Type.BLOCK)) blockList.add(new ScheduleBlockDto(schedule));
+
         }
-        else{
-            for(Schedule schedule : scheduleList){
-                if(dateCheck){
-                    if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().before(startDateFormat) || schedule.getStartDate().after(endDateFormat) || schedule.getEndDate().after(endDateFormat)) continue;
-                }
-                if(schedule.getType().equals(Type.REQUEST)){
-                    requestList.add(new ScheduleViewDto(schedule));
-                }else if(schedule.getType().equals(Type.ACCEPT)){
-                    acceptList.add(new ScheduleViewDto(schedule));
-                }else if(schedule.getType().equals(Type.BLOCK)){
-                    blockList.add(new ScheduleBlockDto(schedule));
-                }else{
-                    cancelList.add(new ScheduleCancelDto(schedule));
-                }
-            }
-        }
+
         List<CategoryViewResponseDto> categoryList = new ArrayList<>();
         for(Category category :userTo.getCategoryList()){
             categoryList.add(new CategoryViewResponseDto(category));
         }
-        responseDtos = new ScheduleViewResponseDto(categoryList, requestList, acceptList, blockList, cancelList);
 
+        ScheduleViewResponseDto responseDtos = new ScheduleViewResponseDto(categoryList, requestList, acceptList, blockList, cancelList);
 
         return responseDtos;
     }
@@ -111,4 +96,8 @@ public class ScheduleServiceImpl implements ScheduleService{
         return responseDto;
     }
 
+    public boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){
+        if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().before(startDateFormat) || schedule.getStartDate().after(endDateFormat) || schedule.getEndDate().after(endDateFormat)) return true;
+        return false;
+    }
 }
