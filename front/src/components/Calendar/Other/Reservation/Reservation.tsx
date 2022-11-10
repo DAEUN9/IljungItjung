@@ -14,11 +14,11 @@ import {
   setMinutes,
   deleteCurrent,
 } from "@modules/othercalendar";
-import ReservationCategory from "@components/Calendar/Other/ReservationCategory";
-import ReservationDate from "./ReservationDate";
-import ReservationTime from "./ReservationTime";
-import ReservationPhone from "./ReservationPhone";
-import ReservationRequest from "./ReservationRequest";
+import ReservationCategory from "@components/Calendar/Other/Reservation/ReservationCategory";
+import ReservationDate from "@components/Calendar/Other/Reservation/ReservationDate";
+import ReservationTime from "@components/Calendar/Other/Reservation/ReservationTime";
+import ReservationPhone from "@components/Calendar/Other/Reservation/ReservationPhone";
+import ReservationRequest from "@components/Calendar/Other/Reservation/ReservationRequest";
 
 interface RequestData {
   category: string;
