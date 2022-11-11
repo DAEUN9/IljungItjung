@@ -2,6 +2,7 @@ package com.iljungitjung.domain.user.service;
 
 import com.iljungitjung.domain.user.dto.SignUpDto;
 import com.iljungitjung.domain.user.dto.UserInfo;
+import com.iljungitjung.domain.user.dto.UserInfoList;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
@@ -19,7 +20,9 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -85,5 +88,15 @@ public class UserServiceImpl implements UserService{
         });
 
         return user;
+    }
+
+    @Override
+    public UserInfoList getUserInfoList(String nickname) {
+        List<User> userList = userRepository.findByNicknameContaining(nickname);
+        for(User user : userList){
+            System.out.println(user.getNickname());
+        }
+        List<UserInfo> userInfoList = userList.stream().map(user -> getUserInfo(user.getNickname())).collect(Collectors.toList());
+        return new UserInfoList(userInfoList);
     }
 }
