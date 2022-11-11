@@ -14,7 +14,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -51,16 +51,17 @@ public class NotificationServiceImpl implements NotificationService{
     @Override
     public void autoReservationMessage(Schedule schedule) {
         NotificationMessageDto message = makeMessage(schedule);
-        List<NotificationMessageDto> messageList = new ArrayList<>();
-        messageList.add(message);
-        NotificationRequestDto requestDto = new NotificationRequestDto(messageList);
+        List<NotificationMessageDto> messageList = makeMessages(message);
+        NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
         sendMessage(requestDto);
     }
 
+    private List<NotificationMessageDto> makeMessages(NotificationMessageDto... message){
+        return Arrays.asList(message);
+    }
+
     private NotificationMessageDto makeMessage(Schedule schedule) {
-        String date = makeDateFormat(schedule.getStartDate());
-        String startTime = makeTimeFormat(schedule.getStartDate());
-        String endTime = makeTimeFormat(schedule.getEndDate());
+
         /*
             DB에 폰번호 없음 임시로 null체크
         */
@@ -74,18 +75,18 @@ public class NotificationServiceImpl implements NotificationService{
         }
         //
         if (schedule.getType().equals(Type.CANCEL) && schedule.getCancelFrom().equals("제공자")) {
-            return new NotificationMessageDto(schedule.getPhonenum(), String.format(REFUSE_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getCategoryName()));
+            return new NotificationMessageDto(schedule.getPhonenum(), makeContents(schedule, 1));
         }
         if (schedule.getType().equals(Type.CANCEL) && schedule.getCancelFrom().equals("사용자")) {
-            return new NotificationMessageDto(schedule.getUserTo().getPhonenum(), String.format(CANCEL_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getUserTo().getNickname()));
+            return new NotificationMessageDto(schedule.getUserTo().getPhonenum(), makeContents(schedule, 2));
         }
         if (schedule.getType().equals(Type.ACCEPT)) {
-            return new NotificationMessageDto(schedule.getPhonenum(), String.format(ACCEPT_BASE, schedule.getUserTo().getNickname(), date, startTime, endTime, schedule.getCategoryName()));
+            return new NotificationMessageDto(schedule.getPhonenum(), makeContents(schedule, 3));
         }
         if (schedule.getType().equals(Type.REQUEST)) {
-            return new NotificationMessageDto(schedule.getUserTo().getPhonenum(), String.format(REQUEST_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getCategoryName()));
+            return new NotificationMessageDto(schedule.getUserTo().getPhonenum(), makeContents(schedule, 4));
         }
-        return new NotificationMessageDto(schedule.getPhonenum(), String.format(DELETE_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getCategoryName()));
+        return new NotificationMessageDto(schedule.getPhonenum(), makeContents(schedule, 5));
     }
 
     private String makeDateFormat(Date date) {
@@ -96,6 +97,25 @@ public class NotificationServiceImpl implements NotificationService{
     private String makeTimeFormat(Date date) {
         SimpleDateFormat base = new SimpleDateFormat("HH:mm");
         return base.format(date);
+    }
+
+    private String makeContents(Schedule schedule, int idx) {
+        String date = makeDateFormat(schedule.getStartDate());
+        String startTime = makeTimeFormat(schedule.getStartDate());
+        String endTime = makeTimeFormat(schedule.getEndDate());
+        if (idx == 1) {
+            return String.format(REFUSE_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getCategoryName());
+        }
+        if (idx == 2) {
+            return String.format(CANCEL_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getUserTo().getNickname());
+        }
+        if (idx == 3) {
+            return String.format(ACCEPT_BASE, schedule.getUserTo().getNickname(), date, startTime, endTime, schedule.getCategoryName());
+        }
+        if (idx == 4) {
+            return String.format(REQUEST_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getCategoryName());
+        }
+        return String.format(DELETE_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getCategoryName());
     }
 
 }

@@ -69,7 +69,7 @@ public class NotificationControllerTest {
         NotificationMessageDto notificationMessageDto = new NotificationMessageDto(phone, message);
         List<NotificationMessageDto> messageList = new ArrayList<>();
         messageList.add(notificationMessageDto);
-        String content = objectMapper.writeValueAsString(new NotificationRequestDto(messageList));
+        String content = objectMapper.writeValueAsString(NotificationRequestDto.createFromMessages(messageList));
 
         when(notificationService.sendMessage(any(NotificationRequestDto.class))).thenReturn(new NotificationResponseDto("202"));
         //then

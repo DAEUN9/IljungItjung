@@ -65,15 +65,12 @@ public class NotificationNcloud {
                 .toString();
         try {
             signingKey = new SecretKeySpec(NCLOUD_SECRET_KEY.getBytes("UTF-8"), "HmacSHA256");
-
             mac = Mac.getInstance("HmacSHA256");
             mac.init(signingKey);
             rawHmac = mac.doFinal(message.getBytes("UTF-8"));
         } catch (Exception e) {
             throw new FailSignatureKeyErrorException();
         }
-        String encodeBase64String = Base64.encodeBase64String(rawHmac);
-
-        return encodeBase64String;
+        return Base64.encodeBase64String(rawHmac);
     }
 }

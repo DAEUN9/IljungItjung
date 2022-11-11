@@ -51,7 +51,7 @@ public class NotificationServiceTest {
         NotificationMessageDto notificationMessageDto = new NotificationMessageDto(phone, message);
         List<NotificationMessageDto> messageList = new ArrayList<>();
         messageList.add(notificationMessageDto);
-        NotificationRequestDto notificationRequestDto = new NotificationRequestDto(messageList);
+        NotificationRequestDto notificationRequestDto = NotificationRequestDto.createFromMessages(messageList);
 
 
         when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());

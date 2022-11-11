@@ -13,15 +13,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NotificationRequestDto {
+    private final String DEFAULT_CONTENT = "필수";
     private String content;
     @Valid
     @NotNull(message = "message list는 필수로 입력해야 합니다.")
     private List<NotificationMessageDto> messages;
 
-
-    public NotificationRequestDto (List<NotificationMessageDto> messages) {
-        this.content = "필수";
+    private NotificationRequestDto (List<NotificationMessageDto> messages){
+        this.content = DEFAULT_CONTENT;
         this.messages = messages;
     }
 
+    public static NotificationRequestDto createFromMessages(List<NotificationMessageDto> messages){
+        return new NotificationRequestDto(messages);
+    }
 }

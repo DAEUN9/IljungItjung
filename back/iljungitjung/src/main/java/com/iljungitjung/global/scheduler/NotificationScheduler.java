@@ -67,12 +67,14 @@ public class NotificationScheduler {
     }
 
     private void sendTodaySchedules(String phone, List<NotificationSchedulerDto> scheduleList) {
-        List<NotificationMessageDto> messageList = new ArrayList<>();
         NotificationMessageDto message = new NotificationMessageDto(phone, makeContents(scheduleList));
-        messageList.add(message);
-        NotificationRequestDto requestDto = new NotificationRequestDto(messageList);
+        NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(makeMessages(message));
 
         notificationService.sendMessage(requestDto);
+    }
+
+    private List<NotificationMessageDto> makeMessages(NotificationMessageDto... message){
+        return Arrays.asList(message);
     }
 
     private String makeContents(List<NotificationSchedulerDto> scheduleList)  {

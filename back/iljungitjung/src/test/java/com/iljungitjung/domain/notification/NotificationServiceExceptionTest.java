@@ -46,12 +46,12 @@ public class NotificationServiceExceptionTest {
         NotificationMessageDto notificationMessageDto = new NotificationMessageDto(phone, message);
         List<NotificationMessageDto> messageList = new ArrayList<>();
         messageList.add(notificationMessageDto);
-        NotificationRequestDto notificationRequestDto = new NotificationRequestDto(messageList);
+        NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
 
         when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
         when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.BAD_GATEWAY.toString()));
 
-        assertThatThrownBy(() -> notificationService.sendMessage(notificationRequestDto))
+        assertThatThrownBy(() -> notificationService.sendMessage(requestDto))
                 .isInstanceOf(FailSendMessageException.class);
     }
 }
