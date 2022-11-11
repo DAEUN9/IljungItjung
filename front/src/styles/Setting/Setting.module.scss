@@ -12,6 +12,13 @@
 .calendar-container {
   width: 60%;
   height: 100%;
+  position: relative;
+
+  & .fab-wrapper {
+    position: absolute;
+    right: 3%;
+    bottom: 3%;
+  }
 }
 
 .right {
@@ -66,4 +73,20 @@
       width: 30%;
     }
   }
+}
+
+.time-table-cell {
+  &:focus {
+    background-color: #f2f2f2 !important;
+  }
+}
+
+.cell {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.shade {
+  background-color: #f2f2f2 !important;
 }

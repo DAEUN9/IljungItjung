@@ -23,16 +23,18 @@ const SearchResult = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.name}>{nickname}</div>
-          <div className={styles.desc}>{/*desc*/}한줄소개</div>
+          <div className={styles.desc}>한줄소개</div>
         </div>
       </div>
-      <div className={styles.detail}>{/*detail*/}설명</div>
+      <div className={styles.detail}>설명</div>
       <div className={styles.categories}>
-        {categories.map((category, index) => (
-          <div className={styles.chip} key={index}>
-            <CustomChip label={category.categoryName} onClick={() => {}} />
-          </div>
-        ))}
+        {categories &&
+          categories.length > 0 &&
+          categories.map((category, index) => (
+            <div className={styles.chip} key={index}>
+              <CustomChip label={category.categoryName} onClick={() => {}} />
+            </div>
+          ))}
       </div>
       <div className={styles.button}>
         <CustomButton
