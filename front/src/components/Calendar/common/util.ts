@@ -91,6 +91,18 @@ export const getStringFromDate = (time: Date | string | undefined) => {
   return str;
 };
 
+export const getFullStringFromDate = (time: Date) => {
+  if (!time) return "";
+
+  const year = time.getFullYear().toString();
+  const month = time.getMonth().toString();
+  const date = time.getDate().toString();
+  const hour = time.getHours().toString();
+  const min = time.getMinutes().toString();
+
+  return year + month + date + hour + min;
+};
+
 export const getFullDate = (date: SchedulerDateTime | undefined) => {
   switch (typeof date) {
     case "undefined":
