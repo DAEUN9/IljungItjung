@@ -19,6 +19,8 @@ public class UserInfo {
 
     private String imagePath;
 
+    private String description;
+
     private List<CategoryInfo> categories;
 
     public UserInfo(RedisUser redisUser){
@@ -31,6 +33,15 @@ public class UserInfo {
         this.nickname = user.getNickname();
         this.email = user.getEmail();
         this.imagePath = user.getImagePath();
+        this.description = user.getDescription();
+    }
+
+    public void convertCategories(List<Category> categoryList){
+        if(categoryList.size() == 0) return;
+        this.categories = new ArrayList<>();
+        for(Category category : categoryList){
+            categories.add(new CategoryInfo(category));
+        }
     }
 
     public void convertCategories(List<Category> categoryList){

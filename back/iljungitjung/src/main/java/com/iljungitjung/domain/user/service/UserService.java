@@ -3,6 +3,7 @@ package com.iljungitjung.domain.user.service;
 import com.iljungitjung.domain.user.dto.SignUpDto;
 import com.iljungitjung.domain.user.dto.SignUpUserResponseDto;
 import com.iljungitjung.domain.user.dto.UserInfo;
+import com.iljungitjung.domain.user.dto.UserInfoList;
 import com.iljungitjung.domain.user.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,8 @@ public interface UserService {
     UserInfo getUserInfo(HttpSession session);
 
     User findUserBySessionId(HttpSession session);
+
+    UserInfoList getUserInfoList(String nickname);
 
     void deleteUserByEmail(String email);
 }
