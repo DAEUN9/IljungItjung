@@ -1,6 +1,6 @@
 import { IoSearchOutline } from "react-icons/io5";
 import { IconButton, InputBase } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@modules/index";
 
@@ -45,14 +45,24 @@ const data = [
 
 interface SearchApiData {
   status: string;
-  data: SearchState[];
+  data: SearchState;
 }
 
 const SearchPage = () => {
   const [search, setSearch] = useState("");
-  const [searchList, setSearchList] = useState<SearchState[]>([]);
+  // const [searchList, setSearchList] = useState<SearchState[]>([]);
+  const [searchList, setSearchList] = useState<SearchState>({
+    nickname: "",
+    email: "",
+    imagePath: "",
+    categories: [],
+  });
 
   const selectedName = useSelector((state: RootState) => state.search.nickname);
+
+  useEffect(() => {
+    console.log(searchList);
+  }, [searchList]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -62,6 +72,7 @@ const SearchPage = () => {
     if (event.key === "Enter") {
       getSearchList(search, (res: SearchApiData) => {
         setSearchList(res.data);
+        console.log(res.data);
       });
     }
   };
@@ -83,19 +94,19 @@ const SearchPage = () => {
             />
           </div>
           <div className={styles["result"]}>
-            {searchList.length > 0 ? (
-              searchList.map((item, index) => (
-                <SearchItem
-                  key={index}
-                  nickname={item.nickname}
-                  email={item.email}
-                  imagePath={item.imagePath}
-                  // desc={item.desc}
-                  // detail={item.detail}
-                  categories={item.categories}
-                />
-              ))
+            {searchList.nickname.length > 0 ? (
+              // searchList.map((item, index) => (
+              <SearchItem
+                // key={index}
+                nickname={searchList.nickname}
+                email={searchList.email}
+                imagePath={searchList.imagePath}
+                // desc={item.desc}
+                // detail={item.detail}
+                categories={searchList.categories}
+              />
             ) : (
+              // ))
               <div className={styles["no-data"]}>검색 결과가 없습니다.</div>
             )}
           </div>
