@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("알림 서비스")
@@ -35,10 +35,8 @@ import static org.mockito.Mockito.when;
 public class NotificationServiceTest {
 
     private NotificationService notificationService;
-
     @MockBean
     private NotificationNcloud notificationNcloud;
-
     @BeforeEach
     public void init(){
         notificationService = new NotificationServiceImpl(notificationNcloud);
@@ -68,33 +66,6 @@ public class NotificationServiceTest {
     public void B() throws Exception {
 
         String categoryName = "파마";
-        String color = "#000000";
-
-        String userFromNickname = "1";
-        String userToNickname = "2";
-        String phone = "01000000000";
-        String email = "email";
-
-        User userFrom = User.builder()
-                .nickname(userFromNickname)
-                .email(email).build();
-        User userTo = User.builder()
-                .nickname(userToNickname)
-                .phonenum(phone).build();
-        Schedule schedule = Schedule.builder().type(Type.REQUEST).userFrom(userFrom).userTo(userTo)
-                .endDate(new Date()).startDate(new Date()).categoryName(categoryName).phonenum(phone).color(color).build();
-
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
-
-        notificationService.autoReservationMessage(schedule);
-    }
-
-    @Test
-    @DisplayName("예약 승인 문자 전송")
-    public void C() throws Exception {
-        String categoryName = "파마";
-        String color = "#000000";
 
         String userFromNickname = "1";
         String userToNickname = "2";
@@ -114,21 +85,54 @@ public class NotificationServiceTest {
                 .endDate(new Date())
                 .startDate(new Date())
                 .categoryName(categoryName)
-                .phonenum(phone)
-                .color(color).build();
+                .phonenum(phone).build();
+
+        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
+
+        notificationService.autoReservationMessage(schedule);
+        verify(notificationNcloud, times(1)).makeHeaders();
+        verify(notificationNcloud, times(1)).sendNcloud(any(HttpEntity.class));
+    }
+
+    @Test
+    @DisplayName("예약 승인 문자 전송")
+    public void C() throws Exception {
+        String categoryName = "파마";
+
+        String userFromNickname = "1";
+        String userToNickname = "2";
+        String phone = "01000000000";
+        String email = "email";
+
+        User userFrom = User.builder()
+                .nickname(userFromNickname)
+                .email(email).build();
+        User userTo = User.builder()
+                .nickname(userToNickname)
+                .phonenum(phone).build();
+        Schedule schedule = Schedule.builder()
+                .type(Type.REQUEST)
+                .userFrom(userFrom)
+                .userTo(userTo)
+                .endDate(new Date())
+                .startDate(new Date())
+                .categoryName(categoryName)
+                .phonenum(phone).build();
         schedule.accpeted();
 
         when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
         when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
 
         notificationService.autoReservationMessage(schedule);
+        verify(notificationNcloud, times(1)).makeHeaders();
+        verify(notificationNcloud, times(1)).sendNcloud(any(HttpEntity.class));
     }
 
     @Test
     @DisplayName("예약 신청 거절 문자 전송")
     public void D() throws Exception {
         String categoryName = "파마";
-        String color = "#000000";
 
         String userFromNickname = "1";
         String userToNickname = "2";
@@ -150,8 +154,7 @@ public class NotificationServiceTest {
                 .endDate(new Date())
                 .startDate(new Date())
                 .categoryName(categoryName)
-                .phonenum(phone)
-                .color(color).build();
+                .phonenum(phone).build();
 
         schedule.canceled(cancelFrom, "");
 
@@ -159,6 +162,8 @@ public class NotificationServiceTest {
         when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
 
         notificationService.autoReservationMessage(schedule);
+        verify(notificationNcloud, times(1)).makeHeaders();
+        verify(notificationNcloud, times(1)).sendNcloud(any(HttpEntity.class));
 
     }
 
@@ -166,7 +171,6 @@ public class NotificationServiceTest {
     @DisplayName("예약 신청 취소 문자 전송")
     public void E() throws Exception {
         String categoryName = "파마";
-        String color = "#000000";
 
         String userFromNickname = "1";
         String userToNickname = "2";
@@ -186,8 +190,7 @@ public class NotificationServiceTest {
                 .endDate(new Date())
                 .startDate(new Date())
                 .categoryName(categoryName)
-                .phonenum(phone)
-                .color(color).build();
+                .phonenum(phone).build();
         String cancelFrom = "사용자";
         schedule.canceled(cancelFrom, "");
 
@@ -195,13 +198,14 @@ public class NotificationServiceTest {
         when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
 
         notificationService.autoReservationMessage(schedule);
+        verify(notificationNcloud, times(1)).makeHeaders();
+        verify(notificationNcloud, times(1)).sendNcloud(any(HttpEntity.class));
     }
 
     @Test
     @DisplayName("예약 취소 문자 전송")
     public void F() throws Exception {
         String categoryName = "파마";
-        String color = "#000000";
 
         String userFromNickname = "1";
         String userToNickname = "2";
@@ -223,8 +227,7 @@ public class NotificationServiceTest {
                 .endDate(new Date())
                 .startDate(new Date())
                 .categoryName(categoryName)
-                .phonenum(phone)
-                .color(color).build();
+                .phonenum(phone).build();
         schedule.deleted();
 
         when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
