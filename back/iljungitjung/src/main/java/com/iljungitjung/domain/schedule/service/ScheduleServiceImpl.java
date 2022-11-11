@@ -13,6 +13,7 @@ import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService{
 
@@ -76,6 +78,12 @@ public class ScheduleServiceImpl implements ScheduleService{
             else if (schedule.getType().equals(Type.BLOCK)) blockList.add(new ScheduleBlockDto(schedule));
 
         }
+        List<CategoryViewResponseDto> categoryList = new ArrayList<>();
+        for(Category category :userTo.getCategoryList()){
+            categoryList.add(new CategoryViewResponseDto(category));
+        }
+        responseDtos = new ScheduleViewResponseDto(categoryList, requestList, acceptList, blockList, cancelList);
+
 
         List<CategoryViewResponseDto> categoryList = new ArrayList<>();
         for(Category category :userTo.getCategoryList()){
