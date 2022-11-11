@@ -39,43 +39,52 @@ dependencies {
 
 	implementation 'org.apache.httpcomponents:httpclient'
 	implementation 'org.apache.httpcomponents:httpcore'
+
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
-tasks.named('test') {
+test {
 	finalizedBy 'jacocoTestReport'
 	useJUnitPlatform()
 }
 
-tasks.named('jacocoTestReport') {
+jacocoTestReport {
 	finalizedBy("jacocoTestCoverageVerification")
+
+	dependsOn test // tests are required to run before generating the report
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					 "com/iljungitjung/IljungitjungApplication.class",
+					 "com/iljungitjung/global/**",
+					 "com/iljungitjung/domain/notification/**",
+					 "com/iljungitjung/domain/**/dto/**",
+					 "com/iljungitjung/domain/**/exception/**",
+			])
+		}))
+	}
 }
 jacoco {
-	toolVersion = "0.8.5"
+	toolVersion = "0.8.8"
 }
-
 
 jacocoTestCoverageVerification {
 	violationRules {
 		rule {
-			limit {
-				minimum = 0.4.toBigDecimal()
-			}
-		}
-		rule {
-			// 룰을 간단히 켜고 끌 수 있습니다.
 			enabled = true
-
-			// 룰을 체크할 단위는 클래스 단위
 			element = 'CLASS'
-
-			// 빈 줄을 제외한 코드의 라인수를 최대 200라인으로 제한합니다.
-
+			excludes = ['com.iljungitjung.global.*'
+						, 'com.iljungitjung.IljungitjungApplication'
+						, 'com.iljungitjung.domain.*.dto.*'
+						, 'com.iljungitjung.domain.*.exception.*'
+						, 'com.iljungitjung.domain.notification.*'
+						, 'com.iljungitjung.domain.*.controller.*']
 			limit {
 				counter = 'LINE'
-				value = 'TOTALCOUNT'
-				maximum = 200
+				value = 'COVEREDRATIO'
+				minimum = 0.7
 			}
 		}
 	}
-
 }

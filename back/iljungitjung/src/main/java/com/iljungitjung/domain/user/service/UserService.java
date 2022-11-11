@@ -1,6 +1,7 @@
 package com.iljungitjung.domain.user.service;
 
 import com.iljungitjung.domain.user.dto.SignUpDto;
+import com.iljungitjung.domain.user.dto.SignUpUserResponseDto;
 import com.iljungitjung.domain.user.dto.UserInfo;
 import com.iljungitjung.domain.user.dto.UserInfoList;
 import com.iljungitjung.domain.user.entity.User;
@@ -14,7 +15,7 @@ public interface UserService {
 
     boolean isExistUserByEmail(String email);
 
-    void signUpUser(SignUpDto signUpDto, HttpServletRequest request);
+    SignUpUserResponseDto signUpUser(SignUpDto signUpDto, HttpServletRequest request);
 
 
     UserInfo getUserInfo(String nickname);
@@ -24,4 +25,6 @@ public interface UserService {
     User findUserBySessionId(HttpSession session);
 
     UserInfoList getUserInfoList(String nickname);
+
+    void deleteUserByEmail(String email);
 }

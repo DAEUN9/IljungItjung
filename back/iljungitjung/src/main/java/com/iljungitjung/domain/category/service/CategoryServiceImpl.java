@@ -9,9 +9,7 @@ import com.iljungitjung.domain.category.exception.NoGrantDeleteCategoryException
 import com.iljungitjung.domain.category.exception.NoGrantUpdateCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.user.entity.User;
-import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
-import com.iljungitjung.global.login.repository.RedisUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,17 +21,13 @@ import javax.transaction.Transactional;
 @Slf4j
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService{
-
-    private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-
-    private final RedisUserRepository redisUserRepository;
 
     private final UserService userService;
     @Override
     @Transactional
     public CategoryIdResponseDto addCategory(CategoryCreateRequestDto requestDto, HttpSession httpSession) {
-        Category category = requestDto.toCategoryEntity(requestDto);
+        Category category = requestDto.toEntity();
 
         User user = userService.findUserBySessionId(httpSession);
 
@@ -55,14 +49,14 @@ public class CategoryServiceImpl implements CategoryService{
 
         if(category.getUser().getId()!=user.getId()) throw new NoGrantUpdateCategoryException();
 
-        Category updateCategory = requestDto.toCategoryEntity(requestDto);
+        Category updateCategory = requestDto.toEntity();
         category.change(updateCategory);
         return new CategoryIdResponseDto(categoryId);
     }
 
     @Override
     @Transactional
-    public CategoryIdResponseDto deleteCategory(Long categoryId, HttpSession httpSession) {
+    public void deleteCategory(Long categoryId, HttpSession httpSession) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });
@@ -72,6 +66,5 @@ public class CategoryServiceImpl implements CategoryService{
         if(category.getUser().getId()!=user.getId()) throw new NoGrantDeleteCategoryException();
 
         categoryRepository.delete(category);
-        return new CategoryIdResponseDto(categoryId);
     }
 }

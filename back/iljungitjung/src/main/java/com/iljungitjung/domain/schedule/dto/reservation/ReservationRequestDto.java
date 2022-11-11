@@ -5,6 +5,7 @@ import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -13,6 +14,7 @@ import java.util.Date;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ReservationRequestDto {
 
     @NotBlank(message = "userToNickname은 비워둘 수 없습니다.")
@@ -26,20 +28,21 @@ public class ReservationRequestDto {
 
     private String contents;
 
-    @Pattern(regexp = "[0-9]{10,11}", message = "10~11자리의 숫자만 입력가능합니다")
+    @NotBlank(message = "전화번호는 필수 입력 값입니다.")
+    @Pattern(regexp = "^01([0|1|6|7|8|9]?)?([0-9]{7,8})$", message = "전화번호는 10~11자리의 숫자만 입력가능합니다.")
     private String phone;
 
     @NotBlank(message = "categoryName은 비워둘 수 없습니다.")
     private String categoryName;
 
-    public Schedule toScheduleEntity(ReservationRequestDto reservationRequestDto, Date startDate, Date endDate, String color, Type type) {
+    public Schedule toEntity(Date startDate, Date endDate, String color, Type type) {
         return Schedule.builder()
-                .categoryName(reservationRequestDto.getCategoryName())
+                .categoryName(this.categoryName)
                 .color(color)
-                .contents(reservationRequestDto.getContents())
+                .contents(this.contents)
                 .startDate(startDate)
                 .endDate(endDate)
-                .phonenum(reservationRequestDto.getPhone())
+                .phonenum(this.phone)
                 .type(type)
                 .build();
 

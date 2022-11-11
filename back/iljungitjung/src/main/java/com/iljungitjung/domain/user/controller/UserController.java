@@ -3,6 +3,9 @@ package com.iljungitjung.domain.user.controller;
 import com.iljungitjung.domain.user.dto.SignUpDto;
 import com.iljungitjung.domain.user.service.UserService;
 import com.iljungitjung.global.common.CommonResponse;
+import com.iljungitjung.global.login.entity.RedisUser;
+import com.iljungitjung.global.login.exception.ExpireRedisUserException;
+import com.iljungitjung.global.login.repository.RedisUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +31,8 @@ public class UserController {
 
     private final UserService userService;
 
+    private final RedisUserRepository redisUserRepository;
+
     @PostMapping
     public void signUpUser(@Valid @RequestBody SignUpDto signUpDto, HttpServletRequest request){
         userService.signUpUser(signUpDto, request);
@@ -41,5 +46,13 @@ public class UserController {
         if(isSearch) return ResponseEntity.ok(CommonResponse.getSuccessResponse(userService.getUserInfoList(nickname)));
         if(Objects.isNull(nickname)) return ResponseEntity.ok(CommonResponse.getSuccessResponse(userService.getUserInfo(session)));
         return ResponseEntity.ok(CommonResponse.getSuccessResponse(userService.getUserInfo(nickname)));
+    }
+
+    @DeleteMapping
+    public void deleteUser(HttpSession session){
+        RedisUser redisUser = redisUserRepository.findById(session.getId()).orElseThrow(() -> {
+            throw new ExpireRedisUserException();
+        });
+        userService.deleteUserByEmail(redisUser.getEmail());
     }
 }

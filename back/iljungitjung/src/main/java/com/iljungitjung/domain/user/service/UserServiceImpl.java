@@ -1,6 +1,7 @@
 package com.iljungitjung.domain.user.service;
 
 import com.iljungitjung.domain.user.dto.SignUpDto;
+import com.iljungitjung.domain.user.dto.SignUpUserResponseDto;
 import com.iljungitjung.domain.user.dto.UserInfo;
 import com.iljungitjung.domain.user.dto.UserInfoList;
 import com.iljungitjung.domain.user.entity.User;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,7 +48,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void signUpUser(SignUpDto signUpDto, HttpServletRequest request) {
+    public SignUpUserResponseDto signUpUser(SignUpDto signUpDto, HttpServletRequest request) {
         log.debug("session Id : {}", request.getSession().getId());
         TemporaryUser temporaryUser = temporaryUserRepository.findById(request.getSession().getId()).orElseThrow(() -> {
             throw new ExpireTemporaryUserException();
@@ -58,7 +60,9 @@ public class UserServiceImpl implements UserService{
         }
         log.debug("user : {}", user);
         temporaryUserRepository.deleteById(request.getSession().getId());
-        userRepository.save(user);
+        user = userRepository.save(user);
+
+        return new SignUpUserResponseDto(user.getId());
     }
 
     @Override
@@ -98,5 +102,10 @@ public class UserServiceImpl implements UserService{
         }
         List<UserInfo> userInfoList = userList.stream().map(user -> getUserInfo(user.getNickname())).collect(Collectors.toList());
         return new UserInfoList(userInfoList);
+    }
+
+    @Transactional
+    public void deleteUserByEmail(String email) {
+        userRepository.deleteUserByEmail(email);
     }
 }
