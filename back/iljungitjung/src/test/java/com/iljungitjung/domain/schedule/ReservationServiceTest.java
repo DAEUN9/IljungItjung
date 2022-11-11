@@ -2,6 +2,7 @@ package com.iljungitjung.domain.schedule;
 
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
+import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.schedule.dto.reservation.*;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
@@ -43,10 +44,12 @@ public class ReservationServiceTest{
     private CategoryRepository categoryRepository;
     @MockBean
     private ScheduleRepository scheduleRepository;
+    @MockBean
+    private NotificationService notificationService;
 
     @BeforeEach
     public void init(){
-        reservationService = new ReservationServiceImpl(scheduleRepository, categoryRepository, userRepository, userService);
+        reservationService = new ReservationServiceImpl(scheduleRepository, categoryRepository, userRepository, userService, notificationService);
     }
 
     @Test
