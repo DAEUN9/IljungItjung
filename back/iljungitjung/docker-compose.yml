@@ -17,6 +17,8 @@ services:
 
   redis:
     image: redis
+    environment:
+      - REDIS_PASSWORD=ijij
     restart: unless-stopped
     ports:
       - 6379:6379
