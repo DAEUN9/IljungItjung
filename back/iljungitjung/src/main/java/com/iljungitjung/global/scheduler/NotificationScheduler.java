@@ -24,7 +24,7 @@ import java.util.*;
 public class NotificationScheduler {
     private final ScheduleRepository scheduleRepository;
     private final NotificationService notificationService;
-    final private String BASE_MESSAGE = "일정있정에서 안내드립니다.\n";
+    final private String BASE_MESSAGE = "일정있정에서 오늘 일정 안내드립니다.\n";
     final private String SCHEDULE_GUIDE = "[%s]\n%s - %s\n%s\n";
 
     @Scheduled(cron=" 0 0 10 ? * * ")
@@ -36,7 +36,7 @@ public class NotificationScheduler {
         List<NotificationSchedulerDto> emptyScheduleList = new ArrayList<>();
         String phone;
         for (Schedule schedule : todayScheduleList) {
-            if (checkNotAccepted(schedule)) continue;
+            if (!checkAccepted(schedule)) continue;
             /*
             DB에 폰번호 없음 임시로 null체크
             */
@@ -61,7 +61,7 @@ public class NotificationScheduler {
         return java.sql.Timestamp.valueOf(startDatetime);
     }
 
-    private boolean checkNotAccepted(Schedule schedule) {
+    private boolean checkAccepted(Schedule schedule) {
         if (schedule.getType().equals(Type.ACCEPT)) return true;
         return false;
     }
