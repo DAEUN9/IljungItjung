@@ -43,12 +43,4 @@ public class UserInfo {
             categories.add(new CategoryInfo(category));
         }
     }
-
-    public void convertCategories(List<Category> categoryList){
-        if(categoryList.size() == 0) return;
-        this.categories = new ArrayList<>();
-        for(Category category : categoryList){
-            categories.add(new CategoryInfo(category));
-        }
-    }
 }

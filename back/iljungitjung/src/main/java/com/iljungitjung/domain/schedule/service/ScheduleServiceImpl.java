@@ -82,16 +82,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         for(Category category :userTo.getCategoryList()){
             categoryList.add(new CategoryViewResponseDto(category));
         }
-        responseDtos = new ScheduleViewResponseDto(categoryList, requestList, acceptList, blockList, cancelList);
-
-
-        List<CategoryViewResponseDto> categoryList = new ArrayList<>();
-        for(Category category :userTo.getCategoryList()){
-            categoryList.add(new CategoryViewResponseDto(category));
-        }
-
         ScheduleViewResponseDto responseDtos = new ScheduleViewResponseDto(categoryList, requestList, acceptList, blockList, cancelList);
-
         return responseDtos;
     }
 
