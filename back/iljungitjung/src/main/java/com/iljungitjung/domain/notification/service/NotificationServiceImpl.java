@@ -61,6 +61,18 @@ public class NotificationServiceImpl implements NotificationService{
         String date = makeDateFormat(schedule.getStartDate());
         String startTime = makeTimeFormat(schedule.getStartDate());
         String endTime = makeTimeFormat(schedule.getEndDate());
+        /*
+            DB에 폰번호 없음 임시로 null체크
+        */
+        String phone;
+        String phone2;
+        try {
+            phone = schedule.getPhonenum();
+            phone2 = schedule.getUserTo().getPhonenum();
+        } catch (Exception e) {
+            return new NotificationMessageDto("01000000000", "임시문자");
+        }
+        //
         if (schedule.getType().equals(Type.CANCEL) && schedule.getCancelFrom().equals("제공자")) {
             return new NotificationMessageDto(schedule.getPhonenum(), String.format(REFUSE_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getCategoryName()));
         }
