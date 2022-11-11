@@ -18,6 +18,10 @@ public class NotificationResponseDto {
     @JsonProperty("statusName")
     private String statusName;
 
+    public NotificationResponseDto() {
+
+    }
+
     public NotificationResponseDto(String statusCode) {
         this.statusCode = statusCode;
     }

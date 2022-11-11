@@ -35,8 +35,7 @@ public class NotificationNcloud {
     public NotificationResponseDto sendNcloud(HttpEntity<NotificationMessageRequestDto> body) {
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.exchange(MESSAGE_REQUEST_URL + NCLOUD_SERVICE_ID + "/messages",
-                        HttpMethod.POST, body, NotificationResponseDto.class)
-                .getBody();
+                        HttpMethod.POST, body, NotificationResponseDto.class).getBody();
     }
     public HttpHeaders makeHeaders() {
         Long time = System.currentTimeMillis();

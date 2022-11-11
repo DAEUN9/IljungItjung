@@ -44,7 +44,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     public NotificationResponseDto checkStatusEqualsAccpeted(NotificationResponseDto response){
-        if(response.getStatusCode().equals(HttpStatus.ACCEPTED.toString())) return response;
+        if(response.getStatusCode().equals("202")) return response;
         throw new FailSendMessageException();
     }
 

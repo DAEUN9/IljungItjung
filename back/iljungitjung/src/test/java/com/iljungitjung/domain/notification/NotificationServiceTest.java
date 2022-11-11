@@ -55,10 +55,10 @@ public class NotificationServiceTest {
 
 
         when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
+        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
 
         NotificationResponseDto responseDto = notificationService.sendMessage(notificationRequestDto);
-        Assertions.assertEquals(responseDto.getStatusCode(), HttpStatus.ACCEPTED.toString());
+        Assertions.assertEquals(responseDto.getStatusCode(), "202");
     }
 
     @Test
@@ -88,7 +88,7 @@ public class NotificationServiceTest {
                 .phonenum(phone).build();
 
         when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
+        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
 
         notificationService.autoReservationMessage(schedule);
         verify(notificationNcloud, times(1)).makeHeaders();
@@ -122,7 +122,7 @@ public class NotificationServiceTest {
         schedule.accpeted();
 
         when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
+        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
 
         notificationService.autoReservationMessage(schedule);
         verify(notificationNcloud, times(1)).makeHeaders();
@@ -159,7 +159,7 @@ public class NotificationServiceTest {
         schedule.canceled(cancelFrom, "");
 
         when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
+        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
 
         notificationService.autoReservationMessage(schedule);
         verify(notificationNcloud, times(1)).makeHeaders();
@@ -196,7 +196,7 @@ public class NotificationServiceTest {
         schedule.canceled(cancelFrom, "");
 
         when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
+        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
 
         notificationService.autoReservationMessage(schedule);
         verify(notificationNcloud, times(1)).makeHeaders();
@@ -232,7 +232,7 @@ public class NotificationServiceTest {
         schedule.deleted();
 
         when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
+        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
 
         notificationService.autoReservationMessage(schedule);
     }

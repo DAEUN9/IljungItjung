@@ -71,13 +71,13 @@ public class NotificationControllerTest {
         messageList.add(notificationMessageDto);
         String content = objectMapper.writeValueAsString(new NotificationRequestDto(messageList));
 
-        when(notificationService.sendMessage(any(NotificationRequestDto.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
+        when(notificationService.sendMessage(any(NotificationRequestDto.class))).thenReturn(new NotificationResponseDto("202"));
         //then
         mockMvc.perform(post("/notifications")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data.statusCode").value(HttpStatus.ACCEPTED.toString()));
+                .andExpect(jsonPath("data.statusCode").value("202"));
     }
 }
