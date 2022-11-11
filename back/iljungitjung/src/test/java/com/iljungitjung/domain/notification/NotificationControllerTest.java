@@ -41,66 +41,40 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @DisplayName("알림 컨트롤러")
-//@AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-//@WebMvcTest(NotificationController.class)
 public class NotificationControllerTest {
-//    private MockMvc mockMvc;
-//    @InjectMocks
-//    private NotificationController notificationController;
-//    @MockBean
-//    private NotificationService notificationService;
-//    @MockBean
-//    private RedisUserRepository redisUserRepository;
-//    @MockBean
-//    private UserRepository userRepository;
-//    private ObjectMapper objectMapper;
-//    private MockHttpSession session;
-//
-//    @BeforeEach
-//    public void init() {
-//        mockMvc = MockMvcBuilders.standaloneSetup(notificationController)
-//                .build();
-//        objectMapper = new ObjectMapper();
-//        session = new MockHttpSession();
-//    }
-//
-//    @Test
-//    @DisplayName("메시지 전송")
-//    public void A() throws Exception {
-//        //given
-//        String message = "하이";
-//        String phone = "01000000000";
-//        String email = "email@email";
-//        String nickname = "닉넴";
-//
-//        User user = User.builder()
-//                .email(email)
-//                .nickname(nickname)
-//                .build();
-//        RedisUser redisUser = RedisUser.builder()
-//                .id(session.getId())
-//                .email(email)
-//                .nickname(nickname)
-//                .build();
-//
-//        NotificationMessageDto notificationMessageDto = new NotificationMessageDto(phone, message);
-//        List<NotificationMessageDto> messageList = new ArrayList<>();
-//        messageList.add(notificationMessageDto);
-//        String content = objectMapper.writeValueAsString(new NotificationRequestDto(messageList));
-//
-//        when(userRepository.save(user)).thenReturn(user);
-//        when(userRepository.findUserByEmail(email)).thenReturn(Optional.of(user));
-//        when(userRepository.existsUserByEmail(email)).thenReturn(true);
-//        when(redisUserRepository.findById(session.getId())).thenReturn(Optional.ofNullable(redisUser));
-//        when(redisUserRepository.existsById(session.getId())).thenReturn(true);
-//        when(redisUserRepository.save(redisUser)).thenReturn(redisUser);
-//        when(notificationService.sendMessage(any(NotificationRequestDto.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
-//        //then
-//        mockMvc.perform(post("/notifications")
-//                .content(content).session(session)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
+    private MockMvc mockMvc;
+    private NotificationController notificationController;
+    @MockBean
+    private NotificationService notificationService;
+    private ObjectMapper objectMapper;
+
+    @BeforeEach
+    public void init() {
+        notificationController = new NotificationController(notificationService);
+        mockMvc = MockMvcBuilders.standaloneSetup(notificationController)
+                .build();
+        objectMapper = new ObjectMapper();
+    }
+
+    @Test
+    @DisplayName("메시지 전송")
+    public void A() throws Exception {
+        //given
+        String message = "하이";
+        String phone = "01000000000";
+
+        NotificationMessageDto notificationMessageDto = new NotificationMessageDto(phone, message);
+        List<NotificationMessageDto> messageList = new ArrayList<>();
+        messageList.add(notificationMessageDto);
+        String content = objectMapper.writeValueAsString(new NotificationRequestDto(messageList));
+
+        when(notificationService.sendMessage(any(NotificationRequestDto.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
+        //then
+        mockMvc.perform(post("/notifications")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }

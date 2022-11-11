@@ -176,6 +176,7 @@ public class NotificationServiceTest {
         String userToNickname = "2";
         String phone = "01000000000";
         String email = "email";
+        String cancelFrom = "사용자";
 
         User userFrom = User.builder()
                 .nickname(userFromNickname)
@@ -191,7 +192,7 @@ public class NotificationServiceTest {
                 .startDate(new Date())
                 .categoryName(categoryName)
                 .phonenum(phone).build();
-        String cancelFrom = "사용자";
+
         schedule.canceled(cancelFrom, "");
 
         when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());

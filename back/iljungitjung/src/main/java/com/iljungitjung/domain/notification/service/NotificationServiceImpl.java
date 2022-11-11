@@ -43,7 +43,7 @@ public class NotificationServiceImpl implements NotificationService{
         return new HttpEntity<>(jsonBody, headers);
     }
 
-    private NotificationResponseDto checkStatusEqualsAccpeted(NotificationResponseDto response){
+    public NotificationResponseDto checkStatusEqualsAccpeted(NotificationResponseDto response){
         if(response.getStatusCode().equals(HttpStatus.ACCEPTED.toString())) return response;
         throw new FailSendMessageException();
     }
