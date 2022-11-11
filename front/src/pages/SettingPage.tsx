@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { IoHelpCircleOutline } from "react-icons/io5";
-import { IconButton, Tab, Tabs } from "@mui/material";
+import { Fab, IconButton, Tab, Tabs } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { BsQuestionLg } from "react-icons/bs";
+import { ThemeProvider } from "@emotion/react";
 
 import Sidebar from "@components/common/Sidebar";
 import styles from "@styles/Setting/Setting.module.scss";
@@ -13,6 +15,11 @@ import CustomModal from "@components/common/CustomModal";
 import iljung from "@assets/iljung.png";
 import SetCalendar from "@components/Setting/SetCalendar";
 import TabContent from "@components/Setting/Category/TabContent";
+import theme from "@components/common/theme";
+import {
+  CalendarTooltip,
+  TooltipContent,
+} from "@components/Setting/CalendarTooltip";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -20,7 +27,7 @@ interface TabPanelProps {
   value: number;
 }
 
-function TabPanel(props: TabPanelProps) {
+const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
 
   return (
@@ -28,7 +35,7 @@ function TabPanel(props: TabPanelProps) {
       {value === index && <div>{children}</div>}
     </div>
   );
-}
+};
 
 const SettingPage = () => {
   const [tab, setTab] = useState(0);
@@ -61,6 +68,15 @@ const SettingPage = () => {
       <div className={styles["content"]}>
         <div className={styles["calendar-container"]}>
           <SetCalendar />
+          <ThemeProvider theme={theme}>
+            <CalendarTooltip title={TooltipContent()}>
+              <div className={styles["fab-wrapper"]}>
+                <Fab size="small" color="primary">
+                  <BsQuestionLg />
+                </Fab>
+              </div>
+            </CalendarTooltip>
+          </ThemeProvider>
         </div>
         <div className={styles["right"]}>
           <div className={styles["button-group"]}>

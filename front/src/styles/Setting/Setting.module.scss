@@ -12,6 +12,13 @@
 .calendar-container {
   width: 60%;
   height: 100%;
+  position: relative;
+
+  & .fab-wrapper {
+    position: absolute;
+    right: 3%;
+    bottom: 3%;
+  }
 }
 
 .right {
