@@ -2,8 +2,8 @@ package com.iljungitjung.domain.schedule.service;
 
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
-import com.iljungitjung.domain.category.exception.NoGrantDeleteCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
+import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.schedule.dto.reservation.*;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
@@ -36,6 +36,7 @@ public class ReservationServiceImpl implements ReservationService{
 
     private final UserRepository userRepository;
     private final UserService userService;
+    private final NotificationService notificasionService;
 
     @Override
     @Transactional
@@ -68,6 +69,7 @@ public class ReservationServiceImpl implements ReservationService{
         schedule.setScheduleRequestList(user);
         schedule.setScheduleResponseList(userTo);
         schedule = scheduleRepository.save(schedule);
+        notificasionService.autoReservationMessage(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -89,6 +91,7 @@ public class ReservationServiceImpl implements ReservationService{
                 cancelFrom="제공자";
                 schedule.canceled(cancelFrom, reservationManageRequestDto.getReason());
             }
+
         }else if(user.getId()==schedule.getUserFrom().getId()){
             if(reservationManageRequestDto.isAccept()){
                 throw new NoGrantAcceptScheduleException();
@@ -99,7 +102,7 @@ public class ReservationServiceImpl implements ReservationService{
         }else{
             throw new NoGrantAccessScheduleException();
         }
-
+        notificasionService.autoReservationMessage(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -114,6 +117,8 @@ public class ReservationServiceImpl implements ReservationService{
 
         Long scheduleId = schedule.getId();
         scheduleRepository.delete(schedule);
+        schedule.deleted();
+        notificasionService.autoReservationMessage(schedule);
         return new ReservationIdResponseDto(scheduleId);
     }
 
