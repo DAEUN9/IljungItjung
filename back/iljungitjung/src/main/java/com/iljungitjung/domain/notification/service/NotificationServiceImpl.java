@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,43 +24,32 @@ public class NotificationServiceImpl implements NotificationService{
 
     @Value("${message.ncloud.phone}")
     private String SENDER_PHONE;
-    private final String SPACE = " ";
-    private final String NEWLINE = "\n";
-    private final String METHOD = "POST";
-    private final String SIGNATURE_URL = "/sms/v2/services/";
-    private final String MESSAGE_REQUEST_URL = "https://sens.apigw.ntruss.com/sms/v2/services/";
-    private final NotificationNcloud notificationNcloud;
-
-    @Override
-    public NotificationResponseDto sendMessage(NotificationRequestDto requestDto) {
-        HttpEntity<NotificationMessageRequestDto> body = makeBody(requestDto);
-        NotificationResponseDto response = notificationNcloud.sendNcloud(body);
-        checkStatus(response.getStatusCode());
-        return response;
-    }
-
-    @Override
-    public HttpEntity<NotificationMessageRequestDto> makeBody(NotificationRequestDto requestDto) {
-        HttpHeaders headers = notificationNcloud.makeHeaders();
-        NotificationMessageRequestDto jsonBody = new NotificationMessageRequestDto(requestDto, SENDER_PHONE);
-        return new HttpEntity<>(jsonBody, headers);
-    }
-
-
-    private void checkStatus (String status) {
-        if (!status.equals("202")) {
-            throw new FailSendMessageException();
-        }
-    }
-
     private final String ACCEPT_BASE = "일정있정에서 안내드립니다.\n[%s]\n%s\n%s - %s\n[%s]예약이 승인되었습니다.";
     private final String CANCEL_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]\n[%s]님의 예약 신청이 취소되었습니다.\n";
     private final String REFUSE_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]\n [%s] 예약 신청이 거절되었습니다.\n";
     private final String DELETE_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]의 [%s]예약이 취소되었습니다.\n";
     private final String REQUEST_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]님이 [%s]예약을 신청 하셨습니다.\n홈페이지에서 확인해주세요.";
+    private final NotificationNcloud notificationNcloud;
 
     @Override
-    public void buildTemplate(Schedule schedule) {
+    public NotificationResponseDto sendMessage(NotificationRequestDto requestDto) {
+        HttpEntity<NotificationMessageRequestDto> body = makeBody(requestDto);
+        return checkStatusEqualsAccpeted(notificationNcloud.sendNcloud(body));
+    }
+
+    private HttpEntity<NotificationMessageRequestDto> makeBody(NotificationRequestDto requestDto) {
+        HttpHeaders headers = notificationNcloud.makeHeaders();
+        NotificationMessageRequestDto jsonBody = new NotificationMessageRequestDto(requestDto, SENDER_PHONE);
+        return new HttpEntity<>(jsonBody, headers);
+    }
+
+    private NotificationResponseDto checkStatusEqualsAccpeted(NotificationResponseDto response){
+        if(response.getStatusCode().equals(HttpStatus.ACCEPTED.toString())) return response;
+        throw new FailSendMessageException();
+    }
+
+    @Override
+    public void autoReservationMessage(Schedule schedule) {
         NotificationMessageDto message = makeMessage(schedule);
         List<NotificationMessageDto> messageList = new ArrayList<>();
         messageList.add(message);
@@ -68,15 +58,13 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     private NotificationMessageDto makeMessage(Schedule schedule) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        String date = dateFormat.format(schedule.getStartDate());
-        String startTime = timeFormat.format(schedule.getStartDate());
-        String endTime = timeFormat.format(schedule.getEndDate());
-        if (schedule.getType().equals(Type.CANCEL)) {
-            if (schedule.getCancelFrom().equals("제공자")) {
-                return new NotificationMessageDto(schedule.getPhonenum(), String.format(REFUSE_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getCategoryName()));
-            }
+        String date = makeDateFormat(schedule.getStartDate());
+        String startTime = makeTimeFormat(schedule.getStartDate());
+        String endTime = makeTimeFormat(schedule.getEndDate());
+        if (schedule.getType().equals(Type.CANCEL) && schedule.getCancelFrom().equals("제공자")) {
+            return new NotificationMessageDto(schedule.getPhonenum(), String.format(REFUSE_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getCategoryName()));
+        }
+        if (schedule.getType().equals(Type.CANCEL) && schedule.getCancelFrom().equals("사용자")) {
             return new NotificationMessageDto(schedule.getUserTo().getPhonenum(), String.format(CANCEL_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getUserTo().getNickname()));
         }
         if (schedule.getType().equals(Type.ACCEPT)) {
@@ -86,6 +74,16 @@ public class NotificationServiceImpl implements NotificationService{
             return new NotificationMessageDto(schedule.getUserTo().getPhonenum(), String.format(REQUEST_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getCategoryName()));
         }
         return new NotificationMessageDto(schedule.getPhonenum(), String.format(DELETE_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getCategoryName()));
-
     }
+
+    private String makeDateFormat(Date date) {
+        SimpleDateFormat base = new SimpleDateFormat("yyyy-MM-dd");
+        return base.format(date);
+    }
+
+    private String makeTimeFormat(Date date) {
+        SimpleDateFormat base = new SimpleDateFormat("HH:mm");
+        return base.format(date);
+    }
+
 }

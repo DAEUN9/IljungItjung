@@ -19,12 +19,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -52,13 +54,13 @@ public class NotificationServiceTest {
         List<NotificationMessageDto> messageList = new ArrayList<>();
         messageList.add(notificationMessageDto);
         NotificationRequestDto notificationRequestDto = new NotificationRequestDto(messageList);
-        HttpEntity<NotificationMessageRequestDto> body = notificationService.makeBody(notificationRequestDto);
 
-        when(notificationNcloud.sendNcloud(body)).thenReturn(new NotificationResponseDto("202"));
+
+        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
 
         NotificationResponseDto responseDto = notificationService.sendMessage(notificationRequestDto);
-
-        Assertions.assertEquals(responseDto.getStatusCode(), "202");
+        Assertions.assertEquals(responseDto.getStatusCode(), HttpStatus.ACCEPTED.toString());
     }
 
     @Test
@@ -68,23 +70,24 @@ public class NotificationServiceTest {
         String categoryName = "파마";
         String color = "#000000";
 
-        Long scheduleId = 2L;
-        Long userToId = 1L;
-        Long userFromId = 2L;
         String userFromNickname = "1";
         String userToNickname = "2";
         String phone = "01000000000";
         String email = "email";
 
-        User userFrom = User.builder().nickname(userFromNickname).email(email).build();
-        User userTo = User.builder().nickname(userToNickname).phonenum(phone).build();
-        userTo.setId(userToId);
-        userFrom.setId(userFromId);
+        User userFrom = User.builder()
+                .nickname(userFromNickname)
+                .email(email).build();
+        User userTo = User.builder()
+                .nickname(userToNickname)
+                .phonenum(phone).build();
         Schedule schedule = Schedule.builder().type(Type.REQUEST).userFrom(userFrom).userTo(userTo)
                 .endDate(new Date()).startDate(new Date()).categoryName(categoryName).phonenum(phone).color(color).build();
-        schedule.setId(scheduleId);
 
-        notificationService.buildTemplate(schedule);
+        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
+
+        notificationService.autoReservationMessage(schedule);
     }
 
     @Test
@@ -93,24 +96,32 @@ public class NotificationServiceTest {
         String categoryName = "파마";
         String color = "#000000";
 
-        Long scheduleId = 2L;
-        Long userToId = 1L;
-        Long userFromId = 2L;
         String userFromNickname = "1";
         String userToNickname = "2";
         String phone = "01000000000";
         String email = "email";
 
-        User userFrom = User.builder().nickname(userFromNickname).email(email).build();
-        User userTo = User.builder().nickname(userToNickname).phonenum(phone).build();
-        userTo.setId(userToId);
-        userFrom.setId(userFromId);
-        Schedule schedule = Schedule.builder().type(Type.REQUEST).userFrom(userFrom).userTo(userTo)
-                .endDate(new Date()).startDate(new Date()).categoryName(categoryName).phonenum(phone).color(color).build();
-        schedule.setId(scheduleId);
+        User userFrom = User.builder()
+                .nickname(userFromNickname)
+                .email(email).build();
+        User userTo = User.builder()
+                .nickname(userToNickname)
+                .phonenum(phone).build();
+        Schedule schedule = Schedule.builder()
+                .type(Type.REQUEST)
+                .userFrom(userFrom)
+                .userTo(userTo)
+                .endDate(new Date())
+                .startDate(new Date())
+                .categoryName(categoryName)
+                .phonenum(phone)
+                .color(color).build();
         schedule.accpeted();
 
-        notificationService.buildTemplate(schedule);
+        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
+
+        notificationService.autoReservationMessage(schedule);
     }
 
     @Test
@@ -119,25 +130,35 @@ public class NotificationServiceTest {
         String categoryName = "파마";
         String color = "#000000";
 
-        Long scheduleId = 2L;
-        Long userToId = 1L;
-        Long userFromId = 2L;
         String userFromNickname = "1";
         String userToNickname = "2";
         String phone = "01000000000";
         String email = "email";
-
-        User userFrom = User.builder().nickname(userFromNickname).email(email).build();
-        User userTo = User.builder().nickname(userToNickname).phonenum(phone).build();
-        userTo.setId(userToId);
-        userFrom.setId(userFromId);
-        Schedule schedule = Schedule.builder().type(Type.REQUEST).userFrom(userFrom).userTo(userTo)
-                .endDate(new Date()).startDate(new Date()).categoryName(categoryName).phonenum(phone).color(color).build();
-        schedule.setId(scheduleId);
         String cancelFrom = "제공자";
+
+        User userFrom = User.builder()
+                .nickname(userFromNickname)
+                .email(email)
+                .build();
+        User userTo = User.builder()
+                .nickname(userToNickname)
+                .phonenum(phone).build();
+        Schedule schedule = Schedule.builder()
+                .type(Type.REQUEST)
+                .userFrom(userFrom)
+                .userTo(userTo)
+                .endDate(new Date())
+                .startDate(new Date())
+                .categoryName(categoryName)
+                .phonenum(phone)
+                .color(color).build();
+
         schedule.canceled(cancelFrom, "");
 
-        notificationService.buildTemplate(schedule);
+        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
+
+        notificationService.autoReservationMessage(schedule);
 
     }
 
@@ -147,25 +168,33 @@ public class NotificationServiceTest {
         String categoryName = "파마";
         String color = "#000000";
 
-        Long scheduleId = 2L;
-        Long userToId = 1L;
-        Long userFromId = 2L;
         String userFromNickname = "1";
         String userToNickname = "2";
         String phone = "01000000000";
         String email = "email";
 
-        User userFrom = User.builder().nickname(userFromNickname).email(email).build();
-        User userTo = User.builder().nickname(userToNickname).phonenum(phone).build();
-        userTo.setId(userToId);
-        userFrom.setId(userFromId);
-        Schedule schedule = Schedule.builder().type(Type.REQUEST).userFrom(userFrom).userTo(userTo)
-                .endDate(new Date()).startDate(new Date()).categoryName(categoryName).phonenum(phone).color(color).build();
-        schedule.setId(scheduleId);
+        User userFrom = User.builder()
+                .nickname(userFromNickname)
+                .email(email).build();
+        User userTo = User.builder()
+                .nickname(userToNickname)
+                .phonenum(phone).build();
+        Schedule schedule = Schedule.builder()
+                .type(Type.REQUEST)
+                .userFrom(userFrom)
+                .userTo(userTo)
+                .endDate(new Date())
+                .startDate(new Date())
+                .categoryName(categoryName)
+                .phonenum(phone)
+                .color(color).build();
         String cancelFrom = "사용자";
         schedule.canceled(cancelFrom, "");
 
-        notificationService.buildTemplate(schedule);
+        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
+
+        notificationService.autoReservationMessage(schedule);
     }
 
     @Test
@@ -174,24 +203,34 @@ public class NotificationServiceTest {
         String categoryName = "파마";
         String color = "#000000";
 
-        Long scheduleId = 2L;
-        Long userToId = 1L;
-        Long userFromId = 2L;
         String userFromNickname = "1";
         String userToNickname = "2";
         String phone = "01000000000";
         String email = "email";
 
-        User userFrom = User.builder().nickname(userFromNickname).email(email).build();
-        User userTo = User.builder().nickname(userToNickname).phonenum(phone).build();
-        userTo.setId(userToId);
-        userFrom.setId(userFromId);
-        Schedule schedule = Schedule.builder().type(Type.ACCEPT).userFrom(userFrom).userTo(userTo)
-                .endDate(new Date()).startDate(new Date()).categoryName(categoryName).phonenum(phone).color(color).build();
-        schedule.setId(scheduleId);
+        User userFrom = User.builder()
+                .nickname(userFromNickname)
+                .email(email)
+                .build();
+        User userTo = User.builder()
+                .nickname(userToNickname)
+                .phonenum(phone)
+                .build();
+        Schedule schedule = Schedule.builder()
+                .type(Type.ACCEPT)
+                .userFrom(userFrom)
+                .userTo(userTo)
+                .endDate(new Date())
+                .startDate(new Date())
+                .categoryName(categoryName)
+                .phonenum(phone)
+                .color(color).build();
         schedule.deleted();
 
-        notificationService.buildTemplate(schedule);
+        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.ACCEPTED.toString()));
+
+        notificationService.autoReservationMessage(schedule);
     }
 
 }

@@ -10,6 +10,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface NotificationService {
     NotificationResponseDto sendMessage(NotificationRequestDto requestDto);
-    void buildTemplate(Schedule schedule);
-    HttpEntity<NotificationMessageRequestDto> makeBody(NotificationRequestDto requestDto);
+    void autoReservationMessage(Schedule schedule);
 }
