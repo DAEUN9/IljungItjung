@@ -1,12 +1,15 @@
-
 import { SettingCategoryState } from "@components/types/types";
 
+// 카테고리 관련
 const SET_CATEGORY = "setting/SET_CATEGORY" as const;
 const ADD_CATEGORY = "setting/ADD_CATEGORY" as const;
 const DEL_CATEGORY = "setting/DEL_CATEGORY" as const;
 const EDIT_CATEGORY = "setting/EDIT_CATEGORY" as const;
 const SELECT_CATEGORY = "setting/SELECT_CATEGORY" as const;
 const TOGGLE_LOCK = "setting/TOGGLE_LOCK" as const;
+
+// 달력 관련
+const TOGGLE_SHADE = "setting/TOGGLE_SHADE" as const;
 
 export const setCategory = (categories: SettingCategoryState[]) => ({
   type: SET_CATEGORY,
@@ -38,13 +41,19 @@ export const toggleLock = (index: number) => ({
   payload: index,
 });
 
+export const toggleShade = (date: string) => ({
+  type: TOGGLE_SHADE,
+  payload: date,
+});
+
 type SettingAction =
   | ReturnType<typeof setCategory>
   | ReturnType<typeof addCategory>
   | ReturnType<typeof delCategory>
   | ReturnType<typeof editCategory>
   | ReturnType<typeof selectCategory>
-  | ReturnType<typeof toggleLock>;
+  | ReturnType<typeof toggleLock>
+  | ReturnType<typeof toggleShade>;
 
 interface SettingState {
   // 카테고리 관련 상태
@@ -52,12 +61,14 @@ interface SettingState {
   selectedCategory: SettingCategoryState;
   // 달력 관련 상태
   lock: boolean[];
+  set: Set<string>;
 }
 
 const initialState: SettingState = {
   categories: [{ name: "기본", color: "#D5EAEF", hour: "1", min: "00" }],
   selectedCategory: { name: "", color: "", hour: "", min: "" },
   lock: [false, false, false, false, false, false, false],
+  set: new Set<string>(),
 };
 
 function setting(
@@ -104,6 +115,16 @@ function setting(
           return day;
         }),
       };
+    case TOGGLE_SHADE: {
+      const copy: Set<string> = new Set<string>(state.set);
+      if (copy.has(action.payload)) copy.delete(action.payload);
+      else copy.add(action.payload);
+
+      return {
+        ...state,
+        set: copy,
+      };
+    }
     default:
       return state;
   }
