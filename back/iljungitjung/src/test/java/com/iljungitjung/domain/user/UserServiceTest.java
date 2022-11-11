@@ -1,5 +1,6 @@
 package com.iljungitjung.domain.user;
 
+import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.user.dto.SignUpDto;
 import com.iljungitjung.domain.user.dto.SignUpUserResponseDto;
 import com.iljungitjung.domain.user.dto.UserInfo;
@@ -13,11 +14,14 @@ import com.iljungitjung.global.login.repository.RedisUserRepository;
 import com.iljungitjung.global.login.repository.TemporaryUserRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -51,7 +55,6 @@ public class UserServiceTest {
         //given
         String nickname = "닉네임";
         String description = "자기소개";
-        String phonenum = "01000000000";
 
         String id = "1";
         String email = "email@naver.com";
@@ -59,7 +62,7 @@ public class UserServiceTest {
 
         Long userId = 1L;
 
-        SignUpDto signUpDto = new SignUpDto(nickname, description, phonenum);
+        SignUpDto signUpDto = new SignUpDto(nickname, description);
 
         User user = signUpDto.toEntity();
         user.setId(userId);

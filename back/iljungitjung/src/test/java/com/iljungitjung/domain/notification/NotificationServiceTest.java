@@ -1,8 +1,6 @@
 package com.iljungitjung.domain.notification;
 
-import com.iljungitjung.domain.category.service.CategoryServiceImpl;
 import com.iljungitjung.domain.notification.dto.NotificationMessageDto;
-import com.iljungitjung.domain.notification.dto.NotificationMessageRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.service.NotificationService;
@@ -13,13 +11,9 @@ import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.global.scheduler.NotificationNcloud;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
