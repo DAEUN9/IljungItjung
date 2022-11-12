@@ -55,7 +55,6 @@ public class UserServiceTest {
         //given
         String nickname = "닉네임";
         String description = "자기소개";
-        String phonenum = "01000000000";
 
         String id = "1";
         String email = "email@naver.com";
@@ -63,7 +62,7 @@ public class UserServiceTest {
 
         Long userId = 1L;
 
-        SignUpDto signUpDto = new SignUpDto(nickname, description, phonenum);
+        SignUpDto signUpDto = new SignUpDto(nickname, description);
 
         User user = signUpDto.toEntity();
         user.setId(userId);
