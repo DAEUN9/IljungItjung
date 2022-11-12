@@ -80,7 +80,7 @@ export default function CustomToolbar() {
     onToggleLock(index);
 
     // lockMap의 저장된 시간들을 지운다.
-    onDeleteLockShade(0, "", true);
+    onDeleteLockShade((index + 6) % 7, "", true);
   };
 
   return (
