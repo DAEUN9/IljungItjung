@@ -165,28 +165,27 @@ function setting(
       };
     }
     case DELETE_LOCK_SHADE: {
+      const copy: Map<number, string[]> = new Map<number, string[]>(
+        state.lockMap
+      );
+
       // all 옵션이 주어지면 전부 지운다.
       if (action.payload.all) {
-        return {
-          ...state,
-          lockMap: new Map<number, string[]>(),
-        };
+        const arr: string[] = [];
+        copy.set(action.payload.day, arr);
       } else {
-        const copy: Map<number, string[]> = new Map<number, string[]>(
-          state.lockMap
-        );
         let list = copy.get(action.payload.day);
 
         if (list) {
           list = list.filter((item) => item !== action.payload.time);
           copy.set(action.payload.day, list);
         }
-
-        return {
-          ...state,
-          lockMap: copy,
-        };
       }
+
+      return {
+        ...state,
+        lockMap: copy,
+      };
     }
     default:
       return state;
