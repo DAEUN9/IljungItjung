@@ -1,24 +1,18 @@
 import { ViewState } from "@devexpress/dx-react-scheduler";
 import { Scheduler } from "@devexpress/dx-react-scheduler-material-ui";
-import { useEffect, useState } from "react";
-import { faLock, faUnlock } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 
 import CustomDateNavigator from "@components/Calendar/common/CustomDateNavigator";
 import CustomTodayButton from "@components/Calendar/common/CustomTodayButton";
 import CustomToolbar from "@components/Calendar/common/CustomToolbar";
-
 import SettingAppointments from "@components/Setting/SettingAppointments";
-import "@styles/Setting/SetCalendar.scss";
-import { RootState } from "@modules/index";
-import { toggleLock } from "@modules/setting";
 import SettingWeekView from "@components/Setting/SettingWeekView";
+import "@styles/Setting/SetCalendar.scss";
 
 const data = [
   {
     id: 1,
-    startDate: "2022-10-31T09:45",
+    startDate: "2022-10-31T09:30",
     endDate: "2022-10-31T11:00",
     title: "목욕",
     nickname: "곰고구마",
@@ -50,15 +44,6 @@ const data = [
 
 const SetCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-
-  const { lock, lockMap } = useSelector((state: RootState) => state.setting);
-  const dispatch = useDispatch();
-  const onToggleLock = (index: number) => dispatch(toggleLock(index));
-
-  useEffect(() => {
-    console.log(lock);
-    console.log(lockMap);
-  });
 
   return (
     <Scheduler data={data} locale="ko-KR" firstDayOfWeek={1}>

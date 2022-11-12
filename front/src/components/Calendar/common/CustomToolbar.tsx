@@ -12,7 +12,7 @@ import { IoSettingsSharp } from "react-icons/io5";
 import styles from "@styles/Calendar/Calendar.module.scss";
 import { RootState } from "@modules/index";
 import { deleteLockShade, lockShade, toggleLock } from "@modules/setting";
-import { days, makeFormat } from "@components/Calendar/common/util";
+import { days } from "@components/Calendar/common/util";
 
 const SettingButton = () => {
   const navigate = useNavigate();
@@ -80,7 +80,7 @@ export default function CustomToolbar() {
     onToggleLock(index);
 
     // lockMap의 저장된 시간들을 지운다.
-    onDeleteLockShade("", "", true);
+    onDeleteLockShade(0, "", true);
   };
 
   return (
