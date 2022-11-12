@@ -50,46 +50,15 @@ const data = [
 
 const SetCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const lockElement = <FontAwesomeIcon icon={faLock} />;
-  const unlockElement = <FontAwesomeIcon icon={faUnlock} />;
 
-  const isLocked = useSelector((state: RootState) => state.setting.lock);
+  const { lock, lockMap } = useSelector((state: RootState) => state.setting);
   const dispatch = useDispatch();
   const onToggleLock = (index: number) => dispatch(toggleLock(index));
 
   useEffect(() => {
-    console.log(isLocked);
+    console.log(lock);
+    console.log(lockMap);
   });
-
-  // useEffect(() => {
-  //   const dayList = document.getElementsByClassName("Cell-dayView");
-
-  //   for (let i = 0; i < dayList.length; i++) {
-  //     const lock = document.createElement("div");
-  //     lock.className = "lock";
-
-  //     lock.addEventListener("click", () => {
-  //       onToggleLock(i);
-  //       console.log(isLocked);
-  //     });
-
-  //     dayList[i].appendChild(lock);
-  //     console.log(dayList[i]);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   const lockElements = document.getElementsByClassName("lock");
-  //   for (let i = 0; i < lockElements.length; i++) {
-  //     let staticElement;
-
-  //     // 잠금된 요일이면 잠금 아이콘 출력
-  //     if (isLocked[i]) staticElement = renderToStaticMarkup(lockElement);
-  //     else staticElement = renderToStaticMarkup(unlockElement);
-
-  //     lockElements[i].innerHTML = `${staticElement}`;
-  //   }
-  // }, [isLocked]);
 
   return (
     <Scheduler data={data} locale="ko-KR" firstDayOfWeek={1}>
