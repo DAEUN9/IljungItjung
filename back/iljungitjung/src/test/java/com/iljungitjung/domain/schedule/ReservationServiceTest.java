@@ -49,7 +49,7 @@ public class ReservationServiceTest{
 
     @BeforeEach
     public void init(){
-        reservationService = new ReservationServiceImpl(scheduleRepository, categoryRepository, userRepository, userService, notificationService);
+        reservationService = new ReservationServiceImpl(scheduleRepository, categoryRepository, userRepository, userService);
     }
 
     @Test
@@ -252,10 +252,9 @@ public class ReservationServiceTest{
         when(userService.findUserBySessionId(httpSession)).thenReturn(userTo);
         when(scheduleRepository.findScheduleById(scheduleId)).thenReturn(schedule);
 
-        ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationDelete(scheduleId, reason, httpSession);
+        reservationService.reservationDelete(scheduleId, reason, httpSession);
 
         //then
-        Assertions.assertEquals(reservationIdResponseDto.getId(), scheduleId);
 
     }
 

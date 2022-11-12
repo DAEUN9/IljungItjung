@@ -184,10 +184,9 @@ class CategoryServiceTest {
         when(userService.findUserBySessionId(httpSession)).thenReturn(user);
         when(categoryRepository.findById(categoryId)).thenReturn(category);
 
-        CategoryIdResponseDto categoryIdResponseDto = categoryService.deleteCategory(categoryId, httpSession);
+        categoryService.deleteCategory(categoryId, httpSession);
 
         //then
-        Assertions.assertEquals(categoryIdResponseDto.getId(), 1L);
 
     }
 
