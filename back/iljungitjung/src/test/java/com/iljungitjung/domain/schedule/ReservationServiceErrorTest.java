@@ -52,7 +52,7 @@ public class ReservationServiceErrorTest {
 
     @BeforeEach
     public void init(){
-        reservationService = new ReservationServiceImpl(scheduleRepository, categoryRepository, userRepository, userService, notificationService);
+        reservationService = new ReservationServiceImpl(scheduleRepository, categoryRepository, userRepository, userService);
     }
 
     @Test
@@ -60,12 +60,12 @@ public class ReservationServiceErrorTest {
     void noExistCategoryWhenRequestSchedule(){
         //given
         User user = User.builder().build();
-
+        Optional<User> userTo = Optional.of(User.builder().build());
         ReservationRequestDto reservationRequestDto = new ReservationRequestDto();
 
         //when
         when(userService.findUserBySessionId(httpSession)).thenReturn(user);
-
+        when(userRepository.findUserByNickname(reservationRequestDto.getUserToNickname())).thenReturn(userTo);
 
         //then
         Assertions.assertThrows(NoExistCategoryException.class, () -> {
@@ -78,11 +78,13 @@ public class ReservationServiceErrorTest {
     void inputErrorDateWhenRequestSchedule(){
         //given
         User user = User.builder().build();
+        Optional<User> userTo = Optional.of(User.builder().build());
         ReservationRequestDto reservationRequestDto = new ReservationRequestDto();
         Optional<Category> category = Optional.of(new Category());
 
         //when
         when(userService.findUserBySessionId(httpSession)).thenReturn(user);
+        when(userRepository.findUserByNickname(reservationRequestDto.getUserToNickname())).thenReturn(userTo);
         when(categoryRepository.findByCategoryNameAndUser_Email(any(), any())).thenReturn(category);
 
         //then
