@@ -1,23 +1,18 @@
 import { ViewState } from "@devexpress/dx-react-scheduler";
 import { Scheduler } from "@devexpress/dx-react-scheduler-material-ui";
-import { useEffect, useState } from "react";
-import { faLock, faUnlock } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 
 import CustomDateNavigator from "@components/Calendar/common/CustomDateNavigator";
 import CustomTodayButton from "@components/Calendar/common/CustomTodayButton";
 import CustomToolbar from "@components/Calendar/common/CustomToolbar";
 import SettingAppointments from "@components/Setting/SettingAppointments";
-import "@styles/Setting/SetCalendar.scss";
-import { RootState } from "@modules/index";
-import { toggleLock } from "@modules/setting";
 import SettingWeekView from "@components/Setting/SettingWeekView";
+import "@styles/Setting/SetCalendar.scss";
 
 const data = [
   {
     id: 1,
-    startDate: "2022-10-31T09:45",
+    startDate: "2022-10-31T09:30",
     endDate: "2022-10-31T11:00",
     title: "목욕",
     nickname: "곰고구마",
@@ -49,46 +44,6 @@ const data = [
 
 const SetCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const lockElement = <FontAwesomeIcon icon={faLock} />;
-  const unlockElement = <FontAwesomeIcon icon={faUnlock} />;
-
-  const isLocked = useSelector((state: RootState) => state.setting.lock);
-  const dispatch = useDispatch();
-  const onToggleLock = (index: number) => dispatch(toggleLock(index));
-
-  useEffect(() => {
-    console.log(isLocked);
-  });
-
-  // useEffect(() => {
-  //   const dayList = document.getElementsByClassName("Cell-dayView");
-
-  //   for (let i = 0; i < dayList.length; i++) {
-  //     const lock = document.createElement("div");
-  //     lock.className = "lock";
-
-  //     lock.addEventListener("click", () => {
-  //       onToggleLock(i);
-  //       console.log(isLocked);
-  //     });
-
-  //     dayList[i].appendChild(lock);
-  //     console.log(dayList[i]);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   const lockElements = document.getElementsByClassName("lock");
-  //   for (let i = 0; i < lockElements.length; i++) {
-  //     let staticElement;
-
-  //     // 잠금된 요일이면 잠금 아이콘 출력
-  //     if (isLocked[i]) staticElement = renderToStaticMarkup(lockElement);
-  //     else staticElement = renderToStaticMarkup(unlockElement);
-
-  //     lockElements[i].innerHTML = `${staticElement}`;
-  //   }
-  // }, [isLocked]);
 
   return (
     <Scheduler data={data} locale="ko-KR" firstDayOfWeek={1}>
