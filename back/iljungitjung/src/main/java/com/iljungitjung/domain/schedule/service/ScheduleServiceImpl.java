@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService{
 
