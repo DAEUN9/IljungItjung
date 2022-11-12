@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService{
 
@@ -43,31 +42,37 @@ public class ReservationServiceImpl implements ReservationService{
 
         User user = userService.findUserBySessionId(httpSession);
 
+        User userTo= userRepository.findUserByNickname(reservationRequestDto.getUserToNickname()).orElseThrow(() -> {
+            throw new NoExistUserException();
+        });
+
         Category category = categoryRepository.findByCategoryNameAndUser_Email(reservationRequestDto.getCategoryName(), user.getEmail()).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });
+
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
         Date startDate;
+        String date = category.getTime();
+        Calendar cal = Calendar.getInstance();
+
         try{
             startDate = formatter.parse(reservationRequestDto.getDate()+reservationRequestDto.getStartTime());
         }catch (Exception e){
             throw new DateFormatErrorException();
         }
 
-        String date = category.getTime();
-        Calendar cal = Calendar.getInstance();
         cal.setTime(startDate);
         cal.add(Calendar.MINUTE, Integer.parseInt(date.substring(2)));
         cal.add(Calendar.HOUR, Integer.parseInt(date.substring(0, 2)));
 
         Date endDate = cal.getTime();
-        User userTo= userRepository.findUserByNickname(reservationRequestDto.getUserToNickname()).orElseThrow(() -> {
-            throw new NoExistUserException();
-        });
+
         Schedule schedule = reservationRequestDto.toEntity(startDate, endDate, category.getColor(), Type.REQUEST);
         schedule.setScheduleRequestList(user);
         schedule.setScheduleResponseList(userTo);
+
         schedule = scheduleRepository.save(schedule);
+
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -82,14 +87,15 @@ public class ReservationServiceImpl implements ReservationService{
         });
 
         String cancelFrom = "";
-        if(user.getId()==schedule.getUserTo().getId()){
+
+        if(checkSamePerson(user, schedule.getUserTo())){
             if(reservationManageRequestDto.isAccept()){
                 schedule.accpeted();
             }else{
                 cancelFrom="제공자";
                 schedule.canceled(cancelFrom, reservationManageRequestDto.getReason());
             }
-        }else if(user.getId()==schedule.getUserFrom().getId()){
+        }else if(checkSamePerson(user, schedule.getUserFrom())){
             if(reservationManageRequestDto.isAccept()){
                 throw new NoGrantAcceptScheduleException();
             }else{
@@ -104,17 +110,17 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     @Override
-    public ReservationIdResponseDto reservationDelete(Long id, String reason, HttpSession httpSession) {
+    public void reservationDelete(Long id, String reason, HttpSession httpSession) {
 
         User user = userService.findUserBySessionId(httpSession);
 
-        Schedule schedule = scheduleRepository.findScheduleById(id).get();
+        Schedule schedule = scheduleRepository.findScheduleById(id).orElseThrow(()->{
+            throw new NoExistScheduleException();
+        });
 
-        if(user.getId() != schedule.getUserTo().getId()) throw new NoGrantDeleteScheduleException();
+        if(!checkSamePerson(user, schedule.getUserTo())) throw new NoGrantDeleteScheduleException();
 
-        Long scheduleId = schedule.getId();
         scheduleRepository.delete(schedule);
-        return new ReservationIdResponseDto(scheduleId);
     }
 
     @Override
@@ -145,8 +151,6 @@ public class ReservationServiceImpl implements ReservationService{
 
         User user = userService.findUserBySessionId(httpSession);
 
-        ReservationViewResponseDto responseDtos;
-
         Date startDateFormat;
         Date endDateFormat;
 
@@ -159,29 +163,34 @@ public class ReservationServiceImpl implements ReservationService{
         }
 
 
-        List<Schedule> scheduleList;
-        scheduleList = scheduleRepository.findByUserFrom_IdIs(user.getId());
+        List<Schedule> scheduleList = scheduleRepository.findByUserFrom_IdIs(user.getId());
 
         List<ReservationViewDto> requestList = new ArrayList<>();
         List<ReservationViewDto> acceptList = new ArrayList<>();
         List<ReservationCancelViewDto> cancelList = new ArrayList<>();
 
         for(Schedule schedule : scheduleList){
-            if(startDateFormat.before(schedule.getStartDate()) && startDateFormat.before(schedule.getEndDate()) && endDateFormat.after(schedule.getStartDate()) && endDateFormat.after(schedule.getEndDate())){
-                if(schedule.getType().equals(Type.REQUEST)){
-                    requestList.add(new ReservationViewDto(schedule));
-                }else if(schedule.getType().equals(Type.ACCEPT)){
-                    acceptList.add(new ReservationViewDto(schedule));
-                }else if(schedule.getType().equals(Type.CANCEL)){
-                    cancelList.add(new ReservationCancelViewDto(schedule));
-                }
-            }
+            if(checkDate(schedule, startDateFormat, endDateFormat)) continue;
 
+            if(schedule.getType().equals(Type.REQUEST)){
+                requestList.add(new ReservationViewDto(schedule));
+            }else if(schedule.getType().equals(Type.ACCEPT)){
+                acceptList.add(new ReservationViewDto(schedule));
+            }else if(schedule.getType().equals(Type.CANCEL)){
+                cancelList.add(new ReservationCancelViewDto(schedule));
+            }
         }
-        responseDtos = new ReservationViewResponseDto(requestList, acceptList, cancelList);
+        ReservationViewResponseDto responseDtos = new ReservationViewResponseDto(requestList, acceptList, cancelList);
 
 
         return responseDtos;
     }
-
+    public boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){
+        if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().before(startDateFormat) || schedule.getStartDate().after(endDateFormat) || schedule.getEndDate().after(endDateFormat)) return true;
+        return false;
+    }
+    public boolean checkSamePerson(User user1, User user2){
+        if(user1.getId()==user2.getId()) return true;
+        return false;
+    }
 }

@@ -42,13 +42,13 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{scheduleId}")
-    public ResponseEntity<CommonResponse> reservationDelete(
+    public void reservationDelete(
             @Pattern(regexp = "^[0-9]+$", message = "scheduleId는 숫자만 입력가능합니다.")
             @PathVariable("scheduleId") Long id,
 
             @RequestParam String reason
             , HttpSession httpSession){
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationDelete(id,reason, httpSession)), HttpStatus.OK);
+        reservationService.reservationDelete(id,reason, httpSession);
 
     }
 
