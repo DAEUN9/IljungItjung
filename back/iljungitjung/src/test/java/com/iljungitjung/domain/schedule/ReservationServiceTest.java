@@ -49,7 +49,7 @@ public class ReservationServiceTest{
 
     @BeforeEach
     public void init(){
-        reservationService = new ReservationServiceImpl(scheduleRepository, categoryRepository, userRepository, userService, notificationService);
+        reservationService = new ReservationServiceImpl(scheduleRepository, categoryRepository, userRepository, userService);
     }
 
     @Test

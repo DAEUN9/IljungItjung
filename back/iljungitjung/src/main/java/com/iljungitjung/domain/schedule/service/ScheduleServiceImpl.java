@@ -80,12 +80,6 @@ public class ScheduleServiceImpl implements ScheduleService{
             else if (schedule.getType().equals(Type.BLOCK)) blockList.add(new ScheduleBlockDto(schedule));
 
         }
-        List<CategoryViewResponseDto> categoryList = new ArrayList<>();
-        for(Category category :userTo.getCategoryList()){
-            categoryList.add(new CategoryViewResponseDto(category));
-        }
-        responseDtos = new ScheduleViewResponseDto(categoryList, requestList, acceptList, blockList, cancelList);
-
 
         for(Category category :userTo.getCategoryList()){
             categoryList.add(new CategoryViewResponseDto(category));
