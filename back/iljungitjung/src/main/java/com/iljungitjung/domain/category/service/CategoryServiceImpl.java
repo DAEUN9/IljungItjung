@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService{
     private final CategoryRepository categoryRepository;
