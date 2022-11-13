@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService{
 
@@ -39,16 +38,25 @@ public class ScheduleServiceImpl implements ScheduleService{
             throw new NoExistUserException();
         });
 
+        List<Schedule> scheduleList = scheduleRepository.findByUserTo_IdIs(userTo.getId());
+
+        List<ScheduleViewDto> requestList = new ArrayList<>();
+        List<ScheduleViewDto> acceptList = new ArrayList<>();
+        List<ScheduleBlockDto> blockList = new ArrayList<>();
+        List<ScheduleCancelDto> cancelList = new ArrayList<>();
+        List<CategoryViewResponseDto> categoryList = new ArrayList<>();
+
         boolean myScheduleView = false;
-
-        if(userFrom.getId()==userTo.getId()) myScheduleView = true;
-
         boolean validDate = true;
 
         Date startDateFormat = new Date();
         Date endDateFormat = new Date();
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+
+
+        if(userFrom.getId()==userTo.getId()) myScheduleView = true;
+
         if(startDate==null || endDate == null) validDate=false;
         else{
             try{
@@ -59,17 +67,10 @@ public class ScheduleServiceImpl implements ScheduleService{
             }
         }
 
-        List<Schedule> scheduleList = scheduleRepository.findByUserTo_IdIs(userTo.getId());
-
-        List<ScheduleViewDto> requestList = new ArrayList<>();
-        List<ScheduleViewDto> acceptList = new ArrayList<>();
-        List<ScheduleBlockDto> blockList = new ArrayList<>();
-        List<ScheduleCancelDto> cancelList = new ArrayList<>();
-
         for(Schedule schedule : scheduleList){
             if(validDate && checkDate(schedule, startDateFormat, endDateFormat)) continue;
 
-            if(!myScheduleView){
+            if(myScheduleView){
                 if(schedule.getType().equals(Type.REQUEST)) requestList.add(new ScheduleViewDto(schedule));
                 else if(schedule.getType().equals(Type.CANCEL)) cancelList.add(new ScheduleCancelDto(schedule));
             }
@@ -78,11 +79,13 @@ public class ScheduleServiceImpl implements ScheduleService{
             else if (schedule.getType().equals(Type.BLOCK)) blockList.add(new ScheduleBlockDto(schedule));
 
         }
-        List<CategoryViewResponseDto> categoryList = new ArrayList<>();
+
         for(Category category :userTo.getCategoryList()){
             categoryList.add(new CategoryViewResponseDto(category));
         }
+
         ScheduleViewResponseDto responseDtos = new ScheduleViewResponseDto(categoryList, requestList, acceptList, blockList, cancelList);
+
         return responseDtos;
     }
 

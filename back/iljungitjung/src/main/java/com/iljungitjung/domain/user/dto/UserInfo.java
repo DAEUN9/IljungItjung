@@ -43,4 +43,5 @@ public class UserInfo {
             categories.add(new CategoryInfo(category));
         }
     }
+
 }

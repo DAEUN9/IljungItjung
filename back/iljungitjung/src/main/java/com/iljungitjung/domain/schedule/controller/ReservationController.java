@@ -8,17 +8,19 @@ import com.iljungitjung.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 
 @RequiredArgsConstructor
 @RequestMapping("/reservations")
 @RestController
+@Validated
 public class ReservationController {
     private final ReservationService reservationService;
 
@@ -29,16 +31,24 @@ public class ReservationController {
     }
 
     @PutMapping("/{scheduleId}")
-    public ResponseEntity<CommonResponse> reservationManage(@PathVariable("scheduleId") Long id, @RequestBody @Valid ReservationManageRequestDto reservationManageRequestDto
+    public ResponseEntity<CommonResponse> reservationManage(
+            @Pattern(regexp = "^[0-9]+$", message = "scheduleId는 숫자만 입력가능합니다.")
+            @PathVariable("scheduleId") Long id,
+
+            @RequestBody @Valid ReservationManageRequestDto reservationManageRequestDto
             , HttpSession httpSession){
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationManage(id, reservationManageRequestDto, httpSession)), HttpStatus.OK);
 
     }
 
     @DeleteMapping("/{scheduleId}")
-    public ResponseEntity<CommonResponse> reservationDelete(@PathVariable("scheduleId") Long id, @RequestParam String reason
+    public void reservationDelete(
+            @Pattern(regexp = "^[0-9]+$", message = "scheduleId는 숫자만 입력가능합니다.")
+            @PathVariable("scheduleId") Long id,
+
+            @RequestParam String reason
             , HttpSession httpSession){
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationDelete(id,reason, httpSession)), HttpStatus.OK);
+        reservationService.reservationDelete(id,reason, httpSession);
 
     }
 
@@ -49,11 +59,15 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse> reservationView(@Size(min=8, max=8, message = "형식을 맞춰주세요 (ex.20221017)")
+    public ResponseEntity<CommonResponse> reservationView(@Size(min=8, max=8, message = "startDate 형식을 맞춰주세요 (ex.20221017)")
+                                                          @Pattern(regexp = "^[0-9]+$", message = "startDate는 숫자만 입력가능합니다.")
                                                           @RequestParam("startDate") String startDate,
-                                                              @Size(min=8, max=8, message = "형식을 맞춰주세요 (ex.20221017)")
-                                                              @RequestParam("endDate") String endDate
-                                                              , HttpSession httpSession){
+
+                                                          @Size(min=8, max=8, message = "endDate 형식을 맞춰주세요 (ex.20221017)")
+                                                          @Pattern(regexp = "^[0-9]+$", message = "endDate는 숫자만 입력가능합니다.")
+                                                          @RequestParam("endDate") String endDate,
+
+                                                          HttpSession httpSession){
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationView(startDate, endDate, httpSession)), HttpStatus.OK);
     }
 }

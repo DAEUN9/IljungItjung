@@ -1,4 +1,4 @@
-package com.iljungitjung.domain.category;
+package com.iljungitjung.domain.category.service;
 
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
@@ -8,8 +8,6 @@ import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.category.exception.NoGrantDeleteCategoryException;
 import com.iljungitjung.domain.category.exception.NoGrantUpdateCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
-import com.iljungitjung.domain.category.service.CategoryService;
-import com.iljungitjung.domain.category.service.CategoryServiceImpl;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
@@ -52,14 +50,14 @@ class CategoryServiceTest {
     void addCategory(){
         //given
         Long categoryId = 1L;
-        String categoryName = "커트";
+        String categoryName = "categoryName";
         String time = "0130";
         String color = "#000000";
 
-        User user = User.builder().build();
         List<Category> categoryList = new ArrayList<>();
 
-        user.setCategoryList(categoryList);
+        User userFrom = createUserFrom();
+        userFrom.setCategoryList(categoryList);
 
         CategoryCreateRequestDto categoryCreateRequestDto = new CategoryCreateRequestDto(
                 categoryName, time, color);
@@ -68,13 +66,13 @@ class CategoryServiceTest {
         category.setId(categoryId);
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(user);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
 
         CategoryIdResponseDto categoryIdResponseDto = categoryService.addCategory(categoryCreateRequestDto, httpSession);
 
         //then
-        Assertions.assertEquals(categoryIdResponseDto.getId(), 1L);
+        Assertions.assertEquals(1L, categoryIdResponseDto.getId());
 
     }
     @Test
@@ -82,44 +80,31 @@ class CategoryServiceTest {
     void updateCategory(){
 
         //given
-        Long categoryId = 1L;
-        String categoryName = "커트";
-        String time = "0130";
-        String color = "#000000";
+        User userFrom = createUserFrom();
 
-        Long userId = 1L;
-        User user = User.builder().build();
-        user.setId(userId);
+        Optional<Category> category = Optional.of(createCategory());
+        category.get().setUser(userFrom);
 
-        Optional<Category> category = Optional.of(new Category(categoryName, color, time));
-        category.get().setId(categoryId);
-        category.get().setUser(user);
-
-        CategoryEditRequestDto categoryEditRequestDto = new CategoryEditRequestDto(
-                categoryId, categoryName, time, color);
+        CategoryEditRequestDto categoryEditRequestDto = createEditCategory();
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(user);
-        when(categoryRepository.findById(categoryId)).thenReturn(category);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+        when(categoryRepository.findById(any(Long.class))).thenReturn(category);
 
         CategoryIdResponseDto categoryIdResponseDto = categoryService.updateCategory(categoryEditRequestDto, httpSession);
+
         //then
-        Assertions.assertEquals(categoryIdResponseDto.getId(), 1L);
+        Assertions.assertEquals(1L, categoryIdResponseDto.getId());
 
     }
     @Test
     @DisplayName("카테고리 수정시 해당 카테고리가 존재하지 않음")
     void noExistCategoryWhenUpdateCategoryExceptionTest(){
         //given
-        Long categoryId = 1L;
-        String categoryName = "커트";
-        String time = "0130";
-        String color = "#000000";
-
-        CategoryEditRequestDto categoryEditRequestDto = new CategoryEditRequestDto(
-                categoryId, categoryName, time, color);
+        CategoryEditRequestDto categoryEditRequestDto = createEditCategory();
 
         //when
+
         //then
         Assertions.assertThrows(NoExistCategoryException.class, () -> {
             categoryService.updateCategory(categoryEditRequestDto, httpSession);
@@ -130,30 +115,18 @@ class CategoryServiceTest {
     void noGrantUpdateCategoryWhenUpdateCategoryExceptionTest(){
 
         //given
-        Long categoryId = 1L;
-        String categoryName = "커트";
-        String time = "0130";
-        String color = "#000000";
+        User userFrom = createUserFrom();
+        User userTo = createUserTo();
 
-        Long userId = 1L;
-        User user = User.builder().build();
-        user.setId(userId);
+        Optional<Category> category = Optional.of(createCategory());
+        category.get().setUser(userFrom);
 
-        Long errorUserId = 2L;
-        User errorUser = User.builder().build();
-        errorUser.setId(errorUserId);
-
-        Optional<Category> category = Optional.of(new Category(categoryName, color, time));
-        category.get().setId(categoryId);
-        category.get().setUser(user);
-
-        CategoryEditRequestDto categoryEditRequestDto = new CategoryEditRequestDto(
-                categoryId, categoryName, time, color);
+        CategoryEditRequestDto categoryEditRequestDto = createEditCategory();
 
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(errorUser);
-        when(categoryRepository.findById(categoryId)).thenReturn(category);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userTo);
+        when(categoryRepository.findById(any(Long.class))).thenReturn(category);
 
 
         //then
@@ -167,27 +140,19 @@ class CategoryServiceTest {
     void deleteCategory(){
 
         //given
+        User userFrom = createUserFrom();
+
         Long categoryId = 1L;
-        String categoryName = "커트";
-        String time = "0130";
-        String color = "#000000";
-
-        Long userId = 1L;
-        User user = User.builder().build();
-        user.setId(userId);
-
-        Optional<Category> category = Optional.of(new Category(categoryName, color, time));
-        category.get().setId(categoryId);
-        category.get().setUser(user);
+        Optional<Category> category = Optional.of(createCategory());
+        category.get().setUser(userFrom);
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(user);
-        when(categoryRepository.findById(categoryId)).thenReturn(category);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+        when(categoryRepository.findById(any(Long.class))).thenReturn(category);
 
-        CategoryIdResponseDto categoryIdResponseDto = categoryService.deleteCategory(categoryId, httpSession);
+        categoryService.deleteCategory(categoryId, httpSession);
 
         //then
-        Assertions.assertEquals(categoryIdResponseDto.getId(), 1L);
 
     }
 
@@ -208,24 +173,61 @@ class CategoryServiceTest {
         //given
         Long categoryId = 1L;
 
-        Long userId = 1L;
-        User user = User.builder().build();
-        user.setId(userId);
+        User userFrom = createUserFrom();
+        User userTo = createUserTo();
 
-        Long errorUserId = 2L;
-        User errorUser = User.builder().build();
-        errorUser.setId(errorUserId);
-
-        Optional<Category> category = Optional.of(new Category());
-        category.get().setId(categoryId);
-        category.get().setUser(user);
+        Optional<Category> category = Optional.of(createCategory());
+        category.get().setUser(userFrom);
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(errorUser);
-        when(categoryRepository.findById(categoryId)).thenReturn(category);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userTo);
+        when(categoryRepository.findById(any(Long.class))).thenReturn(category);
 
         Assertions.assertThrows(NoGrantDeleteCategoryException.class, () -> {
             categoryService.deleteCategory(categoryId, httpSession);
         });
+    }
+    private Category createCategory(){
+        Long categoryId = 1L;
+        String categoryName = "categoryName";
+        String categoryColor = "#000000";
+        String time = "0130";
+
+        Category category = Category.builder()
+                .categoryName(categoryName)
+                .color(categoryColor)
+                .time(time)
+                .build();
+        category.setId(categoryId);
+
+        return category;
+    }
+    private CategoryEditRequestDto createEditCategory(){
+        Long updateCategoryId = 1L;
+        String updateCategoryName = "updateCategoryName";
+        String updateTime = "0100";
+        String updateColor = "#111111";
+
+        CategoryEditRequestDto categoryEditRequestDto = new CategoryEditRequestDto(
+                updateCategoryId, updateCategoryName, updateTime, updateColor);
+
+        return categoryEditRequestDto;
+    }
+    private User createUserFrom(){
+        Long userFromId = 1L;
+
+        User userFrom = User.builder().build();
+        userFrom.setId(userFromId);
+
+        return userFrom;
+    }
+
+    private User createUserTo(){
+        Long userToId = 2L;
+
+        User userTo = User.builder().build();
+        userTo.setId(userToId);
+
+        return userTo;
     }
 }
