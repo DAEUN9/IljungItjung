@@ -20,10 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -54,205 +51,166 @@ public class ReservationServiceTest{
 
     @Test
     @DisplayName("일정 요청")
-    public void requestSchedule() throws Exception {
+    public void requestSchedule() {
 
         //given
-        String categoryName = "커트";
-        String color = "#000000";
-        String time = "0130";
-
-        Long scheduleId=1L;
-        String userFromNickname = "1";
-        String userToNickname = "2";
         String date = "20221017";
         String startTime = "1500";
         String contents = "안녕하세요";
         String phone = "01011111111";
-        String email = "email@naver.com";
 
-        User userFrom = User.builder().nickname(userFromNickname).email(email).build();
-        Optional<User> userTo = Optional.of(User.builder().nickname(userToNickname).build());
-        Optional<Category> category = Optional.of(new Category(categoryName, color, time));
+        User userFrom = createUserFrom();
 
-        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(userToNickname, date, startTime, contents, phone, categoryName);
-        Schedule schedule = reservationRequestDto.toEntity(new Date(), new Date(), category.get().getColor(), Type.REQUEST);
-        schedule.setId(scheduleId);
+        Optional<User> userTo = Optional.of(createUserToWithCategoryList());
+        Optional<Category> category = Optional.of(createCategory());
+
+        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(userTo.get().getNickname(), date, startTime, contents, phone, category.get().getCategoryName());
+        Schedule schedule = createSchedule();
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
-        when(categoryRepository.findByCategoryNameAndUser_Email(categoryName, email)).thenReturn(category);
-        when(userRepository.findUserByNickname(userToNickname)).thenReturn(userTo);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+        when(categoryRepository.findByCategoryNameAndUser_Email(any(String.class), any(String.class))).thenReturn(category);
+        when(userRepository.findUserByNickname(any(String.class))).thenReturn(userTo);
         when(scheduleRepository.save(any(Schedule.class))).thenReturn(schedule);
 
         ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationRequest(reservationRequestDto, httpSession);
 
         //then
-        Assertions.assertEquals(reservationIdResponseDto.getId(), 1L);
+        Assertions.assertEquals(1L, reservationIdResponseDto.getId());
 
 
     }
 
     @Test
     @DisplayName("일정 주인이 일정 수락")
-    public void acceptScheduleFromOwner() throws Exception {
+    public void acceptScheduleFromOwner(){
 
         //given
         boolean accept = true;
         String reason = "가능합니다. 잘부탁드려요";
 
-        Long scheduleId=1L;
+        User userTo = createUserToWithCategoryList();
 
-        Long userToId = 2L;
-        User userTo = User.builder().build();
-        userTo.setId(userToId);
-
-        Optional<Schedule> schedule = Optional.of(Schedule.builder().userTo(userTo).build());
-        schedule.get().setId(scheduleId);
+        Optional<Schedule> schedule = Optional.of(createSchedule());
 
         ReservationManageRequestDto reservationManageRequestDto = new ReservationManageRequestDto(accept, reason);
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(userTo);
-        when(scheduleRepository.findScheduleById(scheduleId)).thenReturn(schedule);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userTo);
+        when(scheduleRepository.findScheduleById(any(Long.class))).thenReturn(schedule);
 
-        ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationManage(scheduleId, reservationManageRequestDto, httpSession);
+        ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationManage(1L, reservationManageRequestDto, httpSession);
 
         //then
-        Assertions.assertEquals(reservationIdResponseDto.getId(), scheduleId);
+        Assertions.assertEquals(1L, reservationIdResponseDto.getId());
     }
     @Test
     @DisplayName("일정 주인이 일정 취소")
-    public void cancelScheduleFromOwner() throws Exception {
+    public void cancelScheduleFromOwner(){
 
         //given
         boolean accept = false;
-        String reason = "가능합니다. 잘부탁드려요";
+        String reason = "죄송합니다.";
 
-        Long scheduleId=1L;
+        User userTo = createUserToWithCategoryList();
 
-        Long userToId = 2L;
-        User userTo = User.builder().build();
-        userTo.setId(userToId);
-
-        Optional<Schedule> schedule = Optional.of(Schedule.builder().userTo(userTo).build());
-        schedule.get().setId(scheduleId);
+        Optional<Schedule> schedule = Optional.of(createSchedule());
 
         ReservationManageRequestDto reservationManageRequestDto = new ReservationManageRequestDto(accept, reason);
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(userTo);
-        when(scheduleRepository.findScheduleById(scheduleId)).thenReturn(schedule);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userTo);
+        when(scheduleRepository.findScheduleById(any(Long.class))).thenReturn(schedule);
 
-        ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationManage(scheduleId, reservationManageRequestDto, httpSession);
+        ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationManage(1L, reservationManageRequestDto, httpSession);
 
         //then
-        Assertions.assertEquals(reservationIdResponseDto.getId(), scheduleId);
+        Assertions.assertEquals(1L, reservationIdResponseDto.getId());
     }
 
     @Test
     @DisplayName("일정 신청자가 일정 취소")
-    public void cancelScheduleFromApplicant() throws Exception {
+    public void cancelScheduleFromApplicant(){
         //given
         boolean accept = false;
-        String reason = "가능합니다. 잘부탁드려요";
+        String reason = "죄송합니다.";
 
-        Long scheduleId=1L;
+        User userFrom = createUserFrom();
 
-        Long userToId = 1L;
-        User userTo = User.builder().build();
-        userTo.setId(userToId);
-
-        Long userFromId = 2L;
-        User userFrom = User.builder().build();
-        userFrom.setId(userFromId);
-
-        Optional<Schedule> schedule = Optional.of(Schedule.builder().userTo(userTo).userFrom(userFrom).build());
-        schedule.get().setId(scheduleId);
+        Optional<Schedule> schedule = Optional.of(createSchedule());
 
         ReservationManageRequestDto reservationManageRequestDto = new ReservationManageRequestDto(accept, reason);
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
-        when(scheduleRepository.findScheduleById(scheduleId)).thenReturn(schedule);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+        when(scheduleRepository.findScheduleById(any(Long.class))).thenReturn(schedule);
 
-        ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationManage(scheduleId, reservationManageRequestDto, httpSession);
+        ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationManage(1L, reservationManageRequestDto, httpSession);
 
         //then
-        Assertions.assertEquals(reservationIdResponseDto.getId(), scheduleId);
+        Assertions.assertEquals(1L, reservationIdResponseDto.getId());
     }
     @Test
     @DisplayName("일정 신청자가 예약 리스트 조회")
-    public void viewScheduleFromApplicant() throws Exception {
+    public void viewScheduleFromApplicant() {
 
         //given
-        Long userFromId = 1L;
-        Long scheduleId = 1L;
+        User userFrom = createUserFrom();
 
-        String date="20221017";
-        String startTime = "1500";
-        String endTime = "1630";
-        Date startDateFormat;
-        Date endDateFormat;
+        Date date = new Date();
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-        try{
-            startDateFormat = formatter.parse(date+startTime);
-            endDateFormat = formatter.parse(date+endTime);
-        }catch (Exception e){
-            throw new DateFormatErrorException();
-        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String startDate = sdf.format(date);
+        String endDate = sdf.format(date);
 
-        User userFrom = User.builder().build();
-        userFrom.setId(userFromId);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, 1);
 
         List<Schedule> scheduleList = new ArrayList<>();
-        Schedule schedule = Schedule.builder().userFrom(userFrom).startDate(startDateFormat).endDate(endDateFormat).type(Type.REQUEST).build();
-        schedule.setId(scheduleId);
+        Schedule schedule = Schedule.builder().userFrom(userFrom).startDate(date).endDate(date).type(Type.REQUEST).build();
+        schedule.setId(1L);
         scheduleList.add(schedule);
 
-        schedule = Schedule.builder().userFrom(userFrom).startDate(startDateFormat).endDate(endDateFormat).type(Type.ACCEPT).build();
-        schedule.setId(scheduleId+1);
+        schedule = Schedule.builder().userFrom(userFrom).startDate(date).endDate(date).type(Type.ACCEPT).build();
+        schedule.setId(2L);
         scheduleList.add(schedule);
 
-        schedule = Schedule.builder().userFrom(userFrom).startDate(startDateFormat).endDate(endDateFormat).type(Type.CANCEL).build();
-        schedule.setId(scheduleId+2);
+        schedule = Schedule.builder().userFrom(userFrom).startDate(date).endDate(date).type(Type.CANCEL).build();
+        schedule.setId(3L);
         scheduleList.add(schedule);
 
-        schedule = Schedule.builder().userFrom(userFrom).startDate(new Date()).endDate(new Date()).type(Type.CANCEL).build();
-        schedule.setId(scheduleId+3);
+        schedule = Schedule.builder().userFrom(userFrom).startDate(cal.getTime()).endDate(cal.getTime()).type(Type.CANCEL).build();
+        schedule.setId(4L);
         scheduleList.add(schedule);
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
-        when(scheduleRepository.findByUserFrom_IdIs(userFrom.getId())).thenReturn(scheduleList);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+        when(scheduleRepository.findByUserFrom_IdIs(any(Long.class))).thenReturn(scheduleList);
 
-        ReservationViewResponseDto reservationViewResponseDto = reservationService.reservationView(date, date, httpSession);
+        ReservationViewResponseDto reservationViewResponseDto = reservationService.reservationView(startDate, endDate, httpSession);
 
         //then
-        Assertions.assertEquals(reservationViewResponseDto.getRequestList().get(0).getId(), 1L);
+        Assertions.assertEquals(1L, reservationViewResponseDto.getRequestList().get(0).getId());
     }
 
 
     @Test
     @DisplayName("일정 주인이 일정 삭제")
-    public void deleteScheduleFromOwner() throws Exception {
+    public void deleteScheduleFromOwner() {
 
         //given
         String reason = "가능합니다. 잘부탁드려요";
 
-        Long userToId = 2L;
-        User userTo = User.builder().build();
-        userTo.setId(userToId);
+        User userTo = createUserToWithCategoryList();
 
-        Long scheduleId=1L;
-        Optional<Schedule> schedule = Optional.of(Schedule.builder().userTo(userTo).build());
-        schedule.get().setId(scheduleId);
+        Optional<Schedule> schedule = Optional.of(createSchedule());
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(userTo);
-        when(scheduleRepository.findScheduleById(scheduleId)).thenReturn(schedule);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userTo);
+        when(scheduleRepository.findScheduleById(any(Long.class))).thenReturn(schedule);
 
-        reservationService.reservationDelete(scheduleId, reason, httpSession);
+        reservationService.reservationDelete(1L, reason, httpSession);
 
         //then
 
@@ -260,16 +218,12 @@ public class ReservationServiceTest{
 
     @Test
     @DisplayName("일정 차단")
-    public void blockSchedule() throws Exception {
+    public void blockSchedule() {
 
         //given
-        Long userToId = 2L;
-        User userTo = User.builder().build();
-        userTo.setId(userToId);
+        User userTo = createUserToWithCategoryList();
 
         Long scheduleId = 1L;
-        String title = "공휴일";
-        String contents = "공휴일이라서 쉽니다.";
         boolean block = false;
         String date="20221017";
         String startTime = "1500";
@@ -285,21 +239,84 @@ public class ReservationServiceTest{
             throw new DateFormatErrorException();
         }
 
-
         ReservationBlockRequestDto reservationBlockRequestDto = new ReservationBlockRequestDto(block, date, startTime, endTime);
 
         Schedule schedule = reservationBlockRequestDto.toEntity(startDateFormat, endDateFormat);
         schedule.setId(scheduleId);
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(userTo);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userTo);
         when(scheduleRepository.save(any(Schedule.class))).thenReturn(schedule);
 
         ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationBlock(reservationBlockRequestDto, httpSession);
 
         //then
-        Assertions.assertEquals(reservationIdResponseDto.getId(), 1L);
+        Assertions.assertEquals(1L, reservationIdResponseDto.getId());
 
     }
+    private Schedule createSchedule() {
+        Long scheduleId = 1L;
+        String categoryName = "categoryName";
+        String categoryColor = "#000000";
+        Date endTime = new Date();
+        Date startTime = new Date();
+        String contents = "contents";
+        Type type = Type.REQUEST;
+        String phoneNum = "01044444444";
 
+        Schedule schedule = Schedule.builder()
+                .userFrom(createUserFrom())
+                .userTo(createUserToWithCategoryList())
+                .categoryName(categoryName)
+                .color(categoryColor)
+                .contents(contents)
+                .type(type)
+                .phonenum(phoneNum)
+                .endDate(endTime)
+                .startDate(startTime)
+                .build();
+        schedule.setId(scheduleId);
+
+        return schedule;
+    }
+    private Category createCategory(){
+        Long categoryId = 1L;
+        String categoryName = "categoryName";
+        String categoryColor = "#000000";
+        String time = "0130";
+
+        Category category = Category.builder()
+                .categoryName(categoryName)
+                .color(categoryColor)
+                .time(time)
+                .build();
+        category.setId(categoryId);
+
+        return category;
+    }
+    private User createUserFrom(){
+        Long userFromId = 1L;
+        String nickname="1";
+        String email = "userFrom@naver.com";
+
+        User userFrom = User.builder().nickname(nickname).email(email).build();
+        userFrom.setId(userFromId);
+
+        return userFrom;
+    }
+
+    private User createUserToWithCategoryList(){
+        Long userToId = 2L;
+        String nickname="2";
+        String email = "userTo@naver.com";
+
+        User userTo = User.builder().nickname(nickname).email(email).build();
+        userTo.setId(userToId);
+
+        List<Category> categoryList = new ArrayList<>();
+        categoryList.add(createCategory());
+        userTo.setCategoryList(categoryList);
+
+        return userTo;
+    }
 }
