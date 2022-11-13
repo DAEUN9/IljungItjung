@@ -67,7 +67,7 @@ public class ReservationServiceImpl implements ReservationService{
 
         Date endDate = cal.getTime();
 
-        Schedule schedule = reservationRequestDto.toEntity(startDate, endDate, category.getColor(), Type.REQUEST);
+        Schedule schedule = reservationRequestDto.toEntity(startDate, endDate, category.getColor());
         schedule.setScheduleRequestList(user);
         schedule.setScheduleResponseList(userTo);
 
