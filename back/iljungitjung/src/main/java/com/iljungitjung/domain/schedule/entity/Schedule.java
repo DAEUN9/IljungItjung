@@ -50,6 +50,8 @@ public class Schedule {
     private String cancelFrom;
     private String reason;
 
+    private boolean block;
+
     public void setScheduleRequestList(User user){
         user.getScheduleRequestList().add(this);
         this.userFrom = user;
@@ -64,7 +66,7 @@ public class Schedule {
     }
 
     @Builder
-    public Schedule(User userFrom, User userTo, Date startDate, Date endDate, String categoryName, String color, String contents, String phonenum, Type type) {
+    public Schedule(User userFrom, User userTo, Date startDate, Date endDate, String categoryName, String color, String contents, String phonenum, Type type, boolean block) {
         this.userFrom = userFrom;
         this.userTo = userTo;
         this.startDate = startDate;
@@ -74,6 +76,7 @@ public class Schedule {
         this.contents=contents;
         this.phonenum = phonenum;
         this.type=type;
+        this.block=block;
     }
     public void accpeted() {
         this.type= Type.ACCEPT;
