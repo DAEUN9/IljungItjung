@@ -1,4 +1,4 @@
-package com.iljungitjung.domain.schedule;
+package com.iljungitjung.domain.schedule.service;
 
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
@@ -50,7 +50,7 @@ public class ReservationServiceTest{
     }
 
     @Test
-    @DisplayName("일정 요청")
+    @DisplayName("일정 예약 요청")
     public void requestSchedule() {
 
         //given

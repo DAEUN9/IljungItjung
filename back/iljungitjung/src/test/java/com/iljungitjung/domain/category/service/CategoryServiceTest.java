@@ -1,4 +1,4 @@
-package com.iljungitjung.domain.category;
+package com.iljungitjung.domain.category.service;
 
 import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryEditRequestDto;
