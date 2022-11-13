@@ -270,6 +270,7 @@ public class ReservationServiceTest{
         Long scheduleId = 1L;
         String title = "공휴일";
         String contents = "공휴일이라서 쉽니다.";
+        boolean block = false;
         String date="20221017";
         String startTime = "1500";
         String endTime = "1630";
@@ -285,7 +286,7 @@ public class ReservationServiceTest{
         }
 
 
-        ReservationBlockRequestDto reservationBlockRequestDto = new ReservationBlockRequestDto(title, contents, date, startTime, endTime);
+        ReservationBlockRequestDto reservationBlockRequestDto = new ReservationBlockRequestDto(block, date, startTime, endTime);
 
         Schedule schedule = reservationBlockRequestDto.toEntity(startDateFormat, endDateFormat);
         schedule.setId(scheduleId);

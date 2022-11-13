@@ -1,14 +1,12 @@
 package com.iljungitjung.domain.schedule;
 
 import com.iljungitjung.domain.category.entity.Category;
-import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewDetailResponseDto;
 import com.iljungitjung.domain.schedule.dto.schedule.ScheduleViewResponseDto;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
-import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
 import com.iljungitjung.domain.schedule.service.ScheduleService;
 import com.iljungitjung.domain.schedule.service.ScheduleServiceImpl;
@@ -29,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
-
+import static org.mockito.ArgumentMatchers.any;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("스케줄 서비스")
@@ -123,9 +121,9 @@ class ScheduleServiceTest{
         scheduleList.add(schedule);
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
-        when(userRepository.findUserByNickname(nickname)).thenReturn(userTo);
-        when(scheduleRepository.findByUserTo_IdIs(userTo.get().getId())).thenReturn(scheduleList);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+        when(userRepository.findUserByNickname(any(String.class))).thenReturn(userTo);
+        when(scheduleRepository.findByUserTo_IdIs(any(Long.class))).thenReturn(scheduleList);
 
         ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView(nickname, date, date, httpSession);
 
@@ -189,9 +187,9 @@ class ScheduleServiceTest{
         date=null;
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
-        when(userRepository.findUserByNickname(nickname)).thenReturn(userTo);
-        when(scheduleRepository.findByUserTo_IdIs(userTo.get().getId())).thenReturn(scheduleList);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+        when(userRepository.findUserByNickname(any(String.class))).thenReturn(userTo);
+        when(scheduleRepository.findByUserTo_IdIs(any(Long.class))).thenReturn(scheduleList);
 
         ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView(nickname, date, date, httpSession);
 
@@ -210,7 +208,7 @@ class ScheduleServiceTest{
         userFrom.setId(userFromId);
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
 
         //then
         Assertions.assertThrows(NoExistUserException.class, () -> {
@@ -233,8 +231,8 @@ class ScheduleServiceTest{
         userTo.get().setId(userToId);
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
-        when(userRepository.findUserByNickname(nickname)).thenReturn(userTo);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+        when(userRepository.findUserByNickname(any(String.class))).thenReturn(userTo);
 
         //then
         Assertions.assertThrows(DateFormatErrorException.class, () -> {
@@ -288,9 +286,9 @@ class ScheduleServiceTest{
         scheduleList.add(schedule);
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
-        when(userRepository.findUserByNickname(nickname)).thenReturn(userTo);
-        when(scheduleRepository.findByUserTo_IdIs(userTo.get().getId())).thenReturn(scheduleList);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+        when(userRepository.findUserByNickname(any(String.class))).thenReturn(userTo);
+        when(scheduleRepository.findByUserTo_IdIs(any(Long.class))).thenReturn(scheduleList);
 
         ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView(nickname, date, date, httpSession);
 
@@ -341,9 +339,9 @@ class ScheduleServiceTest{
         date=null;
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
-        when(userRepository.findUserByNickname(nickname)).thenReturn(userTo);
-        when(scheduleRepository.findByUserTo_IdIs(userTo.get().getId())).thenReturn(scheduleList);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+        when(userRepository.findUserByNickname(any(String.class))).thenReturn(userTo);
+        when(scheduleRepository.findByUserTo_IdIs(any(Long.class))).thenReturn(scheduleList);
 
         ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView(nickname, date, date, httpSession);
 
@@ -379,7 +377,7 @@ class ScheduleServiceTest{
         schedule.get().setId(scheduleId);
 
         //when
-        when(scheduleRepository.findScheduleById(scheduleId)).thenReturn(schedule);
+        when(scheduleRepository.findScheduleById(any(Long.class))).thenReturn(schedule);
 
         ScheduleViewDetailResponseDto scheduleViewDetailResponseDto = scheduleService.scheduleViewDetail(scheduleId);
 
@@ -442,9 +440,9 @@ class ScheduleServiceTest{
         scheduleList.add(schedule);
 
         //when
-        when(userService.findUserBySessionId(httpSession)).thenReturn(userFrom);
-        when(userRepository.findUserByNickname(nickname)).thenReturn(userTo);
-        when(scheduleRepository.findByUserTo_IdIs(userTo.get().getId())).thenReturn(scheduleList);
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+        when(userRepository.findUserByNickname(any(String.class))).thenReturn(userTo);
+        when(scheduleRepository.findByUserTo_IdIs(any(Long.class))).thenReturn(scheduleList);
 
         ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView(nickname, date, date, httpSession);
 
@@ -466,5 +464,55 @@ class ScheduleServiceTest{
             scheduleService.scheduleViewDetail(scheduleId);
         });
 
+    }
+    private Schedule createSchedule() {
+        String categoryName = "categoryName";
+        String categoryColor = "#000000";
+        Date endTime = new Date();
+        Date startTime = new Date();
+        String contents = "contents";
+        Type type = Type.REQUEST;
+        String phoneNum = "01044444444";
+        return Schedule.builder()
+                .categoryName(categoryName)
+                .color(categoryColor)
+                .contents(contents)
+                .type(type)
+                .phonenum(phoneNum)
+                .endDate(endTime)
+                .startDate(startTime)
+                .build();
+    }
+    private Category createCategory(){
+        Long categoryId = 1L;
+        String categoryName = "categoryName";
+        String categoryColor = "#000000";
+        String time = "0130";
+
+        Category category = Category.builder()
+                .categoryName(categoryName)
+                .color(categoryColor)
+                .time(time)
+                .build();
+        category.setId(categoryId);
+
+        return category;
+    }
+    private User createUserFrom(){
+        Long userFromId = 1L;
+
+        User userFrom = User.builder().build();
+        userFrom.setId(userFromId);
+
+        return userFrom;
+    }
+
+    private User createUserTo(){
+        Long userToId = 2L;
+
+        User userTo = User.builder().build();
+        userTo.setId(userToId);
+
+        return userTo;
     }
 }
