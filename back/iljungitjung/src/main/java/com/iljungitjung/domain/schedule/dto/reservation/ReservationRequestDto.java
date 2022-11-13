@@ -39,7 +39,7 @@ public class ReservationRequestDto {
     @Pattern(regexp = "^[a-z|A-Z|0-9|ㄱ-ㅎ|가-힣]{2,10}$", message = "카테고리 이름은 최소 2자, 최대 10자 영어, 한글, 숫자만 입력가능합니다.")
     private String categoryName;
 
-    public Schedule toEntity(Date startDate, Date endDate, String color, Type type) {
+    public Schedule toEntity(Date startDate, Date endDate, String color) {
         return Schedule.builder()
                 .categoryName(this.categoryName)
                 .color(color)
@@ -47,7 +47,7 @@ public class ReservationRequestDto {
                 .startDate(startDate)
                 .endDate(endDate)
                 .phonenum(this.phone)
-                .type(type)
+                .type(Type.REQUEST)
                 .build();
 
     }
