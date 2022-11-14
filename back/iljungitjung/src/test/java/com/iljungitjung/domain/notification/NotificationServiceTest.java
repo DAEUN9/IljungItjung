@@ -1,6 +1,6 @@
 package com.iljungitjung.domain.notification;
 
-import com.iljungitjung.domain.notification.dto.NotificationMessageDto;
+import com.iljungitjung.domain.notification.dto.NotificationMessage;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.service.NotificationService;
@@ -8,15 +8,17 @@ import com.iljungitjung.domain.notification.service.NotificationServiceImpl;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.user.entity.User;
-import com.iljungitjung.global.scheduler.NotificationNcloud;
+import com.iljungitjung.global.scheduler.NotificationCorrespondence;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -30,29 +32,32 @@ public class NotificationServiceTest {
 
     private NotificationService notificationService;
     @MockBean
-    private NotificationNcloud notificationNcloud;
+    private NotificationCorrespondence notificationCorrespondence;
     @BeforeEach
     public void init(){
-        notificationService = new NotificationServiceImpl(notificationNcloud);
+        notificationService = new NotificationServiceImpl(notificationCorrespondence);
     }
 
     @Test
     @DisplayName("메시지 전송")
     public void A() throws Exception {
-        String message = "하이";
+        String content = "하이";
         String phone = "01000000000";
 
-        NotificationMessageDto notificationMessageDto = new NotificationMessageDto(phone, message);
-        List<NotificationMessageDto> messageList = new ArrayList<>();
-        messageList.add(notificationMessageDto);
+        NotificationMessage message = new NotificationMessage(phone, content);
+        List<NotificationMessage> messageList = makeMessages(message);
         NotificationRequestDto notificationRequestDto = NotificationRequestDto.createFromMessages(messageList);
 
 
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 
         NotificationResponseDto responseDto = notificationService.sendMessage(notificationRequestDto);
-        Assertions.assertEquals(responseDto.getStatusCode(), "202");
+        Assertions.assertEquals(responseDto.getStatusCode(), statusAccepted());
+    }
+
+    private List<NotificationMessage> makeMessages(NotificationMessage... message){
+        return Arrays.asList(message);
     }
 
     @Test
@@ -63,7 +68,7 @@ public class NotificationServiceTest {
 
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01000000000";
+        String phone = "01000000001";
         String email = "email";
 
         User userFrom = User.builder()
@@ -81,12 +86,12 @@ public class NotificationServiceTest {
                 .categoryName(categoryName)
                 .phonenum(phone).build();
 
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 
         notificationService.autoReservationMessage(schedule);
-        verify(notificationNcloud, times(1)).makeHeaders();
-        verify(notificationNcloud, times(1)).sendNcloud(any(HttpEntity.class));
+        verify(notificationCorrespondence, times(1)).makeHeaders();
+        verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
     }
 
     @Test
@@ -96,7 +101,7 @@ public class NotificationServiceTest {
 
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01000000000";
+        String phone = "01000000001";
         String email = "email";
 
         User userFrom = User.builder()
@@ -115,12 +120,12 @@ public class NotificationServiceTest {
                 .phonenum(phone).build();
         schedule.accpeted();
 
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 
         notificationService.autoReservationMessage(schedule);
-        verify(notificationNcloud, times(1)).makeHeaders();
-        verify(notificationNcloud, times(1)).sendNcloud(any(HttpEntity.class));
+        verify(notificationCorrespondence, times(1)).makeHeaders();
+        verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
     }
 
     @Test
@@ -130,7 +135,7 @@ public class NotificationServiceTest {
 
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01000000000";
+        String phone = "01000000001";
         String email = "email";
         String cancelFrom = "제공자";
 
@@ -152,12 +157,12 @@ public class NotificationServiceTest {
 
         schedule.canceled(cancelFrom, "");
 
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 
         notificationService.autoReservationMessage(schedule);
-        verify(notificationNcloud, times(1)).makeHeaders();
-        verify(notificationNcloud, times(1)).sendNcloud(any(HttpEntity.class));
+        verify(notificationCorrespondence, times(1)).makeHeaders();
+        verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
 
     }
 
@@ -168,7 +173,7 @@ public class NotificationServiceTest {
 
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01000000000";
+        String phone = "01000000001";
         String email = "email";
         String cancelFrom = "사용자";
 
@@ -189,12 +194,12 @@ public class NotificationServiceTest {
 
         schedule.canceled(cancelFrom, "");
 
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 
         notificationService.autoReservationMessage(schedule);
-        verify(notificationNcloud, times(1)).makeHeaders();
-        verify(notificationNcloud, times(1)).sendNcloud(any(HttpEntity.class));
+        verify(notificationCorrespondence, times(1)).makeHeaders();
+        verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
     }
 
     @Test
@@ -204,7 +209,7 @@ public class NotificationServiceTest {
 
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01000000000";
+        String phone = "01000000001";
         String email = "email";
 
         User userFrom = User.builder()
@@ -225,10 +230,14 @@ public class NotificationServiceTest {
                 .phonenum(phone).build();
         schedule.deleted();
 
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 
         notificationService.autoReservationMessage(schedule);
     }
+    private String statusAccepted() {
+        return HttpStatus.ACCEPTED.value()+"";
+    }
+
 
 }
