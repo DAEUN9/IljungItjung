@@ -15,8 +15,8 @@ interface SearchState {
   nickname: string;
   email: string;
   imagePath: string;
-  // desc: string;
-  // detail: string;
+  introduction: string;
+  description: string;
   categories: SearchCategoryState[];
 }
 
