@@ -1,5 +1,9 @@
 import { WeekView } from "@devexpress/dx-react-scheduler-material-ui";
 import { useDispatch, useSelector } from "react-redux";
+<<<<<<< HEAD
+=======
+import { useEffect } from "react";
+>>>>>>> front-develop
 
 import {
   getDay,
@@ -21,6 +25,11 @@ export default function SettingWeekView() {
   const onDeleteLockShade = (day: number, time: string, all?: boolean) =>
     dispatch(deleteLockShade(day, time, all));
 
+<<<<<<< HEAD
+=======
+  useEffect(() => {}, [lockMap]);
+
+>>>>>>> front-develop
   return (
     <WeekView
       startDayHour={9}
