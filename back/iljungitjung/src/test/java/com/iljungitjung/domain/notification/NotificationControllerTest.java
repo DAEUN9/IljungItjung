@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -47,21 +48,24 @@ public class NotificationControllerTest {
     @DisplayName("메시지 전송")
     public void A() throws Exception {
         //given
-        String message = "하이";
+        String content = "하이";
         String phone = "01000000000";
 
-        NotificationMessage notificationMessage = new NotificationMessage(phone, message);
-        List<NotificationMessage> messageList = new ArrayList<>();
-        messageList.add(notificationMessage);
-        String content = objectMapper.writeValueAsString(NotificationRequestDto.createFromMessages(messageList));
+        NotificationMessage notificationMessage = new NotificationMessage(phone, content);
+        List<NotificationMessage> messageList = makeMessages(notificationMessage);
+        String contents = objectMapper.writeValueAsString(NotificationRequestDto.createFromMessages(messageList));
 
         when(notificationService.sendMessage(any(NotificationRequestDto.class))).thenReturn(new NotificationResponseDto("202"));
         //then
         mockMvc.perform(post("/notifications")
-                .content(content)
+                .content(contents)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("data.statusCode").value("202"));
+    }
+
+    private List<NotificationMessage> makeMessages(NotificationMessage... message){
+        return Arrays.asList(message);
     }
 }

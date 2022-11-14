@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -39,12 +40,11 @@ public class NotificationServiceTest {
     @Test
     @DisplayName("메시지 전송")
     public void A() throws Exception {
-        String message = "하이";
+        String content = "하이";
         String phone = "01000000000";
 
-        NotificationMessage notificationMessage = new NotificationMessage(phone, message);
-        List<NotificationMessage> messageList = new ArrayList<>();
-        messageList.add(notificationMessage);
+        NotificationMessage message = new NotificationMessage(phone, content);
+        List<NotificationMessage> messageList = makeMessages(message);
         NotificationRequestDto notificationRequestDto = NotificationRequestDto.createFromMessages(messageList);
 
 
@@ -53,6 +53,10 @@ public class NotificationServiceTest {
 
         NotificationResponseDto responseDto = notificationService.sendMessage(notificationRequestDto);
         Assertions.assertEquals(responseDto.getStatusCode(), "202");
+    }
+
+    private List<NotificationMessage> makeMessages(NotificationMessage... message){
+        return Arrays.asList(message);
     }
 
     @Test
@@ -230,5 +234,6 @@ public class NotificationServiceTest {
 
         notificationService.autoReservationMessage(schedule);
     }
+
 
 }

@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -40,12 +41,11 @@ public class NotificationServiceExceptionTest {
     @Test
     @DisplayName("ncloud 메세지 전송 예외 발생")
     public void A() throws Exception {
-        String message = "하이";
+        String content = "하이";
         String phone = "01000000000";
 
-        NotificationMessage notificationMessage = new NotificationMessage(phone, message);
-        List<NotificationMessage> messageList = new ArrayList<>();
-        messageList.add(notificationMessage);
+        NotificationMessage message = new NotificationMessage(phone, content);
+        List<NotificationMessage> messageList = makeMessages(message);
         NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
 
         when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
@@ -53,5 +53,9 @@ public class NotificationServiceExceptionTest {
 
         assertThatThrownBy(() -> notificationService.sendMessage(requestDto))
                 .isInstanceOf(FailSendMessageException.class);
+    }
+
+    private List<NotificationMessage> makeMessages(NotificationMessage... message){
+        return Arrays.asList(message);
     }
 }
