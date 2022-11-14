@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -62,10 +63,13 @@ public class NotificationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data.statusCode").value("202"));
+                .andExpect(jsonPath("data.statusCode").value(statusAccepted()));
     }
 
     private List<NotificationMessage> makeMessages(NotificationMessage... message){
         return Arrays.asList(message);
+    }
+    private String statusAccepted() {
+        return HttpStatus.ACCEPTED.value()+"";
     }
 }
