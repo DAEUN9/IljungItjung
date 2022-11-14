@@ -13,6 +13,14 @@ import logo from "@assets/logo.png";
 import defaultImg from "@assets/defaultImg.png";
 import CustomModal from "@components/common/CustomModal";
 import iljung from "@assets/iljung_white.png";
+import { getMyProfile } from "@api/login";
+import { MyProfile } from "@components/types/types";
+import { setProfile } from "@modules/profile";
+
+interface MyInfoApiData {
+  status: string;
+  data: MyProfile;
+}
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -32,6 +40,12 @@ const Sidebar = () => {
     document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
     navigate("/");
   };
+
+  useEffect(() => {
+    getMyProfile((res: MyInfoApiData) => {
+      setProfile(res.data);
+    });
+  }, []);
 
   return (
     <Drawer
