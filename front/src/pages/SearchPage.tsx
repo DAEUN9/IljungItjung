@@ -45,7 +45,9 @@ const data = [
 
 interface SearchApiData {
   status: string;
-  data: SearchState[];
+  data: {
+    users: SearchState[];
+  };
 }
 
 const SearchPage = () => {
@@ -65,7 +67,7 @@ const SearchPage = () => {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === "Enter") {
       getSearchList(search, (res: SearchApiData) => {
-        setSearchList(res.data);
+        setSearchList(res.data.users);
         console.log(res.data);
       });
     }
