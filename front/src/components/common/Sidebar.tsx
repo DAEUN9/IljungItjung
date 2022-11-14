@@ -20,9 +20,16 @@ const Sidebar = () => {
     url.pathname.substring(1, url.pathname.length)
   );
 
+  useEffect(() => {});
+
   const handleClick = (type: string) => {
     navigate(`/${type}`);
     setMenu((menu) => type);
+  };
+
+  const handleLogout = () => {
+    document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    navigate("/");
   };
 
   return (
@@ -54,7 +61,7 @@ const Sidebar = () => {
         </div>
         <div className={styles["bottom"]}>
           <div className={styles["icons"]}>
-            <IconButton className={styles["logout"]}>
+            <IconButton className={styles["logout"]} onClick={handleLogout}>
               <IoExitOutline />
             </IconButton>
             <IconButton
