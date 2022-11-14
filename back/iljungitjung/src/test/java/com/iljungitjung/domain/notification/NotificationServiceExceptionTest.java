@@ -1,12 +1,12 @@
 package com.iljungitjung.domain.notification;
 
-import com.iljungitjung.domain.notification.dto.NotificationMessageDto;
+import com.iljungitjung.domain.notification.dto.NotificationMessage;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.exception.FailSendMessageException;
 import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.notification.service.NotificationServiceImpl;
-import com.iljungitjung.global.scheduler.NotificationNcloud;
+import com.iljungitjung.global.scheduler.NotificationCorrespondence;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -30,11 +30,11 @@ public class NotificationServiceExceptionTest {
     private NotificationService notificationService;
 
     @MockBean
-    private NotificationNcloud notificationNcloud;
+    private NotificationCorrespondence notificationCorrespondence;
 
     @BeforeEach
     public void init(){
-        notificationService = new NotificationServiceImpl(notificationNcloud);
+        notificationService = new NotificationServiceImpl(notificationCorrespondence);
     }
 
     @Test
@@ -43,13 +43,13 @@ public class NotificationServiceExceptionTest {
         String message = "하이";
         String phone = "01000000000";
 
-        NotificationMessageDto notificationMessageDto = new NotificationMessageDto(phone, message);
-        List<NotificationMessageDto> messageList = new ArrayList<>();
-        messageList.add(notificationMessageDto);
+        NotificationMessage notificationMessage = new NotificationMessage(phone, message);
+        List<NotificationMessage> messageList = new ArrayList<>();
+        messageList.add(notificationMessage);
         NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
 
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.BAD_GATEWAY.toString()));
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.BAD_GATEWAY.toString()));
 
         assertThatThrownBy(() -> notificationService.sendMessage(requestDto))
                 .isInstanceOf(FailSendMessageException.class);

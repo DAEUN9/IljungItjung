@@ -1,6 +1,6 @@
 package com.iljungitjung.domain.notification;
 
-import com.iljungitjung.domain.notification.dto.NotificationMessageDto;
+import com.iljungitjung.domain.notification.dto.NotificationMessage;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.service.NotificationService;
@@ -8,7 +8,7 @@ import com.iljungitjung.domain.notification.service.NotificationServiceImpl;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.user.entity.User;
-import com.iljungitjung.global.scheduler.NotificationNcloud;
+import com.iljungitjung.global.scheduler.NotificationCorrespondence;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -30,10 +30,10 @@ public class NotificationServiceTest {
 
     private NotificationService notificationService;
     @MockBean
-    private NotificationNcloud notificationNcloud;
+    private NotificationCorrespondence notificationCorrespondence;
     @BeforeEach
     public void init(){
-        notificationService = new NotificationServiceImpl(notificationNcloud);
+        notificationService = new NotificationServiceImpl(notificationCorrespondence);
     }
 
     @Test
@@ -42,14 +42,14 @@ public class NotificationServiceTest {
         String message = "하이";
         String phone = "01000000000";
 
-        NotificationMessageDto notificationMessageDto = new NotificationMessageDto(phone, message);
-        List<NotificationMessageDto> messageList = new ArrayList<>();
-        messageList.add(notificationMessageDto);
+        NotificationMessage notificationMessage = new NotificationMessage(phone, message);
+        List<NotificationMessage> messageList = new ArrayList<>();
+        messageList.add(notificationMessage);
         NotificationRequestDto notificationRequestDto = NotificationRequestDto.createFromMessages(messageList);
 
 
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
 
         NotificationResponseDto responseDto = notificationService.sendMessage(notificationRequestDto);
         Assertions.assertEquals(responseDto.getStatusCode(), "202");
@@ -81,12 +81,12 @@ public class NotificationServiceTest {
                 .categoryName(categoryName)
                 .phonenum(phone).build();
 
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
 
         notificationService.autoReservationMessage(schedule);
-        verify(notificationNcloud, times(1)).makeHeaders();
-        verify(notificationNcloud, times(1)).sendNcloud(any(HttpEntity.class));
+        verify(notificationCorrespondence, times(1)).makeHeaders();
+        verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
     }
 
     @Test
@@ -115,12 +115,12 @@ public class NotificationServiceTest {
                 .phonenum(phone).build();
         schedule.accpeted();
 
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
 
         notificationService.autoReservationMessage(schedule);
-        verify(notificationNcloud, times(1)).makeHeaders();
-        verify(notificationNcloud, times(1)).sendNcloud(any(HttpEntity.class));
+        verify(notificationCorrespondence, times(1)).makeHeaders();
+        verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
     }
 
     @Test
@@ -152,12 +152,12 @@ public class NotificationServiceTest {
 
         schedule.canceled(cancelFrom, "");
 
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
 
         notificationService.autoReservationMessage(schedule);
-        verify(notificationNcloud, times(1)).makeHeaders();
-        verify(notificationNcloud, times(1)).sendNcloud(any(HttpEntity.class));
+        verify(notificationCorrespondence, times(1)).makeHeaders();
+        verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
 
     }
 
@@ -189,12 +189,12 @@ public class NotificationServiceTest {
 
         schedule.canceled(cancelFrom, "");
 
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
 
         notificationService.autoReservationMessage(schedule);
-        verify(notificationNcloud, times(1)).makeHeaders();
-        verify(notificationNcloud, times(1)).sendNcloud(any(HttpEntity.class));
+        verify(notificationCorrespondence, times(1)).makeHeaders();
+        verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
     }
 
     @Test
@@ -225,8 +225,8 @@ public class NotificationServiceTest {
                 .phonenum(phone).build();
         schedule.deleted();
 
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto("202"));
 
         notificationService.autoReservationMessage(schedule);
     }

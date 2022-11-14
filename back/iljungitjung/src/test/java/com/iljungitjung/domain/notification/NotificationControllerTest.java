@@ -2,7 +2,7 @@ package com.iljungitjung.domain.notification;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iljungitjung.domain.notification.controller.NotificationController;
-import com.iljungitjung.domain.notification.dto.NotificationMessageDto;
+import com.iljungitjung.domain.notification.dto.NotificationMessage;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.service.NotificationService;
@@ -50,9 +50,9 @@ public class NotificationControllerTest {
         String message = "하이";
         String phone = "01000000000";
 
-        NotificationMessageDto notificationMessageDto = new NotificationMessageDto(phone, message);
-        List<NotificationMessageDto> messageList = new ArrayList<>();
-        messageList.add(notificationMessageDto);
+        NotificationMessage notificationMessage = new NotificationMessage(phone, message);
+        List<NotificationMessage> messageList = new ArrayList<>();
+        messageList.add(notificationMessage);
         String content = objectMapper.writeValueAsString(NotificationRequestDto.createFromMessages(messageList));
 
         when(notificationService.sendMessage(any(NotificationRequestDto.class))).thenReturn(new NotificationResponseDto("202"));
