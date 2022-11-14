@@ -20,6 +20,7 @@ import {
   CalendarTooltip,
   TooltipContent,
 } from "@components/Setting/CalendarTooltip";
+import { CategoryTooltip } from "@components/Setting/Category/CategoryTooltip";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -114,7 +115,7 @@ const SettingPage = () => {
             <div className={styles["title"]}>
               <h2>카테고리 관리</h2>
               <CustomTooltip
-                title="카테고리 관리"
+                title={CategoryTooltip()}
                 children={
                   <IconButton>
                     <IoHelpCircleOutline />
