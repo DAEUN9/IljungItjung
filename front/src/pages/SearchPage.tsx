@@ -45,18 +45,12 @@ const data = [
 
 interface SearchApiData {
   status: string;
-  data: SearchState;
+  data: SearchState[];
 }
 
 const SearchPage = () => {
   const [search, setSearch] = useState("");
-  // const [searchList, setSearchList] = useState<SearchState[]>([]);
-  const [searchList, setSearchList] = useState<SearchState>({
-    nickname: "",
-    email: "",
-    imagePath: "",
-    categories: [],
-  });
+  const [searchList, setSearchList] = useState<SearchState[]>([]);
 
   const selectedName = useSelector((state: RootState) => state.search.nickname);
 
@@ -94,19 +88,19 @@ const SearchPage = () => {
             />
           </div>
           <div className={styles["result"]}>
-            {searchList.nickname.length > 0 ? (
-              // searchList.map((item, index) => (
-              <SearchItem
-                // key={index}
-                nickname={searchList.nickname}
-                email={searchList.email}
-                imagePath={searchList.imagePath}
-                // desc={item.desc}
-                // detail={item.detail}
-                categories={searchList.categories}
-              />
+            {searchList.length > 0 ? (
+              searchList.map((item, index) => (
+                <SearchItem
+                  key={index}
+                  nickname={item.nickname}
+                  email={item.email}
+                  imagePath={item.imagePath}
+                  introduction={item.introduction}
+                  description={item.description}
+                  categories={item.categories}
+                />
+              ))
             ) : (
-              // ))
               <div className={styles["no-data"]}>검색 결과가 없습니다.</div>
             )}
           </div>

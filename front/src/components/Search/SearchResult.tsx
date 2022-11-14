@@ -7,7 +7,7 @@ import styles from "@styles/Search/SearchResult.module.scss";
 import { RootState } from "@modules/index";
 
 const SearchResult = () => {
-  const { nickname, email, imagePath, /*desc, detail,*/ categories } =
+  const { nickname, email, imagePath, introduction, description, categories } =
     useSelector((state: RootState) => state.search);
   const navigate = useNavigate();
 
@@ -23,10 +23,10 @@ const SearchResult = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.name}>{nickname}</div>
-          <div className={styles.desc}>한줄소개</div>
+          <div className={styles.desc}>{introduction}</div>
         </div>
       </div>
-      <div className={styles.detail}>설명</div>
+      <div className={styles.detail}>{description}</div>
       <div className={styles.categories}>
         {categories &&
           categories.length > 0 &&

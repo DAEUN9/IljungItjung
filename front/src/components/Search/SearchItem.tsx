@@ -26,7 +26,7 @@ const SearchItem = (props: SearchState) => {
         </div>
         <div className={styles.right}>
           <div className={styles.name}>{props.nickname}</div>
-          {/* <div className={styles.desc}>{props.desc}</div> */}
+          <div className={styles.desc}>{props.description}</div>
         </div>
       </div>
       <Divider className={styles.divider} />
