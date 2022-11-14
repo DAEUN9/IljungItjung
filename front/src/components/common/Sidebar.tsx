@@ -11,6 +11,8 @@ import {
 import styles from "@styles/common/Sidebar.module.scss";
 import logo from "@assets/logo.png";
 import defaultImg from "@assets/defaultImg.png";
+import CustomModal from "@components/common/CustomModal";
+import iljung from "@assets/iljung.png";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -19,8 +21,7 @@ const Sidebar = () => {
   const [menu, setMenu] = useState(
     url.pathname.substring(1, url.pathname.length)
   );
-
-  useEffect(() => {});
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   const handleClick = (type: string) => {
     navigate(`/${type}`);
@@ -36,13 +37,13 @@ const Sidebar = () => {
     <Drawer
       variant="permanent"
       anchor="left"
-      className={styles["drawer"]}
-      PaperProps={{ className: styles["paper"] }}
+      className={styles.drawer}
+      PaperProps={{ className: styles.paper }}
     >
-      <div className={styles["sidebar"]}>
-        <div className={styles["top"]}>
+      <div className={styles.sidebar}>
+        <div className={styles.top}>
           <img src={logo} onClick={() => handleClick("calendar/my")} />
-          <div className={styles["icons"]}>
+          <div className={styles.icons}>
             <IconButton
               className={styles[`${menu === "search" ? "click-icon" : ""}`]}
               onClick={() => handleClick("search")}
@@ -59,11 +60,29 @@ const Sidebar = () => {
             </IconButton>
           </div>
         </div>
-        <div className={styles["bottom"]}>
-          <div className={styles["icons"]}>
-            <IconButton className={styles["logout"]} onClick={handleLogout}>
+        <div className={styles.bottom}>
+          <div className={styles.icons}>
+            <IconButton
+              className={styles.logout}
+              onClick={() => setLogoutOpen(true)}
+            >
               <IoExitOutline />
             </IconButton>
+            <CustomModal
+              open={logoutOpen}
+              setOpen={setLogoutOpen}
+              confirmLabel="확인"
+              cancelLabel="취소"
+              handleConfirm={handleLogout}
+              children={
+                <div className={styles["modal-content"]}>
+                  <div className={styles.img}>
+                    <img src={iljung} />
+                  </div>
+                  <div className={styles.text}>로그아웃 하시겠습니까?</div>
+                </div>
+              }
+            />
             <IconButton
               className={styles[`${menu === "profile" ? "click-icon" : ""}`]}
               onClick={() => handleClick("profile")}
