@@ -12,7 +12,7 @@ import styles from "@styles/common/Sidebar.module.scss";
 import logo from "@assets/logo.png";
 import defaultImg from "@assets/defaultImg.png";
 import CustomModal from "@components/common/CustomModal";
-import iljung from "@assets/iljung.png";
+import iljung from "@assets/iljung_white.png";
 
 const Sidebar = () => {
   const navigate = useNavigate();
