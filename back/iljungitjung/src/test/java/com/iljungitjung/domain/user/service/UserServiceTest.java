@@ -1,4 +1,4 @@
-package com.iljungitjung.domain.user;
+package com.iljungitjung.domain.user.service;
 
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.user.dto.SignUpDto;
@@ -51,7 +51,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("회원 가입")
-    public void A() throws Exception {
+    public void SighUp() {
         //given
         String nickname = "닉네임";
         String description = "자기소개";
@@ -71,19 +71,19 @@ public class UserServiceTest {
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
 
         //when
-        when(temporaryUserRepository.findById(mockHttpServletRequest.getSession().getId())).thenReturn(temporaryUser);
+        when(temporaryUserRepository.findById(any(String.class))).thenReturn(temporaryUser);
         when(userRepository.save(any(User.class))).thenReturn(user);
 
         SignUpUserResponseDto signUpUserResponseDto = userService.signUpUser(signUpDto, mockHttpServletRequest);
 
         //then
-        Assertions.assertEquals(signUpUserResponseDto.getId(), 1L);
+        Assertions.assertEquals(1L, signUpUserResponseDto.getId());
 
     }
 
     @Test
     @DisplayName("이메일로 유저 검색")
-    public void B() throws Exception {
+    public void findUserByEmail() {
 
         //given
         Long userId = 1L;
@@ -94,18 +94,18 @@ public class UserServiceTest {
         user.get().setId(userId);
 
         //when
-        when(userRepository.findUserByEmail(email)).thenReturn(user);
+        when(userRepository.findUserByEmail(any(String.class))).thenReturn(user);
 
         Optional<User> returnUser = userService.findUserByEmail(email);
 
         //then
-        Assertions.assertEquals(returnUser.get().getId(), 1L);
+        Assertions.assertEquals(1L, returnUser.get().getId());
 
     }
 
     @Test
-    @DisplayName("이메일 중복 검사")
-    public void C() throws Exception {
+    @DisplayName("이메일 중복 검사(성공)")
+    public void emailRedundancyCheck() {
 
         //given
         Long userId = 1L;
@@ -116,18 +116,18 @@ public class UserServiceTest {
         user.get().setId(userId);
 
         //when
-        when(userRepository.existsUserByEmail(email)).thenReturn(false);
+        when(userRepository.existsUserByEmail(any(String.class))).thenReturn(false);
 
         boolean isExistUser = userService.isExistUserByEmail(email);
 
         //then
-        Assertions.assertEquals(isExistUser, false);
+        Assertions.assertEquals(false, isExistUser);
 
     }
 
     @Test
     @DisplayName("닉네임으로 유저 정보 조회")
-    public void D() throws Exception {
+    public void findUserInfoByNickname() {
 
         //given
         Long userId = 1L;
@@ -137,18 +137,18 @@ public class UserServiceTest {
         user.get().setId(userId);
 
         //when
-        when(userRepository.findUserByNickname(nickname)).thenReturn(user);
+        when(userRepository.findUserByNickname(any(String.class))).thenReturn(user);
 
         UserInfo userInfo = userService.getUserInfo(nickname);
 
         //then
-        Assertions.assertEquals(userInfo.getNickname(), nickname);
+        Assertions.assertEquals(nickname, userInfo.getNickname());
 
     }
 
     @Test
     @DisplayName("세션으로 유저 정보 조회")
-    public void E() throws Exception {
+    public void findUserInfoBySession(){
 
         //given
         Long userId = 1L;
@@ -160,19 +160,19 @@ public class UserServiceTest {
         Optional<RedisUser> redisUser = Optional.of(RedisUser.builder().nickname(nickname).build());
 
         //when
-        when(redisUserRepository.findById(httpSession.getId())).thenReturn(redisUser);
-        when(userRepository.findUserByNickname(nickname)).thenReturn(user);
+        when(redisUserRepository.findById(any())).thenReturn(redisUser);
+        when(userRepository.findUserByNickname(any(String.class))).thenReturn(user);
 
         UserInfo userInfo = userService.getUserInfo(httpSession);
 
         //then
-        Assertions.assertEquals(userInfo.getNickname(), nickname);
+        Assertions.assertEquals(nickname, userInfo.getNickname());
 
     }
 
     @Test
     @DisplayName("세션 정보로 유저 검색")
-    public void F() throws Exception {
+    public void findUserBySession()  {
 
         //given
         Long userId = 1L;
@@ -184,13 +184,13 @@ public class UserServiceTest {
         Optional<RedisUser> redisUser = Optional.of(RedisUser.builder().email(email).build());
 
         //when
-        when(redisUserRepository.findById(httpSession.getId())).thenReturn(redisUser);
-        when(userRepository.findUserByEmail(email)).thenReturn(user);
+        when(redisUserRepository.findById(any())).thenReturn(redisUser);
+        when(userRepository.findUserByEmail(any(String.class))).thenReturn(user);
 
         User returnUser = userService.findUserBySessionId(httpSession);
 
         //then
-        Assertions.assertEquals(returnUser.getId(), userId);
+        Assertions.assertEquals(1L, returnUser.getId());
 
     }
 

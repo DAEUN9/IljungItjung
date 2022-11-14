@@ -58,7 +58,6 @@ jacocoTestReport {
 			fileTree(dir: it, exclude: [
 					 "com/iljungitjung/IljungitjungApplication.class",
 					 "com/iljungitjung/global/**",
-					 "com/iljungitjung/domain/notification/**",
 					 "com/iljungitjung/domain/**/dto/**",
 					 "com/iljungitjung/domain/**/exception/**",
 			])
@@ -78,7 +77,6 @@ jacocoTestCoverageVerification {
 						, 'com.iljungitjung.IljungitjungApplication'
 						, 'com.iljungitjung.domain.*.dto.*'
 						, 'com.iljungitjung.domain.*.exception.*'
-						, 'com.iljungitjung.domain.notification.*'
 						, 'com.iljungitjung.domain.*.controller.*']
 			limit {
 				counter = 'LINE'
