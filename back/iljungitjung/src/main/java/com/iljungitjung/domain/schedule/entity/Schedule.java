@@ -83,7 +83,7 @@ public class Schedule {
     }
     // 추가
     public void deleted() {
-        this.type= Type.BLOCK;
+        this.type= Type.DELETE;
     }
     public void canceled(String cancelFrom, String reason){
         this.cancelFrom=cancelFrom;

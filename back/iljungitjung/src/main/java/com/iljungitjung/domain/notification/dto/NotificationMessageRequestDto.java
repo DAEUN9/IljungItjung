@@ -19,7 +19,7 @@ public class NotificationMessageRequestDto {
     @JsonProperty("content")
     private String content;
     @JsonProperty("messages")
-    private List<NotificationMessageDto> messages;
+    private List<NotificationMessage> messages;
 
     @Builder
     public NotificationMessageRequestDto(NotificationRequestDto requestDto, String phone) {
