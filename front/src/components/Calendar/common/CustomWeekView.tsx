@@ -1,12 +1,10 @@
-import { useEffect } from 'react';
-import { WeekView } from '@devexpress/dx-react-scheduler-material-ui';
+import { useEffect } from "react";
+import { WeekView } from "@devexpress/dx-react-scheduler-material-ui";
 
-import styles from '@styles/Calendar/Calendar.module.scss';
-import { getDay } from './util';
-
+import styles from "@styles/Calendar/Calendar.module.scss";
+import { getDay } from "./util";
 
 export default function CustomWeekView() {
-
   return (
     <WeekView
       startDayHour={9}

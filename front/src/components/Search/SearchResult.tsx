@@ -7,35 +7,36 @@ import styles from "@styles/Search/SearchResult.module.scss";
 import { RootState } from "@modules/index";
 
 const SearchResult = () => {
-  const { id, name, imgUrl, desc, detail, categories } = useSelector(
-    (state: RootState) => state.search
-  );
+  const { nickname, email, imagePath, introduction, description, categories } =
+    useSelector((state: RootState) => state.search);
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/calendar/${id}`);
+    navigate(`/calendar/${nickname}`);
   };
 
   return (
     <div className={styles["search-result"]}>
-      <div className={styles["profile"]}>
-        <div className={styles["img"]}>
-          <img src={imgUrl} />
+      <div className={styles.profile}>
+        <div className={styles.img}>
+          <img src={imagePath} />
         </div>
-        <div className={styles["right"]}>
-          <div className={styles["name"]}>{name}</div>
-          <div className={styles["desc"]}>{desc}</div>
+        <div className={styles.right}>
+          <div className={styles.name}>{nickname}</div>
+          <div className={styles.desc}>{introduction}</div>
         </div>
       </div>
-      <div className={styles["detail"]}>{detail}</div>
-      <div className={styles["categories"]}>
-        {categories.map((category, index) => (
-          <div className={styles["chip"]} key={index}>
-            <CustomChip label={category} onClick={() => {}} />
-          </div>
-        ))}
+      <div className={styles.detail}>{description}</div>
+      <div className={styles.categories}>
+        {categories &&
+          categories.length > 0 &&
+          categories.map((category, index) => (
+            <div className={styles.chip} key={index}>
+              <CustomChip label={category.categoryName} onClick={() => {}} />
+            </div>
+          ))}
       </div>
-      <div className={styles["button"]}>
+      <div className={styles.button}>
         <CustomButton
           variant="contained"
           children="바로가기"
