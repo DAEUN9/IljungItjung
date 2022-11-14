@@ -68,7 +68,7 @@ public class NotificationServiceTest {
 
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01000000000";
+        String phone = "01000000001";
         String email = "email";
 
         User userFrom = User.builder()
@@ -101,7 +101,7 @@ public class NotificationServiceTest {
 
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01000000000";
+        String phone = "01000000001";
         String email = "email";
 
         User userFrom = User.builder()
@@ -135,7 +135,7 @@ public class NotificationServiceTest {
 
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01000000000";
+        String phone = "01000000001";
         String email = "email";
         String cancelFrom = "제공자";
 
@@ -173,7 +173,7 @@ public class NotificationServiceTest {
 
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01000000000";
+        String phone = "01000000001";
         String email = "email";
         String cancelFrom = "사용자";
 
@@ -209,7 +209,7 @@ public class NotificationServiceTest {
 
         String userFromNickname = "1";
         String userToNickname = "2";
-        String phone = "01000000000";
+        String phone = "01000000001";
         String email = "email";
 
         User userFrom = User.builder()

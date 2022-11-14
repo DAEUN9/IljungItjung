@@ -29,6 +29,7 @@ public class NotificationServiceImpl implements NotificationService{
     private final String REFUSE_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]\n [%s] 예약 신청이 거절되었습니다.\n";
     private final String DELETE_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]의 [%s]예약이 취소되었습니다.\n";
     private final String REQUEST_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]님이 [%s]예약을 신청 하셨습니다.\n홈페이지에서 확인해주세요.";
+    private final String TEMP_PHONE = "01000000000";
     private final NotificationCorrespondence notificationCorrespondence;
 
     @Override
@@ -55,9 +56,18 @@ public class NotificationServiceImpl implements NotificationService{
     @Override
     public void autoReservationMessage(Schedule schedule) {
         NotificationMessage message = makeMessage(schedule);
-        List<NotificationMessage> messageList = makeMessages(message);
-        NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
-        sendMessage(requestDto);
+        if (existPhoneNum(message)) {
+            List<NotificationMessage> messageList = makeMessages(message);
+            NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
+            sendMessage(requestDto);
+        }
+    }
+
+    private boolean existPhoneNum(NotificationMessage message) {
+        if (message.getTo().equals(TEMP_PHONE) || message.getTo() == null) {
+            return false;
+        }
+        return true;
     }
 
     private List<NotificationMessage> makeMessages(NotificationMessage... message){
@@ -65,19 +75,6 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     private NotificationMessage makeMessage(Schedule schedule) {
-
-        /*
-            DB에 폰번호 없음 임시로 null체크
-        */
-        String phone;
-        String phone2;
-        try {
-            phone = schedule.getPhonenum();
-            phone2 = schedule.getUserTo().getPhonenum();
-        } catch (Exception e) {
-            return new NotificationMessage("01000000000", "임시문자");
-        }
-        //
         if (schedule.getType().equals(Type.CANCEL) && schedule.getCancelFrom().equals("제공자")) {
             return new NotificationMessage(schedule.getPhonenum(), makeContents(schedule, 1));
         }

@@ -21,7 +21,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("알림 서비스 예외")
@@ -53,6 +53,19 @@ public class NotificationServiceExceptionTest {
 
         assertThatThrownBy(() -> notificationService.sendMessage(requestDto))
                 .isInstanceOf(FailSendMessageException.class);
+    }
+
+    @Test
+    @DisplayName("전화번호가 존재하지 않는 예약은 문자를 보내지 않음")
+    public void B() throws Exception {
+        String content = "하이";
+        String phone = null;
+
+        NotificationMessage message = new NotificationMessage(phone, content);
+        List<NotificationMessage> messageList = makeMessages(message);
+        NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
+
+        verify(notificationCorrespondence, times(0)).makeHeaders();
     }
 
     private List<NotificationMessage> makeMessages(NotificationMessage... message){
