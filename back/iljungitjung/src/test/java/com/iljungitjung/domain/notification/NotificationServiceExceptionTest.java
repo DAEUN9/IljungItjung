@@ -1,12 +1,12 @@
 package com.iljungitjung.domain.notification;
 
-import com.iljungitjung.domain.notification.dto.NotificationMessageDto;
+import com.iljungitjung.domain.notification.dto.NotificationMessage;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.exception.FailSendMessageException;
 import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.notification.service.NotificationServiceImpl;
-import com.iljungitjung.global.scheduler.NotificationNcloud;
+import com.iljungitjung.global.scheduler.NotificationCorrespondence;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,11 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("알림 서비스 예외")
@@ -30,28 +31,44 @@ public class NotificationServiceExceptionTest {
     private NotificationService notificationService;
 
     @MockBean
-    private NotificationNcloud notificationNcloud;
+    private NotificationCorrespondence notificationCorrespondence;
 
     @BeforeEach
     public void init(){
-        notificationService = new NotificationServiceImpl(notificationNcloud);
+        notificationService = new NotificationServiceImpl(notificationCorrespondence);
     }
 
     @Test
     @DisplayName("ncloud 메세지 전송 예외 발생")
     public void A() throws Exception {
-        String message = "하이";
+        String content = "하이";
         String phone = "01000000000";
 
-        NotificationMessageDto notificationMessageDto = new NotificationMessageDto(phone, message);
-        List<NotificationMessageDto> messageList = new ArrayList<>();
-        messageList.add(notificationMessageDto);
+        NotificationMessage message = new NotificationMessage(phone, content);
+        List<NotificationMessage> messageList = makeMessages(message);
         NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
 
-        when(notificationNcloud.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationNcloud.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.BAD_GATEWAY.toString()));
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.BAD_GATEWAY.toString()));
 
         assertThatThrownBy(() -> notificationService.sendMessage(requestDto))
                 .isInstanceOf(FailSendMessageException.class);
+    }
+
+    @Test
+    @DisplayName("전화번호가 존재하지 않는 예약은 문자를 보내지 않음")
+    public void B() throws Exception {
+        String content = "하이";
+        String phone = null;
+
+        NotificationMessage message = new NotificationMessage(phone, content);
+        List<NotificationMessage> messageList = makeMessages(message);
+        NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
+
+        verify(notificationCorrespondence, times(0)).makeHeaders();
+    }
+
+    private List<NotificationMessage> makeMessages(NotificationMessage... message){
+        return Arrays.asList(message);
     }
 }

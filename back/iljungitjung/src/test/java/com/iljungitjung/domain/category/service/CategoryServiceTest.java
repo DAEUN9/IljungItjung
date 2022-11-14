@@ -8,8 +8,6 @@ import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.category.exception.NoGrantDeleteCategoryException;
 import com.iljungitjung.domain.category.exception.NoGrantUpdateCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
-import com.iljungitjung.domain.category.service.CategoryService;
-import com.iljungitjung.domain.category.service.CategoryServiceImpl;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
