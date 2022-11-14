@@ -1,4 +1,4 @@
-package com.iljungitjung.domain.user;
+package com.iljungitjung.domain.user.service;
 
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.user.dto.SignUpDto;
@@ -51,7 +51,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("회원 가입")
-    public void A() throws Exception {
+    public void SighUp() throws Exception {
         //given
         String nickname = "닉네임";
         String description = "자기소개";
@@ -83,7 +83,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("이메일로 유저 검색")
-    public void B() throws Exception {
+    public void findUserByEmail() throws Exception {
 
         //given
         Long userId = 1L;
