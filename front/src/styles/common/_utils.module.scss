@@ -7,6 +7,19 @@ $primary-color: #6b7bb1;
   display: flex;
 }
 
+@mixin custom-scroll {
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($color: #6b7bb1, $alpha: 0.7);
+    border-radius: 10px;
+    border: 4px solid transparent;
+    background-clip: padding-box;
+  }
+}
+
 @mixin custom-modal {
   & .text {
     text-align: center;
