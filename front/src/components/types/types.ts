@@ -33,7 +33,6 @@ interface SchedulerDate {
   [propertyName: string]: any;
 }
 
-<<<<<<< .merge_file_a12524
 interface MyProfile {
   nickname: string;
   email: string;
@@ -42,16 +41,11 @@ interface MyProfile {
   description: string;
 }
 
-=======
->>>>>>> .merge_file_a08552
 export type {
   SettingCategoryState,
   SearchCategoryState,
   SearchState,
   SchedulerDateTime,
   SchedulerDate,
-<<<<<<< .merge_file_a12524
   MyProfile,
-=======
->>>>>>> .merge_file_a08552
 };
