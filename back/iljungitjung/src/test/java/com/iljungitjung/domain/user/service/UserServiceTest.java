@@ -272,7 +272,7 @@ public class UserServiceTest {
     void isExistNicknameTest(){
         String existNickname = "existNickname";
 
-        when(userRepository.existsUserByNickname(existNickname)).thenThrow(AlreadyExistUserException.class);
+        when(userRepository.existsUserByNickname(existNickname)).thenReturn(true);
 
         assertThrows(AlreadyExistUserException.class, () -> userService.isExistUserByNickname(existNickname));
     }
