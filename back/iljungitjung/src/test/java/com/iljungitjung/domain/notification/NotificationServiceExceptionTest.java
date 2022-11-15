@@ -42,7 +42,7 @@ public class NotificationServiceExceptionTest {
 
     @BeforeEach
     public void init(){
-        notificationService = new NotificationServiceImpl(notificationCorrespondence, userRepository);
+        notificationService = new NotificationServiceImpl(notificationCorrespondence);
     }
 
     @Test

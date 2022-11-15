@@ -1,6 +1,6 @@
 package com.iljungitjung.global.scheduler;
 
-import com.iljungitjung.domain.notification.dto.NotificationMessageRequestDto;
+import com.iljungitjung.domain.notification.dto.MessageRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.exception.FailSignatureKeyErrorException;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class NotificationCorrespondence {
     private final String SIGNATURE_URL = "/sms/v2/services/";
     private final String MESSAGE_REQUEST_URL = "https://sens.apigw.ntruss.com/sms/v2/services/";
 
-    public NotificationResponseDto sendNcloud(HttpEntity<NotificationMessageRequestDto> body) {
+    public NotificationResponseDto sendNcloud(HttpEntity<MessageRequestDto> body) {
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.exchange(MESSAGE_REQUEST_URL + NCLOUD_SERVICE_ID + "/messages",
                         HttpMethod.POST, body, NotificationResponseDto.class).getBody();

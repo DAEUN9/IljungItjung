@@ -37,7 +37,7 @@ public class NotificationServiceTest {
     private UserRepository userRepository;
     @BeforeEach
     public void init(){
-        notificationService = new NotificationServiceImpl(notificationCorrespondence, userRepository);
+        notificationService = new NotificationServiceImpl(notificationCorrespondence);
     }
 
     @Test

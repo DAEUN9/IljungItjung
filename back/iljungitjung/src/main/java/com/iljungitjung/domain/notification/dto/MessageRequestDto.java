@@ -10,22 +10,28 @@ import java.util.List;
 
 @Getter
 @ToString
-public class NotificationMessageRequestDto {
+public class MessageRequestDto {
     @JsonProperty("type")
     private String type;
     @JsonProperty("from")
     private String from;
-    // 추후 LMS 기준으로 변경
     @JsonProperty("content")
     private String content;
     @JsonProperty("messages")
     private List<NotificationMessage> messages;
 
     @Builder
-    public NotificationMessageRequestDto(NotificationRequestDto requestDto, String phone) {
-        this.type = "LMS";
+    public MessageRequestDto(NotificationRequestDto requestDto, String phone) {
+        this.type = choiceType(requestDto);
         this.from = phone;
         this.content = "기본메시지";
         this.messages = requestDto.getMessages();
+    }
+
+    private String choiceType(NotificationRequestDto requestDto) {
+        if (requestDto.getContent().length() >= 50) {
+            return "LMS";
+        }
+        return "SMS";
     }
 }
