@@ -21,19 +21,16 @@ public class UserInfo {
 
     private String description;
 
-    private List<CategoryInfo> categories;
+    private String introduction;
 
-    public UserInfo(RedisUser redisUser){
-        this.nickname = redisUser.getNickname();
-        this.email = redisUser.getEmail();
-        this.imagePath = redisUser.getProfileImg();
-    }
+    private List<CategoryInfo> categories;
 
     public UserInfo(User user){
         this.nickname = user.getNickname();
         this.email = user.getEmail();
         this.imagePath = user.getImagePath();
         this.description = user.getDescription();
+        this.introduction = user.getIntroduction();
     }
 
     public void convertCategories(List<Category> categoryList){
