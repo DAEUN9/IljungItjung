@@ -33,10 +33,19 @@ interface SchedulerDate {
   [propertyName: string]: any;
 }
 
+interface MyProfile {
+  nickname: string;
+  email: string;
+  imagePath: string;
+  introduction?: string;
+  description: string;
+}
+
 export type {
   SettingCategoryState,
   SearchCategoryState,
   SearchState,
   SchedulerDateTime,
   SchedulerDate,
+  MyProfile,
 };
