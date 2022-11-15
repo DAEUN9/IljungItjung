@@ -17,52 +17,7 @@ import CustomAppointmentTooltip from '@components/Calendar/common/CustomAppointm
 import Profile from '@components/Calendar/common/Profile';
 import InfoTabs from './My/InfoTabs';
 import { getSchedule } from '@api/calendar';
-
-interface CommonState {
-  id: number;
-  categoryName: string;
-}
-
-interface DateState {
-  startDate: string;
-  endDate: string;
-}
-
-interface CategoryState extends CommonState {
-  color: string;
-  time: string;
-}
-
-interface RequestState extends CommonState, DateState {
-  color: string;
-  contents: string;
-  phonenum: string;
-}
-
-interface AcceptState extends RequestState {}
-
-interface BlockState extends CategoryState, DateState {
-  contents: string;
-  block: boolean;
-}
-
-interface CancelState extends CategoryState, DateState {
-  reason: string;
-  cancelFrom: string;
-  contents: string;
-  phonenum: string;
-}
-
-interface ScheduleApiData {
-  status: string;
-  data: {
-    categoryList: CategoryState[];
-    requestList: RequestState[];
-    acceptList: AcceptState[];
-    blockList: BlockState[];
-    cancelList: CancelState[];
-  };
-}
+import { ScheduleApiData } from '@components/types/types';
 
 const next = [
   {
@@ -129,8 +84,7 @@ const MyCalendar = () => {
   useEffect(() => {
     if (profile.nickname !== '') {
       getSchedule(profile.nickname, true, (res: ScheduleApiData) => {
-        const requestList = res.data.requestList;
-        const acceptList = res.data.acceptList;
+        const { requestList, acceptList } = res.data;
         console.log(res.data);
       });
       dispatch(setScheduleList(next));
