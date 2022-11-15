@@ -94,6 +94,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserInfoList getUserInfoList(String nickname) {
         List<User> userList = userRepository.findByNicknameContaining(nickname);
+        for(User user : userList){
+            System.out.println(user.getNickname());
+        }
         List<UserInfo> userInfoList = userList.stream().map(user -> getUserInfo(user.getNickname())).collect(Collectors.toList());
         return new UserInfoList(userInfoList);
     }
@@ -114,5 +117,11 @@ public class UserServiceImpl implements UserService{
         user.updateUser(updateUser);
         userRepository.save(user);
         log.debug("user save ok");
+    }
+
+    @Override
+    public void isExistUserByNickname(String nickname) {
+        if(userRepository.existsUserByNickname(nickname))
+            throw new AlreadyExistUserException();
     }
 }
