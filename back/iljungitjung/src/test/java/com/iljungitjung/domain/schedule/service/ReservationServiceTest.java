@@ -237,19 +237,28 @@ public class ReservationServiceTest{
             throw new DateFormatErrorException();
         }
 
-        ReservationBlockRequestDto reservationBlockRequestDto = new ReservationBlockRequestDto(block, date, startTime, endTime);
+        ReservationBlockDto reservationBlockRequestDto = new ReservationBlockDto(block, date, startTime, endTime);
 
         Schedule schedule = reservationBlockRequestDto.toEntity(startDateFormat, endDateFormat);
         schedule.setId(scheduleId);
 
+        List<Schedule> scheduleList = new ArrayList<>();
+        scheduleList.add(schedule);
+
+        List<ReservationBlockDto> reservationBlockDtoList = new ArrayList<>();
+        reservationBlockDtoList.add(reservationBlockRequestDto);
+
+        ReservationBlockListRequestDto reservationBlockListRequestDto = new ReservationBlockListRequestDto(reservationBlockDtoList);
+
         //when
         when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userTo);
         when(scheduleRepository.save(any(Schedule.class))).thenReturn(schedule);
+        when(scheduleRepository.findByUserTo_IdIs(any(Long.class))).thenReturn(scheduleList);
 
-        ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationBlock(reservationBlockRequestDto, httpSession);
+        ReservationBlockResponseDto reservationBlockResponseDto = reservationService.reservationBlock(reservationBlockListRequestDto, httpSession);
 
         //then
-        Assertions.assertEquals(1L, reservationIdResponseDto.getId());
+        Assertions.assertEquals(1L, reservationBlockResponseDto.getCount());
 
     }
     private Schedule createSchedule() {
