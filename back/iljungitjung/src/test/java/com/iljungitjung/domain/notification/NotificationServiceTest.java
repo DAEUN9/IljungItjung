@@ -8,6 +8,7 @@ import com.iljungitjung.domain.notification.service.NotificationServiceImpl;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.user.entity.User;
+import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.global.scheduler.NotificationCorrespondence;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,9 +33,11 @@ public class NotificationServiceTest {
     private NotificationService notificationService;
     @MockBean
     private NotificationCorrespondence notificationCorrespondence;
+    @MockBean
+    private UserRepository userRepository;
     @BeforeEach
     public void init(){
-        notificationService = new NotificationServiceImpl(notificationCorrespondence);
+        notificationService = new NotificationServiceImpl(notificationCorrespondence, userRepository);
     }
 
     @Test

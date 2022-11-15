@@ -11,4 +11,5 @@ import org.springframework.http.ResponseEntity;
 public interface NotificationService {
     NotificationResponseDto sendMessage(NotificationRequestDto requestDto);
     void autoReservationMessage(Schedule schedule);
+    String requestRandomNumber(String phone);
 }

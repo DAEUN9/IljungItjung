@@ -7,6 +7,7 @@ import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.exception.*;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
+import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.global.scheduler.NotificationCorrespondence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +32,10 @@ public class NotificationServiceImpl implements NotificationService{
     private final String DELETE_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]의 [%s]예약이 취소되었습니다.\n";
     private final String REQUEST_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]님이 [%s]예약을 신청 하셨습니다.\n홈페이지에서 확인해주세요.";
     private final String TEMP_PHONE = "01000000000";
+    private final String AUTH_PHONE = "인증 번호를 입력해 주세요/\n[%s]";
+    private final String PRESENTED_NUMBER = "이미 존재하는 전화번호 입니다.";
     private final NotificationCorrespondence notificationCorrespondence;
+    private final UserRepository userRepository;
 
     @Override
     public NotificationResponseDto sendMessage(NotificationRequestDto requestDto) {
@@ -51,6 +56,30 @@ public class NotificationServiceImpl implements NotificationService{
 
     private String statusAccepted() {
         return HttpStatus.ACCEPTED.value()+"";
+    }
+
+    @Override
+    public String requestRandomNumber(String phone) {
+        if (checkDuplicatePhone(phone)) {
+            return PRESENTED_NUMBER;
+        }
+        String randomNum = makeRandomNumber();
+        NotificationMessage message = new NotificationMessage(phone, makeAuthenticateContent(randomNum));
+        sendMessage(NotificationRequestDto.createFromMessages(makeMessages(message)));
+        return randomNum;
+    }
+
+    private String makeRandomNumber() {
+        int number = ThreadLocalRandom.current().nextInt(1000, 9999 + 1);
+        return Integer.toString(number);
+    }
+
+    private String makeAuthenticateContent(String number) {
+        return String.format(AUTH_PHONE, number);
+    }
+
+    private boolean checkDuplicatePhone(String phone) {
+        return userRepository.existsUserByPhonenum(phone);
     }
 
     @Override
