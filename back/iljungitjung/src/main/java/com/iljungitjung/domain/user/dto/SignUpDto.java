@@ -19,12 +19,12 @@ public class SignUpDto {
     private String nickname;
 
     @Size(min = 0, max = 50, message = "한줄소개는 최소 0자, 최대 50자만 가능합니다.")
-    private String description;
+    private String introduction;
 
     public User toEntity(){
         return User.builder()
                 .nickname(this.nickname)
-                .description(this.description)
+                .introduction(this.introduction)
                 .build();
     }
 }

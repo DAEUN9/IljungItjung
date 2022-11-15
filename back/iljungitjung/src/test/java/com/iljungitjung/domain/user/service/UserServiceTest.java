@@ -58,7 +58,7 @@ public class UserServiceTest {
     public void SighUp() {
         //given
         String nickname = "닉네임";
-        String description = "자기소개";
+        String introduction = "자기소개";
 
         String id = "1";
         String email = "email@naver.com";
@@ -66,7 +66,7 @@ public class UserServiceTest {
 
         Long userId = 1L;
 
-        SignUpDto signUpDto = new SignUpDto(nickname, description);
+        SignUpDto signUpDto = new SignUpDto(nickname, introduction);
 
         User user = signUpDto.toEntity();
         user.setId(userId);
@@ -82,7 +82,6 @@ public class UserServiceTest {
 
         //then
         assertEquals(1L, signUpUserResponseDto.getId());
-
     }
 
     @Test

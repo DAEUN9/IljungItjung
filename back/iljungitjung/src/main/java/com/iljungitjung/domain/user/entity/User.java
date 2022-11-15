@@ -69,7 +69,7 @@ public class User {
     }
 
     @Builder
-    public User(String nickname, String phonenum, String imagePath, String openTime, String closeTime, String email, String description) {
+    public User(String nickname, String phonenum, String imagePath, String openTime, String closeTime, String email, String description, String introduction) {
         this.nickname = nickname;
         this.phonenum = phonenum;
         this.imagePath = imagePath;
@@ -77,5 +77,6 @@ public class User {
         this.closeTime = closeTime;
         this.email = email;
         this.description = description;
+        this.introduction = introduction;
     }
 }
