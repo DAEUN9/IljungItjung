@@ -233,6 +233,8 @@ public class NotificationServiceTest {
         when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 
         notificationService.autoReservationMessage(schedule);
+        verify(notificationCorrespondence, times(1)).makeHeaders();
+        verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
     }
     private String statusAccepted() {
         return HttpStatus.ACCEPTED.value()+"";
