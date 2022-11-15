@@ -4,6 +4,7 @@ import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.user.dto.SignUpDto;
 import com.iljungitjung.domain.user.dto.SignUpUserResponseDto;
 import com.iljungitjung.domain.user.dto.UserInfo;
+import com.iljungitjung.domain.user.dto.UserInfoList;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
@@ -21,9 +22,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -77,7 +81,7 @@ public class UserServiceTest {
         SignUpUserResponseDto signUpUserResponseDto = userService.signUpUser(signUpDto, mockHttpServletRequest);
 
         //then
-        Assertions.assertEquals(1L, signUpUserResponseDto.getId());
+        assertEquals(1L, signUpUserResponseDto.getId());
 
     }
 
@@ -99,7 +103,7 @@ public class UserServiceTest {
         Optional<User> returnUser = userService.findUserByEmail(email);
 
         //then
-        Assertions.assertEquals(1L, returnUser.get().getId());
+        assertEquals(1L, returnUser.get().getId());
 
     }
 
@@ -121,7 +125,7 @@ public class UserServiceTest {
         boolean isExistUser = userService.isExistUserByEmail(email);
 
         //then
-        Assertions.assertEquals(false, isExistUser);
+        assertEquals(false, isExistUser);
 
     }
 
@@ -142,7 +146,7 @@ public class UserServiceTest {
         UserInfo userInfo = userService.getUserInfo(nickname);
 
         //then
-        Assertions.assertEquals(nickname, userInfo.getNickname());
+        assertEquals(nickname, userInfo.getNickname());
 
     }
 
@@ -166,7 +170,7 @@ public class UserServiceTest {
         UserInfo userInfo = userService.getUserInfo(httpSession);
 
         //then
-        Assertions.assertEquals(nickname, userInfo.getNickname());
+        assertEquals(nickname, userInfo.getNickname());
 
     }
 
@@ -190,8 +194,42 @@ public class UserServiceTest {
         User returnUser = userService.findUserBySessionId(httpSession);
 
         //then
-        Assertions.assertEquals(1L, returnUser.getId());
+        assertEquals(1L, returnUser.getId());
 
     }
 
+    @Test
+    @DisplayName("닉네임이 포함된 유저 리스트 검색")
+    void searchUsersByNickname(){
+        String searchNickname = "aaa";
+
+        String firstUserNickname = "aaacaa";
+        User firstUser = User.builder()
+                .nickname(firstUserNickname)
+                .build();
+
+        String secondUserNickname = "aaaba";
+        User secondUser = User.builder()
+                .nickname(secondUserNickname)
+                .build();
+
+        String thirdUserNickname = "aaabaaa";
+        User thirdUser = User.builder()
+                .nickname(thirdUserNickname)
+                .build();
+
+        List<User> userList = Arrays.asList(firstUser, secondUser, thirdUser);
+
+        when(userRepository.findByNicknameContaining(searchNickname)).thenReturn(userList);
+        when(userRepository.findUserByNickname(firstUserNickname)).thenReturn(Optional.ofNullable(firstUser));
+        when(userRepository.findUserByNickname(secondUserNickname)).thenReturn(Optional.ofNullable(secondUser));
+        when(userRepository.findUserByNickname(thirdUserNickname)).thenReturn(Optional.ofNullable(thirdUser));
+
+        UserInfoList result = userService.getUserInfoList(searchNickname);
+
+        assertEquals(result.getUsers().size(), 3);
+        assertEquals(result.getUsers().get(0).getNickname(), firstUserNickname);
+        assertEquals(result.getUsers().get(1).getNickname(), secondUserNickname);
+        assertEquals(result.getUsers().get(2).getNickname(), thirdUserNickname);
+    }
 }
