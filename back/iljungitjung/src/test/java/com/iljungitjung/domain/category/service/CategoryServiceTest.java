@@ -1,12 +1,9 @@
 package com.iljungitjung.domain.category.service;
 
-import com.iljungitjung.domain.category.dto.CategoryCreateRequestDto;
+import com.iljungitjung.domain.category.dto.CategoryCreateDto;
 import com.iljungitjung.domain.category.dto.CategoryCreateResponseDto;
 import com.iljungitjung.domain.category.dto.CategoryListCreateRequestDto;
 import com.iljungitjung.domain.category.entity.Category;
-import com.iljungitjung.domain.category.exception.NoExistCategoryException;
-import com.iljungitjung.domain.category.exception.NoGrantDeleteCategoryException;
-import com.iljungitjung.domain.category.exception.NoGrantUpdateCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.repository.UserRepository;
@@ -19,7 +16,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -56,19 +52,23 @@ class CategoryServiceTest {
 
         User userFrom = createUserFrom();
 
-        CategoryCreateRequestDto categoryCreateRequestDto = new CategoryCreateRequestDto(categoryName, time, color);
-
-        List<CategoryCreateRequestDto> categoryCreateRequestDtoList = new ArrayList<>();
-        categoryCreateRequestDtoList.add(categoryCreateRequestDto);
-
-        CategoryListCreateRequestDto categoryListCreateRequestDto = new CategoryListCreateRequestDto(categoryCreateRequestDtoList);
+        CategoryCreateDto categoryCreateRequestDto = new CategoryCreateDto(categoryName, time, color);
 
         Category category = categoryCreateRequestDto.toEntity();
         category.setId(categoryId);
 
+        List<Category> categoryList = new ArrayList<>();
+        categoryList.add(category);
+
+        List<CategoryCreateDto> categoryCreateRequestDtoList = new ArrayList<>();
+        categoryCreateRequestDtoList.add(categoryCreateRequestDto);
+
+        CategoryListCreateRequestDto categoryListCreateRequestDto = new CategoryListCreateRequestDto(categoryCreateRequestDtoList);
+
         //when
         when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
+        when(categoryRepository.findByUser_IdIs(any(Long.class))).thenReturn(categoryList);
 
         CategoryCreateResponseDto categoryCreateResponseDto = categoryService.addCategory(categoryListCreateRequestDto, httpSession);
 

@@ -1,11 +1,13 @@
 package com.iljungitjung.domain.schedule.controller;
 
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
+import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockDto;
+import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockListRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.service.ReservationService;
 import com.iljungitjung.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,12 +23,14 @@ import javax.validation.constraints.Size;
 @RequestMapping("/reservations")
 @RestController
 @Validated
+@Slf4j
 public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
     public ResponseEntity<CommonResponse> reservationRequest(@RequestBody @Valid ReservationRequestDto reservationRequestDto
             , HttpSession httpSession){
+
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationRequest(reservationRequestDto, httpSession)), HttpStatus.OK);
     }
 
@@ -53,9 +57,9 @@ public class ReservationController {
     }
 
     @PostMapping("/block")
-    public ResponseEntity<CommonResponse> reservationBlock(@RequestBody @Valid ReservationBlockRequestDto reservationBlockRequestDto
+    public ResponseEntity<CommonResponse> reservationBlock(@RequestBody @Valid ReservationBlockListRequestDto reservationBlockListRequestDto
             , HttpSession httpSession){
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationBlock(reservationBlockRequestDto, httpSession)), HttpStatus.OK);
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(reservationService.reservationBlock(reservationBlockListRequestDto, httpSession)), HttpStatus.OK);
     }
 
     @GetMapping
