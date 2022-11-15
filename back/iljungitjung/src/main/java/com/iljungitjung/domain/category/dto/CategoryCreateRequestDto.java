@@ -11,7 +11,6 @@ import javax.validation.constraints.Size;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 public class CategoryCreateRequestDto {
 
     @NotBlank(message = "categoryName은 필수 입력 값입니다.")

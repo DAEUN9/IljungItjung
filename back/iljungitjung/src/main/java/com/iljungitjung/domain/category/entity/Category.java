@@ -22,7 +22,7 @@ public class Category {
     @JoinColumn(name="user_id")
     private User user;
 
-    @Column(nullable = false, unique = true, name = "category_name")
+    @Column(nullable = false, name = "category_name")
     private String categoryName;
 
     @Column(nullable = false)
@@ -50,9 +50,4 @@ public class Category {
         this.time = time;
     }
 
-    public void change(Category category) {
-        this.categoryName = category.getCategoryName();
-        this.color = category.getColor();
-        this.time = category.getTime();
-    }
 }
