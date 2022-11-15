@@ -1,6 +1,6 @@
 import { IoSearchOutline } from "react-icons/io5";
 import { IconButton, InputBase } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@modules/index";
 
@@ -43,6 +43,13 @@ const data = [
   },
 ];
 
+interface SearchApiData {
+  status: string;
+  data: {
+    users: SearchState[];
+  };
+}
+
 const SearchPage = () => {
   const [search, setSearch] = useState("");
   const [searchList, setSearchList] = useState<SearchState[]>([]);
@@ -55,8 +62,8 @@ const SearchPage = () => {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === "Enter") {
-      getSearchList(search, (res: SearchState[]) => {
-        setSearchList(res);
+      getSearchList(search, (res: SearchApiData) => {
+        setSearchList(res.data.users);
       });
     }
   };
@@ -85,8 +92,8 @@ const SearchPage = () => {
                   nickname={item.nickname}
                   email={item.email}
                   imagePath={item.imagePath}
-                  desc={item.desc}
-                  detail={item.detail}
+                  introduction={item.introduction}
+                  description={item.description}
                   categories={item.categories}
                 />
               ))

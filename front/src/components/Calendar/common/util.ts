@@ -91,6 +91,24 @@ export const getStringFromDate = (time: Date | string | undefined) => {
   return str;
 };
 
+export const makeFormat = (time: string) => {
+  if (time.length === 1) return "0" + time;
+  return time;
+};
+
+export const getFullStringFromDate = (time: Date) => {
+  if (!time) return "";
+
+  const day = time.getDay().toString();
+  const year = time.getFullYear().toString();
+  let month = makeFormat(time.getMonth().toString());
+  let date = makeFormat(time.getDate().toString());
+  let hour = makeFormat(time.getHours().toString());
+  let min = makeFormat(time.getMinutes().toString());
+
+  return day + year + month + date + hour + min;
+};
+
 export const getFullDate = (date: SchedulerDateTime | undefined) => {
   switch (typeof date) {
     case "undefined":

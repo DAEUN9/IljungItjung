@@ -1,4 +1,4 @@
-import { apiInstance } from '@api/index';
+import { apiInstance } from "@api/index";
 
 const api = apiInstance();
 
@@ -17,18 +17,41 @@ interface ReservationType {
 }
 
 // 캘린더 일정 조회
-export function getSchedule(nickname: string, isMyView: boolean, success: any, fail: any) {
+export function getSchedule(nickname: string, isMyView: boolean, success: any) {
   const params = { isMyView };
 
-  api.get(`/schedules/${nickname}`, { params }).then(success).catch(fail);
+  api
+    .get(`/schedules/${nickname}`, { params })
+    .then(success)
+    .catch((err) => console.log(err));
 }
 
 // 요청 수락 or 거절
-export function acceptRequest(id: number, data: AcceptRequestType, success: any, fail: any) {
-  api.put(`/reservation/${id}`, data).then(success).catch(fail);
+export function acceptRequest(
+  id: number,
+  data: AcceptRequestType,
+  success: any
+) {
+  api
+    .put(`/reservation/${id}`, data)
+    .then(success)
+    .catch((err) => console.log(err));
 }
 
 // 예약 요청
-export function requestReservation(data: ReservationType, success: any, fail: any) {
-  api.post(`/reservation`, data).then(success).catch(fail);
+export function requestReservation(data: ReservationType, success: any) {
+  api
+    .post(`/reservation`, data)
+    .then(success)
+    .catch((err) => console.log(err));
+}
+
+// 타인 프로필
+export function getOtherProfile(nickname: string, success: any) {
+  const params = { nickname };
+
+  api
+    .get(`/users`, { params })
+    .then(success)
+    .catch((err) => console.log(err));
 }

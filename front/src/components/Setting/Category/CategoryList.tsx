@@ -1,14 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Snackbar } from "@mui/material";
 
 import CustomChip from "@components/common/CustomChip";
 import styles from "@styles/Setting/CategoryList.module.scss";
 import { delCategory, selectCategory, setCategory } from "@modules/setting";
-import { CategoryState } from "@components/types/types";
+import { SettingCategoryState } from "@components/types/types";
 import { RootState } from "@modules/index";
 
-const data: CategoryState[] = [
+const data: SettingCategoryState[] = [
   // { name: "커트", color: "#FF0000", hour: "2", min: "30" },
   // { name: "손발톱관리", color: "#000000", hour: "1", min: "00" },
   // { name: "목욕", color: "#00FF00", hour: "3", min: "00" },
@@ -23,16 +23,16 @@ const CategoryList = () => {
   );
 
   const dispatch = useDispatch();
-  const onSetCategory = (categories: CategoryState[]) =>
+  const onSetCategory = (categories: SettingCategoryState[]) =>
     dispatch(setCategory(categories));
-  const onDelCategory = (category: CategoryState) =>
+  const onDelCategory = (category: SettingCategoryState) =>
     dispatch(delCategory(category));
-  const onSelectCategory = (category: CategoryState) =>
+  const onSelectCategory = (category: SettingCategoryState) =>
     dispatch(selectCategory(category));
 
   const [delSnackbar, setDelSnackbar] = useState(false);
 
-  const handleDeleteCategory = (category: CategoryState) => {
+  const handleDeleteCategory = (category: SettingCategoryState) => {
     if (categories.length < 2) {
       setDelSnackbar(true);
     } else {
