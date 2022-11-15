@@ -3,6 +3,7 @@ package com.iljungitjung.domain.user.entity;
 
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.schedule.entity.Schedule;
+import com.iljungitjung.domain.user.dto.UpdateUser;
 import com.iljungitjung.global.login.entity.TemporaryUser;
 import lombok.*;
 
@@ -37,6 +38,8 @@ public class User {
 
     private String description;
 
+    private String introduction;
+
     @OneToMany(mappedBy = "userTo", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Schedule> scheduleRequestList = new ArrayList<>();
 
@@ -52,6 +55,12 @@ public class User {
 
     public void setCategoryList(List<Category> categoryList) {
         this.categoryList = categoryList;
+    }
+
+    public void updateUser(UpdateUser updateUserDto){
+        this.nickname = updateUserDto.getNickname();
+        this.description = updateUserDto.getDescription();
+        this.introduction = updateUserDto.getIntroduction();
     }
 
     public void signUp(TemporaryUser temporaryUser){
