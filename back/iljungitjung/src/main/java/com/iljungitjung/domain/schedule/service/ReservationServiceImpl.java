@@ -140,7 +140,13 @@ public class ReservationServiceImpl implements ReservationService{
             }
         }
 
-        for(ReservationBlockDto reservationBlockDto : reservationBlockListRequestDto.getReservationBlockList()){
+        user.getBlockDayList().clear();
+
+        for(boolean isBlock : reservationBlockListRequestDto.getDays()){
+            user.getBlockDayList().add(isBlock);
+        }
+
+        for(ReservationBlockDto reservationBlockDto : reservationBlockListRequestDto.getBlockList()){
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
             Date startDate;
             Date endDate;

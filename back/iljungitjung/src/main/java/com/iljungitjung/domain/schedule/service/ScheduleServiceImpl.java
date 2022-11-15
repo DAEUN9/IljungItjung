@@ -45,6 +45,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         List<ScheduleBlockDto> blockList = new ArrayList<>();
         List<ScheduleCancelDto> cancelList = new ArrayList<>();
         List<CategoryViewResponseDto> categoryList = new ArrayList<>();
+        List<Boolean> blockDayList = new ArrayList<>();
 
         boolean myScheduleView = false;
         boolean validDate = true;
@@ -84,7 +85,9 @@ public class ScheduleServiceImpl implements ScheduleService{
             categoryList.add(new CategoryViewResponseDto(category));
         }
 
-        ScheduleViewResponseDto responseDtos = new ScheduleViewResponseDto(categoryList, requestList, acceptList, blockList, cancelList);
+        blockDayList = userTo.getBlockDayList();
+
+        ScheduleViewResponseDto responseDtos = new ScheduleViewResponseDto(categoryList, requestList, acceptList, blockList, cancelList, blockDayList);
 
         return responseDtos;
     }

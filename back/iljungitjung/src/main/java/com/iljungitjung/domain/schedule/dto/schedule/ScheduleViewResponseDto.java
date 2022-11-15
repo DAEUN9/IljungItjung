@@ -11,6 +11,7 @@ import java.util.List;
 public class ScheduleViewResponseDto {
 
     private final List<CategoryViewResponseDto> categoryList;
+
     private final List<ScheduleViewDto> requestList;
     private final List<ScheduleViewDto> acceptList;
 
@@ -18,11 +19,14 @@ public class ScheduleViewResponseDto {
 
     private final List<ScheduleCancelDto> cancelList;
 
-    public ScheduleViewResponseDto(List<CategoryViewResponseDto> categoryList, List<ScheduleViewDto> requestList, List<ScheduleViewDto> acceptList, List<ScheduleBlockDto> blockList, List<ScheduleCancelDto> cancelList) {
+    private final List<Boolean> blockDayList;
+
+    public ScheduleViewResponseDto(List<CategoryViewResponseDto> categoryList, List<ScheduleViewDto> requestList, List<ScheduleViewDto> acceptList, List<ScheduleBlockDto> blockList, List<ScheduleCancelDto> cancelList, List<Boolean> blockDayList) {
         this.categoryList = categoryList;
         this.requestList=requestList;
         this.acceptList=acceptList;
         this.blockList=blockList;
         this.cancelList=cancelList;
+        this.blockDayList=blockDayList;
     }
 }

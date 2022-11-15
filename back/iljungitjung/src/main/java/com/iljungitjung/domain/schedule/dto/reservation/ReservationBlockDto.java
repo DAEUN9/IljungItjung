@@ -16,9 +16,6 @@ import java.util.Date;
 @NoArgsConstructor
 public class ReservationBlockDto {
 
-    @NotNull(message = "block는 true 또는 false 입니다.")
-    private boolean block;
-
     @Size(min=8, max=8, message = "date 형식을 맞춰주세요 (ex.20221017)")
     @Pattern(regexp = "^[0-9]+$", message = "date는 숫자만 입력가능합니다.")
     private String date;
@@ -34,7 +31,6 @@ public class ReservationBlockDto {
     public Schedule toEntity(Date startDate, Date endDate) {
         return Schedule.builder()
                 .categoryName("차단")
-                .block(block)
                 .startDate(startDate)
                 .endDate(endDate)
                 .type(Type.BLOCK)

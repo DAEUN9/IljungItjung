@@ -49,6 +49,9 @@ public class User {
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Category> categoryList = new ArrayList<>();
 
+
+    private List<Boolean> blockDayList = new ArrayList<>();
+
     public void setId(Long id) {
         this.id = id;
     }
