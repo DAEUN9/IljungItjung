@@ -19,18 +19,18 @@ public class UserInfo {
 
     private String imagePath;
 
-    private List<CategoryInfo> categories;
+    private String description;
 
-    public UserInfo(RedisUser redisUser){
-        this.nickname = redisUser.getNickname();
-        this.email = redisUser.getEmail();
-        this.imagePath = redisUser.getProfileImg();
-    }
+    private String introduction;
+
+    private List<CategoryInfo> categories;
 
     public UserInfo(User user){
         this.nickname = user.getNickname();
         this.email = user.getEmail();
         this.imagePath = user.getImagePath();
+        this.description = user.getDescription();
+        this.introduction = user.getIntroduction();
     }
 
     public void convertCategories(List<Category> categoryList){
@@ -40,4 +40,5 @@ public class UserInfo {
             categories.add(new CategoryInfo(category));
         }
     }
+
 }

@@ -1,6 +1,5 @@
 package com.iljungitjung.domain.user.dto;
 
-import com.iljungitjung.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,20 +11,12 @@ import javax.validation.constraints.Size;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignUpDto {
-
+public class UpdateUser {
     @NotBlank(message = "닉네임은 필수 입력 값입니다.")
     @Pattern(regexp = "^[a-z|A-Z|0-9|ㄱ-ㅎ|가-힣]{2,10}$", message = "닉네임은 최소 2자, 최대 10자 영어, 한글, 숫자만 입력가능합니다.")
     private String nickname;
-
-    @Size(min = 0, max = 50, message = "한줄소개는 최소 0자, 최대 50자만 가능합니다.")
+    @Size(max = 50, message = "한줄 소개는 0 ~ 50자만 가능합니다.")
     private String introduction;
-
-    public User toEntity(){
-        return User.builder()
-                .nickname(this.nickname)
-                .introduction(this.introduction)
-                .build();
-    }
+    @Size(max = 300, message = "설명은 0 ~ 300자만 가능 합니다.")
+    private String description;
 }
-

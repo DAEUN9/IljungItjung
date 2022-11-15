@@ -39,6 +39,8 @@ dependencies {
 
 	implementation 'org.apache.httpcomponents:httpclient'
 	implementation 'org.apache.httpcomponents:httpcore'
+
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
 test {
@@ -56,7 +58,6 @@ jacocoTestReport {
 			fileTree(dir: it, exclude: [
 					 "com/iljungitjung/IljungitjungApplication.class",
 					 "com/iljungitjung/global/**",
-					 "com/iljungitjung/domain/notification/**",
 					 "com/iljungitjung/domain/**/dto/**",
 					 "com/iljungitjung/domain/**/exception/**",
 			])
@@ -76,7 +77,6 @@ jacocoTestCoverageVerification {
 						, 'com.iljungitjung.IljungitjungApplication'
 						, 'com.iljungitjung.domain.*.dto.*'
 						, 'com.iljungitjung.domain.*.exception.*'
-						, 'com.iljungitjung.domain.notification.*'
 						, 'com.iljungitjung.domain.*.controller.*']
 			limit {
 				counter = 'LINE'

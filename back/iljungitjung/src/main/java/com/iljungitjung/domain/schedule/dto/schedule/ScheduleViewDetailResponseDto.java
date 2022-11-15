@@ -18,7 +18,7 @@ public class ScheduleViewDetailResponseDto {
     private final String phonenum;
 
     public ScheduleViewDetailResponseDto(Schedule schedule){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
         this.id=schedule.getId();
         this.categoryName=schedule.getCategoryName();
         this.contents=schedule.getContents();

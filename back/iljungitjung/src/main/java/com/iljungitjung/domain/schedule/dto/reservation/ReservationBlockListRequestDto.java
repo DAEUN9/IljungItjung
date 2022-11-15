@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReservationViewRequestDto {
+public class ReservationBlockListRequestDto {
 
-    private String startDate;
-    private String endDate;
+    private List<ReservationBlockDto> reservationBlockList;
 
 }
