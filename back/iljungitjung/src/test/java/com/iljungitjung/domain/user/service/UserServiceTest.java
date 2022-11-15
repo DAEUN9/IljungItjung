@@ -1,10 +1,7 @@
 package com.iljungitjung.domain.user.service;
 
 import com.iljungitjung.domain.category.entity.Category;
-import com.iljungitjung.domain.user.dto.SignUpDto;
-import com.iljungitjung.domain.user.dto.SignUpUserResponseDto;
-import com.iljungitjung.domain.user.dto.UserInfo;
-import com.iljungitjung.domain.user.dto.UserInfoList;
+import com.iljungitjung.domain.user.dto.*;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
@@ -230,5 +227,41 @@ public class UserServiceTest {
         assertEquals(result.getUsers().get(0).getNickname(), firstUserNickname);
         assertEquals(result.getUsers().get(1).getNickname(), secondUserNickname);
         assertEquals(result.getUsers().get(2).getNickname(), thirdUserNickname);
+    }
+
+    @Test
+    @DisplayName("사용자 정보 업데이트")
+    void updateUserTest(){
+        String sessionId = "sessionId";
+        String originUserNickname = "originNickname";
+        String originUserIntroduction = "originIntroduction";
+        String originUserDescription = "originDescription";
+
+        String email = "email@email";
+
+        RedisUser redisUser = RedisUser.builder()
+                .nickname(originUserNickname)
+                .email(email)
+                .build();
+
+        User user = User.builder()
+                .nickname(originUserDescription)
+                .introduction(originUserIntroduction)
+                .description(originUserDescription)
+                .build();
+
+        String updateNickname = "updateNickname";
+        String updateIntroduction = "updateIntroduction";
+        String updateDescription = "updateDescription";
+        UpdateUser updateUserDto = new UpdateUser(updateNickname, updateIntroduction, updateDescription);
+
+        when(redisUserRepository.findById(any())).thenReturn(Optional.ofNullable(redisUser));
+        when(userRepository.findUserByEmail(email)).thenReturn(Optional.ofNullable(user));
+
+        userService.updateUser(updateUserDto, httpSession);
+
+        assertEquals(updateNickname, user.getNickname());
+        assertEquals(updateIntroduction, user.getIntroduction());
+        assertEquals(updateDescription, user.getDescription());
     }
 }
