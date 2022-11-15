@@ -1,6 +1,7 @@
 package com.iljungitjung.domain.user.controller;
 
 import com.iljungitjung.domain.user.dto.SignUpDto;
+import com.iljungitjung.domain.user.dto.UpdateUser;
 import com.iljungitjung.domain.user.service.UserService;
 import com.iljungitjung.global.common.CommonResponse;
 import com.iljungitjung.global.login.entity.RedisUser;
@@ -54,5 +55,10 @@ public class UserController {
             throw new ExpireRedisUserException();
         });
         userService.deleteUserByEmail(redisUser.getEmail());
+    }
+
+    @PutMapping
+    public void updateUser(@Valid @RequestBody UpdateUser updateUser, HttpSession session){
+        userService.updateUser(updateUser, session);
     }
 }

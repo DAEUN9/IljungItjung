@@ -1,9 +1,6 @@
 package com.iljungitjung.domain.user.service;
 
-import com.iljungitjung.domain.user.dto.SignUpDto;
-import com.iljungitjung.domain.user.dto.SignUpUserResponseDto;
-import com.iljungitjung.domain.user.dto.UserInfo;
-import com.iljungitjung.domain.user.dto.UserInfoList;
+import com.iljungitjung.domain.user.dto.*;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
@@ -97,9 +94,6 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserInfoList getUserInfoList(String nickname) {
         List<User> userList = userRepository.findByNicknameContaining(nickname);
-        for(User user : userList){
-            System.out.println(user.getNickname());
-        }
         List<UserInfo> userInfoList = userList.stream().map(user -> getUserInfo(user.getNickname())).collect(Collectors.toList());
         return new UserInfoList(userInfoList);
     }
@@ -107,5 +101,18 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void deleteUserByEmail(String email) {
         userRepository.deleteUserByEmail(email);
+    }
+
+    @Override
+    public void updateUser(UpdateUser updateUser, HttpSession session) {
+        RedisUser sessionUser = redisUserRepository.findById(session.getId()).orElseThrow(() -> {
+            throw new ExpireTemporaryUserException();
+        });
+        User user = userRepository.findUserByEmail(sessionUser.getEmail()).orElseThrow(() -> {
+            throw new NoExistUserException();
+        });
+        user.updateUser(updateUser);
+        userRepository.save(user);
+        log.debug("user save ok");
     }
 }
