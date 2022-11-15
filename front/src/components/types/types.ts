@@ -95,4 +95,5 @@ export type {
   SchedulerDate,
   ScheduleApiData,
   MyProfile,
+  CategoryState,
 };
