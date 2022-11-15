@@ -85,9 +85,6 @@ public class PhoneServiceTest {
     }
 
 
-
-
-
     private List<NotificationMessage> makeMessages(NotificationMessage... message){
         return Arrays.asList(message);
     }

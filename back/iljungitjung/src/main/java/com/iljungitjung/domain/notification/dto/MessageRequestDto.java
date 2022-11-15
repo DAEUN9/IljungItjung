@@ -29,7 +29,7 @@ public class MessageRequestDto {
     }
 
     private String choiceType(NotificationRequestDto requestDto) {
-        if (requestDto.getContent().length() >= 50) {
+        if (requestDto.getMessages().get(0).getContent().length() >= 50) {
             return "LMS";
         }
         return "SMS";
