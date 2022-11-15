@@ -9,11 +9,14 @@ import styles from '@styles/Calendar/Calendar.module.scss';
 import CustomTodayButton from '@components/Calendar/common/CustomTodayButton';
 import CustomDateNavigator from '@components/Calendar/common/CustomDateNavigator';
 import Profile from '@components/Calendar/common/Profile';
-import Reservation from './Other/Reservation';
+import Reservation from './Other/Reservation/Reservation';
 import OtherAppointments from './Other/OtherAppointments';
 import OtherWeekView from './Other/OtherWeekView';
 import { RootState } from '@modules/index';
 import { setDisabledMap } from '@modules/othercalendar';
+import { useParams } from 'react-router-dom';
+import { getSchedule } from '@api/calendar';
+import { ScheduleApiData } from '@components/types/types';
 
 const next = [
   {
@@ -56,18 +59,37 @@ const next = [
     phone: '010-3333-3333',
     color: '#D7CBF4',
   },
+  {
+    id: 4,
+    startDate: '2022-11-11T13:00',
+    endDate: '2022-11-11T14:30',
+    title: '카테고리',
+    nickname: '닉네임',
+    desc: '요청사항',
+    phone: '010-3333-3333',
+    color: '#D7CBF4',
+  },
 ];
 
 const OtherCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const current = useSelector((state:RootState) => state.othercalendar.current);
+  const current = useSelector(
+    (state: RootState) => state.othercalendar.current
+  );
   const dispatch = useDispatch();
+  const { nickname } = useParams();
 
   useEffect(() => {
-    const now = new Date();
-    const filter = next.filter((item) => new Date(item.startDate) >= now);
-    dispatch(setDisabledMap(filter));
-  }, []);
+    if (nickname) {
+      getSchedule(nickname, false, (res: ScheduleApiData) => {
+        const { categoryList, blockList, acceptList } = res.data;
+        console.log(res.data);
+      });
+      const now = new Date();
+      const filter = next.filter((item) => new Date(item.startDate) >= now);
+      dispatch(setDisabledMap(filter));
+    }
+  }, [nickname]);
 
   return (
     <>
@@ -85,7 +107,7 @@ const OtherCalendar = () => {
         </Scheduler>
       </Paper>
       <div className={styles.info}>
-        <Profile />
+        {/* <Profile /> */}
         <Reservation />
       </div>
     </>

@@ -1,20 +1,43 @@
 import React from 'react';
+import Skeleton from '@mui/material/Skeleton';
 
 import styles from '@styles/Calendar/Calendar.module.scss';
-import iljung from '@assets/defaultImg.png';
+import { MyProfile } from '@components/types/types';
 
-const Profile = () => {
+interface ProfileProps {
+  profile: MyProfile;
+}
+
+const Profile = ({ profile }: ProfileProps) => {
   return (
     <div className={styles.profile}>
       <div className={styles['profile-inner']}>
         <div className={styles['profile-title']}>
-          <img src={iljung} alt="iljung" />
+          {!profile.imagePath ? (
+            <Skeleton variant="circular" width={60} height={60} />
+          ) : (
+            <img src={profile.imagePath} alt="profile" />
+          )}
           <div className={styles['profile-my']}>
-            <div>일정이</div>
-            <div>IJIJ</div>
+            {!profile.nickname ? (
+              <Skeleton variant="text" width={100} sx={{ fontSize: '27px' }} />
+            ) : (
+              <div>{profile.nickname}</div>
+            )}
+            {!profile.introduction ? (
+              <Skeleton variant="text" width={200} />
+            ) : (
+              <div>{profile.introduction}</div>
+            )}
           </div>
         </div>
-        <div className={styles['profile-desc']}>안녕하세요 일정있정입니다.</div>
+        <div className={styles['profile-desc']}>
+          {!profile.description ? (
+            <Skeleton variant="rounded" width="100%" height="150px" />
+          ) : (
+            <div>{profile.description} </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -72,36 +72,57 @@ export const formatTime = (
   }
   endTime += endHour + ":" + endMinutes;
 
-  return startTime + ' - ' + endTime;
+  return startTime + " - " + endTime;
 };
 
 export const getStringFromDate = (time: Date | string | undefined) => {
-  if(!time) return '';
-  
+  if (!time) return "";
+
   let date = new Date();
-  
-  if(typeof time === 'string') date = new Date(time);
+
+  if (typeof time === "string") date = new Date(time);
   else date = time;
 
-  const str = date.getFullYear().toString() + date.getMonth().toString() + date.getDate().toString();
-  
+  const str =
+    date.getFullYear().toString() +
+    date.getMonth().toString() +
+    date.getDate().toString();
+
   return str;
-}
+};
+
+export const makeFormat = (time: string) => {
+  if (time.length === 1) return "0" + time;
+  return time;
+};
+
+export const getFullStringFromDate = (time: Date) => {
+  if (!time) return "";
+
+  const day = time.getDay().toString();
+  const year = time.getFullYear().toString();
+  let month = makeFormat(time.getMonth().toString());
+  let date = makeFormat(time.getDate().toString());
+  let hour = makeFormat(time.getHours().toString());
+  let min = makeFormat(time.getMinutes().toString());
+
+  return day + year + month + date + hour + min;
+};
 
 export const getFullDate = (date: SchedulerDateTime | undefined) => {
   switch (typeof date) {
-    case 'undefined':
-      return '-';
-    case 'string':
+    case "undefined":
+      return "-";
+    case "string":
       return date;
-    case 'object':
+    case "object":
       return (
         date.getFullYear() +
-        '년 ' +
+        "년 " +
         (date.getMonth() + 1) +
-        '월 ' +
+        "월 " +
         date.getDate() +
-        '일'
+        "일"
       );
   }
 };
