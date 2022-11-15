@@ -23,7 +23,7 @@ public class NotificationMessageRequestDto {
 
     @Builder
     public NotificationMessageRequestDto(NotificationRequestDto requestDto, String phone) {
-        this.type = "SMS";
+        this.type = "LMS";
         this.from = phone;
         this.content = "기본메시지";
         this.messages = requestDto.getMessages();
