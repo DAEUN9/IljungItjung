@@ -20,7 +20,7 @@ services:
   redis:
     image: redis
     volumes:
-      - "/home/ubuntu/docker-volume/redis/conf:/usr/local/etc/redis/redis.conf"
+      - "/home/ubuntu/docker-volume/redis/redis.conf:/usr/local/etc/redis/redis.conf"
     environment:
       - REDIS_PASSWORD=ijij
       - ALLOW_EMPTY_PASSWORD=no
