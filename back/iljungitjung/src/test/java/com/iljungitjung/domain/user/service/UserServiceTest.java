@@ -25,8 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -275,5 +274,14 @@ public class UserServiceTest {
         when(userRepository.existsUserByNickname(existNickname)).thenReturn(true);
 
         assertThrows(AlreadyExistUserException.class, () -> userService.isExistUserByNickname(existNickname));
+    }
+
+    @Test
+    @DisplayName("사용자 닉네임이 중복이 아닐시 그냥 종료")
+    void isNotExistNicknameTest(){
+        String notExistNickname = "notExistNickname";
+
+        when(userRepository.existsUserByNickname(notExistNickname)).thenReturn(false);
+        userService.isExistUserByNickname(notExistNickname);
     }
 }
