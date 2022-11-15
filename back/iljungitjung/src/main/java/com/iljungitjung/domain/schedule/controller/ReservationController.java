@@ -36,7 +36,6 @@ public class ReservationController {
 
     @PutMapping("/{scheduleId}")
     public ResponseEntity<CommonResponse> reservationManage(
-            @Pattern(regexp = "^[0-9]+$", message = "scheduleId는 숫자만 입력가능합니다.")
             @PathVariable("scheduleId") Long id,
 
             @RequestBody @Valid ReservationManageRequestDto reservationManageRequestDto
@@ -47,7 +46,6 @@ public class ReservationController {
 
     @DeleteMapping("/{scheduleId}")
     public void reservationDelete(
-            @Pattern(regexp = "^[0-9]+$", message = "scheduleId는 숫자만 입력가능합니다.")
             @PathVariable("scheduleId") Long id,
 
             @RequestParam String reason
