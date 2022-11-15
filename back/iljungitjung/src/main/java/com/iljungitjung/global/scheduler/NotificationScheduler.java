@@ -34,18 +34,9 @@ public class NotificationScheduler {
         List<Schedule> todayScheduleList = scheduleRepository.findByStartDateBetween(startToday, endToday);
         HashMap<String, List<NotificationSchedulerDto>> phoneHashMap = new HashMap<>();
         List<NotificationSchedulerDto> emptyScheduleList = new ArrayList<>();
-        String phone;
         for (Schedule schedule : todayScheduleList) {
             if (!checkAccepted(schedule)) continue;
-            /*
-            DB에 폰번호 없음 임시로 null체크
-            */
-            try {
-                phone = schedule.getPhonenum();
-            } catch (Exception e) {
-                continue;
-            }
-            //
+            String phone = schedule.getPhonenum();
             NotificationSchedulerDto todaySchedule = new NotificationSchedulerDto(schedule);
             List<NotificationSchedulerDto> tempScheduleList = phoneHashMap.getOrDefault(phone, emptyScheduleList);
             tempScheduleList.add(todaySchedule);
