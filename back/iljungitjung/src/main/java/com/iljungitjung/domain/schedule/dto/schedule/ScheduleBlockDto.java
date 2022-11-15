@@ -16,14 +16,15 @@ public class ScheduleBlockDto {
     private final String startDate;
     private final String endDate;
 
-
+    private final boolean block;
 
     public ScheduleBlockDto(Schedule schedule){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm aa");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
         this.id=schedule.getId();
         this.categoryName=schedule.getCategoryName();
         this.contents=schedule.getContents();
         this.startDate=simpleDateFormat.format(schedule.getStartDate());
         this.endDate=simpleDateFormat.format(schedule.getEndDate());
+        this.block= schedule.isBlock();
     }
 }
