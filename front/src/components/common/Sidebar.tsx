@@ -1,5 +1,6 @@
 import { Drawer, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import {
   IoSearchOutline,
@@ -24,6 +25,7 @@ interface MyInfoApiData {
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const url = new URL(window.location.href);
   const [menu, setMenu] = useState(
@@ -43,7 +45,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     getMyProfile((res: MyInfoApiData) => {
-      setProfile(res.data);
+      dispatch(setProfile(res.data));
     });
   }, []);
 

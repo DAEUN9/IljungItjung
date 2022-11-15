@@ -16,6 +16,56 @@ import CustomAppointments from "@components/Calendar/common/CustomAppointments";
 import CustomAppointmentTooltip from "@components/Calendar/common/CustomAppointmentTooltip";
 import Profile from "@components/Calendar/common/Profile";
 import InfoTabs from "./My/InfoTabs";
+import { getSchedule } from "@api/calendar";
+
+interface CategoryState {
+  id: number;
+  categoryName: string;
+  color: string;
+  time: string;
+}
+
+interface RequestState {
+  id: number;
+  categoryName: string;
+  color: string;
+  startDate: string;
+  endDate: string;
+  contents: string;
+  phonenum: string;
+}
+
+interface AcceptState {
+  id: number;
+  categoryName: string;
+  color: string;
+  startDate: string;
+  endDate: string;
+  contents: string;
+  phonenum: string;
+}
+
+interface BlockState {
+  id: number;
+  categoryName: string;
+  contents: string;
+  startDate: string;
+  endDate: string;
+  block: boolean;
+}
+
+interface CanceState {
+  id: number;
+  categoryName: string;
+  startDate: string;
+  endDate: string;
+  reason: string;
+  cancelFrom: string;
+  contents: string;
+  phonenum: string;
+}
+
+interface ScheduleApiData {}
 
 const next = [
   {
@@ -74,14 +124,18 @@ const request = [
 ];
 
 const MyCalendar = () => {
+  const profile = useSelector((state: RootState) => state.profile.profile);
   const list = useSelector((state: RootState) => state.mycalendar.list);
   const dispatch = useDispatch();
   const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
-    dispatch(setScheduleList(next));
-    dispatch(setRequestList(request));
-  }, []);
+    if (profile.nickname !== "") {
+      // getSchedule(profile.nickname, true, )
+      dispatch(setScheduleList(next));
+      dispatch(setRequestList(request));
+    }
+  }, [profile]);
 
   return (
     <>
@@ -100,7 +154,7 @@ const MyCalendar = () => {
         </Scheduler>
       </Paper>
       <div className={styles.info}>
-        <Profile />
+        <Profile profile={profile} />
         <InfoTabs />
       </div>
     </>
