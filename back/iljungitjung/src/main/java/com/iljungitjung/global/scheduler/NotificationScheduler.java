@@ -1,6 +1,6 @@
 package com.iljungitjung.global.scheduler;
 
-import com.iljungitjung.domain.notification.dto.NotificationMessageDto;
+import com.iljungitjung.domain.notification.dto.NotificationMessage;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationSchedulerDto;
 import com.iljungitjung.domain.notification.service.NotificationService;
@@ -67,13 +67,13 @@ public class NotificationScheduler {
     }
 
     private void sendTodaySchedules(String phone, List<NotificationSchedulerDto> scheduleList) {
-        NotificationMessageDto message = new NotificationMessageDto(phone, makeContents(scheduleList));
+        NotificationMessage message = new NotificationMessage(phone, makeContents(scheduleList));
         NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(makeMessages(message));
 
         notificationService.sendMessage(requestDto);
     }
 
-    private List<NotificationMessageDto> makeMessages(NotificationMessageDto... message){
+    private List<NotificationMessage> makeMessages(NotificationMessage... message){
         return Arrays.asList(message);
     }
 

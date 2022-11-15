@@ -18,7 +18,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 @RequiredArgsConstructor
-public class NotificationNcloud {
+public class NotificationCorrespondence {
 
     @Value("${message.ncloud.service_id}")
     private String NCLOUD_SERVICE_ID;
