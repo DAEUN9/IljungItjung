@@ -125,7 +125,6 @@ public class ReservationServiceImpl implements ReservationService{
         scheduleRepository.delete(schedule);
         schedule.deleted();
         notificasionService.autoReservationMessage(schedule);
-        return new ReservationIdResponseDto(scheduleId);
     }
 
     @Override

@@ -50,7 +50,7 @@ public class ReservationServiceErrorTest {
 
     @BeforeEach
     public void init(){
-        reservationService = new ReservationServiceImpl(scheduleRepository, categoryRepository, userRepository, userService);
+        reservationService = new ReservationServiceImpl(scheduleRepository, categoryRepository, userRepository, userService, notificationService);
     }
 
     @Test
