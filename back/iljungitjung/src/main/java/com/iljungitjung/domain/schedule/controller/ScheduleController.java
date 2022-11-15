@@ -39,7 +39,6 @@ public class ScheduleController {
 
     @GetMapping("/detail/{scheduleId}")
     public ResponseEntity<CommonResponse> scheduleViewDetail(
-            @Pattern(regexp = "^[0-9]+$", message = "scheduleId는 숫자만 입력가능합니다.")
             @PathVariable("scheduleId") Long scheduleId){
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(scheduleService.scheduleViewDetail(scheduleId)), HttpStatus.OK);
     }
