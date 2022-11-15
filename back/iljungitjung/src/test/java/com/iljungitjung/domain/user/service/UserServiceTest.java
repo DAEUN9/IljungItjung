@@ -3,6 +3,7 @@ package com.iljungitjung.domain.user.service;
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.user.dto.*;
 import com.iljungitjung.domain.user.entity.User;
+import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
 import com.iljungitjung.domain.user.service.UserServiceImpl;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -263,5 +264,24 @@ public class UserServiceTest {
         assertEquals(updateNickname, user.getNickname());
         assertEquals(updateIntroduction, user.getIntroduction());
         assertEquals(updateDescription, user.getDescription());
+    }
+
+    @Test
+    @DisplayName("사용자 닉네임 중복시 AlreadyExistUserException 에러 발생")
+    void isExistNicknameTest(){
+        String existNickname = "existNickname";
+
+        when(userRepository.existsUserByNickname(existNickname)).thenReturn(true);
+
+        assertThrows(AlreadyExistUserException.class, () -> userService.isExistUserByNickname(existNickname));
+    }
+
+    @Test
+    @DisplayName("사용자 닉네임이 중복이 아닐시 그냥 종료")
+    void isNotExistNicknameTest(){
+        String notExistNickname = "notExistNickname";
+
+        when(userRepository.existsUserByNickname(notExistNickname)).thenReturn(false);
+        userService.isExistUserByNickname(notExistNickname);
     }
 }
