@@ -9,7 +9,7 @@ public interface ReservationService {
     ReservationIdResponseDto reservationManage(Long id, ReservationManageRequestDto reservationManageRequestDto, HttpSession httpSession);
 
     void reservationDelete(Long id, String reason, HttpSession httpSession);
-    ReservationIdResponseDto reservationBlock(ReservationBlockRequestDto reservationBlockRequestDto, HttpSession httpSession);
+    ReservationBlockResponseDto reservationBlock(ReservationBlockListRequestDto reservationBlockListRequestDto, HttpSession httpSession);
 
     ReservationViewResponseDto reservationView(String startDate, String endDate, HttpSession httpSession);
 

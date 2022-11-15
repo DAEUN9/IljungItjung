@@ -1,4 +1,4 @@
-package com.iljungitjung.domain.category.dto;
+package com.iljungitjung.domain.schedule.dto.reservation;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryListCreateRequestDto {
-    private List<CategoryCreateDto> categoryList;
+public class ReservationBlockListRequestDto {
+
+    private List<ReservationBlockDto> reservationBlockList;
 
 }
