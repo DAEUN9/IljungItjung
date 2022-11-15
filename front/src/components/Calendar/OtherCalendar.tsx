@@ -97,7 +97,7 @@ const OtherCalendar = () => {
         </Scheduler>
       </Paper>
       <div className={styles.info}>
-        <Profile />
+        {/* <Profile /> */}
         <Reservation />
       </div>
     </>
