@@ -15,8 +15,8 @@ import OtherWeekView from './Other/OtherWeekView';
 import { RootState } from '@modules/index';
 import { setDisabledMap } from '@modules/othercalendar';
 import { useParams } from 'react-router-dom';
-import { getSchedule } from '@api/calendar';
-import { ScheduleApiData } from '@components/types/types';
+import { getOtherProfile, getSchedule } from '@api/calendar';
+import { MyProfile, ScheduleApiData } from '@components/types/types';
 
 const next = [
   {
@@ -71,7 +71,19 @@ const next = [
   },
 ];
 
+interface MyInfoApiData {
+  status: string;
+  data: MyProfile;
+}
+
 const OtherCalendar = () => {
+  const [profile, setProfile] = useState<MyProfile>({
+    nickname: '',
+    email: '',
+    imagePath: '',
+    introduction: '',
+    description: '',
+  });
   const [currentDate, setCurrentDate] = useState(new Date());
   const current = useSelector(
     (state: RootState) => state.othercalendar.current
@@ -81,13 +93,20 @@ const OtherCalendar = () => {
 
   useEffect(() => {
     if (nickname) {
+      // 프로필 설정
+      getOtherProfile(nickname, (res: MyInfoApiData) => {
+        setProfile(res.data);
+      });
+
+      // 캘린더 조회
       getSchedule(nickname, false, (res: ScheduleApiData) => {
         const { categoryList, blockList, acceptList } = res.data;
         console.log(res.data);
+
+        const now = new Date();
+        const filter = next.filter((item) => new Date(item.startDate) >= now);
+        dispatch(setDisabledMap(filter));
       });
-      const now = new Date();
-      const filter = next.filter((item) => new Date(item.startDate) >= now);
-      dispatch(setDisabledMap(filter));
     }
   }, [nickname]);
 
@@ -107,7 +126,7 @@ const OtherCalendar = () => {
         </Scheduler>
       </Paper>
       <div className={styles.info}>
-        {/* <Profile /> */}
+        <Profile profile={profile} />
         <Reservation />
       </div>
     </>

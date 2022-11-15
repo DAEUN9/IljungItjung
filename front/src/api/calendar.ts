@@ -30,17 +30,28 @@ export function getSchedule(nickname: string, isMyView: boolean, success: any) {
 export function acceptRequest(
   id: number,
   data: AcceptRequestType,
-  success: any,
-  fail: any
+  success: any
 ) {
-  api.put(`/reservation/${id}`, data).then(success).catch(fail);
+  api
+    .put(`/reservation/${id}`, data)
+    .then(success)
+    .catch((err) => console.log(err));
 }
 
 // 예약 요청
-export function requestReservation(
-  data: ReservationType,
-  success: any,
-  fail: any
-) {
-  api.post(`/reservation`, data).then(success).catch(fail);
+export function requestReservation(data: ReservationType, success: any) {
+  api
+    .post(`/reservation`, data)
+    .then(success)
+    .catch((err) => console.log(err));
+}
+
+// 타인 프로필
+export function getOtherProfile(nickname: string, success: any) {
+  const params = { nickname };
+
+  api
+    .get(`/users`, { params })
+    .then(success)
+    .catch((err) => console.log(err));
 }
