@@ -44,7 +44,7 @@ public class NotificationServiceExceptionTest {
 
     @Test
     @DisplayName("ncloud 메세지 전송 예외 발생")
-    public void A() throws Exception {
+    public void correspondenceNcloudExcepitionTest() throws Exception {
         String content = "하이";
 
         NotificationMessage message = new NotificationMessage(TEMP_PHONE, content);
@@ -61,7 +61,7 @@ public class NotificationServiceExceptionTest {
 
     @Test
     @DisplayName("전화번호가 null인 예약은 문자를 보내지 않음")
-    public void B() throws Exception {
+    public void phoneIsNullExceptionTest() throws Exception {
         String categoryName = "파마";
         String userFromNickname = "1";
         String userToNickname = "2";
@@ -90,7 +90,7 @@ public class NotificationServiceExceptionTest {
 
     @Test
     @DisplayName("전화번호가 임시 번호인 예약은 문자를 보내지 않음")
-    public void C() throws Exception {
+    public void phoneIsTempExceptionTest() throws Exception {
         String categoryName = "파마";
         String userFromNickname = "1";
         String userToNickname = "2";

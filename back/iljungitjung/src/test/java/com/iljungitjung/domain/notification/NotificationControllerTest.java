@@ -17,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,10 +46,10 @@ public class NotificationControllerTest {
 
     @Test
     @DisplayName("메시지 전송")
-    public void A() throws Exception {
+    public void sendMessageTest() throws Exception {
         //given
         String content = "하이";
-        String phone = "01000000000";
+        String phone = "01000000001";
 
         NotificationMessage notificationMessage = new NotificationMessage(phone, content);
         List<NotificationMessage> messageList = makeMessages(notificationMessage);
