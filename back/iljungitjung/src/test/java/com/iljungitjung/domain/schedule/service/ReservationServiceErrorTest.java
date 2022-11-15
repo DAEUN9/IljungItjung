@@ -196,11 +196,25 @@ public class ReservationServiceErrorTest {
     @DisplayName("일정 차단시 날짜 형식 입력을 잘못함")
     void inputDateErrorWhenBlockSchedule(){
         //given
+        boolean block = false;
+        String date="error";
+        String startTime = "error";
+        String endTime = "error";
+
         User userFrom = User.builder().build();
-        ReservationBlockListRequestDto reservationBlockListRequestDto = new ReservationBlockListRequestDto();
+
+        List<Schedule> scheduleList = new ArrayList<>();
+
+        ReservationBlockDto reservationBlockRequestDto = new ReservationBlockDto(block, date, startTime, endTime);
+        List<ReservationBlockDto> reservationBlockDtoList = new ArrayList<>();
+        reservationBlockDtoList.add(reservationBlockRequestDto);
+
+        ReservationBlockListRequestDto reservationBlockListRequestDto = new ReservationBlockListRequestDto(reservationBlockDtoList);
+
 
         //when
         when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+        when(scheduleRepository.findByUserTo_IdIs(any(Long.class))).thenReturn(scheduleList);
 
         //then
         Assertions.assertThrows(DateFormatErrorException.class, () -> {
@@ -224,6 +238,24 @@ public class ReservationServiceErrorTest {
             reservationService.reservationView(errorStartDate, errorEndDate, httpSession);
         });
     }
+    @Test
+    @DisplayName("일정 삭제시 해당 일정이 존재하지않음")
+    void NoExistScheduleWhenDeleteSchedule(){
+
+        //given
+        User userFrom = createUserFrom();
+
+        String reason = "이유";
+
+        //when
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+
+        //then
+        Assertions.assertThrows(NoExistScheduleException.class, () -> {
+            reservationService.reservationDelete(1L, reason, httpSession);
+        });
+    }
+
     @Test
     @DisplayName("일정 삭제시 권한 없음")
     void NoGrantDeleteWhenDeleteSchedule(){

@@ -53,7 +53,6 @@ public class ScheduleServiceImpl implements ScheduleService{
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
 
-
         if(userFrom.getId()==userTo.getId()) myScheduleView = true;
 
         if(startDate==null || endDate == null) validDate=false;
@@ -70,6 +69,7 @@ public class ScheduleServiceImpl implements ScheduleService{
             if(validDate && checkDate(schedule, startDateFormat, endDateFormat)) continue;
 
             if(myScheduleView){
+
                 if(schedule.getType().equals(Type.REQUEST)) requestList.add(new ScheduleViewDto(schedule));
                 else if(schedule.getType().equals(Type.CANCEL)) cancelList.add(new ScheduleCancelDto(schedule));
             }

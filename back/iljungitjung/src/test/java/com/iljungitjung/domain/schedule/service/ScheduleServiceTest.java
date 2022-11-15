@@ -212,10 +212,10 @@ class ScheduleServiceTest{
 
         //when
         when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
-        when(userRepository.findUserByNickname(any(String.class))).thenReturn(userTo);
+        when(userRepository.findUserByNickname(any(String.class))).thenReturn(Optional.of(userFrom));
         when(scheduleRepository.findByUserTo_IdIs(any(Long.class))).thenReturn(scheduleList);
 
-        ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView(userTo.get().getNickname(), null, null, httpSession);
+        ScheduleViewResponseDto scheduleViewResponseDto = scheduleService.scheduleView(userFrom.getNickname(), null, null, httpSession);
 
         //then
         Assertions.assertEquals(4L, scheduleViewResponseDto.getAcceptList().get(0).getId());
