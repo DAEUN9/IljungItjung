@@ -115,4 +115,10 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
         log.debug("user save ok");
     }
+
+    @Override
+    public void isExistUserByNickname(String nickname) {
+        if(userRepository.existsUserByNickname(nickname))
+            throw new AlreadyExistUserException();
+    }
 }
