@@ -44,7 +44,7 @@ public class NotificationServiceTest {
     @DisplayName("메시지 전송")
     public void sendMessageSuccessTest() throws Exception {
         String content = "하이";
-        String phone = "01000000000";
+        String phone = "01000000001";
 
         NotificationMessage message = new NotificationMessage(phone, content);
         List<NotificationMessage> messageList = makeMessages(message);

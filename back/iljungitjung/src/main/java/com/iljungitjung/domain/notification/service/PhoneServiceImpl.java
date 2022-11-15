@@ -42,7 +42,8 @@ public class PhoneServiceImpl implements PhoneService{
     private List<NotificationMessage> makeMessages(NotificationMessage... message){
         return Arrays.asList(message);
     }
-    private void sendMessage(NotificationRequestDto requestDto) {
+    @Override
+    public void sendMessage(NotificationRequestDto requestDto) {
         HttpEntity<MessageRequestDto> body = makeBody(requestDto);
         checkStatusEqualsAccpeted(notificationCorrespondence.sendNcloud(body));
     }
@@ -60,8 +61,8 @@ public class PhoneServiceImpl implements PhoneService{
         MessageRequestDto jsonBody = new MessageRequestDto(requestDto, SENDER_PHONE);
         return new HttpEntity<>(jsonBody, headers);
     }
-
-    private String makeRandomNumber() {
+    @Override
+    public String makeRandomNumber() {
         int number = ThreadLocalRandom.current().nextInt(1000, 9999 + 1);
         return Integer.toString(number);
     }
