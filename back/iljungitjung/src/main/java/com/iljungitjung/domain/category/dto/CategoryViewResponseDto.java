@@ -1,7 +1,7 @@
 package com.iljungitjung.domain.category.dto;
 
 import com.iljungitjung.domain.category.entity.Category;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 public class CategoryViewResponseDto {
