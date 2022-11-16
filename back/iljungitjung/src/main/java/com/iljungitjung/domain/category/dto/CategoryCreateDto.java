@@ -13,7 +13,6 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 public class CategoryCreateDto {
 
-    @Pattern(regexp = "^[a-z|A-Z|0-9|ㄱ-ㅎ|가-힣]{2,20}$", message = "카테고리 이름은 최소 2자, 최대 20자 영어, 한글, 숫자만 입력가능합니다.")
     private String categoryName;
 
     @Pattern(regexp = "^[0-9]{4}$", message = "time은 4자리 숫자만 입력가능합니다.")
