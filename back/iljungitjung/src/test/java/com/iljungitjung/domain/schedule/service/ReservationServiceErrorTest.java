@@ -4,7 +4,6 @@ import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.notification.service.NotificationService;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockListRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
@@ -192,21 +191,22 @@ public class ReservationServiceErrorTest {
         });
     }
 
-//    @Test
-//    @DisplayName("일정 차단시 날짜 형식 입력을 잘못함")
-//    void inputDateErrorWhenBlockSchedule(){
-//        //given
-//        User userFrom = User.builder().build();
-//        ReservationBlockListRequestDto reservationBlockListRequestDto = new ReservationBlockListRequestDto();
-//
-//        //when
-//        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
-//
-//        //then
-//        Assertions.assertThrows(DateFormatErrorException.class, () -> {
-//            reservationService.reservationBlock(reservationBlockListRequestDto, httpSession);
-//        });
-//    }
+    @Test
+    @Disabled
+    @DisplayName("일정 차단시 날짜 형식 입력을 잘못함")
+    void inputDateErrorWhenBlockSchedule(){
+        //given
+        User userFrom = User.builder().build();
+        ReservationBlockListRequestDto reservationBlockListRequestDto = new ReservationBlockListRequestDto();
+
+        //when
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+
+        //then
+        Assertions.assertThrows(DateFormatErrorException.class, () -> {
+            reservationService.reservationBlock(reservationBlockListRequestDto, httpSession);
+        });
+    }
 
     @Test
     @DisplayName("예약 리스트 조회시 날짜 형식 입력을 잘못함")
@@ -280,7 +280,6 @@ public class ReservationServiceErrorTest {
                 .color(categoryColor)
                 .time(time)
                 .build();
-        category.setId(categoryId);
 
         return category;
     }
