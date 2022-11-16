@@ -48,6 +48,7 @@ class ScheduleServiceTest{
     }
 
     @Test
+    @Disabled
     @DisplayName("타인의 일정 리스트 조회(startDate, endDate 입력)")
     void viewScheduleByOthersGivenDate(){
 
@@ -86,6 +87,7 @@ class ScheduleServiceTest{
         Assertions.assertEquals(1L, scheduleViewResponseDto.getAcceptList().get(0).getId());
     }
     @Test
+    @Disabled
     @DisplayName("타인의 일정 리스트 조회(startDate, endDate 미입력)")
     void viewScheduleByOthers() {
 
@@ -147,6 +149,7 @@ class ScheduleServiceTest{
 
 
     @Test
+    @Disabled
     @DisplayName("본인의 일정 리스트 조회(startDate, endDate 입력)")
     void viewScheduleListByMeGivenDate() {
 
@@ -186,6 +189,7 @@ class ScheduleServiceTest{
     }
 
     @Test
+    @Disabled
     @DisplayName("본인의 일정 리스트 조회(startDate, endDate 미입력)")
     void viewScheduleListByMe() {
 
