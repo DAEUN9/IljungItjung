@@ -70,6 +70,8 @@ interface RequestState extends CommonState, DateState {
   color: string;
   contents: string;
   phonenum: string;
+  nickname: string;
+  imagePath: string;
 }
 
 interface AcceptState extends RequestState {}
