@@ -29,3 +29,4 @@ public interface UserService {
 
     void isExistUserByNickname(String nickname);
 }
+
