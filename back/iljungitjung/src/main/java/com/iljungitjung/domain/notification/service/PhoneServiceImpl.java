@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -86,7 +87,7 @@ public class PhoneServiceImpl implements PhoneService{
     private boolean checkDuplicatePhone(String phone) {
         return userRepository.existsUserByPhonenum(phone);
     }
-    
+
     private void savePhoneRandomNumber(PhoneConfirmRequestDto requestDto, HttpSession session) {
         String id = session.getId();
         if (phoneRepository.existsById(id)) {
@@ -102,17 +103,24 @@ public class PhoneServiceImpl implements PhoneService{
     @Override
     public boolean comfirmRandomNumber(PhoneConfirmRequestDto requestDto, HttpSession session) {
         Phone phone = phoneRepository.findById(session.getId()).orElse(null);
-        if (phone ==null) {
+        if (phone == null) {
             return false;
         }
-        if (checkCorrectPhonnum(requestDto.getPhonenum(), phone)) {
+        if (checkCorrectPhonnum(requestDto, phone) && checkCorrectRandomNumber(requestDto, phone)) {
             return true;
         }
         return false;
     }
 
-    private boolean checkCorrectPhonnum(String phoenum, Phone phone) {
-        if (phoenum.equals(phone.getPhonenum())) {
+    private boolean checkCorrectPhonnum(PhoneConfirmRequestDto requestDto, Phone phone) {
+        if (requestDto.getPhonenum().equals(phone.getPhonenum())) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkCorrectRandomNumber(PhoneConfirmRequestDto requestDto, Phone phone) {
+        if(requestDto.getRandomNumber().equals(phone.getRandomNumber())) {
             return true;
         }
         return false;
