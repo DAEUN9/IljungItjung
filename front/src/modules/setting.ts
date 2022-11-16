@@ -1,4 +1,7 @@
-import { SettingCategoryState } from "@components/types/types";
+import {
+  AppointmentsTypes,
+  SettingCategoryState,
+} from "@components/types/types";
 
 // 카테고리 관련
 const SET_CATEGORY = "setting/SET_CATEGORY" as const;
@@ -12,6 +15,7 @@ const TOGGLE_LOCK = "setting/TOGGLE_LOCK" as const;
 const TOGGLE_SHADE = "setting/TOGGLE_SHADE" as const;
 const LOCK_SHADE = "setting/LOCK_SHADE" as const;
 const DELETE_LOCK_SHADE = "setting/DELETE_LOCK_SHADE" as const;
+const SET_DELETE_SCHEDULE = "setting/SET_DELETE_SCHEDULE" as const;
 
 export const setCategory = (categories: SettingCategoryState[]) => ({
   type: SET_CATEGORY,
@@ -59,10 +63,15 @@ export const lockShade = (day: number, time: string) => ({
 export const deleteLockShade = (day: number, time: string, all?: boolean) => ({
   type: DELETE_LOCK_SHADE,
   payload: {
-    day: day,
-    time: time,
-    all: all,
+    day,
+    time,
+    all,
   },
+});
+
+export const setDeleteSchedule = (data: AppointmentsTypes) => ({
+  type: SET_DELETE_SCHEDULE,
+  payload: data,
 });
 
 type SettingAction =
@@ -74,7 +83,8 @@ type SettingAction =
   | ReturnType<typeof toggleLock>
   | ReturnType<typeof toggleShade>
   | ReturnType<typeof lockShade>
-  | ReturnType<typeof deleteLockShade>;
+  | ReturnType<typeof deleteLockShade>
+  | ReturnType<typeof setDeleteSchedule>;
 
 interface SettingState {
   // 카테고리 관련 상태
@@ -84,6 +94,7 @@ interface SettingState {
   lock: boolean[];
   set: Set<string>;
   lockMap: Map<number, string[]>; // 요일, 시간
+  deleteItem: AppointmentsTypes;
 }
 
 const initialState: SettingState = {
@@ -92,6 +103,16 @@ const initialState: SettingState = {
   lock: [false, false, false, false, false, false, false],
   set: new Set<string>(),
   lockMap: new Map<number, string[]>(),
+  deleteItem: {
+    id: 0,
+    categoryName: "",
+    nickname: "",
+    phonenum: "",
+    color: "",
+    contents: "",
+    startDate: "",
+    endDate: "",
+  },
 };
 
 function setting(
@@ -187,6 +208,11 @@ function setting(
         lockMap: copy,
       };
     }
+    case SET_DELETE_SCHEDULE:
+      return {
+        ...state,
+        deleteItem: action.payload,
+      };
     default:
       return state;
   }

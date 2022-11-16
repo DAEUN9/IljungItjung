@@ -105,6 +105,17 @@ interface MyProfile {
   description: string;
 }
 
+interface AppointmentsTypes {
+  id: number;
+  categoryName: string;
+  startDate: string;
+  endDate: string;
+  color: string;
+  nickname: string;
+  contents: string;
+  phonenum: string;
+}
+
 export type {
   SettingCategoryState,
   BlockListTypes,
@@ -114,4 +125,5 @@ export type {
   SchedulerDate,
   ScheduleApiData,
   MyProfile,
+  AppointmentsTypes,
 };

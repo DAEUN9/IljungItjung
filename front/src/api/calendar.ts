@@ -18,6 +18,7 @@ interface ReservationType {
 
 // 캘린더 일정 조회
 export function getSchedule(nickname: string, success: any) {
+  console.log(nickname);
   api
     .get(`/schedules/${nickname}`)
     .then(success)
