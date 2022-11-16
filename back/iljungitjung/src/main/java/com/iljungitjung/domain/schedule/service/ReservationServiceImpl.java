@@ -45,7 +45,7 @@ public class ReservationServiceImpl implements ReservationService{
             throw new NoExistUserException();
         });
 
-        Category category = categoryRepository.findByCategoryNameAndUser_Email(reservationRequestDto.getCategoryName(), user.getEmail()).orElseThrow(() -> {
+        Category category = categoryRepository.findByCategoryNameAndUser_Email(reservationRequestDto.getCategoryName(), userTo.getEmail()).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });
 
