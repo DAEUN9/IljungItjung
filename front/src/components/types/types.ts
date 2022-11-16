@@ -27,7 +27,6 @@ interface SchedulerDate {
   endDate?: SchedulerDateTime;
   title?: string;
   allDay?: boolean;
-  id?: number | string;
   rRule?: string | undefined;
   exDate?: string | undefined;
   [propertyName: string]: any;
