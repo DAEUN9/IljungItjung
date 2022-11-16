@@ -28,7 +28,7 @@ public class PhoneServiceImpl implements PhoneService{
 
     @Value("${message.ncloud.phone}")
     private String SENDER_PHONE;
-    private final String AUTH_PHONE = "인증 번호를 입력해 주세요/\n[%s]";
+    private final String AUTH_PHONE = "인증 번호를 입력해 주세요\n[%s]";
     private final String PRESENTED_NUMBER = "이미 존재하는 전화번호 입니다.";
     private final UserRepository userRepository;
     private final PhoneRepository phoneRepository;
@@ -113,7 +113,7 @@ public class PhoneServiceImpl implements PhoneService{
     }
 
     private boolean checkCorrectPhonnum(String phoenum, Phone phone) {
-        if (phone.getPhonenum().equals(phone.getPhonenum())) {
+        if (phoenum.equals(phone.getPhonenum())) {
             return true;
         }
         return false;
