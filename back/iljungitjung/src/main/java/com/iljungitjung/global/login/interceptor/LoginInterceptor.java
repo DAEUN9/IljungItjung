@@ -23,7 +23,15 @@ public class LoginInterceptor implements HandlerInterceptor {
         log.debug("request path : {}", request.getRequestURL());
         if(request.getMethod().equals(HttpMethod.OPTIONS)) return true;
 
-        if(isSignUpRequest(request)) return true;
+        if(isSignUpRequest(request)) {
+            log.debug("signup");
+            return true;
+        }
+
+        if(isUpdateUserRequest(request)){
+            log.debug("update user");
+            return true;
+        }
 
         String sessionId = request.getSession().getId();
         log.debug("session Id : {}", sessionId);
@@ -35,8 +43,16 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     private boolean isSignUpRequest(HttpServletRequest request) {
-        if(request.getMethod().equals(HttpMethod.POST) && request.getRequestURI().equals("/api/users")) return true;
-        if(request.getMethod().equals(HttpMethod.POST) && request.getRequestURI().equals("/users")) return true;
+        log.debug(request.getMethod());
+        log.debug(request.getRequestURI());
+        if(request.getMethod().equals("POST") && request.getRequestURI().equals("/api/users")) return true;
+        if(request.getMethod().equals("POST") && request.getRequestURI().equals("/users")) return true;
+        return false;
+    }
+
+    private boolean isUpdateUserRequest(HttpServletRequest request){
+        if(request.getMethod().equals("PUT") && request.getRequestURI().equals("/api/users")) return true;
+        if(request.getMethod().equals("PUT") && request.getRequestURI().equals("/users")) return true;
         return false;
     }
 }

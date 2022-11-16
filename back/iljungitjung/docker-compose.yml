@@ -9,6 +9,8 @@ services:
       - 443:443
     volumes:
       - "/home/ubuntu/docker-volume/ssl:/ssl"
+      - "/home/ubuntu/docker-volume/webserver/conf:/etc/nginx/conf.d"
+      - "/home/ubuntu/docker-volume/webserver/dist:/usr/share/nginx/html/dist"
     extra_hosts:
       - "host.docker.internal:host-gateway"
 #    networks:
@@ -17,6 +19,11 @@ services:
 
   redis:
     image: redis
+    volumes:
+      - "/home/ubuntu/docker-volume/redis/redis.conf:/usr/local/etc/redis/redis.conf"
+    environment:
+      - REDIS_PASSWORD=ijij
+      - ALLOW_EMPTY_PASSWORD=no
     restart: unless-stopped
     ports:
       - 6379:6379

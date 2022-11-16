@@ -1,22 +1,29 @@
 package com.iljungitjung.domain.notification.dto;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class NotificationRequestDto {
+    private final String DEFAULT_CONTENT = "필수";
     private String content;
     @Valid
-    @NotNull(message = "메시지 리스트(messages)는 필수로 입력해야 합니다.")
-    private List<NotificationMessageDto> messages;
+    @NotNull(message = "message list는 필수로 입력해야 합니다.")
+    private List<NotificationMessage> messages;
 
-    @Builder
-    public NotificationRequestDto (List<NotificationMessageDto> messages, String content) {
-        this.content = content;
+    private NotificationRequestDto (List<NotificationMessage> messages){
+        this.content = DEFAULT_CONTENT;
         this.messages = messages;
+    }
+
+    public static NotificationRequestDto createFromMessages(List<NotificationMessage> messages){
+        return new NotificationRequestDto(messages);
     }
 }

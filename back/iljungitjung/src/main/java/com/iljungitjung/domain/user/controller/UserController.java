@@ -1,6 +1,7 @@
 package com.iljungitjung.domain.user.controller;
 
 import com.iljungitjung.domain.user.dto.SignUpDto;
+import com.iljungitjung.domain.user.dto.UpdateUser;
 import com.iljungitjung.domain.user.service.UserService;
 import com.iljungitjung.global.common.CommonResponse;
 import com.iljungitjung.global.login.entity.RedisUser;
@@ -39,7 +40,11 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getUserInfo (@Pattern(regexp = "^[a-z|A-Z|0-9|ㄱ-ㅎ|가-힣]{2,10}$", message = "닉네임은 최소 2자, 최대 10자 영어, 한글, 숫자만 입력가능합니다.") @RequestParam(name = "nickname", required = false) String nickname, HttpSession session){
+    public ResponseEntity<CommonResponse> getUserInfo (
+            @Pattern(regexp = "^[a-z|A-Z|0-9|ㄱ-ㅎ|가-힣]{2,10}$", message = "닉네임은 최소 2자, 최대 10자 영어, 한글, 숫자만 입력가능합니다.") @RequestParam(name = "nickname", required = false) String nickname,
+            @RequestParam(name = "isSearch", required = false) boolean isSearch,
+            HttpSession session){
+        if(isSearch) return ResponseEntity.ok(CommonResponse.getSuccessResponse(userService.getUserInfoList(nickname)));
         if(Objects.isNull(nickname)) return ResponseEntity.ok(CommonResponse.getSuccessResponse(userService.getUserInfo(session)));
         return ResponseEntity.ok(CommonResponse.getSuccessResponse(userService.getUserInfo(nickname)));
     }
@@ -51,4 +56,15 @@ public class UserController {
         });
         userService.deleteUserByEmail(redisUser.getEmail());
     }
+
+    @PutMapping
+    public void updateUser(@Valid @RequestBody UpdateUser updateUser, HttpSession session){
+        userService.updateUser(updateUser, session);
+    }
+
+    @GetMapping("/{nickname}")
+    public void isExistNickname(@Pattern(regexp = "^[a-z|A-Z|0-9|ㄱ-ㅎ|가-힣]{2,10}$", message = "닉네임은 최소 2자, 최대 10자 영어, 한글, 숫자만 입력가능합니다.") @PathVariable(name = "nickname") String nickname){
+        userService.isExistUserByNickname(nickname);
+    }
 }
+
