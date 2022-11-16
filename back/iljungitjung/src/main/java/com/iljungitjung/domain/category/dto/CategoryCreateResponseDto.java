@@ -1,6 +1,6 @@
 package com.iljungitjung.domain.category.dto;
 
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 public class CategoryCreateResponseDto {
