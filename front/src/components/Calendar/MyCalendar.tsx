@@ -62,7 +62,6 @@ const request = [
     nickname: '김주영',
     contents: '주영이 잘 부탁드립니당',
     phonenum: '010-1111-1111',
-
   },
 ];
 
