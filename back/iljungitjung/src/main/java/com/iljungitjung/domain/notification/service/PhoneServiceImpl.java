@@ -23,7 +23,6 @@ public class PhoneServiceImpl implements PhoneService{
 
     @Value("${message.ncloud.phone}")
     private String SENDER_PHONE;
-    private final String TEMP_PHONE = "01000000000";
     private final String AUTH_PHONE = "인증 번호를 입력해 주세요/\n[%s]";
     private final String PRESENTED_NUMBER = "이미 존재하는 전화번호 입니다.";
     private final UserRepository userRepository;

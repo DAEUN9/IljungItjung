@@ -2,12 +2,14 @@ package com.iljungitjung.domain.notification.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @ToString
+@NoArgsConstructor
 public class NotificationResponseDto {
     @JsonProperty("requestId")
     private String requestId;
@@ -18,9 +20,6 @@ public class NotificationResponseDto {
     @JsonProperty("statusName")
     private String statusName;
 
-    public NotificationResponseDto() {
-
-    }
 
     public NotificationResponseDto(String statusCode) {
         this.statusCode = statusCode;
