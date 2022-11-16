@@ -9,7 +9,15 @@ import {
 } from '@components/Calendar/common/util';
 
 const UpcomingItem = ({ item }: InfoItemProps) => {
-  const { color, startDate, endDate, title, nickname, phone, desc } = item;
+  const {
+    color,
+    startDate,
+    endDate,
+    categoryName,
+    nickname,
+    phonenum,
+    contents,
+  } = item;
   const time = formatTime(startDate?.toString(), endDate?.toString());
 
   return (
@@ -18,11 +26,11 @@ const UpcomingItem = ({ item }: InfoItemProps) => {
         color={color}
         date={getFullDate(new Date(startDate.toString()))}
         time={time ?? '-'}
-        userId="유저아이디"
+        userId={nickname}
         userName={nickname}
-        category={title ?? '-'}
+        category={categoryName ?? '-'}
         userImg={iljung}
-        render={() => <DetailInfo phone={phone} desc={desc} />}
+        render={() => <DetailInfo phone={phonenum} desc={contents} />}
       />
     </div>
   );
