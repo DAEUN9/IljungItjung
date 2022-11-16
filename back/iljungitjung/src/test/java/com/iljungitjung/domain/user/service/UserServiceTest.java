@@ -285,4 +285,3 @@ public class UserServiceTest {
         userService.isExistUserByNickname(notExistNickname);
     }
 }
-

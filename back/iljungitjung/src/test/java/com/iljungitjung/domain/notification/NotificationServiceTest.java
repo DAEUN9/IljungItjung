@@ -244,6 +244,4 @@ public class NotificationServiceTest {
         return HttpStatus.ACCEPTED.value()+"";
     }
 
-
-
 }

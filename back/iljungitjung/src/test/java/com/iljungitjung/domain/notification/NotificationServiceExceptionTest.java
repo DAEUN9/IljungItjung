@@ -41,6 +41,7 @@ public class NotificationServiceExceptionTest {
     @MockBean
     private UserRepository userRepository;
     private final String TEMP_PHONE = "01000000000";
+
     @BeforeEach
     public void init(){
         notificationService = new NotificationServiceImpl(notificationCorrespondence);
