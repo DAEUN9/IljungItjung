@@ -6,10 +6,12 @@ import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.exception.FailSendMessageException;
 import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.notification.service.NotificationServiceImpl;
+
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.repository.UserRepository;
+
 import com.iljungitjung.global.scheduler.NotificationCorrespondence;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +41,6 @@ public class NotificationServiceExceptionTest {
     @MockBean
     private UserRepository userRepository;
     private final String TEMP_PHONE = "01000000000";
-
     @BeforeEach
     public void init(){
         notificationService = new NotificationServiceImpl(notificationCorrespondence);

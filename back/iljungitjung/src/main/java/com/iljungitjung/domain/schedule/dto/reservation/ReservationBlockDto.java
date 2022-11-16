@@ -2,12 +2,10 @@ package com.iljungitjung.domain.schedule.dto.reservation;
 
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
-import com.iljungitjung.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -16,7 +14,7 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReservationBlockRequestDto {
+public class ReservationBlockDto {
 
     @NotNull(message = "block는 true 또는 false 입니다.")
     private boolean block;
@@ -35,6 +33,7 @@ public class ReservationBlockRequestDto {
 
     public Schedule toEntity(Date startDate, Date endDate) {
         return Schedule.builder()
+                .categoryName("차단")
                 .block(block)
                 .startDate(startDate)
                 .endDate(endDate)

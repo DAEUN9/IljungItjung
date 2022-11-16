@@ -66,7 +66,7 @@ public class NotificationServiceImpl implements NotificationService{
     private boolean existPhoneNum(NotificationMessage message) {
         if (message.getTo() == null || message.getTo().equals(TEMP_PHONE)) {
             return false;
-        } 
+        }
         return true;
     }
 
