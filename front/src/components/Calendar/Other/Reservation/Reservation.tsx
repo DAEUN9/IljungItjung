@@ -39,13 +39,6 @@ interface RequestApiData {
   };
 }
 
-const getMinutes = (time: string) => {
-  const hours = parseInt(time.slice(0, 2));
-  const minutes = parseInt(time.slice(2));
-
-  return hours * 60 + minutes;
-};
-
 const messages = [
   '카테고리를 선택할 수 없습니다.',
   '해당 시간대는 선택할 수 없습니다.',
@@ -60,10 +53,11 @@ const Reservation = () => {
     (state: RootState) => state.othercalendar
   );
   const dispatch = useDispatch();
+  const { nickname } = useParams();
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(0);
-  const { nickname } = useParams();
 
+  // form onSubmit 핸들러
   const onSubmit: SubmitHandler<RequestData> = (data) => {
     if (selected) {
       let startDate =
@@ -90,20 +84,23 @@ const Reservation = () => {
     }
   };
 
-  const handleClose = useCallback(() => setOpen(false), []);
-
+  // 시간대, 카테고리 선택됐을 때 endDate 구하기
   const getScheduleEndDate = (startDate: string) => {
     const endDate = new Date(startDate);
     const time = category.filter(
       (item) => item.categoryName === watchCategory
     )[0].time;
-    const minutes = getMinutes(time);
+    
+    const hours = parseInt(time.slice(0, 2));
+    const minutes = parseInt(time.slice(2));
+    const endDateMinutes = hours * 60 + minutes;
 
-    endDate.setMinutes(endDate.getMinutes() + minutes);
+    endDate.setMinutes(endDate.getMinutes() + endDateMinutes);
 
-    return { endDate, minutes };
+    return { endDate, minutes: endDateMinutes };
   };
 
+  // 블락된 시간대와 겹치는지 확인
   const isOverlapWithSchedule = (
     startDate: SchedulerDateTime,
     endDate: SchedulerDateTime
@@ -131,6 +128,7 @@ const Reservation = () => {
     return isOverlap;
   };
 
+  // 선택할 수 없는 카테고리 or 시간대이면 캘린더에 표시된 예약 삭제
   const unsetSelected = (id: number = 0, startDate: SchedulerDateTime) => {
     dispatch(deleteCurrent());
     dispatch(setSelectedTime({ startDate }));
@@ -138,10 +136,14 @@ const Reservation = () => {
     setValue('category', '');
   };
 
+  // 스낵바 open 핸들러
   const openSnackbar = useCallback((id: number = 0) => {
     setId(id);
     setOpen(true);
   }, []);
+
+  // 스낵바 close 핸들러
+  const handleClose = useCallback(() => setOpen(false), []);
 
   // 카테고리가 선택됐을 때
   useEffect(() => {
