@@ -102,7 +102,7 @@ export const getFullStringFromDate = (time: Date, endTime: Date) => {
 
   const day = time.getDay().toString();
   const year = time.getFullYear().toString();
-  const month = makeFormat(time.getMonth().toString());
+  const month = makeFormat((time.getMonth() + 1).toString());
   const date = makeFormat(time.getDate().toString());
   const hour = makeFormat(time.getHours().toString());
   const min = makeFormat(time.getMinutes().toString());
