@@ -25,12 +25,10 @@ public class ScheduleController {
     public ResponseEntity<CommonResponse> scheduleView(@Pattern(regexp = "^[a-z|A-Z|0-9|ㄱ-ㅎ|가-힣]{2,10}$", message = "닉네임은 최소 2자, 최대 10자 영어, 한글, 숫자만 입력가능합니다.")
                                                        @PathVariable("nickname") String nickname,
 
-                                                       @Size(min=8, max=8, message = "startDate 형식을 맞춰주세요 (ex.20221017)")
-                                                       @Pattern(regexp = "^[0-9]+$", message = "startDate는 숫자만 입력가능합니다.")
+                                                       @Pattern(regexp = "^[0-9]{8}$", message = "startDate는 8자리 숫자만 입력가능합니다. (ex.20221017)")
                                                        @RequestParam(value = "startDate", required = false) String startDate,
 
-                                                       @Size(min=8, max=8, message = "endDate 형식을 맞춰주세요 (ex.20221017)")
-                                                       @Pattern(regexp = "^[0-9]+$", message = "endDate는 숫자만 입력가능합니다.")
+                                                       @Pattern(regexp = "^[0-9]{8}$", message = "endDate는 8자리 숫자만 입력가능합니다. (ex.20221017)")
                                                        @RequestParam(value = "endDate", required = false) String endDate,
 
                                                        HttpSession httpSession){
