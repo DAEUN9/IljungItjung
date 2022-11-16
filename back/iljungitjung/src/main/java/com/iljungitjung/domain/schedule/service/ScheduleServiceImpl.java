@@ -84,7 +84,7 @@ public class ScheduleServiceImpl implements ScheduleService{
             categoryList.add(new CategoryViewResponseDto(category));
         }
 
-        blockDayList = userTo.getBlockDayList();
+        blockDayList = userTo.getBlockDays();
 
         ScheduleViewResponseDto responseDtos = new ScheduleViewResponseDto(categoryList, requestList, acceptList, blockList, cancelList, blockDayList);
 

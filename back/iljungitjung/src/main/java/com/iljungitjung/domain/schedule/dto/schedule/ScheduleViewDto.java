@@ -18,6 +18,8 @@ public class ScheduleViewDto {
     private final String contents;
 
     private final String phonenum;
+    private final String nickname;
+    private final String imagePath;
 
     public ScheduleViewDto(Schedule schedule){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
@@ -28,5 +30,7 @@ public class ScheduleViewDto {
         this.endDate=simpleDateFormat.format(schedule.getEndDate());
         this.contents=schedule.getContents();
         this.phonenum=schedule.getPhonenum();
+        this.nickname=schedule.getUserFrom().getNickname();
+        this.imagePath=schedule.getUserFrom().getImagePath();
     }
 }
