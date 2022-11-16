@@ -59,26 +59,6 @@ const next = [
     phone: "010-3333-3333",
     color: "#D7CBF4",
   },
-  {
-    id: 4,
-    startDate: "2022-11-11T13:00",
-    endDate: "2022-11-11T14:30",
-    title: "카테고리",
-    nickname: "닉네임",
-    desc: "요청사항",
-    phone: "010-3333-3333",
-    color: "#D7CBF4",
-  },
-  {
-    id: 4,
-    startDate: '2022-11-11T13:00',
-    endDate: '2022-11-11T14:30',
-    title: '카테고리',
-    nickname: '닉네임',
-    desc: '요청사항',
-    phone: '010-3333-3333',
-    color: '#D7CBF4',
-  },
 ];
 
 interface MyInfoApiData {

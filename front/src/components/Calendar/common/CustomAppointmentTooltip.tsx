@@ -44,7 +44,7 @@ export default function CustomAppointmentTooltip() {
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path>
                   </SvgIcon>
                   <div>
-                    <div>{appointmentData?.title}</div>
+                    <div>{appointmentData?.categoryName}</div>
                     <div>{formatDate(startDate)}</div>
                   </div>
                 </div>
@@ -63,13 +63,13 @@ export default function CustomAppointmentTooltip() {
                 <div className={styles.tooltip}>
                   <FaPhoneAlt />
                   <div className={styles["tooltip-inner"]}>
-                    {appointmentData?.phone}
+                    {appointmentData?.phonenum}
                   </div>
                 </div>
                 <div className={styles.tooltip}>
                   <FaPen />
                   <div className={styles["tooltip-inner"]}>
-                    {appointmentData?.desc}
+                    {appointmentData?.contents}
                   </div>
                 </div>
               </div>

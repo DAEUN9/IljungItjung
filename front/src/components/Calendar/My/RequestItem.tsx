@@ -13,6 +13,7 @@ import {
 } from '@components/Calendar/common/util';
 import CustomButton from '@components/common/CustomButton';
 import { acceptRequest } from '@api/calendar';
+import { Snackbar } from '@mui/material';
 
 interface ButtonProps {
   id: number;
@@ -31,9 +32,18 @@ const TextField = styled(MuiTextField)`
   }
 `;
 
+const messages = ['수락되었습니다.', '거절되었습니다.'];
+
 const RequestButtons = ({ id }: ButtonProps) => {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
+  const [snackbar, setSnackbar] = useState(false);
+  const [idx, setIdx] = useState(0);
+  
+  // 스낵바 close 핸들러
+  const handleClose = useCallback(() => {
+    setSnackbar(false);
+  }, []);
 
   // 예약 거절
   const handleDeny = useCallback(() => {
@@ -45,6 +55,8 @@ const RequestButtons = ({ id }: ButtonProps) => {
     const data = { accept: true };
     acceptRequest(id, data, (res: RequestApiData) => {
       console.log(res);
+      setIdx(0);
+      setSnackbar(true);
     });
   };
 
@@ -59,6 +71,8 @@ const RequestButtons = ({ id }: ButtonProps) => {
     const data = { accept: false, reason: text };
     acceptRequest(id, data, (res: RequestApiData) => {
       console.log(res);
+      setIdx(1);
+      setSnackbar(true);
     });
   };
 
@@ -102,6 +116,13 @@ const RequestButtons = ({ id }: ButtonProps) => {
           </div>
         </div>
       )}
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        autoHideDuration={6000}
+        open={snackbar}
+        onClose={handleClose}
+        message={messages[idx]}
+      />
     </div>
   );
 };
