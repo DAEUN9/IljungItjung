@@ -1,18 +1,20 @@
 package com.iljungitjung.domain.user.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Embeddable
 public class BlockDays {
-    private boolean monday;
-    private boolean tuesday;
-    private boolean wednesday;
-    private boolean thursday;
-    private boolean friday;
-    private boolean saturday;
-    private boolean sunday;
+
+    private Boolean monday;
+    private Boolean tuesday;
+    private Boolean wednesday;
+    private Boolean thursday;
+    private Boolean friday;
+    private Boolean saturday;
+    private Boolean sunday;
 
     public void updateBlockDays(List<Boolean> blockDaysList){
         int dayCount=0;
