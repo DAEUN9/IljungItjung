@@ -36,6 +36,7 @@ public class NotificationServiceTest {
     @MockBean
     private UserRepository userRepository;
 
+
     @BeforeEach
     public void init(){
         notificationService = new NotificationServiceImpl(notificationCorrespondence);
@@ -243,5 +244,6 @@ public class NotificationServiceTest {
     private String statusAccepted() {
         return HttpStatus.ACCEPTED.value()+"";
     }
+
 
 }
