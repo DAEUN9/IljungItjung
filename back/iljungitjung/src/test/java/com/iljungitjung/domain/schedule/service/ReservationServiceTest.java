@@ -8,6 +8,7 @@ import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
+import com.iljungitjung.domain.user.entity.BlockDays;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
@@ -220,9 +221,9 @@ public class ReservationServiceTest{
 
         //given
         User userTo = createUserToWithCategoryList();
+        userTo.setBlockDays(new BlockDays());
 
         Long scheduleId = 1L;
-        boolean block = false;
         String date="20221017";
         String startTime = "1500";
         String endTime = "1630";
@@ -237,7 +238,10 @@ public class ReservationServiceTest{
             throw new DateFormatErrorException();
         }
 
-        ReservationBlockDto reservationBlockRequestDto = new ReservationBlockDto(block, date, startTime, endTime);
+        List<Boolean> days = new ArrayList<>();
+        for(int i=0;i<7;i++) days.add(false);
+
+        ReservationBlockDto reservationBlockRequestDto = new ReservationBlockDto(date, startTime, endTime);
 
         Schedule schedule = reservationBlockRequestDto.toEntity(startDateFormat, endDateFormat);
         schedule.setId(scheduleId);
@@ -248,7 +252,7 @@ public class ReservationServiceTest{
         List<ReservationBlockDto> reservationBlockDtoList = new ArrayList<>();
         reservationBlockDtoList.add(reservationBlockRequestDto);
 
-        ReservationBlockListRequestDto reservationBlockListRequestDto = new ReservationBlockListRequestDto(reservationBlockDtoList);
+        ReservationBlockListRequestDto reservationBlockListRequestDto = new ReservationBlockListRequestDto(days, reservationBlockDtoList);
 
         //when
         when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userTo);
@@ -287,7 +291,6 @@ public class ReservationServiceTest{
         return schedule;
     }
     private Category createCategory(){
-        Long categoryId = 1L;
         String categoryName = "categoryName";
         String categoryColor = "#000000";
         String time = "0130";

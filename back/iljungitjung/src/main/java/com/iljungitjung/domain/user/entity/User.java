@@ -52,6 +52,10 @@ public class User {
     @Embedded
     private BlockDays blockDays;
 
+    public void setBlockDays(BlockDays blockDays) {
+        this.blockDays = blockDays;
+    }
+
     public void updateBlockDays(List<Boolean> blockDaysList){
         this.blockDays.updateBlockDays(blockDaysList);
     }
