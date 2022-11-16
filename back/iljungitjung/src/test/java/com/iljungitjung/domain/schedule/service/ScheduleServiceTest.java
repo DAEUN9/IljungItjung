@@ -291,7 +291,6 @@ class ScheduleServiceTest{
                 .color(categoryColor)
                 .time(time)
                 .build();
-        category.setId(categoryId);
 
         return category;
     }
