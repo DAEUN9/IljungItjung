@@ -23,6 +23,54 @@ interface MyInfoApiData {
   data: MyProfile;
 }
 
+const next = [
+  {
+    id: 1,
+    startDate: "2022-11-07T09:30",
+    endDate: "2022-11-07T11:00",
+    title: "목욕",
+    nickname: "곰고구마",
+    desc: "요청사항이 엄청나게 길어지면 어떻게 보일지 정말정말 궁금하네요 요청사항이 엄청나게 길어지면 어떻게 보일지 정말정말 궁금하네요",
+    phone: "010-1111-1111",
+    color: "#F4F38A",
+  },
+  {
+    id: 2,
+    startDate: "2022-11-09T12:00",
+    endDate: "2022-11-09T13:30",
+    title: "손발톱관리",
+    nickname: "신봉선",
+    desc: "예쁘게 해주세용",
+    phone: "010-2222-2222",
+    color: "#C3DBE3",
+  },
+  {
+    id: 3,
+    startDate: "2022-11-10T12:00",
+    endDate: "2022-11-10T13:30",
+    title: "커트",
+    nickname: "퍼플독",
+    desc: "멋지게 해주십쇼",
+    phone: "010-3333-3333",
+    color: "#D7CBF4",
+  },
+  {
+    id: 4,
+    startDate: "2022-11-11T13:00",
+    endDate: "2022-11-11T14:30",
+    title: "카테고리",
+    nickname: "닉네임",
+    desc: "요청사항",
+    phone: "010-3333-3333",
+    color: "#D7CBF4",
+  },
+];
+
+interface MyInfoApiData {
+  status: string;
+  data: MyProfile;
+}
+
 const OtherCalendar = () => {
   const [profile, setProfile] = useState<MyProfile>({
     nickname: '',
@@ -46,23 +94,13 @@ const OtherCalendar = () => {
       });
 
       // 캘린더 조회
-      getSchedule(nickname, false, (res: ScheduleApiData) => {
+      getSchedule(nickname, (res: ScheduleApiData) => {
         const { categoryList, blockList, acceptList } = res.data;
         console.log(res.data);
 
-        // 카테고리 설정
-        if (categoryList.length !== 0) {
-          dispatch(setCategory(categoryList));
-        }
-
-        // 시간대 블락 처리
-        if (acceptList.length !== 0 || blockList.length !== 0) {
-          const now = new Date();
-          const filter = acceptList.filter(
-            (item) => new Date(item.startDate) >= now
-          );
-          dispatch(setDisabledMap(filter));
-        }
+        const now = new Date();
+        const filter = next.filter((item) => new Date(item.startDate) >= now);
+        dispatch(setDisabledMap(filter));
       });
     }
   }, [nickname]);

@@ -21,7 +21,7 @@ export default function CustomAppointments() {
             children={
               <>
                 <div className={styles['appointment-category']}>
-                  {data.title}
+                  {data.categoryName}
                 </div>
                 <div className={styles['appointment-nickname']}>
                   <Avatar sx={{ width: '18px', height: '18px' }} />

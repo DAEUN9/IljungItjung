@@ -4,7 +4,7 @@ import { Snackbar } from "@mui/material";
 
 import CustomChip from "@components/common/CustomChip";
 import styles from "@styles/Setting/CategoryList.module.scss";
-import { delCategory, selectCategory, setCategory } from "@modules/setting";
+import { delCategory, selectCategory } from "@modules/setting";
 import { SettingCategoryState } from "@components/types/types";
 import { RootState } from "@modules/index";
 
@@ -23,8 +23,6 @@ const CategoryList = () => {
   );
 
   const dispatch = useDispatch();
-  const onSetCategory = (categories: SettingCategoryState[]) =>
-    dispatch(setCategory(categories));
   const onDelCategory = (category: SettingCategoryState) =>
     dispatch(delCategory(category));
   const onSelectCategory = (category: SettingCategoryState) =>
@@ -36,8 +34,8 @@ const CategoryList = () => {
     if (categories.length < 2) {
       setDelSnackbar(true);
     } else {
-      if (category.name === selectedCategory.name) {
-        onSelectCategory({ name: "", hour: "", min: "", color: "" });
+      if (category.categoryName === selectedCategory.categoryName) {
+        onSelectCategory({ categoryName: "", time: "", color: "" });
       }
       onDelCategory(category);
     }
@@ -52,12 +50,16 @@ const CategoryList = () => {
       <div className={styles["content"]}>
         {categories.map((category, index) => (
           <div
-            className={`${styles["chip"]} ${category.color} chip${category.name}`}
+            className={`${styles["chip"]} ${category.color} chip${category.categoryName}`}
             key={index}
           >
             <CustomChip
-              active={selectedCategory.name === category.name ? true : false}
-              label={category.name}
+              active={
+                selectedCategory.categoryName === category.categoryName
+                  ? true
+                  : false
+              }
+              label={category.categoryName}
               onClick={() => onSelectCategory(category)}
               onDelete={() => handleDeleteCategory(category)}
             />
