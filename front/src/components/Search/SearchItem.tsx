@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Divider } from "@mui/material";
 
 import styles from "@styles/Search/SearchItem.module.scss";
@@ -8,14 +8,13 @@ import { useEffect } from "react";
 
 const SearchItem = (props: SearchState) => {
   const dispatch = useDispatch();
-  const onSelectUser = (user: SearchState) => dispatch(selectUser(user));
 
   useEffect(() => {
     console.log("props", props);
   });
 
   const handleClick = () => {
-    onSelectUser({ ...props });
+    dispatch(selectUser({ ...props }));
   };
 
   return (
