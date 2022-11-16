@@ -18,6 +18,16 @@ $light-gray: #f5f5f5;
   height: 100%;
 }
 
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  color: gray;
+  font-size: 16px;
+}
+
 /* toolbar */
 
 .today {
@@ -81,6 +91,29 @@ $light-gray: #f5f5f5;
   &:hover,
   &:focus {
     background-color: unset !important;
+  }
+
+  &-inner {
+    height: 100%;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #6b7bb1 !important;
+    }
+  }
+
+  &-selected {
+    background-color: #6b7bb1 !important;
+    height: 100%;
+
+    &:hover {
+      background-color: #6b7bb1 !important;
+    }
+  }
+
+  &-disabled {
+    background-color: $light-gray !important;
+    height: 100%;
   }
 }
 
@@ -286,15 +319,76 @@ $light-gray: #f5f5f5;
 }
 
 /* other */
-.other-timeTableCell {
-  &:focus {
-    background-color: #6b7bb1 !important;
+.reservation {
+  height: calc(100% - 315px);
+  margin: 15px;
+  background-color: $light-gray;
+  border-radius: 15px;
+
+  > form {
+    height: 100%;
   }
 
-  &-disabled {
-    &:hover,
-    &:focus {
-      background-color: unset !important;
+  &-inner {
+    $inner-padding: 20px;
+
+    height: calc(100% - $inner-padding * 2);
+    padding: $inner-padding;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  &-item {
+    padding: 5px;
+    display: flex;
+
+    > div {
+      color: black;
+      margin-right: 15px;
+      height: unset;
+    }
+
+    &:nth-child(2),
+    &:nth-child(3) {
+      padding: 10px 5px;
     }
   }
+
+  &-request {
+    padding: 5px;
+
+    > div {
+      font-weight: 600;
+      font-size: 17px;
+      margin-bottom: 5px;
+    }
+  }
+
+  > button {
+    width: 100%;
+  }
+}
+
+.icon {
+  &-short {
+    padding-top: 3px;
+  }
+
+  &-long {
+    padding-top: 10px;
+  }
+}
+
+.menu {
+  width: 100%;
+  padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.error {
+  color: rgb(222, 0, 0);
+  font-size: 12px;
+  margin-top: 3px;
 }

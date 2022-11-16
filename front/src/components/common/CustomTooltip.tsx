@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
-import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip';
+import styled from "@emotion/styled";
+import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
 
 interface customTooltipProps extends TooltipProps {}
 
@@ -11,6 +11,8 @@ const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
     border: 1px solid #dadada;
     background-color: #eaeaea;
     color: black;
+    padding: 1rem;
+    maxwidth: none;
   }
 
   & .${tooltipClasses.arrow} {

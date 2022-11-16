@@ -9,15 +9,15 @@ function getMyInfo(success: any) {
 // 프로필 수정 요청
 function putProfile(
   nickname: string,
-  introduction: string,
-  description: string,
+  introduction: string | null,
+  description: string | null,
   success: any
 ) {
   api
     .put(`/users`, {
-      nickname: nickname,
-      introduction: introduction,
-      description: description,
+      nickname,
+      introduction,
+      description,
     })
     .then(success);
 }

@@ -3,11 +3,11 @@ import { SearchState } from "@components/types/types";
 const SELECT_USER = "search/SELECT_USER" as const;
 
 const initialState: SearchState = {
-  id: 0,
-  name: "",
-  imgUrl: "",
-  desc: "",
-  detail: "",
+  nickname: "",
+  email: "",
+  imagePath: "",
+  introduction: "",
+  description: "",
   categories: [],
 };
 
