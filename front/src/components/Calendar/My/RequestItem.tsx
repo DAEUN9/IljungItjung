@@ -12,9 +12,17 @@ import {
   InfoItemProps,
 } from '@components/Calendar/common/util';
 import CustomButton from '@components/common/CustomButton';
+import { acceptRequest } from '@api/calendar';
 
 interface ButtonProps {
   id: number;
+}
+
+interface RequestApiData {
+  status: string;
+  data: {
+    id: number;
+  };
 }
 
 const TextField = styled(MuiTextField)`
@@ -33,7 +41,12 @@ const RequestButtons = ({ id }: ButtonProps) => {
   }, []);
 
   // 예약 수락
-  const handleAccept = () => {};
+  const handleAccept = () => {
+    const data = { accept: true };
+    acceptRequest(id, data, (res: RequestApiData) => {
+      console.log(res);
+    });
+  };
 
   // 거절 사유 입력 취소
   const handleCancle = useCallback(() => {
@@ -42,7 +55,12 @@ const RequestButtons = ({ id }: ButtonProps) => {
   }, []);
 
   // 거절 사유 입력 확인
-  const handleConfirm = () => {};
+  const handleConfirm = () => {
+    const data = { accept: false, reason: text };
+    acceptRequest(id, data, (res: RequestApiData) => {
+      console.log(res);
+    });
+  };
 
   return (
     <div>
