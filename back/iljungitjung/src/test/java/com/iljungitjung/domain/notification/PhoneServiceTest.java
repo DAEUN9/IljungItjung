@@ -3,9 +3,11 @@ package com.iljungitjung.domain.notification;
 import com.iljungitjung.domain.notification.dto.NotificationMessage;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.exception.FailSendMessageException;
+import com.iljungitjung.domain.notification.repository.PhoneRepository;
 import com.iljungitjung.domain.notification.service.PhoneService;
 import com.iljungitjung.domain.notification.service.PhoneServiceImpl;
 import com.iljungitjung.domain.user.repository.UserRepository;
+import com.iljungitjung.global.login.repository.RedisUserRepository;
 import com.iljungitjung.global.scheduler.NotificationCorrespondence;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,8 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Arrays;
-import java.util.List;
+import javax.servlet.http.HttpSession;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,10 +32,16 @@ public class PhoneServiceTest {
     @MockBean
     private NotificationCorrespondence notificationCorrespondence;
     @MockBean
+    private PhoneRepository phoneRepository;
+    @MockBean
     private UserRepository userRepository;
+    @MockBean
+    private RedisUserRepository redisUserRepository;
+    @MockBean
+    private HttpSession httpSession;
     @BeforeEach
     public void init(){
-        phoneService = new PhoneServiceImpl(userRepository, notificationCorrespondence);
+        phoneService = new PhoneServiceImpl(userRepository, phoneRepository, redisUserRepository, notificationCorrespondence);
     }
 
     @Test
@@ -45,7 +52,7 @@ public class PhoneServiceTest {
         when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
         when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 
-        phoneService.requestRandomNumber(phone);
+        phoneService.requestRandomNumber(phone, httpSession);
         verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
     }
 
@@ -56,7 +63,7 @@ public class PhoneServiceTest {
         String phone = "01012341234";
 
         when(userRepository.existsUserByPhonenum(phone)).thenReturn(true);
-        String response = phoneService.requestRandomNumber(phone);
+        String response = phoneService.requestRandomNumber(phone, httpSession);
 
         Assertions.assertEquals(response, PRESENTED_NUMBER);
     }
@@ -69,7 +76,7 @@ public class PhoneServiceTest {
         when(notificationCorrespondence.sendNcloud(any(HttpEntity.class)))
                 .thenReturn(new NotificationResponseDto(HttpStatus.BAD_GATEWAY.toString()));
 
-        assertThatThrownBy(() -> phoneService.requestRandomNumber(phone))
+        assertThatThrownBy(() -> phoneService.requestRandomNumber(phone, httpSession))
                 .isInstanceOf(FailSendMessageException.class);
     }
 
