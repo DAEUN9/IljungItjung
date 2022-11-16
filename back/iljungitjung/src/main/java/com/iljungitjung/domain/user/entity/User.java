@@ -69,7 +69,7 @@ public class User {
     }
 
     public void clearCategoryList(){
-        this.categoryList = new ArrayList<>();
+        this.categoryList.clear();
     }
 
     public Long categoryCount() {
