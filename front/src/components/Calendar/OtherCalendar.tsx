@@ -105,6 +105,7 @@ const OtherCalendar = () => {
     if (nickname) {
       // 프로필 설정
       getOtherProfile(nickname, (res: MyInfoApiData) => {
+        console.log(res.data);
         setProfile(res.data);
       });
 
