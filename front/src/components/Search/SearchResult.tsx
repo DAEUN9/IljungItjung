@@ -7,12 +7,18 @@ import styles from "@styles/Search/SearchResult.module.scss";
 import { RootState } from "@modules/index";
 
 const SearchResult = () => {
-  const { nickname, email, imagePath, /*desc, detail,*/ categories } =
-    useSelector((state: RootState) => state.search);
   const navigate = useNavigate();
 
+  const { nickname, email, imagePath, introduction, description, categories } =
+    useSelector((state: RootState) => state.search);
+  const { profile } = useSelector((state: RootState) => state.profile);
+
   const handleClick = () => {
-    navigate(`/calendar/${nickname}`);
+    if (profile.nickname === nickname) {
+      navigate("/calendar/my");
+    } else {
+      navigate(`/calendar/${nickname}`);
+    }
   };
 
   return (
@@ -23,10 +29,10 @@ const SearchResult = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.name}>{nickname}</div>
-          <div className={styles.desc}>한줄소개</div>
+          <div className={styles.desc}>{introduction}</div>
         </div>
       </div>
-      <div className={styles.detail}>설명</div>
+      <div className={styles.detail}>{description}</div>
       <div className={styles.categories}>
         {categories &&
           categories.length > 0 &&

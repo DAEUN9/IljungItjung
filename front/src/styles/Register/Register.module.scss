@@ -10,12 +10,12 @@
   justify-content: center;
   align-items: center;
 
-  & .picturebox{
+  & .picturebox {
     display: flex;
     justify-content: center;
     align-items: flex-start;
 
-    & .iljung{
+    & .iljung {
       width: 35%;
       height: auto;
     }
@@ -42,16 +42,13 @@
       display: flex;
       justify-content: space-between;
     }
-      & .nickname {
-        width: 78%;
-        padding: 0% 1%;
-      }
+    & .nickname {
+      width: 82%;
+    }
 
     & .oneline {
-      width: 97%;
-      height: 32px;
+      width: 100%;
       overflow: auto;
-      padding: 0% 1%;
     }
 
     & .count {
@@ -61,7 +58,7 @@
     }
   }
 
-  & .startbox{
+  & .startbox {
     display: flex;
     justify-content: center;
     margin-top: 10%;

@@ -6,31 +6,61 @@ import styles from '@styles/Calendar/Calendar.module.scss';
 import Schedule from '@components/common/Schedule';
 import iljung from '@assets/defaultImg.png';
 import DetailInfo from './DetailInfo';
-import { formatTime, getFullDate, InfoItemProps } from '@components/Calendar/common/util';
+import {
+  formatTime,
+  getFullDate,
+  InfoItemProps,
+} from '@components/Calendar/common/util';
 import CustomButton from '@components/common/CustomButton';
+import { acceptRequest } from '@api/calendar';
+
+interface ButtonProps {
+  id: number;
+}
+
+interface RequestApiData {
+  status: string;
+  data: {
+    id: number;
+  };
+}
 
 const TextField = styled(MuiTextField)`
   > .Mui-focused > fieldset {
-    border-color: #6B7BB1 !important;
+    border-color: #6b7bb1 !important;
   }
-`
+`;
 
-const RequestButtons = () => {
+const RequestButtons = ({ id }: ButtonProps) => {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
 
+  // 예약 거절
   const handleDeny = useCallback(() => {
     setOpen(true);
   }, []);
 
-  const handleAccept = () => {};
+  // 예약 수락
+  const handleAccept = () => {
+    const data = { accept: true };
+    acceptRequest(id, data, (res: RequestApiData) => {
+      console.log(res);
+    });
+  };
 
+  // 거절 사유 입력 취소
   const handleCancle = useCallback(() => {
     setOpen(false);
     setText('');
   }, []);
 
-  const handleConfirm = () => {};
+  // 거절 사유 입력 확인
+  const handleConfirm = () => {
+    const data = { accept: false, reason: text };
+    acceptRequest(id, data, (res: RequestApiData) => {
+      console.log(res);
+    });
+  };
 
   return (
     <div>
@@ -39,7 +69,7 @@ const RequestButtons = () => {
           <CustomButton variant="outlined" onClick={handleDeny}>
             거절
           </CustomButton>
-          <CustomButton>수락</CustomButton>
+          <CustomButton onClick={handleAccept}>수락</CustomButton>
         </div>
       )}
       {open && (
@@ -53,7 +83,7 @@ const RequestButtons = () => {
             value={text}
             onChange={(e) => {
               const current = e.currentTarget.value;
-              if(current.length <= 100) {
+              if (current.length <= 100) {
                 setText(current);
               }
             }}
@@ -63,7 +93,12 @@ const RequestButtons = () => {
             <CustomButton variant="outlined" onClick={handleCancle}>
               취소
             </CustomButton>
-            <CustomButton disabled={text.length > 0 ? false : true}>확인</CustomButton>
+            <CustomButton
+              disabled={text.length > 0 ? false : true}
+              onClick={handleConfirm}
+            >
+              확인
+            </CustomButton>
           </div>
         </div>
       )}
@@ -72,7 +107,16 @@ const RequestButtons = () => {
 };
 
 const RequestItem = ({ item }: InfoItemProps) => {
-  const { color, startDate, endDate, title, nickname, phone, desc } = item;
+  const {
+    id,
+    color,
+    startDate,
+    endDate,
+    categoryName,
+    nickname,
+    phonenum,
+    contents,
+  } = item;
   const time = formatTime(startDate?.toString(), endDate?.toString());
 
   return (
@@ -83,12 +127,12 @@ const RequestItem = ({ item }: InfoItemProps) => {
         time={time ?? '-'}
         userId="유저아이디"
         userName={nickname}
-        category={title ?? '-'}
+        category={categoryName ?? '-'}
         userImg={iljung}
         render={() => (
           <>
-            <DetailInfo phone={phone} desc={desc} />
-            <RequestButtons />
+            <DetailInfo phone={phonenum} desc={contents} />
+            <RequestButtons id={id} />
           </>
         )}
       />
