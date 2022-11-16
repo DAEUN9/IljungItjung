@@ -14,7 +14,7 @@ public class CategoryCreateDto {
     @Pattern(regexp = "^[0-9]{4}$", message = "time은 4자리 숫자만 입력가능합니다. (ex.0130)")
     private String time;
 
-    @Pattern(regexp = "^#[a-z|A-Z|0-9]{6}$", message = "color 형식을 맞춰주세요 (ex.#000000)")
+    @Pattern(regexp = "^#[a-z|A-Z|0-9]{6}$", message = "color 형식을 맞춰주세요. (ex.#000000)")
     private String color;
 
     public Category toEntity(){

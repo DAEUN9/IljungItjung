@@ -21,12 +21,11 @@ public class ReservationViewDto {
     private final String contents;
 
     public ReservationViewDto(Schedule schedule){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm");
         this.id=schedule.getId();
         this.categoryName=schedule.getCategoryName();
         this.color= schedule.getColor();
-        this.startDate=simpleDateFormat.format(schedule.getStartDate());
-        this.endDate=simpleDateFormat.format(schedule.getEndDate());
+        this.startDate=schedule.getDateFormat(schedule.getStartDate());
+        this.endDate= schedule.getDateFormat(schedule.getEndDate());
         this.imagePath=schedule.getUserFrom().getImagePath();
         this.nickname=schedule.getUserFrom().getNickname();
         this.contents=schedule.getContents();
