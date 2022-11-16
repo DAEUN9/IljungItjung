@@ -2,7 +2,11 @@ import styles from '@styles/Calendar/Calendar.module.scss';
 import Schedule from '@components/common/Schedule';
 import iljung from '@assets/defaultImg.png';
 import DetailInfo from './DetailInfo';
-import { formatTime, getFullDate, InfoItemProps } from '@components/Calendar/common/util';
+import {
+  formatTime,
+  getFullDate,
+  InfoItemProps,
+} from '@components/Calendar/common/util';
 
 const UpcomingItem = ({ item }: InfoItemProps) => {
   const { color, startDate, endDate, title, nickname, phone, desc } = item;

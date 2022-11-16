@@ -99,7 +99,7 @@ const OtherCalendar = () => {
       });
 
       // 캘린더 조회
-      getSchedule(nickname, false, (res: ScheduleApiData) => {
+      getSchedule(nickname, (res: ScheduleApiData) => {
         const { categoryList, blockList, acceptList } = res.data;
         console.log(res.data);
 

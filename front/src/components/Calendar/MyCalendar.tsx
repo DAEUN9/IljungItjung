@@ -74,7 +74,7 @@ const MyCalendar = () => {
 
   useEffect(() => {
     if (profile.nickname !== '') {
-      getSchedule(profile.nickname, true, (res: ScheduleApiData) => {
+      getSchedule(profile.nickname, (res: ScheduleApiData) => {
         const { acceptList, requestList } = res.data;
         console.log(res.data);
         dispatch(setScheduleList(acceptList));
