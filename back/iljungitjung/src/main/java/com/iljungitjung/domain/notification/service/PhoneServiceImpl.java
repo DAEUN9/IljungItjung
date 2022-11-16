@@ -12,9 +12,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -60,10 +61,15 @@ public class PhoneServiceImpl implements PhoneService{
         NotificationMessageRequestDto jsonBody = new NotificationMessageRequestDto(requestDto, SENDER_PHONE);
         return new HttpEntity<>(jsonBody, headers);
     }
-    @Override
-    public String makeRandomNumber() {
-        int number = ThreadLocalRandom.current().nextInt(1000, 9999 + 1);
-        return Integer.toString(number);
+
+    private String makeRandomNumber() {
+        UUID uuid = UUID.randomUUID();
+        return parseToShortUUID(uuid.toString());
+    }
+
+    private String parseToShortUUID(String uuid) {
+        int uuidInt = ByteBuffer.wrap(uuid.getBytes()).getInt();
+        return Integer.toString(uuidInt, 10);
     }
 
     private String makeAuthenticateContent(String number) {

@@ -49,15 +49,6 @@ public class PhoneServiceTest {
         verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
     }
 
-    @Test
-    @DisplayName("4자리 수의 난수 생성 검증")
-    public void makeRandomNumbersTest() throws Exception {
-        String randomNum = phoneService.makeRandomNumber();
-        Boolean isNumber = randomNum.chars().allMatch(Character::isDigit);
-
-        Assertions.assertEquals(randomNum.length(), 4);
-        Assertions.assertEquals(isNumber, true);
-    }
 
     @Test
     @DisplayName("다른 유저가 사용중인 전화번호일때 중복 메시지 반환")
