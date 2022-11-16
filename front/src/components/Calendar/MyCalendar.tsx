@@ -77,7 +77,7 @@ const MyCalendar = () => {
       getSchedule(profile.nickname, (res: ScheduleApiData) => {
         const { acceptList, requestList } = res.data;
         console.log(res.data);
-        dispatch(setScheduleList(acceptList));
+        dispatch(setScheduleList(next));
         dispatch(setRequestList(request));
       });
     }
