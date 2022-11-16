@@ -33,7 +33,7 @@ public class ReservationServiceImpl implements ReservationService{
 
     private final UserRepository userRepository;
     private final UserService userService;
-    //private final NotificationService notificasionService;
+    private final NotificationService notificasionService;
 
     @Override
     @Transactional
