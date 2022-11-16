@@ -22,32 +22,32 @@ import { ScheduleApiData } from '@components/types/types';
 const next = [
   {
     id: 1,
-    startDate: '2022-11-07T09:30',
-    endDate: '2022-11-07T11:00',
-    title: '목욕',
+    startDate: '2022-11-14T09:30',
+    endDate: '2022-11-14T11:00',
+    categoryName: '목욕',
     nickname: '곰고구마',
-    desc: '요청사항이 엄청나게 길어지면 어떻게 보일지 정말정말 궁금하네요 요청사항이 엄청나게 길어지면 어떻게 보일지 정말정말 궁금하네요',
-    phone: '010-1111-1111',
+    contents: '요청사항이 엄청나게 길어지면 어떻게 보일지 정말정말 궁금하네요 요청사항이 엄청나게 길어지면 어떻게 보일지 정말정말 궁금하네요',
+    phonenum: '010-1111-1111',
     color: '#F4F38A',
   },
   {
     id: 2,
-    startDate: '2022-11-08T12:00',
-    endDate: '2022-11-08T13:30',
-    title: '손발톱관리',
+    startDate: '2022-11-16T12:00',
+    endDate: '2022-11-16T13:30',
+    categoryName: '손발톱관리',
     nickname: '신봉선',
-    desc: '예쁘게 해주세용',
-    phone: '010-2222-2222',
+    contents: '예쁘게 해주세용',
+    phonenum: '010-2222-2222',
     color: '#C3DBE3',
   },
   {
     id: 3,
-    startDate: '2022-11-11T12:00',
-    endDate: '2022-11-11T13:30',
-    title: '커트',
+    startDate: '2022-11-18T12:00',
+    endDate: '2022-11-18T13:30',
+    categoryName: '커트',
     nickname: '퍼플독',
-    desc: '멋지게 해주십쇼',
-    phone: '010-3333-3333',
+    contents: '멋지게 해주십쇼',
+    phonenum: '010-3333-3333',
     color: '#D7CBF4',
   },
 ];
@@ -55,23 +55,14 @@ const next = [
 const request = [
   {
     id: 1,
+    categoryName: '목욕',
+    color: '#F4F38A',
     startDate: '2022-11-03T09:45',
     endDate: '2022-11-03T11:00',
-    title: '목욕',
     nickname: '김주영',
-    desc: '주영이 잘 부탁드립니당',
-    phone: '010-1111-1111',
-    color: '#F4F38A',
-  },
-  {
-    id: 2,
-    startDate: '2022-11-05T12:00',
-    endDate: '2022-11-05T13:30',
-    title: '손발톱관리',
-    nickname: '바보',
-    desc: '바보 잘 부탁드립니당',
-    phone: '010-2222-2222',
-    color: '#C3DBE3',
+    contents: '주영이 잘 부탁드립니당',
+    phonenum: '010-1111-1111',
+
   },
 ];
 
@@ -83,12 +74,12 @@ const MyCalendar = () => {
 
   useEffect(() => {
     if (profile.nickname !== '') {
-      getSchedule(profile.nickname, true, (res: ScheduleApiData) => {
-        const { requestList, acceptList } = res.data;
+      getSchedule(profile.nickname, (res: ScheduleApiData) => {
+        const { acceptList, requestList } = res.data;
         console.log(res.data);
+        dispatch(setScheduleList(acceptList));
+        dispatch(setRequestList(request));
       });
-      dispatch(setScheduleList(next));
-      dispatch(setRequestList(request));
     }
   }, [profile]);
 

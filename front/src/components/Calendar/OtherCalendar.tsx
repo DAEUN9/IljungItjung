@@ -4,19 +4,19 @@ import { ViewState } from "@devexpress/dx-react-scheduler";
 import { Scheduler, Toolbar } from "@devexpress/dx-react-scheduler-material-ui";
 import Paper from "@mui/material/Paper";
 
-import "@styles/Calendar/CustomCalendar.css";
-import styles from "@styles/Calendar/Calendar.module.scss";
-import CustomTodayButton from "@components/Calendar/common/CustomTodayButton";
-import CustomDateNavigator from "@components/Calendar/common/CustomDateNavigator";
-import Profile from "@components/Calendar/common/Profile";
-import Reservation from "./Other/Reservation/Reservation";
-import OtherAppointments from "./Other/OtherAppointments";
-import OtherWeekView from "./Other/OtherWeekView";
-import { RootState } from "@modules/index";
-import { setDisabledMap } from "@modules/othercalendar";
-import { useParams } from "react-router-dom";
-import { getOtherProfile, getSchedule } from "@api/calendar";
-import { MyProfile, ScheduleApiData } from "@components/types/types";
+import '@styles/Calendar/CustomCalendar.css';
+import styles from '@styles/Calendar/Calendar.module.scss';
+import CustomTodayButton from '@components/Calendar/common/CustomTodayButton';
+import CustomDateNavigator from '@components/Calendar/common/CustomDateNavigator';
+import Profile from '@components/Calendar/common/Profile';
+import Reservation from './Other/Reservation/Reservation';
+import OtherAppointments from './Other/OtherAppointments';
+import OtherWeekView from './Other/OtherWeekView';
+import { RootState } from '@modules/index';
+import { setDisabledMap } from '@modules/othercalendar';
+import { useParams } from 'react-router-dom';
+import { getOtherProfile, getSchedule } from '@api/calendar';
+import { MyProfile, ScheduleApiData } from '@components/types/types';
 
 const next = [
   {
@@ -69,6 +69,16 @@ const next = [
     phone: "010-3333-3333",
     color: "#D7CBF4",
   },
+  {
+    id: 4,
+    startDate: '2022-11-11T13:00',
+    endDate: '2022-11-11T14:30',
+    title: '카테고리',
+    nickname: '닉네임',
+    desc: '요청사항',
+    phone: '010-3333-3333',
+    color: '#D7CBF4',
+  },
 ];
 
 interface MyInfoApiData {
@@ -78,11 +88,11 @@ interface MyInfoApiData {
 
 const OtherCalendar = () => {
   const [profile, setProfile] = useState<MyProfile>({
-    nickname: "",
-    email: "",
-    imagePath: "",
-    introduction: "",
-    description: "",
+    nickname: '',
+    email: '',
+    imagePath: '',
+    introduction: '',
+    description: '',
   });
   const [currentDate, setCurrentDate] = useState(new Date());
   const current = useSelector(
@@ -99,7 +109,7 @@ const OtherCalendar = () => {
       });
 
       // 캘린더 조회
-      getSchedule(nickname, false, (res: ScheduleApiData) => {
+      getSchedule(nickname, (res: ScheduleApiData) => {
         const { categoryList, blockList, acceptList } = res.data;
         console.log(res.data);
 
