@@ -14,6 +14,8 @@ import {
 import CustomButton from '@components/common/CustomButton';
 import { acceptRequest } from '@api/calendar';
 import { Snackbar } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { addSchedule } from '@modules/mycalendar';
 
 interface ButtonProps {
   id: number;
@@ -34,11 +36,13 @@ const TextField = styled(MuiTextField)`
 
 const messages = ['수락되었습니다.', '거절되었습니다.'];
 
-const RequestButtons = ({ id }: ButtonProps) => {
+const RequestButtons = ({ item }: InfoItemProps) => {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
   const [snackbar, setSnackbar] = useState(false);
   const [idx, setIdx] = useState(0);
+
+  const dispatch = useDispatch();
   
   // 스낵바 close 핸들러
   const handleClose = useCallback(() => {
@@ -53,10 +57,12 @@ const RequestButtons = ({ id }: ButtonProps) => {
   // 예약 수락
   const handleAccept = () => {
     const data = { accept: true };
-    acceptRequest(id, data, (res: RequestApiData) => {
+
+    acceptRequest(item.id, data, (res: RequestApiData) => {
       console.log(res);
       setIdx(0);
       setSnackbar(true);
+      dispatch(addSchedule(item));
     });
   };
 
@@ -69,7 +75,8 @@ const RequestButtons = ({ id }: ButtonProps) => {
   // 거절 사유 입력 확인
   const handleConfirm = () => {
     const data = { accept: false, reason: text };
-    acceptRequest(id, data, (res: RequestApiData) => {
+
+    acceptRequest(item.id, data, (res: RequestApiData) => {
       console.log(res);
       setIdx(1);
       setSnackbar(true);
@@ -129,7 +136,6 @@ const RequestButtons = ({ id }: ButtonProps) => {
 
 const RequestItem = ({ item }: InfoItemProps) => {
   const {
-    id,
     color,
     startDate,
     endDate,
@@ -153,7 +159,7 @@ const RequestItem = ({ item }: InfoItemProps) => {
         render={() => (
           <>
             <DetailInfo phone={phonenum} desc={contents} />
-            <RequestButtons id={id} />
+            <RequestButtons item={item} />
           </>
         )}
       />
