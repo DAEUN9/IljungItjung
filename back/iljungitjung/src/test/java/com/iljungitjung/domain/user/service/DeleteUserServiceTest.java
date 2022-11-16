@@ -73,7 +73,7 @@ class DeleteUserServiceTest {
         userRepository.save(userFrom);
         userRepository.save(userTo);
 
-        category.setUser(userTo);
+        category.updateUser(userTo);
         schedule.setScheduleResponseList(userFrom);
         schedule.setScheduleRequestList(userTo);
 
