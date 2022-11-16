@@ -59,9 +59,9 @@ public class NotificationControllerTest {
         when(notificationService.sendMessage(any(NotificationRequestDto.class))).thenReturn(new NotificationResponseDto("202"));
         //then
         mockMvc.perform(post("/notifications")
-                .content(contents)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .content(contents)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("data.statusCode").value(statusAccepted()));
     }

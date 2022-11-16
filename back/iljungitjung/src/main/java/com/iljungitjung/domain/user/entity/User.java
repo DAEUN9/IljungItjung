@@ -71,6 +71,14 @@ public class User {
         this.imagePath = temporaryUser.getProfileImg();
     }
 
+    public void clearCategoryList(){
+        this.categoryList = new ArrayList<>();
+    }
+
+    public Long categoryCount() {
+        return Long.valueOf(this.categoryList.size());
+    }
+
     @Builder
     public User(String nickname, String phonenum, String imagePath, String openTime, String closeTime, String email, String description, String introduction) {
         this.nickname = nickname;

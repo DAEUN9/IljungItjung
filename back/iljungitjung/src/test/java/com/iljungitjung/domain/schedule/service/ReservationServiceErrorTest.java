@@ -193,6 +193,7 @@ public class ReservationServiceErrorTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("일정 차단시 날짜 형식 입력을 잘못함")
     void inputDateErrorWhenBlockSchedule(){
         //given
@@ -280,7 +281,6 @@ public class ReservationServiceErrorTest {
                 .color(categoryColor)
                 .time(time)
                 .build();
-        category.setId(categoryId);
 
         return category;
     }

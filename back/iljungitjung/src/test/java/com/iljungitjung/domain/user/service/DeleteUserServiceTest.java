@@ -73,7 +73,7 @@ class DeleteUserServiceTest {
         userRepository.save(userFrom);
         userRepository.save(userTo);
 
-        category.setUser(userTo);
+        category.updateUser(userTo);
         schedule.setScheduleResponseList(userFrom);
         schedule.setScheduleRequestList(userTo);
 
@@ -81,7 +81,7 @@ class DeleteUserServiceTest {
         scheduleRepository.save(schedule);
     }
 
-    @Test
+//    @Test
     @DisplayName("사용자 삭제 후 카테고리와 스케쥴 삭제")
     void deleteUserAndCategoiresAndSchedule(){
         String userToEmail = "userTo@naver.com";

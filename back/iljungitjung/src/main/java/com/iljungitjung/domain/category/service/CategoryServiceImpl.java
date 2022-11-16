@@ -1,48 +1,52 @@
 package com.iljungitjung.domain.category.service;
 
-import com.iljungitjung.domain.category.dto.CategoryListCreateRequestDto;
 import com.iljungitjung.domain.category.dto.CategoryCreateDto;
 import com.iljungitjung.domain.category.dto.CategoryCreateResponseDto;
+import com.iljungitjung.domain.category.dto.CategoryListCreateRequestDto;
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.service.UserService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.*;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class CategoryServiceImpl implements CategoryService{
     private final CategoryRepository categoryRepository;
 
     private final UserService userService;
+
     @Override
     @Transactional
     public CategoryCreateResponseDto addCategory(CategoryListCreateRequestDto requestDto, HttpSession httpSession) {
-        Long count = 0L;
+        Long categoryCount = 0L;
         User user = userService.findUserBySessionId(httpSession);
 
-        List<Category> categoryList = categoryRepository.findByUser_IdIs(user.getId());
+        deleteCategoryListAtUser(user);
+        putCategoryListToUser(requestDto, user);
+        categoryCount = user.categoryCount();
 
-        for(Category category : categoryList){
-            categoryRepository.delete(category);
-        }
+        return new CategoryCreateResponseDto(categoryCount);
+    }
 
-        user.getCategoryList().clear();
+    @Transactional
+    private void deleteCategoryListAtUser(User user){
+        List<Category> categoryList = categoryRepository.findByUser_Id(user.getId());
+        categoryList.forEach(category -> categoryRepository.delete(category));
+        user.clearCategoryList();
+    }
 
-        for(CategoryCreateDto categoryRequestDto : requestDto.getCategoryList()){
+    @Transactional
+    private void putCategoryListToUser(CategoryListCreateRequestDto requestDto, User user){
+        List<CategoryCreateDto> categoryList = requestDto.getCategoryList();
+        categoryList.forEach(categoryRequestDto -> {
             Category category = categoryRequestDto.toEntity();
-            category.setCategoryList(user);
+            category.updateCategoryList(user);
             categoryRepository.save(category);
-            count++;
-        }
-
-        return new CategoryCreateResponseDto(count);
+        });
     }
 }

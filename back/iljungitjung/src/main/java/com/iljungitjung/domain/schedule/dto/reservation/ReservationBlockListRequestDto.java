@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ReservationBlockListRequestDto {
 
-    private List<Boolean> days;
-    private List<ReservationBlockDto> blockList;
+    private List<ReservationBlockDto> reservationBlockList;
 
 }

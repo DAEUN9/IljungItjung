@@ -14,7 +14,6 @@ import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -27,7 +26,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ReservationServiceImpl implements ReservationService{
 
     private final ScheduleRepository scheduleRepository;
@@ -140,13 +138,7 @@ public class ReservationServiceImpl implements ReservationService{
             }
         }
 
-        user.getBlockDayList().clear();
-
-        for(boolean isBlock : reservationBlockListRequestDto.getDays()){
-            user.getBlockDayList().add(isBlock);
-        }
-
-        for(ReservationBlockDto reservationBlockDto : reservationBlockListRequestDto.getBlockList()){
+        for(ReservationBlockDto reservationBlockDto : reservationBlockListRequestDto.getReservationBlockList()){
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
             Date startDate;
             Date endDate;

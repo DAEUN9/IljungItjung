@@ -17,9 +17,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
+import java.util.Iterator;
 
 
 @RestControllerAdvice
@@ -92,5 +94,13 @@ public class ExceptionHandlerUtil {
     @ExceptionHandler(ExpireRedisUserException.class)
     ResponseEntity<CommonResponse> handleExpireRedisUserException(ExpireRedisUserException e){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CommonResponse.getErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    ResponseEntity<CommonResponse> handleConstraintViolationException(ConstraintViolationException e){
+        Iterator<ConstraintViolation<?>> iterator = e.getConstraintViolations().iterator();
+        ConstraintViolation<?> error = iterator.next();
+
+        return ResponseEntity.badRequest().body(CommonResponse.getErrorResponse(error.getMessage()));
     }
 }

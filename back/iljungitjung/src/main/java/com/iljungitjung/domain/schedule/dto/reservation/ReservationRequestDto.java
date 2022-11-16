@@ -36,7 +36,7 @@ public class ReservationRequestDto {
     private String phone;
 
     @NotBlank(message = "categoryName은 필수 입력 값입니다.")
-    @Pattern(regexp = "^[a-z|A-Z|0-9|ㄱ-ㅎ|가-힣]{2,10}$", message = "카테고리 이름은 최소 2자, 최대 10자 영어, 한글, 숫자만 입력가능합니다.")
+    @Pattern(regexp = "^[a-z|A-Z|0-9|ㄱ-ㅎ|가-힣]{2,20}$", message = "카테고리 이름은 최소 2자, 최대 20자 영어, 한글, 숫자만 입력가능합니다.")
     private String categoryName;
 
     public Schedule toEntity(Date startDate, Date endDate, String color) {
