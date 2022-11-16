@@ -101,6 +101,7 @@ const OtherCalendar = () => {
         const now = new Date();
         const filter = next.filter((item) => new Date(item.startDate) >= now);
         dispatch(setDisabledMap(filter));
+        dispatch(setCategory(categoryList));
       });
     }
   }, [nickname]);
