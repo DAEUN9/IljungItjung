@@ -21,7 +21,7 @@ public class ReservationViewDto {
     private final String contents;
 
     public ReservationViewDto(Schedule schedule){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm");
         this.id=schedule.getId();
         this.categoryName=schedule.getCategoryName();
         this.color= schedule.getColor();

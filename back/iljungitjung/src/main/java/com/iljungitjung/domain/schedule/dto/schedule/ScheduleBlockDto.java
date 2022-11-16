@@ -15,7 +15,7 @@ public class ScheduleBlockDto {
 
 
     public ScheduleBlockDto(Schedule schedule){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm");
         this.id=schedule.getId();
         this.startDate=simpleDateFormat.format(schedule.getStartDate());
         this.endDate=simpleDateFormat.format(schedule.getEndDate());
