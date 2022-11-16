@@ -86,8 +86,7 @@ public class PhoneServiceImpl implements PhoneService{
     private boolean checkDuplicatePhone(String phone) {
         return userRepository.existsUserByPhonenum(phone);
     }
-
-    //
+    
     private void savePhoneRandomNumber(PhoneConfirmRequestDto requestDto, HttpSession session) {
         String id = session.getId();
         if (phoneRepository.existsById(id)) {
