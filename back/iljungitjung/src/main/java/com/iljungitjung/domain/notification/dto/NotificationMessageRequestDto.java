@@ -15,7 +15,6 @@ public class NotificationMessageRequestDto {
     private String type;
     @JsonProperty("from")
     private String from;
-    // 추후 LMS 기준으로 변경
     @JsonProperty("content")
     private String content;
     @JsonProperty("messages")
@@ -23,9 +22,16 @@ public class NotificationMessageRequestDto {
 
     @Builder
     public NotificationMessageRequestDto(NotificationRequestDto requestDto, String phone) {
-        this.type = "SMS";
+        this.type = choiceType(requestDto);
         this.from = phone;
         this.content = "기본메시지";
         this.messages = requestDto.getMessages();
+    }
+
+    private String choiceType(NotificationRequestDto requestDto) {
+        if (requestDto.getMessages().get(0).getContent().length() >= 50) {
+            return "LMS";
+        }
+        return "SMS";
     }
 }
