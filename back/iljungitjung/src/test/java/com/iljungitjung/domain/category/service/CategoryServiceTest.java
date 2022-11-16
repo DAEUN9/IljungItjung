@@ -55,7 +55,6 @@ class CategoryServiceTest {
         CategoryCreateDto categoryCreateRequestDto = new CategoryCreateDto(categoryName, time, color);
 
         Category category = categoryCreateRequestDto.toEntity();
-        category.setId(categoryId);
 
         List<Category> categoryList = new ArrayList<>();
         categoryList.add(category);

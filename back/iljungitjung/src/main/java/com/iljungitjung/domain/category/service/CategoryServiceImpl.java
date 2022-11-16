@@ -20,27 +20,34 @@ public class CategoryServiceImpl implements CategoryService{
     private final CategoryRepository categoryRepository;
 
     private final UserService userService;
+
     @Override
     @Transactional
     public CategoryCreateResponseDto addCategory(CategoryListCreateRequestDto requestDto, HttpSession httpSession) {
-        Long count = 0L;
+        Long categoryCount = 0L;
         User user = userService.findUserBySessionId(httpSession);
 
+        deleteCategoryListAtUser(user);
+        putCategoryListToUser(requestDto, user);
+        categoryCount = user.categoryCount();
+
+        return new CategoryCreateResponseDto(categoryCount);
+    }
+
+    @Transactional
+    private void deleteCategoryListAtUser(User user){
         List<Category> categoryList = categoryRepository.findByUser_IdIs(user.getId());
+        categoryList.forEach(category -> categoryRepository.delete(category));
+        user.clearCategoryList();
+    }
 
-        for(Category category : categoryList){
-            categoryRepository.delete(category);
-        }
-
-        user.getCategoryList().clear();
-
-        for(CategoryCreateDto categoryRequestDto : requestDto.getCategoryList()){
+    @Transactional
+    private void putCategoryListToUser(CategoryListCreateRequestDto requestDto, User user){
+        List<CategoryCreateDto> categoryList = requestDto.getCategoryList();
+        categoryList.forEach(categoryRequestDto -> {
             Category category = categoryRequestDto.toEntity();
-            category.setCategoryList(user);
+            category.updateCategoryList(user);
             categoryRepository.save(category);
-            count++;
-        }
-
-        return new CategoryCreateResponseDto(count);
+        });
     }
 }

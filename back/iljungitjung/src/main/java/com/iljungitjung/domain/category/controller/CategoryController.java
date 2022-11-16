@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/categories")
@@ -26,11 +25,7 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<CommonResponse> createCategory(
             @RequestBody @Valid CategoryListCreateRequestDto requestDto
-            , HttpSession httpSession
-    ) {
+            , HttpSession httpSession) {
         return new ResponseEntity<>(CommonResponse.getSuccessResponse(categoryService.addCategory(requestDto, httpSession)), HttpStatus.OK);
     }
-
-
-
 }

@@ -192,21 +192,22 @@ public class ReservationServiceErrorTest {
         });
     }
 
-//    @Test
-//    @DisplayName("일정 차단시 날짜 형식 입력을 잘못함")
-//    void inputDateErrorWhenBlockSchedule(){
-//        //given
-//        User userFrom = User.builder().build();
-//        ReservationBlockListRequestDto reservationBlockListRequestDto = new ReservationBlockListRequestDto();
-//
-//        //when
-//        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
-//
-//        //then
-//        Assertions.assertThrows(DateFormatErrorException.class, () -> {
-//            reservationService.reservationBlock(reservationBlockListRequestDto, httpSession);
-//        });
-//    }
+    @Test
+    @Disabled
+    @DisplayName("일정 차단시 날짜 형식 입력을 잘못함")
+    void inputDateErrorWhenBlockSchedule(){
+        //given
+        User userFrom = User.builder().build();
+        ReservationBlockListRequestDto reservationBlockListRequestDto = new ReservationBlockListRequestDto();
+
+        //when
+        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
+
+        //then
+        Assertions.assertThrows(DateFormatErrorException.class, () -> {
+            reservationService.reservationBlock(reservationBlockListRequestDto, httpSession);
+        });
+    }
 
     @Test
     @DisplayName("예약 리스트 조회시 날짜 형식 입력을 잘못함")
@@ -280,7 +281,6 @@ public class ReservationServiceErrorTest {
                 .color(categoryColor)
                 .time(time)
                 .build();
-        category.setId(categoryId);
 
         return category;
     }

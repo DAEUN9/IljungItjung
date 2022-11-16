@@ -2,9 +2,6 @@ package com.iljungitjung.domain.category.entity;
 
 import com.iljungitjung.domain.user.entity.User;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -30,15 +27,11 @@ public class Category {
     @Column(nullable = false)
     private String time;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setUser(User user) {
+    public void updateUser(User user) {
         this.user = user;
     }
 
-    public void setCategoryList(User user){
+    public void updateCategoryList(User user){
         user.getCategoryList().add(this);
         this.user = user;
     }
@@ -49,5 +42,4 @@ public class Category {
         this.color = color;
         this.time = time;
     }
-
 }
