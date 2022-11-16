@@ -34,8 +34,8 @@ const CategoryList = () => {
     if (categories.length < 2) {
       setDelSnackbar(true);
     } else {
-      if (category.name === selectedCategory.name) {
-        onSelectCategory({ name: "", hour: "", min: "", color: "" });
+      if (category.categoryName === selectedCategory.categoryName) {
+        onSelectCategory({ categoryName: "", time: "", color: "" });
       }
       onDelCategory(category);
     }
@@ -50,12 +50,16 @@ const CategoryList = () => {
       <div className={styles["content"]}>
         {categories.map((category, index) => (
           <div
-            className={`${styles["chip"]} ${category.color} chip${category.name}`}
+            className={`${styles["chip"]} ${category.color} chip${category.categoryName}`}
             key={index}
           >
             <CustomChip
-              active={selectedCategory.name === category.name ? true : false}
-              label={category.name}
+              active={
+                selectedCategory.categoryName === category.categoryName
+                  ? true
+                  : false
+              }
+              label={category.categoryName}
               onClick={() => onSelectCategory(category)}
               onDelete={() => handleDeleteCategory(category)}
             />

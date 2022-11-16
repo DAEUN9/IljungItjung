@@ -98,7 +98,7 @@ export default function CustomToolbar() {
               {lock.map((isLocked, index) => {
                 if (isLocked)
                   return (
-                    <div className="day-lock">
+                    <div className="day-lock" key={index}>
                       <span>{days[(index + 1) % 7]}</span>
                       <FontAwesomeIcon
                         className="lock"
@@ -109,7 +109,7 @@ export default function CustomToolbar() {
                   );
                 else
                   return (
-                    <div className="day-lock">
+                    <div className="day-lock" key={index}>
                       <span>{days[(index + 1) % 7]}</span>
                       <FontAwesomeIcon
                         className="unlock"

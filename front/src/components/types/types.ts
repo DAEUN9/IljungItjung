@@ -1,9 +1,14 @@
 // 카테고리 관련 타입
 interface SettingCategoryState {
-  name: string;
+  categoryName: string;
   color: string;
-  hour: string;
-  min: string;
+  time: string;
+}
+
+interface BlockListTypes {
+  startTime: string;
+  endTime: string;
+  date: string;
 }
 
 interface SearchCategoryState {
@@ -35,6 +40,7 @@ interface SchedulerDate {
 
 export type {
   SettingCategoryState,
+  BlockListTypes,
   SearchCategoryState,
   SearchState,
   SchedulerDateTime,
