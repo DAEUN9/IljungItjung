@@ -87,8 +87,8 @@ interface SettingState {
 }
 
 const initialState: SettingState = {
-  categories: [{ name: "기본", color: "#D5EAEF", hour: "1", min: "00" }],
-  selectedCategory: { name: "", color: "", hour: "", min: "" },
+  categories: [{ categoryName: "기본", color: "#D5EAEF", time: "0100" }],
+  selectedCategory: { categoryName: "", color: "", time: "" },
   lock: [false, false, false, false, false, false, false],
   set: new Set<string>(),
   lockMap: new Map<number, string[]>(),
@@ -113,14 +113,14 @@ function setting(
       return {
         ...state,
         categories: state.categories.filter(
-          (category) => category.name !== action.payload.name
+          (category) => category.categoryName !== action.payload.categoryName
         ),
       };
     case EDIT_CATEGORY:
       return {
         ...state,
         categories: state.categories.map((category) => {
-          if (category.name === state.selectedCategory.name)
+          if (category.categoryName === state.selectedCategory.categoryName)
             return action.payload;
           return category;
         }),

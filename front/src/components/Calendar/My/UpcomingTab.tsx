@@ -10,7 +10,7 @@ import { SchedulerDate } from "@components/types/types";
 const plus = [0, 6, 5, 4, 3, 2, 1];
 
 const parseList = (list: SchedulerDate[] | undefined) => {
-  if (!list) return;
+  if (!list) return [];
 
   let parsed: SchedulerDate[] = [];
   const today = new Date();
@@ -50,13 +50,16 @@ const UpcomingTab = (props: TabPanelProps) => {
       aria-labelledby={`tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <div className={styles["tab-inner"]}>
-          {parsed?.map((item) => (
-            <UpcomingItem key={item.id} item={item} />
-          ))}
-        </div>
-      )}
+      {value === index &&
+        (parsed.length === 0 ? (
+          <div className={styles.center}>다음 일정이 없습니다.</div>
+        ) : (
+          <div className={styles["tab-inner"]}>
+            {parsed.map((item) => (
+              <UpcomingItem key={item.id} item={item} />
+            ))}
+          </div>
+        ))}
     </div>
   );
 };

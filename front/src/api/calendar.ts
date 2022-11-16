@@ -17,11 +17,9 @@ interface ReservationType {
 }
 
 // 캘린더 일정 조회
-export function getSchedule(nickname: string, isMyView: boolean, success: any) {
-  const params = { isMyView };
-
+export function getSchedule(nickname: string, success: any) {
   api
-    .get(`/schedules/${nickname}`, { params })
+    .get(`/schedules/${nickname}`)
     .then(success)
     .catch((err) => console.log(err));
 }
@@ -30,17 +28,28 @@ export function getSchedule(nickname: string, isMyView: boolean, success: any) {
 export function acceptRequest(
   id: number,
   data: AcceptRequestType,
-  success: any,
-  fail: any
+  success: any
 ) {
-  api.put(`/reservation/${id}`, data).then(success).catch(fail);
+  api
+    .put(`/reservation/${id}`, data)
+    .then(success)
+    .catch((err) => console.log(err));
 }
 
 // 예약 요청
-export function requestReservation(
-  data: ReservationType,
-  success: any,
-  fail: any
-) {
-  api.post(`/reservation`, data).then(success).catch(fail);
+export function requestReservation(data: ReservationType, success: any) {
+  api
+    .post(`/reservation`, data)
+    .then(success)
+    .catch((err) => console.log(err));
+}
+
+// 타인 프로필
+export function getOtherProfile(nickname: string, success: any) {
+  const params = { nickname };
+
+  api
+    .get(`/users`, { params })
+    .then(success)
+    .catch((err) => console.log(err));
 }

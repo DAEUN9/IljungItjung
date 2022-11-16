@@ -7,12 +7,18 @@ import styles from "@styles/Search/SearchResult.module.scss";
 import { RootState } from "@modules/index";
 
 const SearchResult = () => {
-  const { nickname, email, imagePath, introduction, description, categories } =
-    useSelector((state: RootState) => state.search);
   const navigate = useNavigate();
 
+  const { nickname, email, imagePath, introduction, description, categories } =
+    useSelector((state: RootState) => state.search);
+  const { profile } = useSelector((state: RootState) => state.profile);
+
   const handleClick = () => {
-    navigate(`/calendar/${nickname}`);
+    if (profile.nickname === nickname) {
+      navigate("/calendar/my");
+    } else {
+      navigate(`/calendar/${nickname}`);
+    }
   };
 
   return (
