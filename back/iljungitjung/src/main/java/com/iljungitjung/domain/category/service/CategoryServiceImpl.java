@@ -7,9 +7,8 @@ import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.service.UserService;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -36,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Transactional
     private void deleteCategoryListAtUser(User user){
-        List<Category> categoryList = categoryRepository.findByUser_IdIs(user.getId());
+        List<Category> categoryList = categoryRepository.findByUser_Id(user.getId());
         categoryList.forEach(category -> categoryRepository.delete(category));
         user.clearCategoryList();
     }
