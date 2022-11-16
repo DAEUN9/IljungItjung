@@ -33,7 +33,7 @@ public class ReservationServiceImpl implements ReservationService{
 
     private final UserRepository userRepository;
     private final UserService userService;
-    private final NotificationService notificasionService;
+    //private final NotificationService notificasionService;
 
     @Override
     @Transactional
@@ -71,7 +71,7 @@ public class ReservationServiceImpl implements ReservationService{
         schedule.setScheduleResponseList(userTo);
 
         schedule = scheduleRepository.save(schedule);
-        notificasionService.autoReservationMessage(schedule);
+        //notificasionService.autoReservationMessage(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -104,7 +104,7 @@ public class ReservationServiceImpl implements ReservationService{
         }else{
             throw new NoGrantAccessScheduleException();
         }
-        notificasionService.autoReservationMessage(schedule);
+        //notificasionService.autoReservationMessage(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -120,7 +120,7 @@ public class ReservationServiceImpl implements ReservationService{
         if(!checkSamePerson(user, schedule.getUserTo())) throw new NoGrantDeleteScheduleException();
 
         schedule.deleted();
-        notificasionService.autoReservationMessage(schedule);
+        //notificasionService.autoReservationMessage(schedule);
     }
 
     @Override
