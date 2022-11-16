@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoHelpCircleOutline } from "react-icons/io5";
-import { Fab, IconButton, Tab, Tabs } from "@mui/material";
+import { Fab, IconButton, Tab, Tabs, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { BsQuestionLg } from "react-icons/bs";
 import { ThemeProvider } from "@emotion/react";
@@ -24,7 +24,9 @@ import {
 import { CategoryTooltip } from "@components/Setting/Category/CategoryTooltip";
 import { blockSchedule, registerCategory } from "@api/setting";
 import { RootState } from "@modules/index";
-import { BlockListTypes } from "@components/types/types";
+import { AppointmentsTypes, BlockListTypes } from "@components/types/types";
+import { getSchedule } from "@api/calendar";
+import DeleteModal from "@components/Setting/DeleteModal";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -47,15 +49,61 @@ interface SettingApiData {
   data: number;
 }
 
+const data: AppointmentsTypes[] = [
+  {
+    id: 1,
+    startDate: "2022-11-16T09:30",
+    endDate: "2022-11-16T11:00",
+    categoryName: "목욕",
+    nickname: "곰고구마",
+    contents:
+      "요청사항이 엄청나게 길어지면 어떻게 보일지 정말정말 궁금하네요 요청사항이 엄청나게 길어지면 어떻게 보일지 정말정말 궁금하네요",
+    phonenum: "010-1111-1111",
+    color: "#F4F38A",
+  },
+  {
+    id: 2,
+    startDate: "2022-11-16T12:00",
+    endDate: "2022-11-16T13:30",
+    categoryName: "손발톱관리",
+    nickname: "신봉선",
+    contents: "예쁘게 해주세용",
+    phonenum: "010-2222-2222",
+    color: "#C3DBE3",
+  },
+  {
+    id: 3,
+    startDate: "2022-11-18T12:00",
+    endDate: "2022-11-18T13:30",
+    categoryName: "커트",
+    nickname: "퍼플독",
+    contents: "멋지게 해주십쇼",
+    phonenum: "010-3333-3333",
+    color: "#D7CBF4",
+  },
+];
+
 const SettingPage = () => {
-  const [tab, setTab] = useState(0);
   const navigate = useNavigate();
 
+  const [tab, setTab] = useState(0);
   const [saveOpen, setSaveOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
+  const [appointments, setAppointments] = useState<AppointmentsTypes[]>([]);
   const { categories, set, lock } = useSelector(
     (state: RootState) => state.setting
   );
+  const profile = useSelector((state: RootState) => state.profile.profile);
+
+  useEffect(() => {
+    getSchedule(profile.nickname, (res: any) => {
+      setAppointments(res.data.acceptList);
+    });
+  }, []);
+
+  const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
+    setTab(newValue);
+  };
 
   const handleSubmit = () => {
     setSaveOpen(false);
@@ -79,11 +127,7 @@ const SettingPage = () => {
       console.log(res.data);
     });
 
-    // navigate("/calendar/my");
-  };
-
-  const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
+    navigate("/calendar/my");
   };
 
   return (
@@ -91,7 +135,7 @@ const SettingPage = () => {
       <Sidebar />
       <div className={styles.content}>
         <div className={styles["calendar-container"]}>
-          <SetCalendar />
+          <SetCalendar appointments={appointments} />
           <ThemeProvider theme={theme}>
             <CalendarTooltip title={TooltipContent()}>
               <div className={styles["fab-wrapper"]}>
@@ -101,6 +145,7 @@ const SettingPage = () => {
               </div>
             </CalendarTooltip>
           </ThemeProvider>
+          <DeleteModal />
         </div>
         <div className={styles.right}>
           <div className={styles["button-group"]}>

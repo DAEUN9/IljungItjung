@@ -63,7 +63,9 @@ const RegisterPage = () => {
     // 회원가입 API 요청
     postRegister(name, text, () => {
       // 결과에 따라서 페이지 이동. 가이드 페이지 출력
-      const category = [{categoryName: "기본", color: "#D5EAEF", time: "0100"}];
+      const category = [
+        { categoryName: "기본", color: "#D5EAEF", time: "0100" },
+      ];
       registerCategory(category, () => {});
       navigate(`/calender/my`);
     });
