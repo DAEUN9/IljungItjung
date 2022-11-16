@@ -1,7 +1,6 @@
 package com.iljungitjung.domain.notification;
 
 import com.iljungitjung.domain.notification.dto.NotificationMessage;
-import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.exception.FailSendMessageException;
 import com.iljungitjung.domain.notification.service.PhoneService;
@@ -21,10 +20,10 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DisplayName("휴대폰 서비스")
+@DisplayName("폰 서비스")
 @ExtendWith(SpringExtension.class)
 public class PhoneServiceTest {
     private final String PRESENTED_NUMBER = "이미 존재하는 전화번호 입니다.";
@@ -47,13 +46,17 @@ public class PhoneServiceTest {
         when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 
         phoneService.requestRandomNumber(phone);
+        verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
     }
 
     @Test
     @DisplayName("4자리 수의 난수 생성 검증")
     public void makeRandomNumbersTest() throws Exception {
         String randomNum = phoneService.makeRandomNumber();
+        Boolean isNumber = randomNum.chars().allMatch(Character::isDigit);
+
         Assertions.assertEquals(randomNum.length(), 4);
+        Assertions.assertEquals(isNumber, true);
     }
 
     @Test
@@ -70,24 +73,15 @@ public class PhoneServiceTest {
     @Test
     @DisplayName("ncloud 서버에서 문자 전송 실패")
     public void errorCorrespondenceNcoloud() throws Exception {
-        String content = "1234";
         String phone = "01012341234";
-
-        NotificationMessage message = new NotificationMessage(phone, content);
-        List<NotificationMessage> messageList = makeMessages(message);
-        NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
 
         when(notificationCorrespondence.sendNcloud(any(HttpEntity.class)))
                 .thenReturn(new NotificationResponseDto(HttpStatus.BAD_GATEWAY.toString()));
 
-        assertThatThrownBy(() -> phoneService.sendMessage(requestDto))
+        assertThatThrownBy(() -> phoneService.requestRandomNumber(phone))
                 .isInstanceOf(FailSendMessageException.class);
     }
 
-
-    private List<NotificationMessage> makeMessages(NotificationMessage... message){
-        return Arrays.asList(message);
-    }
     private String statusAccepted() {
         return HttpStatus.ACCEPTED.value()+"";
     }

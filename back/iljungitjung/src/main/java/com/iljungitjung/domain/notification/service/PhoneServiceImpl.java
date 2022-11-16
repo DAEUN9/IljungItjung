@@ -41,8 +41,8 @@ public class PhoneServiceImpl implements PhoneService{
     private List<NotificationMessage> makeMessages(NotificationMessage... message){
         return Arrays.asList(message);
     }
-    @Override
-    public void sendMessage(NotificationRequestDto requestDto) {
+
+    private void sendMessage(NotificationRequestDto requestDto) {
         HttpEntity<MessageRequestDto> body = makeBody(requestDto);
         checkStatusEqualsAccpeted(notificationCorrespondence.sendNcloud(body));
     }
