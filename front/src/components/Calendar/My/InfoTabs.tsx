@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -7,6 +8,7 @@ import styled from '@emotion/styled';
 
 import UpcomingTab from './UpcomingTab';
 import RequestTab from './RequestTab';
+import { RootState } from '@modules/index';
 
 function a11yProps(index: number) {
   return {
@@ -43,6 +45,7 @@ const CustomTab = styled(Tab)`
 const InfoTabs = () => {
   const [value, setValue] = useState(0);
   const [check, setCheck] = useState(false);
+  const request = useSelector((state: RootState) => state.mycalendar.request);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     if(newValue === 1 && !check) {
@@ -52,7 +55,7 @@ const InfoTabs = () => {
   };
 
   const getLabel = () => {
-    if (check) {
+    if (request.length === 0 || check) {
       return '요청';
     } else {
       return (
