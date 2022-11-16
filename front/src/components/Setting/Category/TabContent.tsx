@@ -78,14 +78,30 @@ const TabContent = ({ flag }: TabContentProps) => {
     min: "00",
     color: "#D5EAEF",
   });
-  const [edit, setEdit] = useState(selectedCategory);
+  const [edit, setEdit] = useState({ name: "", hour: "", min: "", color: "" });
   const [snackbar, setSnackbar] = useState(false);
   const [overSnackbar, setOverSnackbar] = useState(false);
 
-  const init = { name: "", hour: "1", min: "00", color: "#D5EAEF" };
+  const init = { categoryName: "", time: "", color: "#D5EAEF" };
 
   useEffect(() => {
-    setEdit(selectedCategory);
+    let hour, min;
+    const time = selectedCategory.time;
+    if (time.substring(0, 1) === "0") {
+      hour = time.substring(1, 2);
+      min = time.substring(2);
+    } else {
+      hour = time.substring(0, 1);
+      min = time.substring(1);
+    }
+    console.log(hour, min);
+
+    setEdit({
+      name: selectedCategory.categoryName,
+      hour: hour,
+      min: min,
+      color: selectedCategory.color,
+    });
   }, [selectedCategory]);
 
   const handleSubmitForm = () => {
@@ -97,14 +113,23 @@ const TabContent = ({ flag }: TabContentProps) => {
       }
 
       if (add.name.length > 0) {
-        onAddCategory(add);
-        setAdd(init);
+        onAddCategory({
+          categoryName: add.name,
+          time: (add.hour.length === 1 ? "0" + add.hour : add.hour) + add.min,
+          color: add.color,
+        });
+        setAdd({ name: "", hour: "1", min: "00", color: "#D5EAEF" });
       } else {
         setSnackbar(true);
       }
     } else {
       if (edit.name.length > 0) {
-        onEditCategory(edit);
+        onEditCategory({
+          categoryName: edit.name,
+          time:
+            (edit.hour.length === 1 ? "0" + edit.hour : edit.hour) + edit.min,
+          color: edit.color,
+        });
         onSelectCategory(init);
       } else {
         setSnackbar(true);
@@ -114,7 +139,7 @@ const TabContent = ({ flag }: TabContentProps) => {
 
   return (
     <div className={styles["tab-content"]}>
-      {flag && selectedCategory.name === "" ? (
+      {flag && selectedCategory.categoryName === "" ? (
         <div className={styles["no-selected-category"]}>
           수정할 카테고리를 선택해 주세요.
         </div>
@@ -157,15 +182,15 @@ const TabContent = ({ flag }: TabContentProps) => {
             message="카테고리는 최대 15개까지 등록 가능합니다."
           />
           <div className={styles["time-taken"]}>
-            <div className={styles["title"]}>
+            <div className={styles.title}>
               <h3>소요시간</h3>
               <span>* 30분 단위로 입력</span>
             </div>
-            <div className={styles["dropdown"]}>
-              <FormControl className={styles["hour"]} size="small">
+            <div className={styles.dropdown}>
+              <FormControl className={styles.hour} size="small">
                 <Select
                   label=""
-                  className={styles["select"]}
+                  className={styles.select}
                   value={!flag ? add.hour : edit.hour}
                   onChange={(e) => {
                     if (!flag) {
@@ -183,9 +208,9 @@ const TabContent = ({ flag }: TabContentProps) => {
                 </Select>
               </FormControl>
               <span>시간</span>
-              <FormControl className={styles["min"]} size="small">
+              <FormControl className={styles.min} size="small">
                 <Select
-                  className={styles["select"]}
+                  className={styles.select}
                   value={!flag ? add.min : edit.min}
                   onChange={(e) => {
                     if (!flag) {
