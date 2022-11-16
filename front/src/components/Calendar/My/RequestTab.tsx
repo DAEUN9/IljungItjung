@@ -18,13 +18,16 @@ const RequestTab = (props: TabPanelProps) => {
       aria-labelledby={`tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <div className={styles['tab-inner']}>
-          {request?.map((item) => (
-            <RequestItem key={item.id} item={item} />
-          ))}
-        </div>
-      )}
+      {value === index &&
+        (request.length === 0 ? (
+          <div className={styles.center}>예약 요청이 없습니다.</div>
+        ) : (
+          <div className={styles['tab-inner']}>
+            {request.map((item) => (
+              <RequestItem key={item.id} item={item} />
+            ))}
+          </div>
+        ))}
     </div>
   );
 };
