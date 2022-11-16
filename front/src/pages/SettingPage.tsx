@@ -4,7 +4,7 @@ import { Fab, IconButton, Tab, Tabs, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { BsQuestionLg } from "react-icons/bs";
 import { ThemeProvider } from "@emotion/react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Sidebar from "@components/common/Sidebar";
 import styles from "@styles/Setting/Setting.module.scss";
@@ -27,6 +27,7 @@ import { RootState } from "@modules/index";
 import { AppointmentsTypes, BlockListTypes } from "@components/types/types";
 import { getSchedule } from "@api/calendar";
 import DeleteModal from "@components/Setting/DeleteModal";
+import { setCategory } from "@modules/setting";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -85,6 +86,7 @@ const data: AppointmentsTypes[] = [
 
 const SettingPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [tab, setTab] = useState(0);
   const [saveOpen, setSaveOpen] = useState(false);
@@ -96,8 +98,17 @@ const SettingPage = () => {
   const profile = useSelector((state: RootState) => state.profile.profile);
 
   useEffect(() => {
+    // acceptList -> 캘린더에 표시할 예약 정보
+    // categoryList -> 카테고리 목록 정보
+    // blockList -> 블락된 일정 정보
     getSchedule(profile.nickname, (res: any) => {
       setAppointments(res.data.acceptList);
+      dispatch(setCategory(res.data.categoryList));
+      console.log(res.data);
+
+      // res.data.blockList.map((block) => {
+
+      // })
     });
   }, []);
 

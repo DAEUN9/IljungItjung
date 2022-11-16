@@ -98,7 +98,7 @@ interface SettingState {
 }
 
 const initialState: SettingState = {
-  categories: [{ categoryName: "기본", color: "#D5EAEF", time: "0100" }],
+  categories: [],
   selectedCategory: { categoryName: "", color: "", time: "" },
   lock: [false, false, false, false, false, false, false],
   set: new Set<string>(),

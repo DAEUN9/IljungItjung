@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Snackbar } from "@mui/material";
 
 import CustomChip from "@components/common/CustomChip";
 import styles from "@styles/Setting/CategoryList.module.scss";
-import { delCategory, selectCategory } from "@modules/setting";
+import { delCategory, selectCategory, setCategory } from "@modules/setting";
 import { SettingCategoryState } from "@components/types/types";
 import { RootState } from "@modules/index";
 
@@ -15,19 +15,11 @@ const data: SettingCategoryState[] = [
 ];
 
 const CategoryList = () => {
-  const categories = useSelector(
-    (state: RootState) => state.setting.categories
-  );
-  const selectedCategory = useSelector(
-    (state: RootState) => state.setting.selectedCategory
-  );
-
   const dispatch = useDispatch();
-  const onDelCategory = (category: SettingCategoryState) =>
-    dispatch(delCategory(category));
-  const onSelectCategory = (category: SettingCategoryState) =>
-    dispatch(selectCategory(category));
 
+  const { categories, selectedCategory } = useSelector(
+    (state: RootState) => state.setting
+  );
   const [delSnackbar, setDelSnackbar] = useState(false);
 
   const handleDeleteCategory = (category: SettingCategoryState) => {
@@ -35,9 +27,9 @@ const CategoryList = () => {
       setDelSnackbar(true);
     } else {
       if (category.categoryName === selectedCategory.categoryName) {
-        onSelectCategory({ categoryName: "", time: "", color: "" });
+        dispatch(selectCategory({ categoryName: "", time: "", color: "" }));
       }
-      onDelCategory(category);
+      dispatch(delCategory(category));
     }
   };
 
@@ -60,7 +52,7 @@ const CategoryList = () => {
                   : false
               }
               label={category.categoryName}
-              onClick={() => onSelectCategory(category)}
+              onClick={() => dispatch(selectCategory(category))}
               onDelete={() => handleDeleteCategory(category)}
             />
           </div>
