@@ -9,12 +9,12 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.categoryList")
+    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.categoryList WHERE u.nickname=:nickname")
     Optional<User> findUserByNickname(String nickname);
 
     List<User> findByNicknameContaining(String nickname);
 
-    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.categoryList")
+    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.categoryList WHERE u.email=:email")
     Optional<User> findUserByEmail(String email);
 
     boolean existsUserByEmail(String email);

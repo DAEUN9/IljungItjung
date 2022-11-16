@@ -4,6 +4,7 @@ import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.notification.service.NotificationService;
+import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockListRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
