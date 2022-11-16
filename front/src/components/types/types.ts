@@ -33,10 +33,66 @@ interface SchedulerDate {
   [propertyName: string]: any;
 }
 
+interface CommonState {
+  id: number;
+  categoryName: string;
+}
+
+interface DateState {
+  startDate: string;
+  endDate: string;
+}
+
+interface CategoryState extends CommonState {
+  color: string;
+  time: string;
+}
+
+interface RequestState extends CommonState, DateState {
+  color: string;
+  contents: string;
+  phonenum: string;
+}
+
+interface AcceptState extends RequestState {}
+
+interface BlockState extends CategoryState, DateState {
+  contents: string;
+  block: boolean;
+}
+
+interface CancelState extends CategoryState, DateState {
+  reason: string;
+  cancelFrom: string;
+  contents: string;
+  phonenum: string;
+}
+
+interface ScheduleApiData {
+  status: string;
+  data: {
+    categoryList: CategoryState[];
+    requestList: RequestState[];
+    acceptList: AcceptState[];
+    blockList: BlockState[];
+    cancelList: CancelState[];
+  };
+}
+
+interface MyProfile {
+  nickname: string;
+  email: string;
+  imagePath: string;
+  introduction?: string;
+  description: string;
+}
+
 export type {
   SettingCategoryState,
   SearchCategoryState,
   SearchState,
   SchedulerDateTime,
   SchedulerDate,
+  ScheduleApiData,
+  MyProfile,
 };

@@ -56,10 +56,6 @@ const SearchPage = () => {
 
   const selectedName = useSelector((state: RootState) => state.search.nickname);
 
-  useEffect(() => {
-    console.log(searchList);
-  }, [searchList]);
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
   };
@@ -68,7 +64,6 @@ const SearchPage = () => {
     if (event.key === "Enter") {
       getSearchList(search, (res: SearchApiData) => {
         setSearchList(res.data.users);
-        console.log(res.data);
       });
     }
   };
