@@ -1,29 +1,29 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
-import Snackbar from '@mui/material/Snackbar';
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import Snackbar from "@mui/material/Snackbar";
 
-import styles from '@styles/Calendar/Calendar.module.scss';
-import CustomButton from '@components/common/CustomButton';
+import styles from "@styles/Calendar/Calendar.module.scss";
+import CustomButton from "@components/common/CustomButton";
 import {
   getStringFromDate,
   makeFormat,
-} from '@components/Calendar/common/util';
-import { SchedulerDate, SchedulerDateTime } from '@components/types/types';
-import { RootState } from '@modules/index';
+} from "@components/Calendar/common/util";
+import { SchedulerDate, SchedulerDateTime } from "@components/types/types";
+import { RootState } from "@modules/index";
 import {
   setCurrent,
   setSelectedTime,
   setMinutes,
   deleteCurrent,
-} from '@modules/othercalendar';
-import ReservationCategory from '@components/Calendar/Other/Reservation/ReservationCategory';
-import ReservationDate from '@components/Calendar/Other/Reservation/ReservationDate';
-import ReservationTime from '@components/Calendar/Other/Reservation/ReservationTime';
-import ReservationPhone from '@components/Calendar/Other/Reservation/ReservationPhone';
-import ReservationRequest from '@components/Calendar/Other/Reservation/ReservationRequest';
-import { requestReservation } from '@api/calendar';
+} from "@modules/othercalendar";
+import ReservationCategory from "@components/Calendar/Other/Reservation/ReservationCategory";
+import ReservationDate from "@components/Calendar/Other/Reservation/ReservationDate";
+import ReservationTime from "@components/Calendar/Other/Reservation/ReservationTime";
+import ReservationPhone from "@components/Calendar/Other/Reservation/ReservationPhone";
+import ReservationRequest from "@components/Calendar/Other/Reservation/ReservationRequest";
+import { requestReservation } from "@api/calendar";
 
 interface RequestData {
   category: string;
@@ -40,15 +40,15 @@ interface RequestApiData {
 }
 
 const messages = [
-  '카테고리를 선택할 수 없습니다.',
-  '해당 시간대는 선택할 수 없습니다.',
-  '예약 요청이 완료되었습니다.',
+  "카테고리를 선택할 수 없습니다.",
+  "해당 시간대는 선택할 수 없습니다.",
+  "예약 요청이 완료되었습니다.",
 ];
 
 const Reservation = () => {
   const methods = useForm<RequestData>();
   const { handleSubmit, watch, setValue } = methods;
-  const watchCategory = watch('category', '');
+  const watchCategory = watch("category", "");
   const { selected, map, category } = useSelector(
     (state: RootState) => state.othercalendar
   );
@@ -61,12 +61,12 @@ const Reservation = () => {
   const onSubmit: SubmitHandler<RequestData> = (data) => {
     if (selected) {
       let startDate =
-        typeof selected.startDate === 'object'
+        typeof selected.startDate === "object"
           ? selected.startDate
           : new Date(selected.startDate);
 
       const requestData = {
-        userToNickname: nickname ?? '',
+        userToNickname: nickname ?? "",
         date: getStringFromDate(startDate),
         startTime:
           makeFormat(startDate.getHours().toString()) +
@@ -82,7 +82,6 @@ const Reservation = () => {
         console.log(res);
         openSnackbar(2);
       });
-
     }
   };
 
@@ -92,7 +91,7 @@ const Reservation = () => {
     const time = category.filter(
       (item) => item.categoryName === watchCategory
     )[0].time;
-    
+
     const hours = parseInt(time.slice(0, 2));
     const minutes = parseInt(time.slice(2));
     const endDateMinutes = hours * 60 + minutes;
@@ -135,7 +134,7 @@ const Reservation = () => {
     dispatch(deleteCurrent());
     dispatch(setSelectedTime({ startDate }));
     openSnackbar(id);
-    setValue('category', '');
+    setValue("category", "");
   };
 
   // 스낵바 open 핸들러
@@ -154,7 +153,13 @@ const Reservation = () => {
         selected.startDate.toString()
       );
 
-      if (isOverlapWithSchedule(selected.startDate, endDate)) {
+      console.log(endDate.getHours());
+      console.log(endDate.getMinutes());
+
+      if (
+        isOverlapWithSchedule(selected.startDate, endDate) ||
+        (endDate.getHours() >= 22 && endDate.getMinutes() > 0)
+      ) {
         unsetSelected(0, selected.startDate);
       } else {
         const newSelected: SchedulerDate = { startDate: selected.startDate };
@@ -170,7 +175,12 @@ const Reservation = () => {
   // selectedTime이 변경됐을 때
   useEffect(() => {
     if (selected && selected.endDate) {
-      if (isOverlapWithSchedule(selected.startDate, selected.endDate)) {
+      const endDate = new Date(selected.endDate.toString());
+
+      if (
+        isOverlapWithSchedule(selected.startDate, selected.endDate) ||
+        (endDate.getHours() >= 22 && endDate.getMinutes() > 0)
+      ) {
         unsetSelected(1, selected.startDate);
       } else {
         dispatch(setCurrent());
@@ -184,21 +194,21 @@ const Reservation = () => {
       {selected && (
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className={styles['reservation-inner']}>
+            <div className={styles["reservation-inner"]}>
               <ReservationCategory />
               <ReservationDate />
               <ReservationTime />
               <ReservationPhone />
               <ReservationRequest />
               <CustomButton
-                style={{ width: 'calc(100% - 10px)', margin: '0 5px' }}
+                style={{ width: "calc(100% - 10px)", margin: "0 5px" }}
                 type="submit"
               >
                 신청하기
               </CustomButton>
             </div>
             <Snackbar
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               autoHideDuration={6000}
               open={open}
               onClose={handleClose}
