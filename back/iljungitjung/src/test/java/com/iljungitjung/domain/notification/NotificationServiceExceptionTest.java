@@ -6,12 +6,6 @@ import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.exception.FailSendMessageException;
 import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.notification.service.NotificationServiceImpl;
-
-import com.iljungitjung.domain.schedule.entity.Schedule;
-import com.iljungitjung.domain.schedule.entity.Type;
-import com.iljungitjung.domain.user.entity.User;
-import com.iljungitjung.domain.user.repository.UserRepository;
-
 import com.iljungitjung.global.scheduler.NotificationCorrespondence;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,8 +15,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -38,9 +32,6 @@ public class NotificationServiceExceptionTest {
 
     @MockBean
     private NotificationCorrespondence notificationCorrespondence;
-    @MockBean
-    private UserRepository userRepository;
-    private final String TEMP_PHONE = "01000000000";
 
     @BeforeEach
     public void init(){
@@ -49,76 +40,32 @@ public class NotificationServiceExceptionTest {
 
     @Test
     @DisplayName("ncloud 메세지 전송 예외 발생")
-    public void correspondenceNcloudExcepitionTest() throws Exception {
+    public void A() throws Exception {
         String content = "하이";
+        String phone = "01000000000";
 
-        NotificationMessage message = new NotificationMessage(TEMP_PHONE, content);
+        NotificationMessage message = new NotificationMessage(phone, content);
         List<NotificationMessage> messageList = makeMessages(message);
         NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
 
         when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
-        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class)))
-                .thenReturn(new NotificationResponseDto(HttpStatus.BAD_GATEWAY.toString()));
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(HttpStatus.BAD_GATEWAY.toString()));
 
         assertThatThrownBy(() -> notificationService.sendMessage(requestDto))
                 .isInstanceOf(FailSendMessageException.class);
     }
 
     @Test
-    @DisplayName("전화번호가 null인 예약은 문자를 보내지 않음")
-    public void phoneIsNullExceptionTest() throws Exception {
-        String categoryName = "파마";
-        String userFromNickname = "1";
-        String userToNickname = "2";
+    @DisplayName("전화번호가 존재하지 않는 예약은 문자를 보내지 않음")
+    public void B() throws Exception {
+        String content = "하이";
         String phone = null;
-        String email = "email";
 
-        User userFrom = User.builder()
-                .nickname(userFromNickname)
-                .email(email).build();
-        User userTo = User.builder()
-                .nickname(userToNickname)
-                .phonenum(phone).build();
-        Schedule schedule = Schedule.builder()
-                .type(Type.REQUEST)
-                .userFrom(userFrom)
-                .userTo(userTo)
-                .endDate(new Date())
-                .startDate(new Date())
-                .categoryName(categoryName)
-                .phonenum(phone).build();
+        NotificationMessage message = new NotificationMessage(phone, content);
+        List<NotificationMessage> messageList = makeMessages(message);
+        NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
 
-        notificationService.autoReservationMessage(schedule);
-        verify(notificationCorrespondence, times(0))
-                .sendNcloud(any(HttpEntity.class));
-    }
-
-    @Test
-    @DisplayName("전화번호가 임시 번호인 예약은 문자를 보내지 않음")
-    public void phoneIsTempExceptionTest() throws Exception {
-        String categoryName = "파마";
-        String userFromNickname = "1";
-        String userToNickname = "2";
-        String email = "email";
-
-        User userFrom = User.builder()
-                .nickname(userFromNickname)
-                .email(email).build();
-        User userTo = User.builder()
-                .nickname(userToNickname)
-                .phonenum(TEMP_PHONE).build();
-        Schedule schedule = Schedule.builder()
-                .type(Type.REQUEST)
-                .userFrom(userFrom)
-                .userTo(userTo)
-                .endDate(new Date())
-                .startDate(new Date())
-                .categoryName(categoryName)
-                .phonenum(TEMP_PHONE).build();
-
-        notificationService.autoReservationMessage(schedule);
-        verify(notificationCorrespondence, times(0))
-                .sendNcloud(any(HttpEntity.class));
+        verify(notificationCorrespondence, times(0)).makeHeaders();
     }
 
     private List<NotificationMessage> makeMessages(NotificationMessage... message){

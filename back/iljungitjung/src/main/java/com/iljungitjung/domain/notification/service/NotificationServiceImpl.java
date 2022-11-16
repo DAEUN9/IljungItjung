@@ -1,7 +1,7 @@
 package com.iljungitjung.domain.notification.service;
 
 import com.iljungitjung.domain.notification.dto.NotificationMessage;
-import com.iljungitjung.domain.notification.dto.MessageRequestDto;
+import com.iljungitjung.domain.notification.dto.NotificationMessageRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.exception.*;
@@ -34,13 +34,13 @@ public class NotificationServiceImpl implements NotificationService{
 
     @Override
     public NotificationResponseDto sendMessage(NotificationRequestDto requestDto) {
-        HttpEntity<MessageRequestDto> body = makeBody(requestDto);
+        HttpEntity<NotificationMessageRequestDto> body = makeBody(requestDto);
         return checkStatusEqualsAccpeted(notificationCorrespondence.sendNcloud(body));
     }
 
-    private HttpEntity<MessageRequestDto> makeBody(NotificationRequestDto requestDto) {
+    private HttpEntity<NotificationMessageRequestDto> makeBody(NotificationRequestDto requestDto) {
         HttpHeaders headers = notificationCorrespondence.makeHeaders();
-        MessageRequestDto jsonBody = new MessageRequestDto(requestDto, SENDER_PHONE);
+        NotificationMessageRequestDto jsonBody = new NotificationMessageRequestDto(requestDto, SENDER_PHONE);
         return new HttpEntity<>(jsonBody, headers);
     }
 
@@ -64,7 +64,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     private boolean existPhoneNum(NotificationMessage message) {
-        if (message.getTo() == null || message.getTo().equals(TEMP_PHONE)) {
+        if (message.getTo().equals(TEMP_PHONE) || message.getTo() == null) {
             return false;
         }
         return true;

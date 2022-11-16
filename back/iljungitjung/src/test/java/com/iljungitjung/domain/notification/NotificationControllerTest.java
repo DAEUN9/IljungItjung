@@ -17,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,21 +47,21 @@ public class NotificationControllerTest {
 
     @Test
     @DisplayName("메시지 전송")
-    public void sendMessageTest() throws Exception {
+    public void A() throws Exception {
         //given
         String content = "하이";
-        String phone = "01000000001";
+        String phone = "01000000000";
 
         NotificationMessage notificationMessage = new NotificationMessage(phone, content);
         List<NotificationMessage> messageList = makeMessages(notificationMessage);
         String contents = objectMapper.writeValueAsString(NotificationRequestDto.createFromMessages(messageList));
 
-        when(notificationService.sendMessage(any(NotificationRequestDto.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
+        when(notificationService.sendMessage(any(NotificationRequestDto.class))).thenReturn(new NotificationResponseDto("202"));
         //then
         mockMvc.perform(post("/notifications")
-                .content(contents)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .content(contents)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("data.statusCode").value(statusAccepted()));
     }

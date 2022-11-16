@@ -43,7 +43,7 @@ public class PhoneServiceImpl implements PhoneService{
     }
 
     private void sendMessage(NotificationRequestDto requestDto) {
-        HttpEntity<MessageRequestDto> body = makeBody(requestDto);
+        HttpEntity<NotificationMessageRequestDto> body = makeBody(requestDto);
         checkStatusEqualsAccpeted(notificationCorrespondence.sendNcloud(body));
     }
 
@@ -55,9 +55,9 @@ public class PhoneServiceImpl implements PhoneService{
     private String statusAccepted() {
         return HttpStatus.ACCEPTED.value()+"";
     }
-    private HttpEntity<MessageRequestDto> makeBody(NotificationRequestDto requestDto) {
+    private HttpEntity<NotificationMessageRequestDto> makeBody(NotificationRequestDto requestDto) {
         HttpHeaders headers = notificationCorrespondence.makeHeaders();
-        MessageRequestDto jsonBody = new MessageRequestDto(requestDto, SENDER_PHONE);
+        NotificationMessageRequestDto jsonBody = new NotificationMessageRequestDto(requestDto, SENDER_PHONE);
         return new HttpEntity<>(jsonBody, headers);
     }
     @Override

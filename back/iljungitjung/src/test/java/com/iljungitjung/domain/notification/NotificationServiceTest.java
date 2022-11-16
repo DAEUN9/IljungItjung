@@ -8,7 +8,6 @@ import com.iljungitjung.domain.notification.service.NotificationServiceImpl;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.user.entity.User;
-import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.global.scheduler.NotificationCorrespondence;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -33,10 +33,6 @@ public class NotificationServiceTest {
     private NotificationService notificationService;
     @MockBean
     private NotificationCorrespondence notificationCorrespondence;
-    @MockBean
-    private UserRepository userRepository;
-
-
     @BeforeEach
     public void init(){
         notificationService = new NotificationServiceImpl(notificationCorrespondence);
@@ -44,9 +40,9 @@ public class NotificationServiceTest {
 
     @Test
     @DisplayName("메시지 전송")
-    public void sendMessageSuccessTest() throws Exception {
+    public void A() throws Exception {
         String content = "하이";
-        String phone = "01000000001";
+        String phone = "01000000000";
 
         NotificationMessage message = new NotificationMessage(phone, content);
         List<NotificationMessage> messageList = makeMessages(message);
@@ -66,7 +62,7 @@ public class NotificationServiceTest {
 
     @Test
     @DisplayName("예약 신청 알림 문자 전송")
-    public void sendReuestNotificationTest() throws Exception {
+    public void B() throws Exception {
 
         String categoryName = "파마";
 
@@ -100,7 +96,7 @@ public class NotificationServiceTest {
 
     @Test
     @DisplayName("예약 승인 문자 전송")
-    public void sendAcceptedNotificationTest() throws Exception {
+    public void C() throws Exception {
         String categoryName = "파마";
 
         String userFromNickname = "1";
@@ -134,7 +130,7 @@ public class NotificationServiceTest {
 
     @Test
     @DisplayName("예약 신청 거절 문자 전송")
-    public void sendRefuseNotificationTest() throws Exception {
+    public void D() throws Exception {
         String categoryName = "파마";
 
         String userFromNickname = "1";
@@ -172,7 +168,7 @@ public class NotificationServiceTest {
 
     @Test
     @DisplayName("예약 신청 취소 문자 전송")
-    public void sendRequestCancelNotificationTest() throws Exception {
+    public void E() throws Exception {
         String categoryName = "파마";
 
         String userFromNickname = "1";
@@ -208,7 +204,7 @@ public class NotificationServiceTest {
 
     @Test
     @DisplayName("예약 취소 문자 전송")
-    public void sendCancelNotificationTest() throws Exception {
+    public void F() throws Exception {
         String categoryName = "파마";
 
         String userFromNickname = "1";
@@ -238,8 +234,6 @@ public class NotificationServiceTest {
         when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 
         notificationService.autoReservationMessage(schedule);
-        verify(notificationCorrespondence, times(1)).makeHeaders();
-        verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
     }
     private String statusAccepted() {
         return HttpStatus.ACCEPTED.value()+"";
@@ -247,3 +241,4 @@ public class NotificationServiceTest {
 
 
 }
+

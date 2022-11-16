@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @ToString
-public class MessageRequestDto {
+public class NotificationMessageRequestDto {
     @JsonProperty("type")
     private String type;
     @JsonProperty("from")
@@ -21,7 +21,7 @@ public class MessageRequestDto {
     private List<NotificationMessage> messages;
 
     @Builder
-    public MessageRequestDto(NotificationRequestDto requestDto, String phone) {
+    public NotificationMessageRequestDto(NotificationRequestDto requestDto, String phone) {
         this.type = choiceType(requestDto);
         this.from = phone;
         this.content = "기본메시지";
