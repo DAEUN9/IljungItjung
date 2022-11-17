@@ -19,7 +19,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/calendar" element={<CalendarPage />}>
           <Route path="my" element={<MyCalendar />} />
-          <Route path=":seqNum" element={<OtherCalendar />} />
+          <Route path=":nickname" element={<OtherCalendar />} />
         </Route>
         <Route path="/profile" element={<ProfileEditPage />} />
         <Route path="/reservation" element={<ReservationPage />} />

@@ -1,17 +1,19 @@
-import { useState } from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
-import Badge from '@mui/material/Badge';
-import styled from '@emotion/styled';
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import Badge from "@mui/material/Badge";
+import styled from "@emotion/styled";
 
-import UpcomingTab from './UpcomingTab';
-import RequestTab from './RequestTab';
+import UpcomingTab from "./UpcomingTab";
+import RequestTab from "./RequestTab";
+import { RootState } from "@modules/index";
 
 function a11yProps(index: number) {
   return {
     id: `tab-${index}`,
-    'aria-controls': `tabpanel-${index}`,
+    "aria-controls": `tabpanel-${index}`,
   };
 }
 
@@ -43,20 +45,21 @@ const CustomTab = styled(Tab)`
 const InfoTabs = () => {
   const [value, setValue] = useState(0);
   const [check, setCheck] = useState(false);
+  const request = useSelector((state: RootState) => state.mycalendar.request);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    if(newValue === 1 && !check) {
+    if (newValue === 1 && !check) {
       setCheck(true);
     }
     setValue(newValue);
   };
 
   const getLabel = () => {
-    if (check) {
-      return '요청';
+    if (request.length === 0 || check) {
+      return "요청";
     } else {
       return (
-        <Badge color="warning" variant="dot" sx={{ paddingRight: '3px' }}>
+        <Badge color="warning" variant="dot" sx={{ paddingRight: "3px" }}>
           요청
         </Badge>
       );
@@ -64,7 +67,7 @@ const InfoTabs = () => {
   };
 
   return (
-    <Box sx={{ margin: '15px' }}>
+    <Box sx={{ margin: "15px" }}>
       <div>
         <CustomTabs
           value={value}
