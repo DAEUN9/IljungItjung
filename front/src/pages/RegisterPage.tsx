@@ -1,24 +1,25 @@
 import React, { useState } from "react";
-import { postRegister } from "@api/register";
+import { getOverlap, postRegister } from "@api/register";
 import { useNavigate } from "react-router-dom";
 import styles from "@styles/Register/Register.module.scss";
 import iljung from "@assets/iljung.png";
 import logo from "@assets/logo.png";
 import CustomButton from "@components/common/CustomButton";
 import TextField from "@mui/material/TextField";
-import { getMyProfile } from "@api/login";
 import { registerCategory } from "@api/setting";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const [text, setText] = useState("");
+  const [intro, setIntro] = useState("");
   // 닉네임 체크 후 출력할 문자
   const [check, setcheck] = useState("");
   // 닉네임 중복검사 버튼 활성화 상태
   const [ableName, setAbleName] = useState(true);
-  // 시작하기 버튼 상태 - 중복체크 api 아직 미구현으로 false처리
-  const [able, setAble] = useState(false);
+  // 닉네임 박스 포커스 설정
+  const [focus, setFocus] = useState(false);
+  // 시작하기 버튼 상태
+  const [able, setAble] = useState(true);
 
   // 입력값 변화할 때 유효성 검사 하고 값 담고 중복검사 버튼 활성화
   const regex = /^[가-힣|a-z|A-Z|]{2,10}$/;
@@ -34,35 +35,67 @@ const RegisterPage = () => {
       setName(event.target.value);
       setcheck("공백을 제외한 한글과 영어만 입력해주세요.");
       setAbleName(true);
+      setFocus(true);
+    }
+  };
+  const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+    setFocus(true);
+  };
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    if (name !== "") {
+      setFocus(true);
+    } else {
+      setFocus(false);
     }
   };
 
-  const handleInput2 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setText(event.target.value);
+  const handleIntro = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIntro(event.target.value);
   };
 
   // 중복 확인 버튼 누르면 중복검사 API로 확인하고 결과값 출력
   const checkOverlap = () => {
-    setcheck("사용 가능한 닉네임 입니다.");
-    // fetch(`http://k7d106.p.ssafy.io/api/nicknames/${name}`).then((res) => {
-    //   console.log(res.status);
-    //   if (res.status === 200) {
-    //     시작하기 버튼 활성화
-    //     setAble(false)
-    //   } else res.status === 409;
-    //   {
-    //     setcheck("이미 등록된 닉네임 입니다.");
-    //     시작하기 버튼 비활성화
-    //     setAble(true)
-    //   }
-    // });
+    getOverlap(
+      name,
+      (res: object) => {
+        setcheck("사용 가능한 닉네임 입니다.");
+        setAbleName(true);
+        setFocus(true);
+        setAble(false);
+      },
+      (err: any) => {
+        setcheck("이미 등록된 닉네임 입니다.");
+        setAbleName(true);
+        setFocus(true);
+        setAble(true);
+      }
+    );
+  };
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    if (event.key === "Enter") {
+      getOverlap(
+        name,
+        (res: object) => {
+          setcheck("사용 가능한 닉네임 입니다.");
+          setAbleName(true);
+          setFocus(true);
+          setAble(false);
+        },
+        (err: any) => {
+          setcheck("이미 등록된 닉네임 입니다.");
+          setAbleName(true);
+          setFocus(true);
+          setAble(true);
+        }
+      );
+    }
   };
 
   // 시작하기 버튼 누르면
   const onSubmit = () => {
     // 회원가입 API 요청
-    postRegister(name, text, () => {
-      // 결과에 따라서 페이지 이동. 가이드 페이지 출력
+    postRegister(name, intro, () => {
+      // 결과에 따라서 페이지 이동.
       const category = [
         { categoryName: "기본", color: "#D5EAEF", time: "0100" },
       ];
@@ -93,17 +126,21 @@ const RegisterPage = () => {
               onChange={handleInput}
               placeholder="닉네임을 입력해주세요"
               inputProps={{ maxLength: 10, minLength: 2 }}
-              focused={check === "사용 가능한 닉네임 입니다." ? true : false}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              focused={focus}
               error={
-                check === "공백을 제외한 한글과 영어만 입력해주세요."
+                check === "공백을 제외한 한글과 영어만 입력해주세요." ||
+                check === "이미 등록된 닉네임 입니다."
                   ? true
                   : false
               }
               color={
-                check === "사용 가능한 닉네임 입니다." ? "success" : "info"
+                check === "사용 가능한 닉네임 입니다." ? "success" : "primary"
               }
               label={check}
               value={name}
+              onKeyDown={handleKeyDown}
             />
             <CustomButton
               variant="outlined"
@@ -117,14 +154,14 @@ const RegisterPage = () => {
           <h2>한 줄 소개</h2>
           <TextField
             id="oneline"
-            value={text}
-            onChange={handleInput2}
+            value={intro}
+            onChange={handleIntro}
             type="text"
             placeholder="한 줄 소개를 입력해주세요"
             inputProps={{ maxLength: 50 }}
             className={styles["oneline"]}
           />
-          <span className={styles["count"]}>{text.length}/50</span>
+          <span className={styles["count"]}>{intro.length}/50</span>
           <div className={styles["startbox"]}>
             <CustomButton
               className={styles["startbtn"]}
