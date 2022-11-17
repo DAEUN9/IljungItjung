@@ -1,6 +1,7 @@
 import { ViewState } from "@devexpress/dx-react-scheduler";
 import { Scheduler } from "@devexpress/dx-react-scheduler-material-ui";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useState } from "react";
 =======
 import { useEffect, useState } from "react";
@@ -110,15 +111,40 @@ const SetCalendar = () => {
 
   return (
     <Scheduler data={data} locale="ko-KR" firstDayOfWeek={1}>
+=======
+import { useState } from "react";
+
+import CustomDateNavigator from "@components/Calendar/common/CustomDateNavigator";
+import CustomTodayButton from "@components/Calendar/common/CustomTodayButton";
+import CustomToolbar from "@components/Calendar/common/CustomToolbar";
+import SettingAppointments from "@components/Setting/SettingAppointments";
+import SettingWeekView from "@components/Setting/SettingWeekView";
+import "@styles/Setting/SetCalendar.scss";
+import { AppointmentsTypes } from "@components/types/types";
+
+interface SetCalendarProps {
+  appointments: AppointmentsTypes[];
+}
+
+const SetCalendar = ({ appointments }: SetCalendarProps) => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  return (
+    <Scheduler data={appointments} locale="ko-KR" firstDayOfWeek={1}>
+>>>>>>> 5d8f8f59d8ec19d8971dbe9e724ebc3c5f8058a5
       <ViewState
         currentDate={currentDate}
         onCurrentDateChange={(currentDate) => setCurrentDate(currentDate)}
       />
 <<<<<<< HEAD
+<<<<<<< HEAD
       <SettingWeekView />
 =======
       <CustomWeekView />
 >>>>>>> 653a39ec835717dd46a43023cbbfaa11b42ac025
+=======
+      <SettingWeekView />
+>>>>>>> 5d8f8f59d8ec19d8971dbe9e724ebc3c5f8058a5
       <CustomToolbar />
       <CustomDateNavigator />
       <CustomTodayButton />

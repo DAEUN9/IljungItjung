@@ -20,7 +20,7 @@ export default ({ mode }) => {
     server: {
       proxy: {
         "/api": {
-          target: "https://k7d106.p.ssafy.io/api",
+          target: process.env.VITE_PROXY_TARGET,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ""),
         },

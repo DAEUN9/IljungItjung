@@ -1,12 +1,13 @@
-import { SchedulerDate } from "@components/types/types";
-import { getStringFromDate } from "@components/Calendar/common/util";
+import { SchedulerDate, CategoryState } from '@components/types/types';
+import { getStringFromDate } from '@components/Calendar/common/util';
 
 /* action type */
-const SET_DISABLED_MAP = "othercalendar/SET_DISABLED_MAP" as const;
-const SET_CURRENT = "othercalendar/SET_CURRENT" as const;
-const DELETE_CURRENT = "othercalendar/DELETE_CURRENT" as const;
-const SET_SELECTED_TIME = "othercalendar/SET_SELECTED_TIME" as const;
-const SET_MINUTES = "othercalendar/SET_MINUTES" as const;
+const SET_DISABLED_MAP = 'othercalendar/SET_DISABLED_MAP' as const;
+const SET_CURRENT = 'othercalendar/SET_CURRENT' as const;
+const DELETE_CURRENT = 'othercalendar/DELETE_CURRENT' as const;
+const SET_SELECTED_TIME = 'othercalendar/SET_SELECTED_TIME' as const;
+const SET_MINUTES = 'othercalendar/SET_MINUTES' as const;
+const SET_CATEGORY = 'othercalendar/SET_CATEGORY' as const;
 
 /* action creator */
 export const setDisabledMap = (list: SchedulerDate[]) => ({
@@ -32,24 +33,39 @@ export const setMinutes = (minutes: number) => ({
   payload: minutes,
 });
 
+export const setCategory = (category: CategoryState[]) => ({
+  type: SET_CATEGORY,
+  payload: category,
+});
+
 type OtherCalenderActions =
   | ReturnType<typeof setDisabledMap>
   | ReturnType<typeof setCurrent>
   | ReturnType<typeof deleteCurrent>
   | ReturnType<typeof setSelectedTime>
-  | ReturnType<typeof setMinutes>;
+  | ReturnType<typeof setMinutes>
+  | ReturnType<typeof setCategory>;
 
 export interface OtherCalenderState {
   current: SchedulerDate[];
   selected?: SchedulerDate;
   minutes: number;
   map: Map<string, SchedulerDate[]>;
+  category: CategoryState[];
 }
 
 const initialState: OtherCalenderState = {
   current: [],
   minutes: 0,
   map: new Map<string, SchedulerDate[]>(),
+  category: [
+    {
+      id: 0,
+      categoryName: '기본',
+      time: '0100',
+      color: '#D5EAEF',
+    },
+  ],
 };
 
 export default function reducer(
@@ -82,6 +98,8 @@ export default function reducer(
       return { ...state, selected: action.payload };
     case SET_MINUTES:
       return { ...state, minutes: action.payload };
+    case SET_CATEGORY:
+      return { ...state, category: action.payload };
     default:
       return state;
   }

@@ -3,8 +3,8 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styled from "@emotion/styled";
-import caroL from "@assets/carouselL.png"
-import caroR from "@assets/carouselR.png"
+import caroL from "@assets/carouselL.png";
+import caroR from "@assets/carouselR.png";
 import defaultImg from "@assets/defaultImg.png";
 
 const Image = styled.img`
@@ -21,7 +21,8 @@ const StyledSlider = styled(Slider)`
   .slick-next::before {
     opacity: 0;
     display: none;
-  }`;
+  }
+`;
 
 const Pre = styled.div`
   width: 30px;
@@ -44,7 +45,7 @@ const CustomCarousel = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay : true,
+    autoplay: true,
     nextArrow: (
       <NextTo>
         <img src={caroR} />
@@ -55,10 +56,14 @@ const CustomCarousel = () => {
         <img src={caroL} />
       </Pre>
     ),
-  }
+  };
+
   return (
     <div className={styles["carousel"]}>
-      <StyledSlider {...settings}>
+      <StyledSlider
+        {...settings}
+        // dotsClass={styles["slick-dots"]}
+      >
         <div>
           <Image src={defaultImg} />
         </div>
@@ -77,6 +82,6 @@ const CustomCarousel = () => {
       </StyledSlider>
     </div>
   );
-}
+};
 
 export default CustomCarousel;
