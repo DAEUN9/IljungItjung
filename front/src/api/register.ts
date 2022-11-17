@@ -8,11 +8,11 @@ function getOverlap(nickname: string, success: any, fail: any) {
 }
 
 // 회원가입 api
-function postRegister(nickname: string, description: string, success: any) {
+function postRegister(nickname: string, introduction: string, success: any) {
   api
     .post(`/users`, {
       nickname: nickname,
-      description: description,
+      introduction: introduction,
     })
     .then(success);
 }
