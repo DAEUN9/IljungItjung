@@ -1,8 +1,5 @@
 import { SchedulerDate, SchedulerDateTime } from "@components/types/types";
-<<<<<<< .merge_file_a13240
 import { DateNavigatorProps } from "@devexpress/dx-react-scheduler";
-=======
->>>>>>> .merge_file_a08760
 
 /* type, interface */
 export interface TabPanelProps {
@@ -89,11 +86,8 @@ export const getStringFromDate = (time: Date | string | undefined) => {
 
   const str =
     date.getFullYear().toString() +
-<<<<<<< .merge_file_a13240
     (date.getMonth() + 1) +
-=======
     date.getMonth().toString() +
->>>>>>> .merge_file_a08760
     date.getDate().toString();
 
   return str;
@@ -104,16 +98,11 @@ export const makeFormat = (time: string) => {
   return time;
 };
 
-<<<<<<< .merge_file_a13240
 export const getFullStringFromDate = (time: Date, endTime: Date) => {
-=======
-export const getFullStringFromDate = (time: Date) => {
->>>>>>> .merge_file_a08760
   if (!time) return "";
 
   const day = time.getDay().toString();
   const year = time.getFullYear().toString();
-<<<<<<< .merge_file_a13240
   const month = makeFormat((time.getMonth() + 1).toString());
   const date = makeFormat(time.getDate().toString());
   const hour = makeFormat(time.getHours().toString());
@@ -122,14 +111,6 @@ export const getFullStringFromDate = (time: Date) => {
   const endMin = makeFormat(endTime.getMinutes().toString());
 
   return day + year + month + date + hour + min + endHour + endMin;
-=======
-  let month = makeFormat(time.getMonth().toString());
-  let date = makeFormat(time.getDate().toString());
-  let hour = makeFormat(time.getHours().toString());
-  let min = makeFormat(time.getMinutes().toString());
-
-  return day + year + month + date + hour + min;
->>>>>>> .merge_file_a08760
 };
 
 export const getFullDate = (date: SchedulerDateTime | undefined) => {

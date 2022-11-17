@@ -44,11 +44,7 @@ export default function CustomAppointmentTooltip() {
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path>
                   </SvgIcon>
                   <div>
-<<<<<<< .merge_file_a00900
                     <div>{appointmentData?.categoryName}</div>
-=======
-                    <div>{appointmentData?.title}</div>
->>>>>>> .merge_file_a13616
                     <div>{formatDate(startDate)}</div>
                   </div>
                 </div>
@@ -67,21 +63,13 @@ export default function CustomAppointmentTooltip() {
                 <div className={styles.tooltip}>
                   <FaPhoneAlt />
                   <div className={styles["tooltip-inner"]}>
-<<<<<<< .merge_file_a00900
                     {appointmentData?.phonenum}
-=======
-                    {appointmentData?.phone}
->>>>>>> .merge_file_a13616
                   </div>
                 </div>
                 <div className={styles.tooltip}>
                   <FaPen />
                   <div className={styles["tooltip-inner"]}>
-<<<<<<< .merge_file_a00900
                     {appointmentData?.contents}
-=======
-                    {appointmentData?.desc}
->>>>>>> .merge_file_a13616
                   </div>
                 </div>
               </div>
