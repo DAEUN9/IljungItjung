@@ -51,7 +51,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     private String statusAccepted() {
-        return HttpStatus.ACCEPTED.value()+"";
+        return Integer.toString(HttpStatus.ACCEPTED.value());
     }
 
     @Override
@@ -65,9 +65,8 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     private boolean existPhoneNum(NotificationMessage message) {
-        if (message.getTo() == null) {
+        if(message.getTo() == null)
             return false;
-        }
         return true;
     }
 
