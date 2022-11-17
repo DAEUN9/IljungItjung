@@ -22,16 +22,10 @@ public class NotificationMessageRequestDto {
 
     @Builder
     public NotificationMessageRequestDto(NotificationRequestDto requestDto, String phone) {
-        this.type = choiceType(requestDto);
+        this.type = "LMS";
         this.from = phone;
         this.content = "기본메시지";
         this.messages = requestDto.getMessages();
     }
 
-    private String choiceType(NotificationRequestDto requestDto) {
-        if (requestDto.getMessages().get(0).getContent().length() >= 50) {
-            return "LMS";
-        }
-        return "SMS";
-    }
 }
