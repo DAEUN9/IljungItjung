@@ -49,7 +49,7 @@ export default function SettingWeekView() {
                 const propsTime =
                   makeFormat(props.startDate.getHours().toString()) +
                   makeFormat(props.startDate.getMinutes().toString());
-                if (item === propsTime) {
+                if (item.substring(0, 4) === propsTime) {
                   isDisabled = true;
                   break;
                 }
@@ -60,7 +60,6 @@ export default function SettingWeekView() {
 
         return (
           <WeekView.TimeTableCell
-            key="hi"
             {...props}
             className={styles["time-table-cell"]}
             children={
