@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 @RequiredArgsConstructor
@@ -17,10 +18,11 @@ import javax.validation.constraints.Pattern;
 @Validated
 public class PhoneController {
     private final PhoneService phoneService;
+    private final String EXPIRATION = "인증번호가 틀리거나 만료되었습니다.";
 
     @GetMapping("/phones/{phone}")
-    public ResponseEntity<CommonResponse> authenticatePhone (
-            @Pattern(regexp = "01\\d{8,9}", message = "전화번호는 01로 시작하고 10~11자리의 숫자만 입력가능합니다.")
+    public ResponseEntity<CommonResponse> sendAuthenticatePhone (
+            @Pattern(regexp = "^01\\d{8,9}$", message = "전화번호는 01로 시작하고 10~11자리의 숫자만 입력가능합니다.")
             @PathVariable("phone")
             String phone,
             HttpSession httpSession
@@ -33,14 +35,15 @@ public class PhoneController {
     }
 
     @PutMapping("/phones")
-    public ResponseEntity<CommonResponse> authenticatePhone (
+    public ResponseEntity<CommonResponse> confirmAuthenticatePhone (
+            @Valid @RequestBody
             PhoneConfirmRequestDto requestDto,
             HttpSession httpSession
     ) {
-        Boolean confirm = phoneService.comfirmRandomNumber(requestDto, httpSession);
+        Boolean confirm = phoneService.confirmRandomNumber(requestDto, httpSession);
         if(confirm) {
             return new ResponseEntity<>(CommonResponse.getSuccessResponse(confirm), HttpStatus.OK);
         }
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(confirm), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(CommonResponse.getErrorResponse(EXPIRATION), HttpStatus.CONFLICT);
     }
 }

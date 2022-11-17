@@ -1,7 +1,12 @@
 package com.iljungitjung.global.exceptionhandler;
 
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
-import com.iljungitjung.domain.notification.exception.*;
+import com.iljungitjung.domain.notification.exception.notification.ConvertToJsonErrorException;
+import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
+import com.iljungitjung.domain.notification.exception.notification.FailSignatureKeyErrorException;
+import com.iljungitjung.domain.notification.exception.notification.MessageUriSyntaxErrorException;
+import com.iljungitjung.domain.notification.exception.phone.IncorrectPhonenumException;
+import com.iljungitjung.domain.notification.exception.phone.IncorrectRandomNumberException;
 import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
@@ -102,5 +107,15 @@ public class ExceptionHandlerUtil {
         ConstraintViolation<?> error = iterator.next();
 
         return ResponseEntity.badRequest().body(CommonResponse.getErrorResponse(error.getMessage()));
+    }
+
+    @ExceptionHandler(IncorrectPhonenumException.class)
+    ResponseEntity<CommonResponse> handleIncorrectPhonenumException(BindingResult bindingResult) {
+        return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
+    }
+
+    @ExceptionHandler(IncorrectRandomNumberException.class)
+    ResponseEntity<CommonResponse> handleIncorrectRandomNumberException(BindingResult bindingResult) {
+        return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
     }
 }

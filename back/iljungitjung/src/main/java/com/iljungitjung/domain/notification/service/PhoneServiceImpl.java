@@ -3,7 +3,7 @@ package com.iljungitjung.domain.notification.service;
 
 import com.iljungitjung.domain.notification.dto.*;
 import com.iljungitjung.domain.notification.entity.Phone;
-import com.iljungitjung.domain.notification.exception.FailSendMessageException;
+import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
 import com.iljungitjung.domain.notification.repository.PhoneRepository;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.global.scheduler.NotificationCorrespondence;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -104,7 +103,7 @@ public class PhoneServiceImpl implements PhoneService{
 
     @Override
     @Transactional
-    public boolean comfirmRandomNumber(PhoneConfirmRequestDto requestDto, HttpSession session) {
+    public boolean confirmRandomNumber(PhoneConfirmRequestDto requestDto, HttpSession session) {
         if (!phoneRepository.existsById(session.getId())) {
             return false;
         }
