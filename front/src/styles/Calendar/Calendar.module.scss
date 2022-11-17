@@ -393,3 +393,11 @@ $light-gray: #f5f5f5;
   font-size: 12px;
   margin-top: 3px;
 }
+
+.no-shadow {
+  box-shadow: none !important;
+
+  &:hover {
+    box-shadow: none !important;
+  }
+}

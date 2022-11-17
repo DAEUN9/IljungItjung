@@ -90,7 +90,7 @@ const RequestButtons = ({ item }: InfoItemProps) => {
           <CustomButton variant="outlined" onClick={handleDeny}>
             거절
           </CustomButton>
-          <CustomButton onClick={handleAccept}>수락</CustomButton>
+          <CustomButton onClick={handleAccept} className={styles['no-shadow']}>수락</CustomButton>
         </div>
       )}
       {open && (
@@ -117,6 +117,7 @@ const RequestButtons = ({ item }: InfoItemProps) => {
             <CustomButton
               disabled={text.length > 0 ? false : true}
               onClick={handleConfirm}
+              className={styles['no-shadow']}
             >
               확인
             </CustomButton>
