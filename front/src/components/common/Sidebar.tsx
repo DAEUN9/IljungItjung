@@ -13,7 +13,7 @@ import logo from "@assets/logo.png";
 import defaultImg from "@assets/defaultImg.png";
 import CustomModal from "@components/common/CustomModal";
 import iljung from "@assets/iljung_white.png";
-import { getMyProfile } from "@api/login";
+import { getMyProfile, logout } from "@api/login";
 import { MyProfile } from "@components/types/types";
 import { setProfile } from "@modules/profile";
 
@@ -37,7 +37,7 @@ const Sidebar = () => {
   };
 
   const handleLogout = () => {
-    document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    logout();
     navigate("/");
   };
 
