@@ -9,9 +9,11 @@ const ADD_CATEGORY = "setting/ADD_CATEGORY" as const;
 const DEL_CATEGORY = "setting/DEL_CATEGORY" as const;
 const EDIT_CATEGORY = "setting/EDIT_CATEGORY" as const;
 const SELECT_CATEGORY = "setting/SELECT_CATEGORY" as const;
+const SET_LOCK = "setting/SET_LOCK" as const;
 const TOGGLE_LOCK = "setting/TOGGLE_LOCK" as const;
 
 // 달력 관련
+const SET_SHADE = "setting/SET_SHADE" as const;
 const TOGGLE_SHADE = "setting/TOGGLE_SHADE" as const;
 const LOCK_SHADE = "setting/LOCK_SHADE" as const;
 const DELETE_LOCK_SHADE = "setting/DELETE_LOCK_SHADE" as const;
@@ -42,9 +44,19 @@ export const selectCategory = (category: SettingCategoryState) => ({
   payload: category,
 });
 
+export const setLock = (lock: boolean[]) => ({
+  type: SET_LOCK,
+  payload: lock,
+});
+
 export const toggleLock = (index: number) => ({
   type: TOGGLE_LOCK,
   payload: index,
+});
+
+export const setShade = (set: Set<string>) => ({
+  type: SET_SHADE,
+  payload: set,
 });
 
 export const toggleShade = (date: string) => ({
@@ -80,7 +92,9 @@ type SettingAction =
   | ReturnType<typeof delCategory>
   | ReturnType<typeof editCategory>
   | ReturnType<typeof selectCategory>
+  | ReturnType<typeof setLock>
   | ReturnType<typeof toggleLock>
+  | ReturnType<typeof setShade>
   | ReturnType<typeof toggleShade>
   | ReturnType<typeof lockShade>
   | ReturnType<typeof deleteLockShade>
@@ -151,14 +165,28 @@ function setting(
         ...state,
         selectedCategory: action.payload,
       };
+    case SET_LOCK:
+      return {
+        ...state,
+        lock: action.payload,
+      };
     case TOGGLE_LOCK:
       return {
         ...state,
         lock: state.lock.map((day, index) => {
           if (index === action.payload) return !day;
+
           return day;
         }),
       };
+    case SET_SHADE: {
+      const copy: Set<string> = new Set<string>(action.payload);
+
+      return {
+        ...state,
+        set: copy,
+      };
+    }
     case TOGGLE_SHADE: {
       const copy: Set<string> = new Set<string>(state.set);
       if (copy.has(action.payload)) copy.delete(action.payload);
