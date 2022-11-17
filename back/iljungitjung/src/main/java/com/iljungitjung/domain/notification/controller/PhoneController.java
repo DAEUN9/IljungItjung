@@ -38,7 +38,7 @@ public class PhoneController {
             PhoneConfirmRequestDto requestDto,
             HttpSession httpSession
     ) {
-        Boolean confirm = phoneService.comfirmRandomNumber(requestDto, httpSession);
+        Boolean confirm = phoneService.confirmRandomNumber(requestDto, httpSession);
         if(confirm) {
             return new ResponseEntity<>(CommonResponse.getSuccessResponse(confirm), HttpStatus.OK);
         }
