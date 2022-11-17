@@ -20,7 +20,7 @@ public class PhoneController {
     private final String EXPIRATION = "인증번호가 틀리거나 만료되었습니다.";
 
     @GetMapping("/phones/{phone}")
-    public ResponseEntity<CommonResponse> authenticatePhone (
+    public ResponseEntity<CommonResponse> sendAuthenticatePhone (
             @Pattern(regexp = "01\\d{8,9}", message = "전화번호는 01로 시작하고 10~11자리의 숫자만 입력가능합니다.")
             @PathVariable("phone")
             String phone,
@@ -34,7 +34,7 @@ public class PhoneController {
     }
 
     @PutMapping("/phones")
-    public ResponseEntity<CommonResponse> confirmPhone (
+    public ResponseEntity<CommonResponse> confirmAuthenticatePhone (
             PhoneConfirmRequestDto requestDto,
             HttpSession httpSession
     ) {
