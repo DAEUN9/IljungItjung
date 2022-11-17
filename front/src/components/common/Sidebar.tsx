@@ -8,15 +8,16 @@ import {
   IoExitOutline,
   IoPersonOutline,
 } from "react-icons/io5";
+import { useSelector } from "react-redux";
 
 import styles from "@styles/common/Sidebar.module.scss";
 import logo from "@assets/logo.png";
-import defaultImg from "@assets/defaultImg.png";
 import CustomModal from "@components/common/CustomModal";
 import iljung from "@assets/iljung_white.png";
-import { getMyProfile } from "@api/login";
+import { getMyProfile, logout } from "@api/login";
 import { MyProfile } from "@components/types/types";
 import { setProfile } from "@modules/profile";
+import { RootState } from "@modules/index";
 
 interface MyInfoApiData {
   status: string;
@@ -32,6 +33,7 @@ const Sidebar = () => {
     url.pathname.substring(1, url.pathname.length)
   );
   const [logoutOpen, setLogoutOpen] = useState(false);
+  const profile = useSelector((state: RootState) => state.profile.profile);
 
   const handleClick = (type: string) => {
     navigate(`/${type}`);
@@ -39,7 +41,7 @@ const Sidebar = () => {
   };
 
   const handleLogout = () => {
-    document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    logout();
     navigate("/");
   };
 
@@ -110,7 +112,7 @@ const Sidebar = () => {
             className={
               styles[`${menu === "calendar/my" ? "click-profile" : ""}`]
             }
-            src={defaultImg}
+            src={profile.imagePath}
             onClick={() => handleClick("calendar/my")}
           />
         </div>
