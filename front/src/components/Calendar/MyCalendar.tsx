@@ -5,7 +5,7 @@ import { Scheduler } from "@devexpress/dx-react-scheduler-material-ui";
 import Paper from "@mui/material/Paper";
 
 import { RootState } from "@modules/index";
-import { setBlockDay, setRequestList, setScheduleList } from "@modules/mycalendar";
+import { setRequestList, setScheduleList } from "@modules/mycalendar";
 import "@styles/Calendar/CustomCalendar.css";
 import styles from "@styles/Calendar/Calendar.module.scss";
 import CustomWeekView from "@components/Calendar/common/CustomWeekView";
@@ -36,7 +36,7 @@ const MyCalendar = () => {
         // 요청 목록 설정
         dispatch(setRequestList(requestList));
         // 블락 설정
-        dispatch(setBlockDay(blockDayList));
+
       });
     }
   }, [profile]);
