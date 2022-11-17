@@ -27,7 +27,14 @@ import { RootState } from "@modules/index";
 import { AppointmentsTypes, BlockListTypes } from "@components/types/types";
 import { getSchedule } from "@api/calendar";
 import DeleteModal from "@components/Setting/DeleteModal";
-import { setCategory } from "@modules/setting";
+import {
+  lockShade,
+  selectCategory,
+  setCategory,
+  setLock,
+  setShade,
+} from "@modules/setting";
+import { getFullStringFromDate } from "@components/Calendar/common/util";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -50,40 +57,6 @@ interface SettingApiData {
   data: number;
 }
 
-const data: AppointmentsTypes[] = [
-  {
-    id: 1,
-    startDate: "2022-11-16T09:30",
-    endDate: "2022-11-16T11:00",
-    categoryName: "목욕",
-    nickname: "곰고구마",
-    contents:
-      "요청사항이 엄청나게 길어지면 어떻게 보일지 정말정말 궁금하네요 요청사항이 엄청나게 길어지면 어떻게 보일지 정말정말 궁금하네요",
-    phonenum: "010-1111-1111",
-    color: "#F4F38A",
-  },
-  {
-    id: 2,
-    startDate: "2022-11-16T12:00",
-    endDate: "2022-11-16T13:30",
-    categoryName: "손발톱관리",
-    nickname: "신봉선",
-    contents: "예쁘게 해주세용",
-    phonenum: "010-2222-2222",
-    color: "#C3DBE3",
-  },
-  {
-    id: 3,
-    startDate: "2022-11-18T12:00",
-    endDate: "2022-11-18T13:30",
-    categoryName: "커트",
-    nickname: "퍼플독",
-    contents: "멋지게 해주십쇼",
-    phonenum: "010-3333-3333",
-    color: "#D7CBF4",
-  },
-];
-
 const SettingPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -98,17 +71,23 @@ const SettingPage = () => {
   const profile = useSelector((state: RootState) => state.profile.profile);
 
   useEffect(() => {
-    // acceptList -> 캘린더에 표시할 예약 정보
-    // categoryList -> 카테고리 목록 정보
-    // blockList -> 블락된 일정 정보
     getSchedule(profile.nickname, (res: any) => {
+      console.log(res.data);
       setAppointments(res.data.acceptList);
       dispatch(setCategory(res.data.categoryList));
-      console.log(res.data);
+      dispatch(setLock(res.data.blockDayList));
 
-      // res.data.blockList.map((block) => {
+      // const tempSet = new Set<string>();
+      // res.data.blockList.map((block:any) => {
+      //   const time = getFullStringFromDate(block.startDate, block.endDate);
+      //   tempSet.add(time);
 
-      // })
+      //   const day = block.startDate.getDay();
+      //   if(lock[(day+6)%7]) {
+      //     dispatch(lockShade(day, time));
+      //   }
+      // });
+      // dispatch(setShade(tempSet));
     });
   }, []);
 
@@ -137,6 +116,8 @@ const SettingPage = () => {
     blockSchedule(lock, blockList, (res: SettingApiData) => {
       console.log(res.data);
     });
+
+    dispatch(selectCategory({ categoryName: "", time: "", color: "" }));
 
     navigate("/calendar/my");
   };
@@ -195,7 +176,7 @@ const SettingPage = () => {
             setOpen={setCancelOpen}
             cancelLabel="취소"
             confirmLabel="확인"
-            handleConfirm={handleSubmit}
+            handleConfirm={() => navigate("/calendar/my")}
             children={
               <div className={styles["modal-content"]}>
                 <div className={styles.img}>

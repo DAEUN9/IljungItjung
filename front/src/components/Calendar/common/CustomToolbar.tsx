@@ -45,16 +45,10 @@ const CustomerList = () => (
 export default function CustomToolbar() {
   const [visible, setVisible] = useState(true);
   const location = useLocation();
-
+  const dispatch = useDispatch();
   const { set, lock, lockMap } = useSelector(
     (state: RootState) => state.setting
   );
-  const dispatch = useDispatch();
-  const onToggleLock = (index: number) => dispatch(toggleLock(index));
-  const onLockShade = (day: number, time: string) =>
-    dispatch(lockShade(day, time));
-  const onDeleteLockShade = (day: number, time: string, all?: boolean) =>
-    dispatch(deleteLockShade(day, time, all));
 
   useEffect(() => {
     if (location.pathname.includes("setting")) {
@@ -63,24 +57,25 @@ export default function CustomToolbar() {
   }, []);
 
   const handleClickLock = (index: number) => {
-    onToggleLock(index);
+    dispatch(toggleLock(index));
 
     // set에서 해당하는 요일의 block된 시간들을 lockMap에 저장한다.
     const keys = set.keys();
     for (const key of keys) {
+      console.log(key + " in set");
       const blockDay = Number(key.substring(0, 1));
       if ((blockDay + 6) % 7 === index) {
         const time = key.substring(9);
-        onLockShade(blockDay, time);
+        dispatch(lockShade(blockDay, time));
       }
     }
   };
 
   const handleClickUnlock = (index: number) => {
-    onToggleLock(index);
+    dispatch(toggleLock(index));
 
     // lockMap의 저장된 시간들을 지운다.
-    onDeleteLockShade((index + 6) % 7, "", true);
+    dispatch(deleteLockShade((index + 6) % 7, "", true));
   };
 
   return (
