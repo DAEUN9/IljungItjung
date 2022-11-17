@@ -111,7 +111,6 @@ const ProfileEditPage = () => {
   const [openWithdrow, setOpenWithdrow] = React.useState(false);
   const handleOpenWithdrow = () => setOpenWithdrow(true);
   const handleConfirmWithdrow = () => {
-    navigate(`/`);
     // 회원 탈퇴 요청
     delWithdraw(() => {
       // 탈퇴 후 로그인 화면으로 이동
