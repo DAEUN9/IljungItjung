@@ -36,6 +36,60 @@ public class ScheduleServiceImpl implements ScheduleService{
             throw new NoExistUserException();
         });
 
+        boolean viewMySchedule = checkSamePerson(userFrom, userTo);
+
+        boolean validDate = validDateCheck(startDate, endDate);
+
+        Date []dateArray = makeDateFormat(validDate, startDate, endDate);
+        Date startDateFormat = dateArray[0];
+        Date endDateFormat = dateArray[1];
+
+        return makeScheduleViewResponseDto(viewMySchedule, validDate, userTo, startDateFormat, endDateFormat);
+    }
+
+    @Override
+    public ScheduleViewDetailResponseDto scheduleViewDetail(Long id) {
+        Schedule schedule = scheduleRepository.findScheduleById(id).orElseThrow(()->{
+            throw new NoExistScheduleDetailException();
+        });
+        return new ScheduleViewDetailResponseDto(schedule);
+    }
+
+    public boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){
+        return schedule.getStartDate().before(startDateFormat)
+                || schedule.getEndDate().before(startDateFormat)
+                || schedule.getStartDate().after(endDateFormat)
+                || schedule.getEndDate().after(endDateFormat);
+    }
+
+    public boolean checkSamePerson(User userFrom, User userTo){
+        return userFrom.getId()==userTo.getId();
+    }
+
+    public boolean validDateCheck(String startDate, String endDate){
+        return startDate!=null && endDate != null;
+    }
+
+    public Date[] makeDateFormat(boolean validDate, String startDate, String endDate){
+        Date []dateArray = new Date[2];
+
+        for(int i=0;i<2;i++) dateArray[i]=new Date();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+
+        if(validDate){
+            try{
+                dateArray[0] = formatter.parse(startDate+"0000");
+                dateArray[1] = formatter.parse(endDate+"2359");
+            }catch (Exception e){
+                throw new DateFormatErrorException();
+            }
+        }
+
+        return dateArray;
+    }
+
+    public ScheduleViewResponseDto makeScheduleViewResponseDto(boolean viewMySchedule, boolean validDate, User userTo, Date startDateFormat, Date endDateFormat){
         List<Schedule> scheduleList = scheduleRepository.findByUserTo_IdIs(userTo.getId());
 
         List<ScheduleViewDto> requestList = new ArrayList<>();
@@ -45,12 +99,6 @@ public class ScheduleServiceImpl implements ScheduleService{
         List<CategoryViewResponseDto> categoryList = new ArrayList<>();
 
         List<Boolean> blockDayList = userTo.getBlockDays();
-
-        boolean viewMySchedule = checkSamePerson(userFrom, userTo);
-        boolean validDate = validDateCheck(startDate, endDate);
-        Date []dateArray = makeDateFormat(validDate, startDate, endDate);
-        Date startDateFormat = dateArray[0];
-        Date endDateFormat = dateArray[1];
 
         scheduleList.forEach(schedule -> {
             if(validDate && checkDate(schedule, startDateFormat, endDateFormat)) return;
@@ -72,44 +120,5 @@ public class ScheduleServiceImpl implements ScheduleService{
                 blockList,
                 cancelList,
                 blockDayList);
-    }
-
-    @Override
-    public ScheduleViewDetailResponseDto scheduleViewDetail(Long id) {
-        Schedule schedule = scheduleRepository.findScheduleById(id).orElseThrow(()->{
-            throw new NoExistScheduleDetailException();
-        });
-        return new ScheduleViewDetailResponseDto(schedule);
-    }
-
-    public boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){
-        return schedule.getStartDate().before(startDateFormat)
-                || schedule.getEndDate().before(startDateFormat)
-                || schedule.getStartDate().after(endDateFormat)
-                || schedule.getEndDate().after(endDateFormat);
-    }
-    public boolean checkSamePerson(User userFrom, User userTo){
-        return userFrom.getId()==userTo.getId();
-    }
-    public boolean validDateCheck(String startDate, String endDate){
-        return startDate!=null && endDate != null;
-    }
-    public Date[] makeDateFormat(boolean validDate, String startDate, String endDate){
-        Date []dateArray = new Date[2];
-
-        for(int i=0;i<2;i++) dateArray[i]=new Date();
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-
-        if(validDate){
-            try{
-                dateArray[0] = formatter.parse(startDate+"0000");
-                dateArray[1] = formatter.parse(endDate+"2359");
-            }catch (Exception e){
-                throw new DateFormatErrorException();
-            }
-        }
-
-        return dateArray;
     }
 }
