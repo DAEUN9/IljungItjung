@@ -21,10 +21,11 @@ public class TemporaryUser {
     private String profileImg;
     private String phonenum;
     @Builder
-    public TemporaryUser(String id, String email, String profileImg){
+    public TemporaryUser(String id, String email, String profileImg, String phonenum){
         this.id = id;
         this.email = email;
         this.profileImg = profileImg;
+        this.phonenum = phonenum;
     }
 
     public void setPhonenum(String phonenum) {

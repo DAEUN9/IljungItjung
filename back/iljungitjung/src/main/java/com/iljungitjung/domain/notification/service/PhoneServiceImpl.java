@@ -121,6 +121,7 @@ public class PhoneServiceImpl implements PhoneService{
             throw new ExpireTemporaryUserException();
         });
         temporaryUser.setPhonenum(requestDto.getPhonenum());
+        temporaryUserRepository.save(temporaryUser);
     }
 
 
