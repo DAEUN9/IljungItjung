@@ -87,7 +87,6 @@ export const getStringFromDate = (time: Date | string | undefined) => {
   const str =
     date.getFullYear().toString() +
     (date.getMonth() + 1) +
-    date.getMonth().toString() +
     date.getDate().toString();
 
   return str;
