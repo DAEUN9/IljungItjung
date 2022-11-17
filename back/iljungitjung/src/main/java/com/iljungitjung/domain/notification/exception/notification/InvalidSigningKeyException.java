@@ -1,4 +1,4 @@
-package com.iljungitjung.domain.notification.exception;
+package com.iljungitjung.domain.notification.exception.notification;
 
 public class InvalidSigningKeyException extends RuntimeException{
 
