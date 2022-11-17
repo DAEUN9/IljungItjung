@@ -1,10 +1,13 @@
-import { SchedulerDate } from "@components/types/types";
+import { BlockState, SchedulerDate } from "@components/types/types";
 
 /* action type */
 const SET_SCHEDULE_LIST = "mycalendar/SET_SCHEDULE_LIST" as const;
 const SET_REQUEST_LIST = "mycalendar/SET_REQUEST_LIST" as const;
 const ADD_SCHEDULE = "mycalendar/ADD_SCHEDULE" as const;
 const DELETE_REQUEST = "mycalendar/DELETE_REQUEST" as const;
+const SET_BLOCK_DAY = "mycalendar/SET_BLOCK_DAY" as const;
+const SET_BLOCK_LIST = "mycalendar/SET_BLOCK_LIST" as const;
+const SET_FIXED_BLOCK_LIST = "mycalendar/SET_FIXED_BLOCK_LIST" as const;
 
 /* action creator */
 export const setScheduleList = (list: SchedulerDate[]) => ({
@@ -27,6 +30,16 @@ export const deleteRequest = (id: number) => ({
   payload: id,
 });
 
+export const setBlockDay = (lock: boolean[]) => ({
+  type: SET_BLOCK_DAY,
+  payload: lock,
+});
+
+export const setBlockList = (blockList: Set<string>) => ({
+  type: SET_BLOCK_LIST,
+  payload: blockList,
+})
+
 /* function */
 const filterRequest = (request: SchedulerDate[], id: number) => {
   const filtered = request.filter((item) => item.id !== id);
@@ -37,14 +50,25 @@ type MyCalendarAction =
   | ReturnType<typeof setScheduleList>
   | ReturnType<typeof setRequestList>
   | ReturnType<typeof addSchedule>
-  | ReturnType<typeof deleteRequest>;
+  | ReturnType<typeof deleteRequest>
+  | ReturnType<typeof setBlockDay>
+  | ReturnType<typeof setBlockList>;
 
 export interface MyCalendarState {
   list: SchedulerDate[];
   request: SchedulerDate[];
+  lock: boolean[];
+  fixedBlockList: Map<number, string>;
+  blockList: Set<string>;
 }
 
-const initialState: MyCalendarState = { list: [], request: [] };
+const initialState: MyCalendarState = {
+  list: [],
+  request: [],
+  lock: [false, false, false, false, false, false, false],
+  fixedBlockList: new Map<number, string>(),
+  blockList: new Set<string>(),
+};
 
 export default function reducer(
   state: MyCalendarState = initialState,
@@ -65,6 +89,8 @@ export default function reducer(
     case DELETE_REQUEST:
       const request = filterRequest(state.request, action.payload);
       return { ...state, request };
+    case SET_BLOCK_DAY:
+      return { ...state, lock: action.payload };
     default:
       return state;
   }
