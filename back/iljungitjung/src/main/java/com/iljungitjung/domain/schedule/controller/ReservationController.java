@@ -61,12 +61,10 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse> reservationView(@Size(min=8, max=8, message = "startDate 형식을 맞춰주세요 (ex.20221017)")
-                                                          @Pattern(regexp = "^[0-9]+$", message = "startDate는 숫자만 입력가능합니다.")
+    public ResponseEntity<CommonResponse> reservationView(@Pattern(regexp = "^[0-9]{8}$", message = "startDate는 8자리 숫자만 입력가능합니다. (ex.20221017)")
                                                           @RequestParam("startDate") String startDate,
 
-                                                          @Size(min=8, max=8, message = "endDate 형식을 맞춰주세요 (ex.20221017)")
-                                                          @Pattern(regexp = "^[0-9]+$", message = "endDate는 숫자만 입력가능합니다.")
+                                                          @Pattern(regexp = "^[0-9]{8}$", message = "endDate는 8자리 숫자만 입력가능합니다. (ex.20221017)")
                                                           @RequestParam("endDate") String endDate,
 
                                                           HttpSession httpSession){
