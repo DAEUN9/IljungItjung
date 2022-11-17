@@ -1,4 +1,5 @@
 import { WeekView } from "@devexpress/dx-react-scheduler-material-ui";
+<<<<<<< HEAD
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
@@ -24,6 +25,13 @@ export default function SettingWeekView() {
 
   useEffect(() => {}, [lockMap]);
 
+=======
+
+import { getDay } from "@components/Calendar/common/util";
+import styles from "@styles/Calendar/Calendar.module.scss";
+
+export default function SettingWeekView() {
+>>>>>>> 653a39ec835717dd46a43023cbbfaa11b42ac025
   return (
     <WeekView
       startDayHour={9}
@@ -35,6 +43,7 @@ export default function SettingWeekView() {
           formatDate={getDay}
         />
       )}
+<<<<<<< HEAD
       timeTableCellComponent={(props) => {
         let isDisabled = false;
 
@@ -94,6 +103,17 @@ export default function SettingWeekView() {
           />
         );
       }}
+=======
+      timeTableCellComponent={(props) => (
+        <WeekView.TimeTableCell
+          onDoubleClick={() => {
+            console.log("cell_double_click", props.startDate);
+          }}
+          {...props}
+          className={styles.timeTableCell}
+        />
+      )}
+>>>>>>> 653a39ec835717dd46a43023cbbfaa11b42ac025
     />
   );
 }

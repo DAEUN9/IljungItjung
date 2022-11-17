@@ -20,6 +20,14 @@ interface SearchState {
   categories: SearchCategoryState[];
 }
 
+// 카테고리 관련 타입
+interface CategoryState {
+  name: string;
+  color: string;
+  hour: string;
+  min: string;
+}
+
 declare type SchedulerDateTime = Date | number | string;
 
 interface SchedulerDate {

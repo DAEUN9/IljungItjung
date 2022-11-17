@@ -1,18 +1,38 @@
 import { ViewState } from "@devexpress/dx-react-scheduler";
 import { Scheduler } from "@devexpress/dx-react-scheduler-material-ui";
+<<<<<<< HEAD
 import { useState } from "react";
+=======
+import { useEffect, useState } from "react";
+import { faLock, faUnlock } from "@fortawesome/free-solid-svg-icons";
+import { renderToStaticMarkup } from "react-dom/server";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useDispatch, useSelector } from "react-redux";
+>>>>>>> 653a39ec835717dd46a43023cbbfaa11b42ac025
 
 import CustomDateNavigator from "@components/Calendar/common/CustomDateNavigator";
 import CustomTodayButton from "@components/Calendar/common/CustomTodayButton";
 import CustomToolbar from "@components/Calendar/common/CustomToolbar";
+<<<<<<< HEAD
 import SettingAppointments from "@components/Setting/SettingAppointments";
 import SettingWeekView from "@components/Setting/SettingWeekView";
 import "@styles/Setting/SetCalendar.scss";
+=======
+import CustomWeekView from "@components/Calendar/common/CustomWeekView";
+import SettingAppointments from "@components/Setting/SettingAppointments";
+import "@styles/Setting/SetCalendar.scss";
+import { RootState } from "@modules/index";
+import { toggleLock } from "@modules/setting";
+>>>>>>> 653a39ec835717dd46a43023cbbfaa11b42ac025
 
 const data = [
   {
     id: 1,
+<<<<<<< HEAD
     startDate: "2022-10-31T09:30",
+=======
+    startDate: "2022-10-31T09:45",
+>>>>>>> 653a39ec835717dd46a43023cbbfaa11b42ac025
     endDate: "2022-10-31T11:00",
     title: "목욕",
     nickname: "곰고구마",
@@ -44,6 +64,49 @@ const data = [
 
 const SetCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
+<<<<<<< HEAD
+=======
+  const lockElement = <FontAwesomeIcon icon={faLock} />;
+  const unlockElement = <FontAwesomeIcon icon={faUnlock} />;
+
+  const isLocked = useSelector((state: RootState) => state.setting.lock);
+  const dispatch = useDispatch();
+  const onToggleLock = (index: number) => dispatch(toggleLock(index));
+
+  useEffect(() => {
+    console.log(isLocked);
+  });
+
+  // useEffect(() => {
+  //   const dayList = document.getElementsByClassName("Cell-dayView");
+
+  //   for (let i = 0; i < dayList.length; i++) {
+  //     const lock = document.createElement("div");
+  //     lock.className = "lock";
+
+  //     lock.addEventListener("click", () => {
+  //       onToggleLock(i);
+  //       console.log(isLocked);
+  //     });
+
+  //     dayList[i].appendChild(lock);
+  //     console.log(dayList[i]);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   const lockElements = document.getElementsByClassName("lock");
+  //   for (let i = 0; i < lockElements.length; i++) {
+  //     let staticElement;
+
+  //     // 잠금된 요일이면 잠금 아이콘 출력
+  //     if (isLocked[i]) staticElement = renderToStaticMarkup(lockElement);
+  //     else staticElement = renderToStaticMarkup(unlockElement);
+
+  //     lockElements[i].innerHTML = `${staticElement}`;
+  //   }
+  // }, [isLocked]);
+>>>>>>> 653a39ec835717dd46a43023cbbfaa11b42ac025
 
   return (
     <Scheduler data={data} locale="ko-KR" firstDayOfWeek={1}>
@@ -51,7 +114,11 @@ const SetCalendar = () => {
         currentDate={currentDate}
         onCurrentDateChange={(currentDate) => setCurrentDate(currentDate)}
       />
+<<<<<<< HEAD
       <SettingWeekView />
+=======
+      <CustomWeekView />
+>>>>>>> 653a39ec835717dd46a43023cbbfaa11b42ac025
       <CustomToolbar />
       <CustomDateNavigator />
       <CustomTodayButton />
