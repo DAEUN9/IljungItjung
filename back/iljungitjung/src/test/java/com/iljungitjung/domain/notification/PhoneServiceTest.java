@@ -2,7 +2,10 @@ package com.iljungitjung.domain.notification;
 
 import com.iljungitjung.domain.notification.dto.NotificationMessage;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
+import com.iljungitjung.domain.notification.dto.PhoneConfirmRequestDto;
+import com.iljungitjung.domain.notification.entity.Phone;
 import com.iljungitjung.domain.notification.exception.FailSendMessageException;
+import com.iljungitjung.domain.notification.repository.PhoneRepository;
 import com.iljungitjung.domain.notification.service.PhoneService;
 import com.iljungitjung.domain.notification.service.PhoneServiceImpl;
 import com.iljungitjung.domain.user.repository.UserRepository;
@@ -15,8 +18,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Arrays;
-import java.util.List;
+import javax.servlet.http.HttpSession;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,33 +35,47 @@ public class PhoneServiceTest {
     @MockBean
     private NotificationCorrespondence notificationCorrespondence;
     @MockBean
+    private PhoneRepository phoneRepository;
+    @MockBean
     private UserRepository userRepository;
+    @MockBean
+    private HttpSession httpSession;
     @BeforeEach
     public void init(){
-        phoneService = new PhoneServiceImpl(userRepository, notificationCorrespondence);
+        phoneService = new PhoneServiceImpl(userRepository, phoneRepository, notificationCorrespondence);
     }
 
     @Test
     @DisplayName("인증번호 전송")
     public void sendMessageTest() throws Exception {
+        String id = "1";
         String phone = "01000000001";
 
+        when(httpSession.getId()).thenReturn(id);
         when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
         when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 
-        phoneService.requestRandomNumber(phone);
+        String response = phoneService.requestRandomNumber(phone, httpSession);
         verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
+        Assertions.assertEquals(response.length(), 6);
     }
 
     @Test
-    @DisplayName("4자리 수의 난수 생성 검증")
-    public void makeRandomNumbersTest() throws Exception {
-        String randomNum = phoneService.makeRandomNumber();
-        Boolean isNumber = randomNum.chars().allMatch(Character::isDigit);
+    @DisplayName("이미 인증번호가 전송됐으면 재전송 후 인증번호 반환")
+    public void existSendRandomNumber() throws Exception {
+        String id = "1";
+        String phonnum = "01012341234";
 
-        Assertions.assertEquals(randomNum.length(), 4);
-        Assertions.assertEquals(isNumber, true);
+        when(httpSession.getId()).thenReturn(id);
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
+        when(phoneRepository.existsById(id)).thenReturn(true);
+
+        String response = phoneService.requestRandomNumber(phonnum, httpSession);
+        verify(notificationCorrespondence, times(1)).sendNcloud(any(HttpEntity.class));
+        Assertions.assertEquals(response.length(), 6);
     }
+
 
     @Test
     @DisplayName("다른 유저가 사용중인 전화번호일때 중복 메시지 반환")
@@ -65,7 +83,7 @@ public class PhoneServiceTest {
         String phone = "01012341234";
 
         when(userRepository.existsUserByPhonenum(phone)).thenReturn(true);
-        String response = phoneService.requestRandomNumber(phone);
+        String response = phoneService.requestRandomNumber(phone, httpSession);
 
         Assertions.assertEquals(response, PRESENTED_NUMBER);
     }
@@ -78,8 +96,94 @@ public class PhoneServiceTest {
         when(notificationCorrespondence.sendNcloud(any(HttpEntity.class)))
                 .thenReturn(new NotificationResponseDto(HttpStatus.BAD_GATEWAY.toString()));
 
-        assertThatThrownBy(() -> phoneService.requestRandomNumber(phone))
+        assertThatThrownBy(() -> phoneService.requestRandomNumber(phone, httpSession))
                 .isInstanceOf(FailSendMessageException.class);
+    }
+
+    @Test
+    @DisplayName("알맞은 인증번호와 전화번호를 입력하면 true를 반환")
+    public void successConfirmRandomNumber() throws Exception {
+        String id = "1";
+        String phonnum = "01012341234";
+        String randonNum = "123";
+        PhoneConfirmRequestDto requestDto = new PhoneConfirmRequestDto(phonnum, randonNum);
+        Phone phone = Phone.builder()
+                .randomNumber(randonNum)
+                .id(id)
+                .phonenum(phonnum)
+                .build();
+
+        when(httpSession.getId()).thenReturn(id);
+        when(phoneRepository.existsById(id)).thenReturn(true);
+        when(phoneRepository.findById(id)).thenReturn(Optional.of(phone));
+
+        boolean response = phoneService.comfirmRandomNumber(requestDto, httpSession);
+        Assertions.assertEquals(response, true);
+    }
+
+    @Test
+    @DisplayName("틀린 인증번호를 입력하면 false를 반환")
+    public void confirmIncorrectRandomNumber() throws Exception {
+        String id = "1";
+        String phonnum = "01012341234";
+        String randonNum = "123";
+        String incorrectRandomNum = "111";
+        PhoneConfirmRequestDto requestDto = new PhoneConfirmRequestDto(phonnum, incorrectRandomNum);
+        Phone phone = Phone.builder()
+                .randomNumber(randonNum)
+                .id(id)
+                .phonenum(phonnum)
+                .build();
+
+        when(httpSession.getId()).thenReturn(id);
+        when(phoneRepository.existsById(id)).thenReturn(true);
+        when(phoneRepository.findById(id)).thenReturn(Optional.of(phone));
+
+        boolean response = phoneService.comfirmRandomNumber(requestDto, httpSession);
+        Assertions.assertEquals(response, false);
+    }
+
+    @Test
+    @DisplayName("일치하지 않는 전화번호를 입력하면 false를 반환")
+    public void confirmIncorrectPhonnum() throws Exception {
+        String id = "1";
+        String phonnum = "01012341234";
+        String incorrectPhonnum = "01011111111";
+        String randonNum = "123";
+        PhoneConfirmRequestDto requestDto = new PhoneConfirmRequestDto(incorrectPhonnum, randonNum);
+        Phone phone = Phone.builder()
+                .randomNumber(randonNum)
+                .id(id)
+                .phonenum(phonnum)
+                .build();
+
+        when(httpSession.getId()).thenReturn(id);
+        when(phoneRepository.existsById(id)).thenReturn(true);
+        when(phoneRepository.findById(id)).thenReturn(Optional.of(phone));
+
+        boolean response = phoneService.comfirmRandomNumber(requestDto, httpSession);
+        Assertions.assertEquals(response, false);
+    }
+
+    @Test
+    @DisplayName("인증번호가 만료됐으면 fasle를 반환")
+    public void expirationRandomNum() throws Exception {
+        String id = "1";
+        String phonnum = "01012341234";
+        String randonNum = "123";
+        PhoneConfirmRequestDto requestDto = new PhoneConfirmRequestDto(phonnum, randonNum);
+        Phone phone = Phone.builder()
+                .randomNumber(randonNum)
+                .id(id)
+                .phonenum(phonnum)
+                .build();
+
+        when(httpSession.getId()).thenReturn(id);
+        when(phoneRepository.existsById(id)).thenReturn(false);
+        when(phoneRepository.findById(id)).thenReturn(Optional.of(phone));
+
+        boolean response = phoneService.comfirmRandomNumber(requestDto, httpSession);
+        Assertions.assertEquals(response, false);
     }
 
     private String statusAccepted() {
