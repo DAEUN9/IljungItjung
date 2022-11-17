@@ -1,5 +1,6 @@
 package com.iljungitjung.domain.notification.entity;
 
+import com.iljungitjung.domain.notification.dto.PhoneConfirmRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
@@ -23,6 +24,17 @@ public class Phone {
     }
 
     public String getId() {return this.id;}
-    public String getRandomNumber() {return this.randomNumber;}
     public String getPhonenum() {return this.phonenum;}
+
+    public boolean checkCorrect(PhoneConfirmRequestDto requestDto) {
+        return checkPhonenum(requestDto.getPhonenum()) && checkRandomNumber(requestDto.getRandomNumber());
+    }
+
+    private boolean checkPhonenum(String phonnum) {
+        return this.phonenum.equals(phonnum);
+    }
+
+    private boolean checkRandomNumber(String randomNumber) {
+        return this.randomNumber.equals(randomNumber);
+    }
 }

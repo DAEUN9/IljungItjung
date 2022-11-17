@@ -33,7 +33,6 @@ public class PhoneServiceImpl implements PhoneService{
     private final String PRESENTED_NUMBER = "이미 존재하는 전화번호 입니다.";
     private final UserRepository userRepository;
     private final PhoneRepository phoneRepository;
-    private final RedisUserRepository redisUserRepository;
     private final NotificationCorrespondence notificationCorrespondence;
 
     @Override
@@ -43,11 +42,11 @@ public class PhoneServiceImpl implements PhoneService{
         }
         String randomNum = makeRandomNumber();
         NotificationMessage message = new NotificationMessage(phone, makeAuthenticateContent(randomNum));
-        sendMessage(NotificationRequestDto.createFromMessages(makeMessages(message)));
+        sendMessage(NotificationRequestDto.createFromMessages(makeMessageList(message)));
         savePhoneRandomNumber(new PhoneConfirmRequestDto(phone, randomNum), httpSession);
         return randomNum;
     }
-    private List<NotificationMessage> makeMessages(NotificationMessage... message){
+    private List<NotificationMessage> makeMessageList(NotificationMessage... message){
         return Arrays.asList(message);
     }
 
@@ -90,14 +89,18 @@ public class PhoneServiceImpl implements PhoneService{
 
     private void savePhoneRandomNumber(PhoneConfirmRequestDto requestDto, HttpSession session) {
         String id = session.getId();
-        if (phoneRepository.existsById(id)) {
-            phoneRepository.deleteById(id);
-        }
+        deleteExistPhone(id);
         Phone phone = Phone.builder()
                 .phonenum(requestDto.getPhonenum())
                 .id(id)
                 .randomNumber(requestDto.getRandomNumber()).build();
         phoneRepository.save(phone);
+    }
+
+    private void deleteExistPhone(String id) {
+        if (phoneRepository.existsById(id)) {
+            phoneRepository.deleteById(id);
+        }
     }
 
     @Override
@@ -106,23 +109,7 @@ public class PhoneServiceImpl implements PhoneService{
         if (phone == null) {
             return false;
         }
-        if (checkCorrectPhonnum(requestDto, phone) && checkCorrectRandomNumber(requestDto, phone)) {
-            return true;
-        }
-        return false;
+        return phone.checkCorrect(requestDto);
     }
 
-    private boolean checkCorrectPhonnum(PhoneConfirmRequestDto requestDto, Phone phone) {
-        if (requestDto.getPhonenum().equals(phone.getPhonenum())) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean checkCorrectRandomNumber(PhoneConfirmRequestDto requestDto, Phone phone) {
-        if(requestDto.getRandomNumber().equals(phone.getRandomNumber())) {
-            return true;
-        }
-        return false;
-    }
 }
