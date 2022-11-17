@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Getter
@@ -50,7 +51,10 @@ public class Schedule {
     private String cancelFrom;
     private String reason;
 
-
+    public String getDateFormat(Date date){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        return simpleDateFormat.format(date);
+    }
     public void setScheduleRequestList(User user){
         user.getScheduleRequestList().add(this);
         this.userFrom = user;
