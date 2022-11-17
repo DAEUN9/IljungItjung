@@ -45,7 +45,7 @@ public class ReservationServiceImpl implements ReservationService{
             throw new NoExistUserException();
         });
 
-        Category category = categoryRepository.findByCategoryNameAndUser_Email(reservationRequestDto.getCategoryName(), user.getEmail()).orElseThrow(() -> {
+        Category category = categoryRepository.findByCategoryNameAndUser_Email(reservationRequestDto.getCategoryName(), userTo.getEmail()).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });
 
@@ -138,7 +138,9 @@ public class ReservationServiceImpl implements ReservationService{
             }
         }
 
-        for(ReservationBlockDto reservationBlockDto : reservationBlockListRequestDto.getReservationBlockList()){
+        user.updateBlockDays(reservationBlockListRequestDto.getDays());
+
+        for(ReservationBlockDto reservationBlockDto : reservationBlockListRequestDto.getBlockList()){
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
             Date startDate;
             Date endDate;

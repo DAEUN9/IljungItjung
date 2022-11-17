@@ -49,6 +49,19 @@ public class User {
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Category> categoryList = new ArrayList<>();
 
+    @Embedded
+    private BlockDays blockDays;
+
+    public void setBlockDays(BlockDays blockDays) {
+        this.blockDays = blockDays;
+    }
+
+    public void updateBlockDays(List<Boolean> blockDaysList){
+        this.blockDays.updateBlockDays(blockDaysList);
+    }
+    public List<Boolean> getBlockDays(){
+        return this.blockDays.getBlockDays();
+    }
     public void setId(Long id) {
         this.id = id;
     }
@@ -69,7 +82,7 @@ public class User {
     }
 
     public void clearCategoryList(){
-        this.categoryList = new ArrayList<>();
+        this.categoryList.clear();
     }
 
     public Long categoryCount() {

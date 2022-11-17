@@ -12,6 +12,7 @@ import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.schedule.exception.*;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
+import com.iljungitjung.domain.user.entity.BlockDays;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
@@ -193,13 +194,21 @@ public class ReservationServiceErrorTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("일정 차단시 날짜 형식 입력을 잘못함")
     void inputDateErrorWhenBlockSchedule(){
         //given
         User userFrom = User.builder().build();
-        ReservationBlockListRequestDto reservationBlockListRequestDto = new ReservationBlockListRequestDto();
+        userFrom.setBlockDays(new BlockDays());
 
+        List<Boolean> days = new ArrayList<>();
+        for(int i=0;i<7;i++) days.add(false);
+
+        ReservationBlockDto reservationBlockRequestDto = new ReservationBlockDto(null, null, null);
+
+        List<ReservationBlockDto> reservationBlockDtoList = new ArrayList<>();
+        reservationBlockDtoList.add(reservationBlockRequestDto);
+
+        ReservationBlockListRequestDto reservationBlockListRequestDto = new ReservationBlockListRequestDto(days, reservationBlockDtoList);
         //when
         when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
 

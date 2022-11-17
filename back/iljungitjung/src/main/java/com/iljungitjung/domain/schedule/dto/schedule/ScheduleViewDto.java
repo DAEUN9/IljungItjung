@@ -18,15 +18,18 @@ public class ScheduleViewDto {
     private final String contents;
 
     private final String phonenum;
+    private final String nickname;
+    private final String imagePath;
 
     public ScheduleViewDto(Schedule schedule){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
         this.id=schedule.getId();
         this.categoryName=schedule.getCategoryName();
         this.color= schedule.getColor();
-        this.startDate=simpleDateFormat.format(schedule.getStartDate());
-        this.endDate=simpleDateFormat.format(schedule.getEndDate());
+        this.startDate=schedule.getDateFormat(schedule.getStartDate());
+        this.endDate= schedule.getDateFormat(schedule.getEndDate());
         this.contents=schedule.getContents();
         this.phonenum=schedule.getPhonenum();
+        this.nickname=schedule.getUserFrom().getNickname();
+        this.imagePath=schedule.getUserFrom().getImagePath();
     }
 }

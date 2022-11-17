@@ -22,11 +22,10 @@ public class ScheduleCancelDto {
 
 
     public ScheduleCancelDto(Schedule schedule){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
         this.id=schedule.getId();
         this.categoryName=schedule.getCategoryName();
-        this.startDate=simpleDateFormat.format(schedule.getStartDate());
-        this.endDate=simpleDateFormat.format(schedule.getEndDate());
+        this.startDate=schedule.getDateFormat(schedule.getStartDate());
+        this.endDate= schedule.getDateFormat(schedule.getEndDate());
         this.reason=schedule.getReason();
         this.cancelFrom=schedule.getCancelFrom();
         this.contents=schedule.getContents();
