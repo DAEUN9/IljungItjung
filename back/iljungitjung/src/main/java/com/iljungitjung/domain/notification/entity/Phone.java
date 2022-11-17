@@ -23,9 +23,6 @@ public class Phone {
         this.phonenum = phonenum;
     }
 
-    public String getId() {return this.id;}
-    public String getPhonenum() {return this.phonenum;}
-
     public boolean checkCorrect(PhoneConfirmRequestDto requestDto) {
         return checkPhonenum(requestDto.getPhonenum()) && checkRandomNumber(requestDto.getRandomNumber());
     }

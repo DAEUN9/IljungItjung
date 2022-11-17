@@ -26,7 +26,7 @@ public class PhoneController {
             HttpSession httpSession
     ) {
         String response = phoneService.requestRandomNumber(phone, httpSession);
-        if(response.length() == 10) {
+        if(response.length() == 6) {
             return new ResponseEntity<>(CommonResponse.getSuccessResponse(response), HttpStatus.OK);
         }
         return new ResponseEntity<>(CommonResponse.getErrorResponse(response), HttpStatus.CONFLICT);

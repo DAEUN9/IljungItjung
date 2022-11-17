@@ -6,8 +6,6 @@ import com.iljungitjung.domain.notification.entity.Phone;
 import com.iljungitjung.domain.notification.exception.FailSendMessageException;
 import com.iljungitjung.domain.notification.repository.PhoneRepository;
 import com.iljungitjung.domain.user.repository.UserRepository;
-import com.iljungitjung.global.login.entity.RedisUser;
-import com.iljungitjung.global.login.repository.RedisUserRepository;
 import com.iljungitjung.global.scheduler.NotificationCorrespondence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.nio.ByteBuffer;
@@ -36,6 +35,7 @@ public class PhoneServiceImpl implements PhoneService{
     private final NotificationCorrespondence notificationCorrespondence;
 
     @Override
+    @Transactional
     public String requestRandomNumber(String phone, HttpSession httpSession) {
         if (checkDuplicatePhone(phone)) {
             return PRESENTED_NUMBER;
@@ -75,8 +75,7 @@ public class PhoneServiceImpl implements PhoneService{
     }
 
     private String parseToShortUUID(String uuid) {
-        int uuidInt = ByteBuffer.wrap(uuid.getBytes()).getInt();
-        return Integer.toString(uuidInt, 10);
+        return uuid.substring(0, 6);
     }
 
     private String makeAuthenticateContent(String number) {
@@ -104,12 +103,13 @@ public class PhoneServiceImpl implements PhoneService{
     }
 
     @Override
+    @Transactional
     public boolean comfirmRandomNumber(PhoneConfirmRequestDto requestDto, HttpSession session) {
-        Phone phone = phoneRepository.findById(session.getId()).orElse(null);
-        if (phone == null) {
+        if (!phoneRepository.existsById(session.getId())) {
             return false;
         }
-        return phone.checkCorrect(requestDto);
+        Optional<Phone> phone = phoneRepository.findById(session.getId());
+        return phone.get().checkCorrect(requestDto);
     }
 
 }
