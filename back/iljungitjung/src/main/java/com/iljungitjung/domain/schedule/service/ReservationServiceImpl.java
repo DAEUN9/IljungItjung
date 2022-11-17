@@ -109,42 +109,24 @@ public class ReservationServiceImpl implements ReservationService{
             throw new NoExistScheduleException();
         });
 
-        if(!checkSamePerson(user, schedule.getUserTo())) throw new NoGrantDeleteScheduleException();
-
-        schedule.deleted();
+        checkUserSchedule(user, schedule);
         //notificasionService.autoReservationMessage(schedule);
+    }
+
+    private void checkUserSchedule(User user, Schedule schedule){
+        if (schedule.isUserSchedule(user))
+            return;
+        throw new NoGrantDeleteScheduleException();
     }
 
     @Override
     @Transactional
     public ReservationBlockResponseDto reservationBlock(ReservationBlockListRequestDto reservationBlockListRequestDto, HttpSession httpSession) {
-        Long count = 0L;
         User user = userService.findUserBySessionId(httpSession);
 
-        List<Schedule> scheduleList = scheduleRepository.findByUserTo_IdIs(user.getId());
+        updateBlockDays(user, reservationBlockListRequestDto);
 
-        for(Schedule schedule : scheduleList){
-
-            if(schedule.getType().equals(Type.BLOCK)){
-                scheduleRepository.delete(schedule);
-            }
-        }
-
-        user.updateBlockDays(reservationBlockListRequestDto.getDays());
-
-        for(ReservationBlockDto reservationBlockDto : reservationBlockListRequestDto.getBlockList()){
-
-            Date startDateFormat = makeDateFormat(reservationBlockDto.getDate()+reservationBlockDto.getStartTime());
-            Date endDateFormat = makeDateFormat(reservationBlockDto.getDate()+reservationBlockDto.getEndTime());
-
-            Schedule schedule = reservationBlockDto.toEntity(startDateFormat, endDateFormat);
-            schedule.setScheduleResponseList(user);
-            scheduleRepository.save(schedule);
-
-            count++;
-        }
-        return new ReservationBlockResponseDto(count);
-
+        return makeReservationBlockResponseDto(user, reservationBlockListRequestDto);
     }
 
     @Override
@@ -158,41 +140,22 @@ public class ReservationServiceImpl implements ReservationService{
         Date startDateFormat = makeDateFormat(startDate);
         Date endDateFormat = makeDateFormat(endDate);
 
-        List<Schedule> scheduleList = scheduleRepository.findByUserFrom_IdIs(user.getId());
 
-        List<ReservationViewDto> requestList = new ArrayList<>();
-        List<ReservationViewDto> acceptList = new ArrayList<>();
-        List<ReservationCancelViewDto> cancelList = new ArrayList<>();
-
-        for(Schedule schedule : scheduleList){
-            if(checkDate(schedule, startDateFormat, endDateFormat)) continue;
-
-            if(schedule.getType().equals(Type.REQUEST)){
-                requestList.add(new ReservationViewDto(schedule));
-            }else if(schedule.getType().equals(Type.ACCEPT)){
-                acceptList.add(new ReservationViewDto(schedule));
-            }else if(schedule.getType().equals(Type.CANCEL)){
-                cancelList.add(new ReservationCancelViewDto(schedule));
-            }
-        }
-        ReservationViewResponseDto responseDtos = new ReservationViewResponseDto(requestList, acceptList, cancelList);
-
-
-        return responseDtos;
+        return makeReservationViewResponseDto(user, startDateFormat, endDateFormat);
     }
-    public boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){
+    private boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){
         return schedule.getStartDate().before(startDateFormat)
                 || schedule.getEndDate().before(startDateFormat)
                 || schedule.getStartDate().after(endDateFormat)
                 || schedule.getEndDate().after(endDateFormat);
     }
 
-    public boolean checkSamePerson(User userFrom, User userTo){
+    private boolean checkSamePerson(User userFrom, User userTo){
         return userFrom.getId()==userTo.getId();
     }
 
-    public Date makeDateFormat(String date){
-        Date dateFormat = new Date();
+    private Date makeDateFormat(String date){
+        Date dateFormat;
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
 
@@ -203,5 +166,52 @@ public class ReservationServiceImpl implements ReservationService{
         }
 
         return dateFormat;
+    }
+
+    private ReservationViewResponseDto makeReservationViewResponseDto(User user, Date startDateFormat, Date endDateFormat){
+        List<Schedule> scheduleList = scheduleRepository.findByUserFrom_IdIs(user.getId());
+
+        List<ReservationViewDto> requestList = new ArrayList<>();
+        List<ReservationViewDto> acceptList = new ArrayList<>();
+        List<ReservationCancelViewDto> cancelList = new ArrayList<>();
+
+        scheduleList.forEach(schedule -> {
+            if(checkDate(schedule, startDateFormat, endDateFormat)) return;
+
+            if(schedule.getType().equals(Type.REQUEST)) requestList.add(new ReservationViewDto(schedule));
+            if(schedule.getType().equals(Type.ACCEPT)) acceptList.add(new ReservationViewDto(schedule));
+            if(schedule.getType().equals(Type.CANCEL)) cancelList.add(new ReservationCancelViewDto(schedule));
+        });
+
+        return new ReservationViewResponseDto(requestList, acceptList, cancelList);
+    }
+
+    private void updateBlockDays(User user, ReservationBlockListRequestDto reservationBlockListRequestDto){
+        List<Schedule> scheduleList = scheduleRepository.findByUserTo_IdIs(user.getId());
+
+        scheduleList.forEach(schedule -> {
+            if(schedule.getType().equals(Type.BLOCK)) scheduleRepository.delete(schedule);
+        });
+
+        user.updateBlockDays(reservationBlockListRequestDto.getDays());
+    }
+
+    private ReservationBlockResponseDto makeReservationBlockResponseDto(User user, ReservationBlockListRequestDto reservationBlockListRequestDto){
+        Long blockReservationCount=0L;
+
+        for(ReservationBlockDto reservationBlockDto : reservationBlockListRequestDto.getBlockList()){
+            saveBlockReservation(user, reservationBlockDto);
+            blockReservationCount++;
+        }
+
+        return new ReservationBlockResponseDto(blockReservationCount);
+    }
+    private void saveBlockReservation(User user, ReservationBlockDto reservationBlockDto){
+        Date startDateFormat = makeDateFormat(reservationBlockDto.getDate()+reservationBlockDto.getStartTime());
+        Date endDateFormat = makeDateFormat(reservationBlockDto.getDate()+reservationBlockDto.getEndTime());
+
+        Schedule schedule = reservationBlockDto.toEntity(startDateFormat, endDateFormat);
+        schedule.setScheduleResponseList(user);
+        scheduleRepository.save(schedule);
     }
 }

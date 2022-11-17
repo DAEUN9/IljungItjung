@@ -37,6 +37,10 @@ public class Schedule {
     private String cancelFrom;
     private String reason;
 
+    public boolean isUserSchedule(User user){
+        return user.getId() == this.userTo.getId();
+    }
+
     public String getDateFormat(Date date){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         return simpleDateFormat.format(date);

@@ -55,22 +55,22 @@ public class ScheduleServiceImpl implements ScheduleService{
         return new ScheduleViewDetailResponseDto(schedule);
     }
 
-    public boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){
+    private boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){
         return schedule.getStartDate().before(startDateFormat)
                 || schedule.getEndDate().before(startDateFormat)
                 || schedule.getStartDate().after(endDateFormat)
                 || schedule.getEndDate().after(endDateFormat);
     }
 
-    public boolean checkSamePerson(User userFrom, User userTo){
+    private boolean checkSamePerson(User userFrom, User userTo){
         return userFrom.getId()==userTo.getId();
     }
 
-    public boolean validDateCheck(String startDate, String endDate){
+    private boolean validDateCheck(String startDate, String endDate){
         return startDate!=null && endDate != null;
     }
 
-    public Date makeDateFormat(boolean validDate, String date){
+    private Date makeDateFormat(boolean validDate, String date){
         Date dateFormat = new Date();
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
@@ -86,7 +86,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         return dateFormat;
     }
 
-    public ScheduleViewResponseDto makeScheduleViewResponseDto(boolean viewMySchedule, boolean validDate, User userTo, Date startDateFormat, Date endDateFormat){
+    private ScheduleViewResponseDto makeScheduleViewResponseDto(boolean viewMySchedule, boolean validDate, User userTo, Date startDateFormat, Date endDateFormat){
         List<Schedule> scheduleList = scheduleRepository.findByUserTo_IdIs(userTo.getId());
 
         List<ScheduleViewDto> requestList = new ArrayList<>();

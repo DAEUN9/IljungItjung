@@ -1,6 +1,7 @@
 package com.iljungitjung.domain.schedule.dto.schedule;
 
 import com.iljungitjung.domain.schedule.entity.Schedule;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
