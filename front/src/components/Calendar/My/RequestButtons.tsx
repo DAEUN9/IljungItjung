@@ -42,7 +42,7 @@ const RequestButtons = ({ item }: InfoItemProps) => {
     acceptRequest(item.id, data, (res: RequestApiData) => {
       setMessage("수락되었습니다.");
       setOpen(true);
-      dispatch(deleteRequest(res.data.id));
+      dispatch(addSchedule(item));
     });
   };
 
