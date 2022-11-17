@@ -17,7 +17,7 @@ import javax.validation.constraints.Pattern;
 @Validated
 public class PhoneController {
     private final PhoneService phoneService;
-    private final String INSPIRATION = "인증번호가 틀리거나 만료되었습니다.";
+    private final String EXPIRATION = "인증번호가 틀리거나 만료되었습니다.";
 
     @GetMapping("/phones/{phone}")
     public ResponseEntity<CommonResponse> authenticatePhone (
@@ -34,7 +34,7 @@ public class PhoneController {
     }
 
     @PutMapping("/phones")
-    public ResponseEntity<CommonResponse> authenticatePhone (
+    public ResponseEntity<CommonResponse> confirmPhone (
             PhoneConfirmRequestDto requestDto,
             HttpSession httpSession
     ) {
@@ -42,6 +42,6 @@ public class PhoneController {
         if(confirm) {
             return new ResponseEntity<>(CommonResponse.getSuccessResponse(confirm), HttpStatus.OK);
         }
-        return new ResponseEntity<>(CommonResponse.getErrorResponse(INSPIRATION), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(CommonResponse.getErrorResponse(EXPIRATION), HttpStatus.CONFLICT);
     }
 }
