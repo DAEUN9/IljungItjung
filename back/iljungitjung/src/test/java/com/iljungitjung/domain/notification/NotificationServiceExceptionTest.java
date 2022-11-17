@@ -3,7 +3,7 @@ package com.iljungitjung.domain.notification;
 import com.iljungitjung.domain.notification.dto.NotificationMessage;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
-import com.iljungitjung.domain.notification.exception.FailSendMessageException;
+import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
 import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.notification.service.NotificationServiceImpl;
 import com.iljungitjung.domain.schedule.entity.Schedule;

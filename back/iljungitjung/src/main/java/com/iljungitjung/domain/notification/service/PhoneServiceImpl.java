@@ -3,7 +3,7 @@ package com.iljungitjung.domain.notification.service;
 
 import com.iljungitjung.domain.notification.dto.*;
 import com.iljungitjung.domain.notification.entity.Phone;
-import com.iljungitjung.domain.notification.exception.FailSendMessageException;
+import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
 import com.iljungitjung.domain.notification.repository.PhoneRepository;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.global.scheduler.NotificationCorrespondence;
