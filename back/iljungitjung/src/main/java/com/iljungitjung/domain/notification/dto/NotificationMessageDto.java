@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 public class NotificationMessageDto {
-    @Pattern(regexp = "[0-9]{10,11}", message = "수신인 전화번호(to)는 10~11자리의 숫자만 입력가능합니다.")
+    @Pattern(regexp = "^[0-9]{10,11}$", message = "수신인 전화번호(to)는 10~11자리의 숫자만 입력가능합니다.")
     @NotBlank(message = "수신인 전화번호(to)는 비워둘 수 없습니다.")
     private String to;
 

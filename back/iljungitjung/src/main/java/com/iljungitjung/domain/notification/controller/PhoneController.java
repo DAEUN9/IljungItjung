@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ public class PhoneController {
 
     @GetMapping("/phones/{phone}")
     public ResponseEntity<CommonResponse> sendAuthenticatePhone (
-            @Pattern(regexp = "01\\d{8,9}", message = "전화번호는 01로 시작하고 10~11자리의 숫자만 입력가능합니다.")
+            @Pattern(regexp = "^01\\d{8,9}$", message = "전화번호는 01로 시작하고 10~11자리의 숫자만 입력가능합니다.")
             @PathVariable("phone")
             String phone,
             HttpSession httpSession
@@ -35,6 +36,7 @@ public class PhoneController {
 
     @PutMapping("/phones")
     public ResponseEntity<CommonResponse> confirmAuthenticatePhone (
+            @Valid @RequestBody
             PhoneConfirmRequestDto requestDto,
             HttpSession httpSession
     ) {
