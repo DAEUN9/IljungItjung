@@ -29,6 +29,7 @@ const MyCalendar = () => {
     if (profile.nickname !== '') {
       getSchedule(profile.nickname, (res: ScheduleApiData) => {
         const { acceptList, requestList } = res.data;
+        
         dispatch(setScheduleList(acceptList));
         dispatch(setRequestList(requestList));
       });
