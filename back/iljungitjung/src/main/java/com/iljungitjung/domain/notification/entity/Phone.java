@@ -17,12 +17,14 @@ public class Phone {
     private String id;
     private String randomNumber;
     private String phonenum;
+    private boolean accepted;
 
     @Builder
-    Phone(String id, String randomNumber, String phonenum) {
+    Phone(String id, String randomNumber, String phonenum, boolean accepted) {
         this.id = id;
         this.randomNumber = randomNumber;
         this.phonenum = phonenum;
+        this.accepted = accepted;
     }
 
     public boolean checkCorrect(PhoneConfirmRequestDto requestDto) {
@@ -30,16 +32,20 @@ public class Phone {
     }
 
     private boolean checkPhonenum(String phonenum) {
-        if(!this.phonenum.equals(phonenum)) {
-            throw new IncorrectPhonenumException();
+        if(this.phonenum.equals(phonenum)) {
+            return true;
         }
-        return this.phonenum.equals(phonenum);
+        throw new IncorrectPhonenumException();
     }
 
     private boolean checkRandomNumber(String randomNumber) {
         if(!this.randomNumber.equals(randomNumber)) {
-            throw new IncorrectRandomNumberException();
+            return true;
         }
-        return this.randomNumber.equals(randomNumber);
+        throw new IncorrectRandomNumberException();
+    }
+
+    public void setAcceptedTrue() {
+        this.accepted = true;
     }
 }

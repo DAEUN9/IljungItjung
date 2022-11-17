@@ -5,6 +5,7 @@ import com.iljungitjung.domain.notification.exception.notification.ConvertToJson
 import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
 import com.iljungitjung.domain.notification.exception.notification.FailSignatureKeyErrorException;
 import com.iljungitjung.domain.notification.exception.notification.MessageUriSyntaxErrorException;
+import com.iljungitjung.domain.notification.exception.phone.ExpireRandomNumException;
 import com.iljungitjung.domain.notification.exception.phone.IncorrectPhonenumException;
 import com.iljungitjung.domain.notification.exception.phone.IncorrectRandomNumberException;
 import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
@@ -118,4 +119,11 @@ public class ExceptionHandlerUtil {
     ResponseEntity<CommonResponse> handleIncorrectRandomNumberException(BindingResult bindingResult) {
         return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
     }
+
+    @ExceptionHandler(ExpireRandomNumException.class)
+    ResponseEntity<CommonResponse> handleExpireRandomNumException(ExpireRandomNumException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CommonResponse.getErrorResponse(e.getMessage()));
+    }
+
+
 }

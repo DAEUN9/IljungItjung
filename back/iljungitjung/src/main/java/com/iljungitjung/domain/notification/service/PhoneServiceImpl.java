@@ -4,6 +4,7 @@ package com.iljungitjung.domain.notification.service;
 import com.iljungitjung.domain.notification.dto.*;
 import com.iljungitjung.domain.notification.entity.Phone;
 import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
+import com.iljungitjung.domain.notification.exception.phone.ExpireRandomNumException;
 import com.iljungitjung.domain.notification.repository.PhoneRepository;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.global.scheduler.NotificationCorrespondence;
@@ -90,6 +91,7 @@ public class PhoneServiceImpl implements PhoneService{
         deleteExistPhone(id);
         Phone phone = Phone.builder()
                 .phonenum(requestDto.getPhonenum())
+                .accepted(false)
                 .id(id)
                 .randomNumber(requestDto.getRandomNumber()).build();
         phoneRepository.save(phone);
@@ -107,8 +109,14 @@ public class PhoneServiceImpl implements PhoneService{
         if (!phoneRepository.existsById(session.getId())) {
             return false;
         }
-        Optional<Phone> phone = phoneRepository.findById(session.getId());
-        return phone.get().checkCorrect(requestDto);
+        Phone phone = phoneRepository.findById(session.getId()).orElseThrow(() -> {
+            throw new ExpireRandomNumException();
+        });
+        if(phone.checkCorrect(requestDto)) {
+            phone.setAcceptedTrue();
+            return true;
+        }
+        return false;
     }
 
 }
