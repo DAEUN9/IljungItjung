@@ -18,7 +18,6 @@ interface ReservationType {
 
 // 캘린더 일정 조회
 export function getSchedule(nickname: string, success: any) {
-  console.log(nickname);
   api
     .get(`/schedules/${nickname}`)
     .then(success)
@@ -32,7 +31,7 @@ export function acceptRequest(
   success: any
 ) {
   api
-    .put(`/reservation/${id}`, data)
+    .put(`/reservations/${id}`, data)
     .then(success)
     .catch((err) => console.log(err));
 }
@@ -40,7 +39,7 @@ export function acceptRequest(
 // 예약 요청
 export function requestReservation(data: ReservationType, success: any) {
   api
-    .post(`/reservation`, data)
+    .post(`/reservations`, data)
     .then(success)
     .catch((err) => console.log(err));
 }

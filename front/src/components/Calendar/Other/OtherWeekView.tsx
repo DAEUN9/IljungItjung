@@ -34,7 +34,6 @@ export default function OtherWeekView() {
       const newEndDate = new Date(startDate.toString());
       newEndDate.setMinutes(newEndDate.getMinutes() + minutes);
       newSelected.endDate = newEndDate;
-      console.log(newSelected);
     }
 
     dispatch(setSelectedTime(newSelected));

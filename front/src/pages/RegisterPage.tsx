@@ -7,6 +7,7 @@ import logo from "@assets/logo.png";
 import CustomButton from "@components/common/CustomButton";
 import TextField from "@mui/material/TextField";
 import { getMyProfile } from "@api/login";
+import { registerCategory } from "@api/setting";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -62,9 +63,10 @@ const RegisterPage = () => {
     // 회원가입 API 요청
     postRegister(name, text, () => {
       // 결과에 따라서 페이지 이동. 가이드 페이지 출력
-      getMyProfile(() => {
-        console.log('회원가입 후 api 요청 테스트');
-      })
+      const category = [
+        { categoryName: "기본", color: "#D5EAEF", time: "0100" },
+      ];
+      registerCategory(category, () => {});
       navigate(`/calender/my`);
     });
   };

@@ -1,42 +1,49 @@
-import React from 'react';
-import Skeleton from '@mui/material/Skeleton';
+import React, { useEffect, useState } from "react";
+import Skeleton from "@mui/material/Skeleton";
 
-import styles from '@styles/Calendar/Calendar.module.scss';
-import { MyProfile } from '@components/types/types';
+import styles from "@styles/Calendar/Calendar.module.scss";
+import { MyProfile } from "@components/types/types";
 
 interface ProfileProps {
   profile: MyProfile;
 }
 
 const Profile = ({ profile }: ProfileProps) => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+  }, []);
+
   return (
     <div className={styles.profile}>
-      <div className={styles['profile-inner']}>
-        <div className={styles['profile-title']}>
-          {!profile.imagePath ? (
+      <div className={styles["profile-inner"]}>
+        <div className={styles["profile-title"]}>
+          {!profile.imagePath && loading && (
             <Skeleton variant="circular" width={60} height={60} />
-          ) : (
-            <img src={profile.imagePath} alt="profile" />
           )}
-          <div className={styles['profile-my']}>
-            {!profile.nickname ? (
-              <Skeleton variant="text" width={100} sx={{ fontSize: '27px' }} />
-            ) : (
-              <div>{profile.nickname}</div>
+          {profile.imagePath && <img src={profile.imagePath} alt="profile" />}
+          <div className={styles["profile-my"]}>
+            {!profile.nickname && loading && (
+              <Skeleton variant="text" width={100} sx={{ fontSize: "27px" }} />
             )}
-            {!profile.introduction ? (
+            {profile.nickname && <div>{profile.nickname}</div>}
+            {!profile.introduction && loading && (
               <Skeleton variant="text" width={200} />
-            ) : (
-              <div>{profile.introduction}</div>
             )}
+            {!profile.introduction && !loading && (
+              <div style={{ color: "gray" }}>한줄 소개가 없습니다.</div>
+            )}
+            {profile.introduction && <div>{profile.introduction}</div>}
           </div>
         </div>
-        <div className={styles['profile-desc']}>
-          {!profile.description ? (
+        <div className={styles["profile-desc"]}>
+          {!profile.description && loading && (
             <Skeleton variant="rounded" width="100%" height="150px" />
-          ) : (
-            <div>{profile.description} </div>
           )}
+          {profile.description && <div>{profile.description}</div>}
         </div>
       </div>
     </div>
