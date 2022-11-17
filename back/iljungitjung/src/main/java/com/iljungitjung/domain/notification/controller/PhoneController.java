@@ -15,32 +15,32 @@ import javax.validation.constraints.Pattern;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/phones")
 @Validated
 public class PhoneController {
     private final PhoneService phoneService;
     private final String EXPIRATION = "인증번호가 만료되었습니다.";
 
-    @GetMapping("/phones/{phone}")
+    @GetMapping("/{phonenum}")
     public ResponseEntity<CommonResponse> sendAuthenticatePhone (
             @Pattern(regexp = "^01\\d{8,9}$", message = "전화번호는 01로 시작하고 10~11자리의 숫자만 입력가능합니다.")
-            @PathVariable("phone")
-            String phone,
+            @PathVariable("phonenum")
+            String phonenum,
             HttpSession httpSession
     ) {
-        String response = phoneService.requestRandomNumber(phone, httpSession);
+        String response = phoneService.requestRandomNumber(phonenum, httpSession);
         if(response.length() == 6) {
             return new ResponseEntity<>(CommonResponse.getSuccessResponse(response), HttpStatus.OK);
         }
         return new ResponseEntity<>(CommonResponse.getErrorResponse(response), HttpStatus.CONFLICT);
     }
 
-    @PutMapping("/phones")
-    public ResponseEntity<CommonResponse> confirmAuthenticatePhone (
+    @PutMapping
+    public void confirmAuthenticatePhone (
             @Valid @RequestBody
             PhoneConfirmRequestDto requestDto,
             HttpSession httpSession
     ) {
-        boolean confirm = phoneService.confirmRandomNumber(requestDto, httpSession);
-        return new ResponseEntity<>(CommonResponse.getSuccessResponse(confirm), HttpStatus.OK);
+        phoneService.confirmRandomNumber(requestDto, httpSession);
     }
 }

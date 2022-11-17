@@ -14,12 +14,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,7 +33,6 @@ public class PhoneServiceImpl implements PhoneService{
     private final NotificationCorrespondence notificationCorrespondence;
 
     @Override
-    @Transactional
     public String requestRandomNumber(String phone, HttpSession httpSession) {
         if (checkDuplicatePhone(phone)) {
             return PRESENTED_NUMBER;
@@ -91,7 +88,6 @@ public class PhoneServiceImpl implements PhoneService{
         deleteExistPhone(id);
         Phone phone = Phone.builder()
                 .phonenum(requestDto.getPhonenum())
-                .accepted(false)
                 .id(id)
                 .randomNumber(requestDto.getRandomNumber()).build();
         phoneRepository.save(phone);
@@ -104,19 +100,11 @@ public class PhoneServiceImpl implements PhoneService{
     }
 
     @Override
-    @Transactional
-    public boolean confirmRandomNumber(PhoneConfirmRequestDto requestDto, HttpSession session) {
-        if (!phoneRepository.existsById(session.getId())) {
-            return false;
-        }
+    public void confirmRandomNumber(PhoneConfirmRequestDto requestDto, HttpSession session) {
         Phone phone = phoneRepository.findById(session.getId()).orElseThrow(() -> {
             throw new ExpireRandomNumException();
         });
-        if(phone.checkCorrect(requestDto)) {
-            phone.setAcceptedTrue();
-            return true;
-        }
-        return false;
+        phone.checkCorrect(requestDto);
     }
 
 }
