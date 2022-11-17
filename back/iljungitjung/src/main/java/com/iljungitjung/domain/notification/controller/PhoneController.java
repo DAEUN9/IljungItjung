@@ -41,10 +41,6 @@ public class PhoneController {
             HttpSession httpSession
     ) {
         boolean confirm = phoneService.confirmRandomNumber(requestDto, httpSession);
-        System.out.println(confirm);
-        if(confirm) {
-            return new ResponseEntity<>(CommonResponse.getSuccessResponse(confirm), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(CommonResponse.getErrorResponse(EXPIRATION), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(CommonResponse.getSuccessResponse(confirm), HttpStatus.OK);
     }
 }

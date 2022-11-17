@@ -111,13 +111,13 @@ public class ExceptionHandlerUtil {
     }
 
     @ExceptionHandler(IncorrectPhonenumException.class)
-    ResponseEntity<CommonResponse> handleIncorrectPhonenumException(BindingResult bindingResult) {
-        return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
+    ResponseEntity<CommonResponse> handleIncorrectPhonenumException(IncorrectPhonenumException e) {
+        return ResponseEntity.badRequest().body(CommonResponse.getErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(IncorrectRandomNumberException.class)
-    ResponseEntity<CommonResponse> handleIncorrectRandomNumberException(BindingResult bindingResult) {
-        return ResponseEntity.badRequest().body(CommonResponse.getFailResponse(bindingResult));
+    ResponseEntity<CommonResponse> handleIncorrectRandomNumberException(IncorrectRandomNumberException e) {
+        return ResponseEntity.badRequest().body(CommonResponse.getErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(ExpireRandomNumException.class)
