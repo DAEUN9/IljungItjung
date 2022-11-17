@@ -47,7 +47,7 @@ public class PhoneServiceTest {
 
     @Test
     @DisplayName("인증번호 전송")
-    public void sendMessageTest() throws Exception {
+    public void sendRandomNumberMessage() throws Exception {
         String id = "1";
         String phone = "01000000001";
 
@@ -62,7 +62,7 @@ public class PhoneServiceTest {
 
     @Test
     @DisplayName("이미 인증번호가 전송됐으면 재전송 후 인증번호 반환")
-    public void existSendRandomNumber() throws Exception {
+    public void existPhoneSendRandomNumber() throws Exception {
         String id = "1";
         String phonnum = "01012341234";
 
@@ -79,7 +79,7 @@ public class PhoneServiceTest {
 
     @Test
     @DisplayName("다른 유저가 사용중인 전화번호일때 중복 메시지 반환")
-    public void duplicatePhoneNumberConflictTest() throws Exception {
+    public void duplicatePhoneNumberConflict() throws Exception {
         String phone = "01012341234";
 
         when(userRepository.existsUserByPhonenum(phone)).thenReturn(true);
@@ -187,6 +187,6 @@ public class PhoneServiceTest {
     }
 
     private String statusAccepted() {
-        return HttpStatus.ACCEPTED.value()+"";
+        return Integer.toString(HttpStatus.ACCEPTED.value());
     }
 }

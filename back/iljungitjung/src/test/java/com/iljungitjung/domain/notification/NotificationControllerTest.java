@@ -47,13 +47,13 @@ public class NotificationControllerTest {
 
     @Test
     @DisplayName("메시지 전송")
-    public void A() throws Exception {
+    public void sendNotificationMessage() throws Exception {
         //given
         String content = "하이";
         String phone = "01000000000";
 
         NotificationMessage notificationMessage = new NotificationMessage(phone, content);
-        List<NotificationMessage> messageList = makeMessages(notificationMessage);
+        List<NotificationMessage> messageList = makeMessageList(notificationMessage);
         String contents = objectMapper.writeValueAsString(NotificationRequestDto.createFromMessages(messageList));
 
         when(notificationService.sendMessage(any(NotificationRequestDto.class))).thenReturn(new NotificationResponseDto("202"));
@@ -66,10 +66,8 @@ public class NotificationControllerTest {
                 .andExpect(jsonPath("data.statusCode").value(statusAccepted()));
     }
 
-    private List<NotificationMessage> makeMessages(NotificationMessage... message){
+    private List<NotificationMessage> makeMessageList(NotificationMessage... message){
         return Arrays.asList(message);
     }
-    private String statusAccepted() {
-        return HttpStatus.ACCEPTED.value()+"";
-    }
+    private String statusAccepted() {return Integer.toString(HttpStatus.ACCEPTED.value());}
 }
