@@ -21,7 +21,11 @@ export default function CustomAppointments() {
             children={
               <>
                 <div className={styles['appointment-category']}>
+<<<<<<< .merge_file_a08376
                   {data.categoryName}
+=======
+                  {data.title}
+>>>>>>> .merge_file_a02200
                 </div>
                 <div className={styles['appointment-nickname']}>
                   <Avatar sx={{ width: '18px', height: '18px' }} />
