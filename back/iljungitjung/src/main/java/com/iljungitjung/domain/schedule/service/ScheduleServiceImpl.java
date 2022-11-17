@@ -1,7 +1,6 @@
 package com.iljungitjung.domain.schedule.service;
 
 import com.iljungitjung.domain.category.dto.CategoryViewResponseDto;
-import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.schedule.dto.schedule.*;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
@@ -39,9 +38,11 @@ public class ScheduleServiceImpl implements ScheduleService{
         boolean viewMySchedule = checkSamePerson(userFrom, userTo);
         boolean validDate = validDateCheck(startDate, endDate);
 
-        Date []dateArray = makeDateFormat(validDate, startDate, endDate);
-        Date startDateFormat = dateArray[0];
-        Date endDateFormat = dateArray[1];
+        startDate+="0000";
+        endDate+="2359";
+
+        Date startDateFormat = makeDateFormat(validDate, startDate);
+        Date endDateFormat = makeDateFormat(validDate, endDate);
 
         return makeScheduleViewResponseDto(viewMySchedule, validDate, userTo, startDateFormat, endDateFormat);
     }
@@ -69,23 +70,20 @@ public class ScheduleServiceImpl implements ScheduleService{
         return startDate!=null && endDate != null;
     }
 
-    public Date[] makeDateFormat(boolean validDate, String startDate, String endDate){
-        Date []dateArray = new Date[2];
-
-        for(int i=0;i<2;i++) dateArray[i]=new Date();
+    public Date makeDateFormat(boolean validDate, String date){
+        Date dateFormat = new Date();
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
 
         if(validDate){
             try{
-                dateArray[0] = formatter.parse(startDate+"0000");
-                dateArray[1] = formatter.parse(endDate+"2359");
+                dateFormat = formatter.parse(date);
             }catch (Exception e){
                 throw new DateFormatErrorException();
             }
         }
 
-        return dateArray;
+        return dateFormat;
     }
 
     public ScheduleViewResponseDto makeScheduleViewResponseDto(boolean viewMySchedule, boolean validDate, User userTo, Date startDateFormat, Date endDateFormat){

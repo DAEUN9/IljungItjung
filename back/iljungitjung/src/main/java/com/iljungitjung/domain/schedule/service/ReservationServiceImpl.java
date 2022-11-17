@@ -27,7 +27,6 @@ public class ReservationServiceImpl implements ReservationService{
 
     private final ScheduleRepository scheduleRepository;
     private final CategoryRepository categoryRepository;
-
     private final UserRepository userRepository;
     private final UserService userService;
     private final NotificationService notificationService;
@@ -36,7 +35,7 @@ public class ReservationServiceImpl implements ReservationService{
     @Transactional
     public ReservationIdResponseDto reservationRequest(ReservationRequestDto reservationRequestDto, HttpSession httpSession) {
 
-        User user = userService.findUserBySessionId(httpSession);
+        User userFrom = userService.findUserBySessionId(httpSession);
 
         User userTo= userRepository.findUserByNickname(reservationRequestDto.getUserToNickname()).orElseThrow(() -> {
             throw new NoExistUserException();
@@ -46,25 +45,21 @@ public class ReservationServiceImpl implements ReservationService{
             throw new NoExistCategoryException();
         });
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-        Date startDate;
+        Date startDate = makeDateFormat(reservationRequestDto.getDate()+reservationRequestDto.getStartTime());
+
         String date = category.getTime();
+        int minute = Integer.parseInt(date.substring(2));
+        int hour = Integer.parseInt(date.substring(0, 2));
+
         Calendar cal = Calendar.getInstance();
-
-        try{
-            startDate = formatter.parse(reservationRequestDto.getDate()+reservationRequestDto.getStartTime());
-        }catch (Exception e){
-            throw new DateFormatErrorException();
-        }
-
         cal.setTime(startDate);
-        cal.add(Calendar.MINUTE, Integer.parseInt(date.substring(2)));
-        cal.add(Calendar.HOUR, Integer.parseInt(date.substring(0, 2)));
+        cal.add(Calendar.MINUTE, minute);
+        cal.add(Calendar.HOUR, hour);
 
         Date endDate = cal.getTime();
 
         Schedule schedule = reservationRequestDto.toEntity(startDate, endDate, category.getColor());
-        schedule.setScheduleRequestList(user);
+        schedule.setScheduleRequestList(userFrom);
         schedule.setScheduleResponseList(userTo);
 
         schedule = scheduleRepository.save(schedule);
@@ -138,16 +133,11 @@ public class ReservationServiceImpl implements ReservationService{
         user.updateBlockDays(reservationBlockListRequestDto.getDays());
 
         for(ReservationBlockDto reservationBlockDto : reservationBlockListRequestDto.getBlockList()){
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-            Date startDate;
-            Date endDate;
-            try{
-                startDate = formatter.parse(reservationBlockDto.getDate()+reservationBlockDto.getStartTime());
-                endDate = formatter.parse(reservationBlockDto.getDate()+reservationBlockDto.getEndTime());
-            }catch (Exception e){
-                throw new DateFormatErrorException();
-            }
-            Schedule schedule = reservationBlockDto.toEntity(startDate, endDate);
+
+            Date startDateFormat = makeDateFormat(reservationBlockDto.getDate()+reservationBlockDto.getStartTime());
+            Date endDateFormat = makeDateFormat(reservationBlockDto.getDate()+reservationBlockDto.getEndTime());
+
+            Schedule schedule = reservationBlockDto.toEntity(startDateFormat, endDateFormat);
             schedule.setScheduleResponseList(user);
             scheduleRepository.save(schedule);
 
@@ -162,17 +152,11 @@ public class ReservationServiceImpl implements ReservationService{
 
         User user = userService.findUserBySessionId(httpSession);
 
-        Date startDateFormat;
-        Date endDateFormat;
+        startDate += "0000";
+        endDate += "2359";
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-        try{
-            startDateFormat = formatter.parse(startDate+"0000");
-            endDateFormat = formatter.parse(endDate+"2359");
-        }catch (Exception e){
-            throw new DateFormatErrorException();
-        }
-
+        Date startDateFormat = makeDateFormat(startDate);
+        Date endDateFormat = makeDateFormat(endDate);
 
         List<Schedule> scheduleList = scheduleRepository.findByUserFrom_IdIs(user.getId());
 
@@ -202,7 +186,22 @@ public class ReservationServiceImpl implements ReservationService{
                 || schedule.getStartDate().after(endDateFormat)
                 || schedule.getEndDate().after(endDateFormat);
     }
+
     public boolean checkSamePerson(User userFrom, User userTo){
         return userFrom.getId()==userTo.getId();
+    }
+
+    public Date makeDateFormat(String date){
+        Date dateFormat = new Date();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+
+        try{
+            dateFormat = formatter.parse(date);
+        }catch (Exception e){
+            throw new DateFormatErrorException();
+        }
+
+        return dateFormat;
     }
 }
