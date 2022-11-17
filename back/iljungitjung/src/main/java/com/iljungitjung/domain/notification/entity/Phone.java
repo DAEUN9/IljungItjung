@@ -31,17 +31,13 @@ public class Phone {
         return checkPhonenum(requestDto.getPhonenum()) && checkRandomNumber(requestDto.getRandomNumber());
     }
 
-    private boolean checkPhonenum(String phonenum) {
-        if(this.phonenum.equals(phonenum)) {
-            return true;
-        }
+    private boolean checkPhonenum(String other) {
+        if(this.phonenum.equals(other)) return true;
         throw new IncorrectPhonenumException();
     }
 
-    private boolean checkRandomNumber(String randomNumber) {
-        if(!this.randomNumber.equals(randomNumber)) {
-            return true;
-        }
+    private boolean checkRandomNumber(String other) {
+        if(this.randomNumber.equals(other)) return true;
         throw new IncorrectRandomNumberException();
     }
 
