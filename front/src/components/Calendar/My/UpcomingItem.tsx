@@ -1,23 +1,36 @@
-import styles from '@styles/Calendar/Calendar.module.scss';
-import Schedule from '@components/common/Schedule';
-import iljung from '@assets/defaultImg.png';
-import DetailInfo from './DetailInfo';
-import { formatTime, InfoItemProps } from '@components/Calendar/common/util';
+import styles from "@styles/Calendar/Calendar.module.scss";
+import Schedule from "@components/common/Schedule";
+import iljung from "@assets/defaultImg.png";
+import DetailInfo from "./DetailInfo";
+import {
+  formatTime,
+  getFullDate,
+  InfoItemProps,
+} from "@components/Calendar/common/util";
 
 const UpcomingItem = ({ item }: InfoItemProps) => {
-  const { color, startDate, endDate, title, nickname, phone, desc } = item;
+  const {
+    color,
+    startDate,
+    endDate,
+    categoryName,
+    nickname,
+    phonenum,
+    contents,
+  } = item;
   const time = formatTime(startDate?.toString(), endDate?.toString());
 
   return (
-    <div className={styles['info-item']}>
+    <div className={styles["info-item"]}>
       <Schedule
         color={color}
-        time={time ?? '-'}
-        userId="유저아이디"
+        date={getFullDate(new Date(startDate.toString()))}
+        time={time ?? "-"}
+        userId={nickname}
         userName={nickname}
-        category={title ?? '-'}
+        category={categoryName ?? "-"}
         userImg={iljung}
-        render={() => <DetailInfo phone={phone} desc={desc} />}
+        render={() => <DetailInfo phone={phonenum} desc={contents} />}
       />
     </div>
   );

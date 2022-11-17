@@ -1,30 +1,7 @@
+import { SchedulerDate, SchedulerDateTime } from "@components/types/types";
+import { DateNavigatorProps } from "@devexpress/dx-react-scheduler";
+
 /* type, interface */
-export declare type SchedulerDateTime = Date | number | string;
-
-export interface SchedulerDate {
-  startDate: SchedulerDateTime;
-  endDate?: SchedulerDateTime;
-  title?: string;
-  allDay?: boolean;
-  id?: number | string;
-  rRule?: string | undefined;
-  exDate?: string | undefined;
-  [propertyName: string]: any;
-}
-
-export interface ResourceInstance {
-  id: number | string;
-  color?: string;
-  text?: string;
-};
-
-export interface Resource {
-  fieldName: string;
-  title?: string;
-  allowMultiple?: boolean;
-  instances: Array<ResourceInstance>;
-};
-
 export interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -36,19 +13,22 @@ export interface InfoItemProps {
 }
 
 /* variables */
-export const days = ['일', '월', '화', '수', '목', '금', '토'];
+export const days = ["일", "월", "화", "수", "목", "금", "토"];
 
 /* function */
-export const getDay = (nextDate: SchedulerDateTime | undefined, nextOptions: any) => {
+export const getDay = (
+  nextDate: SchedulerDateTime | undefined,
+  nextOptions: any
+) => {
   const date =
-    typeof nextDate === 'object'
+    typeof nextDate === "object"
       ? nextDate
-      : typeof nextDate === 'string'
+      : typeof nextDate === "string"
       ? new Date(nextDate)
       : new Date();
   const { day } = nextOptions;
 
-  let value = '';
+  let value = "";
 
   if (day) {
     value = date.getDate().toString();
@@ -63,7 +43,7 @@ export const formatTime = (
   startDate: string | undefined,
   endDate: string | undefined
 ) => {
-  if (typeof startDate === 'undefined' || typeof endDate === 'undefined')
+  if (typeof startDate === "undefined" || typeof endDate === "undefined")
     return;
 
   const start = new Date(startDate);
@@ -72,26 +52,80 @@ export const formatTime = (
   let startHour = start.getHours();
   const startMinutes =
     start.getMinutes() < 10
-      ? '0' + start.getMinutes().toString()
+      ? "0" + start.getMinutes().toString()
       : start.getMinutes().toString();
 
   let endHour = end.getHours();
   const endMinutes =
     end.getMinutes() < 10
-      ? '0' + end.getMinutes().toString()
+      ? "0" + end.getMinutes().toString()
       : end.getMinutes().toString();
 
-  let startTime = startHour < 12 ? '오전 ' : '오후 ';
+  let startTime = startHour < 12 ? "오전 " : "오후 ";
   if (startHour > 12) {
     startHour -= 12;
   }
-  startTime += startHour + ':' + startMinutes;
+  startTime += startHour + ":" + startMinutes;
 
-  let endTime = endHour < 12 ? '오전 ' : '오후 ';
+  let endTime = endHour < 12 ? "오전 " : "오후 ";
   if (endHour > 12) {
     endHour -= 12;
   }
-  endTime += endHour + ':' + endMinutes;
+  endTime += endHour + ":" + endMinutes;
 
-  return startTime + ' - ' + endTime;
+  return startTime + " - " + endTime;
+};
+
+export const getStringFromDate = (time: Date | string | undefined) => {
+  if (!time) return "";
+
+  let date = new Date();
+
+  if (typeof time === "string") date = new Date(time);
+  else date = time;
+
+  const str =
+    date.getFullYear().toString() +
+    (date.getMonth() + 1) +
+    date.getDate().toString();
+
+  return str;
+};
+
+export const makeFormat = (time: string) => {
+  if (time.length === 1) return "0" + time;
+  return time;
+};
+
+export const getFullStringFromDate = (time: Date, endTime: Date) => {
+  if (!time) return "";
+
+  const day = time.getDay().toString();
+  const year = time.getFullYear().toString();
+  const month = makeFormat((time.getMonth() + 1).toString());
+  const date = makeFormat(time.getDate().toString());
+  const hour = makeFormat(time.getHours().toString());
+  const min = makeFormat(time.getMinutes().toString());
+  const endHour = makeFormat(endTime.getHours().toString());
+  const endMin = makeFormat(endTime.getMinutes().toString());
+
+  return day + year + month + date + hour + min + endHour + endMin;
+};
+
+export const getFullDate = (date: SchedulerDateTime | undefined) => {
+  switch (typeof date) {
+    case "undefined":
+      return "-";
+    case "string":
+      return date;
+    case "object":
+      return (
+        date.getFullYear() +
+        "년 " +
+        (date.getMonth() + 1) +
+        "월 " +
+        date.getDate() +
+        "일"
+      );
+  }
 };
