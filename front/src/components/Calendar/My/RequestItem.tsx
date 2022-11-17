@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 
 import styles from '@styles/Calendar/Calendar.module.scss';
 import Schedule from '@components/common/Schedule';
-import iljung from '@assets/defaultImg.png';
 import DetailInfo from './DetailInfo';
 import {
   formatTime,
@@ -15,17 +14,19 @@ import CustomButton from '@components/common/CustomButton';
 import { acceptRequest } from '@api/calendar';
 import { Snackbar } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { addSchedule } from '@modules/mycalendar';
-
-interface ButtonProps {
-  id: number;
-}
+import { addSchedule, deleteRequest } from '@modules/mycalendar';
+import { SchedulerDate } from '@components/types/types';
 
 interface RequestApiData {
   status: string;
   data: {
     id: number;
   };
+}
+
+interface ScheduleDetailApiData {
+  status: string;
+  data: SchedulerDate[];
 }
 
 const TextField = styled(MuiTextField)`
@@ -59,10 +60,10 @@ const RequestButtons = ({ item }: InfoItemProps) => {
     const data = { accept: true };
 
     acceptRequest(item.id, data, (res: RequestApiData) => {
-      console.log(res);
+      console.log(res.data);
       setIdx(0);
       setSnackbar(true);
-      dispatch(addSchedule(item));
+      dispatch(deleteRequest(res.data.id));
     });
   };
 
@@ -144,6 +145,7 @@ const RequestItem = ({ item }: InfoItemProps) => {
     nickname,
     phonenum,
     contents,
+    imagePath
   } = item;
   const time = formatTime(startDate?.toString(), endDate?.toString());
 
@@ -156,7 +158,7 @@ const RequestItem = ({ item }: InfoItemProps) => {
         userId="유저아이디"
         userName={nickname}
         category={categoryName ?? '-'}
-        userImg={iljung}
+        userImg={imagePath}
         render={() => (
           <>
             <DetailInfo phone={phonenum} desc={contents} />
