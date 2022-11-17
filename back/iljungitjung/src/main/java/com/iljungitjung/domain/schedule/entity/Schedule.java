@@ -52,7 +52,7 @@ public class Schedule {
     private String reason;
 
     public String getDateFormat(Date date){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd'T'HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         return simpleDateFormat.format(date);
     }
     public void setScheduleRequestList(User user){
