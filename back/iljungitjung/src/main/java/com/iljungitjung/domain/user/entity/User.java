@@ -59,9 +59,11 @@ public class User {
     public void updateBlockDays(List<Boolean> blockDaysList){
         this.blockDays.updateBlockDays(blockDaysList);
     }
+
     public List<Boolean> getBlockDays(){
         return this.blockDays.getBlockDays();
     }
+
     public void setId(Long id) {
         this.id = id;
     }

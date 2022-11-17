@@ -37,7 +37,6 @@ public class ScheduleServiceImpl implements ScheduleService{
         });
 
         boolean viewMySchedule = checkSamePerson(userFrom, userTo);
-
         boolean validDate = validDateCheck(startDate, endDate);
 
         Date []dateArray = makeDateFormat(validDate, startDate, endDate);

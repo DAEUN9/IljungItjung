@@ -68,7 +68,7 @@ public class ReservationServiceImpl implements ReservationService{
         schedule.setScheduleResponseList(userTo);
 
         schedule = scheduleRepository.save(schedule);
-        notificationService.autoReservationMessage(schedule);
+        //notificasionService.autoReservationMessage(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -86,7 +86,7 @@ public class ReservationServiceImpl implements ReservationService{
 
         if(checkSamePerson(user, schedule.getUserTo())){
             if(reservationManageRequestDto.isAccept()){
-                schedule.accpeted();
+                schedule.accepted();
             }else{
                 cancelFrom="제공자";
                 schedule.canceled(cancelFrom, reservationManageRequestDto.getReason());
@@ -101,7 +101,7 @@ public class ReservationServiceImpl implements ReservationService{
         }else{
             throw new NoGrantAccessScheduleException();
         }
-        notificationService.autoReservationMessage(schedule);
+        //notificasionService.autoReservationMessage(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -117,7 +117,7 @@ public class ReservationServiceImpl implements ReservationService{
         if(!checkSamePerson(user, schedule.getUserTo())) throw new NoGrantDeleteScheduleException();
 
         schedule.deleted();
-        notificationService.autoReservationMessage(schedule);
+        //notificasionService.autoReservationMessage(schedule);
     }
 
     @Override

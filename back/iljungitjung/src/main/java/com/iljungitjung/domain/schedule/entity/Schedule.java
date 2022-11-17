@@ -56,7 +56,7 @@ public class Schedule {
         this.id = id;
     }
 
-    public void accpeted() {
+    public void accepted() {
         this.type= Type.ACCEPT;
     }
 
