@@ -25,23 +25,6 @@ interface SearchState {
   categories: SearchCategoryState[];
 }
 
-<<<<<<< .merge_file_a15156
-=======
-interface SearchCategoryState {
-  categoryName: string;
-}
-
-// 검색 관련 타입
-interface SearchState {
-  nickname: string;
-  email: string;
-  imagePath: string;
-  introduction: string;
-  description: string;
-  categories: SearchCategoryState[];
-}
-
->>>>>>> .merge_file_a16948
 declare type SchedulerDateTime = Date | number | string;
 
 interface SchedulerDate {
@@ -106,11 +89,7 @@ interface MyProfile {
   nickname: string;
   email: string;
   imagePath: string;
-<<<<<<< .merge_file_a15156
-  introduction?: string;
-=======
   introduction: string;
->>>>>>> .merge_file_a16948
   description: string;
 }
 
