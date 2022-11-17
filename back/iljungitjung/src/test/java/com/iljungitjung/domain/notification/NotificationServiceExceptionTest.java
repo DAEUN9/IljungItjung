@@ -43,7 +43,7 @@ public class NotificationServiceExceptionTest {
 
     @Test
     @DisplayName("ncloud 메세지 전송 예외 발생")
-    public void errorCorrespondenceNcoloud() throws Exception {
+    public void errorCorrespondenceNcloud() throws Exception {
         String content = "하이";
         String phone = "01000000000";
 

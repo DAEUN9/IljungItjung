@@ -1,6 +1,5 @@
 package com.iljungitjung.domain.notification;
 
-import com.iljungitjung.domain.notification.dto.NotificationMessage;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.dto.PhoneConfirmRequestDto;
 import com.iljungitjung.domain.notification.entity.Phone;

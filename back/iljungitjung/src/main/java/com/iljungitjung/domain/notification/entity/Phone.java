@@ -27,8 +27,8 @@ public class Phone {
         return checkPhonenum(requestDto.getPhonenum()) && checkRandomNumber(requestDto.getRandomNumber());
     }
 
-    private boolean checkPhonenum(String phonnum) {
-        return this.phonenum.equals(phonnum);
+    private boolean checkPhonenum(String phonenum) {
+        return this.phonenum.equals(phonenum);
     }
 
     private boolean checkRandomNumber(String randomNumber) {
