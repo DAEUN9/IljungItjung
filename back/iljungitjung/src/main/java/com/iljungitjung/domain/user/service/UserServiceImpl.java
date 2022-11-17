@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService{
             throw new AlreadyExistUserException();
         }
         log.debug("user : {}", user);
+        temporaryUser.matchPhonenum(signUpDto);
         temporaryUserRepository.deleteById(request.getSession().getId());
         user = userRepository.save(user);
 
