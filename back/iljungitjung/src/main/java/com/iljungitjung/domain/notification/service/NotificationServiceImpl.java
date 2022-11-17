@@ -29,13 +29,13 @@ public class NotificationServiceImpl implements NotificationService{
     private final String REFUSE_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]\n [%s] 예약 신청이 거절되었습니다.\n";
     private final String DELETE_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]의 [%s]예약이 취소되었습니다.\n";
     private final String REQUEST_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]님이 [%s]예약을 신청 하셨습니다.\n홈페이지에서 확인해주세요.";
-    private final String TEMP_PHONE = "01000000000";
     private final NotificationCorrespondence notificationCorrespondence;
 
     @Override
     public NotificationResponseDto sendMessage(NotificationRequestDto requestDto) {
         HttpEntity<NotificationMessageRequestDto> body = makeBody(requestDto);
-        return checkStatusEqualsAccpeted(notificationCorrespondence.sendNcloud(body));
+        NotificationResponseDto responseDto = notificationCorrespondence.sendNcloud(body);
+        return checkStatusEqualsAccpeted(responseDto);
     }
 
     private HttpEntity<NotificationMessageRequestDto> makeBody(NotificationRequestDto requestDto) {
@@ -57,20 +57,20 @@ public class NotificationServiceImpl implements NotificationService{
     public void autoReservationMessage(Schedule schedule) {
         NotificationMessage message = makeMessage(schedule);
         if (existPhoneNum(message)) {
-            List<NotificationMessage> messageList = makeMessages(message);
+            List<NotificationMessage> messageList = makeMessageList(message);
             NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
             sendMessage(requestDto);
         }
     }
 
     private boolean existPhoneNum(NotificationMessage message) {
-        if (message.getTo().equals(TEMP_PHONE) || message.getTo() == null) {
+        if (message.getTo() == null) {
             return false;
         }
         return true;
     }
 
-    private List<NotificationMessage> makeMessages(NotificationMessage... message){
+    private List<NotificationMessage> makeMessageList(NotificationMessage... message){
         return Arrays.asList(message);
     }
 
