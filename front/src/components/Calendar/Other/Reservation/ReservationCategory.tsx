@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { FaThList } from "react-icons/fa";
 import { Controller, useFormContext } from "react-hook-form";
 import FormControl from "@mui/material/FormControl";
@@ -9,21 +10,7 @@ import {
   Select,
   InputLabel,
 } from "@components/Calendar/Other/CustomComponents";
-
-const items = [
-  {
-    categoryName: "예쁜 그림",
-    time: "0100",
-  },
-  {
-    categoryName: "멋진 그림",
-    time: "0130",
-  },
-  {
-    categoryName: "예쁘고 멋진 그림",
-    time: "0300",
-  },
-];
+import { RootState } from "@modules/index";
 
 const getTime = (time: string) => {
   const hours = parseInt(time.slice(0, 2));
@@ -42,6 +29,9 @@ const ReservationCategory = () => {
     register,
     formState: { errors },
   } = useFormContext();
+  const category = useSelector(
+    (state: RootState) => state.othercalendar.category
+  );
 
   return (
     <div className={styles["reservation-item"]}>
@@ -71,7 +61,7 @@ const ReservationCategory = () => {
                   required: "카테고리를 선택해주세요",
                 })}
               >
-                {items.map((item) => (
+                {category.map((item) => (
                   <MenuItem key={item.categoryName} value={item.categoryName}>
                     <div className={styles.menu}>
                       <div>{item.categoryName}</div>
