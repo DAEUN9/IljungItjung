@@ -72,22 +72,25 @@ const SettingPage = () => {
 
   useEffect(() => {
     getSchedule(profile.nickname, (res: any) => {
+      const { acceptList, categoryList, blockDayList, blockList } = res.data;
       console.log(res.data);
-      setAppointments(res.data.acceptList);
-      dispatch(setCategory(res.data.categoryList));
-      dispatch(setLock(res.data.blockDayList));
+      setAppointments(acceptList);
+      dispatch(setCategory(categoryList));
+      dispatch(setLock(blockDayList));
 
-      // const tempSet = new Set<string>();
-      // res.data.blockList.map((block:any) => {
-      //   const time = getFullStringFromDate(block.startDate, block.endDate);
-      //   tempSet.add(time);
+      const tempSet = new Set<string>();
+      blockList.map((block: any) => {
+        const start = new Date(block.startDate);
+        const end = new Date(block.endDate);
+        const time = getFullStringFromDate(start, end);
+        tempSet.add(time);
 
-      //   const day = block.startDate.getDay();
-      //   if(lock[(day+6)%7]) {
-      //     dispatch(lockShade(day, time));
-      //   }
-      // });
-      // dispatch(setShade(tempSet));
+        const day = start.getDay();
+        if (lock[(day + 6) % 7]) {
+          dispatch(lockShade(day, time));
+        }
+      });
+      dispatch(setShade(tempSet));
     });
   }, []);
 
