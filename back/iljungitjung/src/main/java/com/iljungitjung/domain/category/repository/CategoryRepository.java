@@ -7,6 +7,5 @@ import java.util.*;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findByCategoryNameAndUser_Email(String categoryName, String email);
-
     List<Category> findByUser_Id(Long id);
 }

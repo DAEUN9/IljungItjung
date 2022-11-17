@@ -2,13 +2,9 @@ package com.iljungitjung.domain.schedule.dto.reservation;
 
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Getter
@@ -18,10 +14,8 @@ public class ReservationBlockDto {
 
     @Pattern(regexp = "^[0-9]{8}$", message = "startDate는 8자리 숫자만 입력가능합니다. (ex.20221017)")
     private String date;
-
     @Pattern(regexp = "^[0-9]{4}$", message = "startTime은 4자리 숫자만 입력가능합니다. (ex.1500)")
     private String startTime;
-
     @Pattern(regexp = "^[0-9]{4}$", message = "endTime은 4자리 숫자만 입력가능합니다. (ex.1500)")
     private String endTime;
 
@@ -33,5 +27,4 @@ public class ReservationBlockDto {
                 .type(Type.BLOCK)
                 .build();
     }
-
 }

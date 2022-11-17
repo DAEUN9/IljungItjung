@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +26,7 @@ public class ScheduleServiceImpl implements ScheduleService{
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+
     @Override
     public ScheduleViewResponseDto scheduleView(String nickname, String startDate, String endDate, HttpSession httpSession) {
 
@@ -44,51 +43,35 @@ public class ScheduleServiceImpl implements ScheduleService{
         List<ScheduleBlockDto> blockList = new ArrayList<>();
         List<ScheduleCancelDto> cancelList = new ArrayList<>();
         List<CategoryViewResponseDto> categoryList = new ArrayList<>();
-        List<Boolean> blockDayList = new ArrayList<>();
 
-        boolean myScheduleView = false;
-        boolean validDate = true;
+        List<Boolean> blockDayList = userTo.getBlockDays();
 
-        Date startDateFormat = new Date();
-        Date endDateFormat = new Date();
+        boolean viewMySchedule = checkSamePerson(userFrom, userTo);
+        boolean validDate = validDateCheck(startDate, endDate);
+        Date []dateArray = makeDateFormat(validDate, startDate, endDate);
+        Date startDateFormat = dateArray[0];
+        Date endDateFormat = dateArray[1];
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+        scheduleList.forEach(schedule -> {
+            if(validDate && checkDate(schedule, startDateFormat, endDateFormat)) return;
 
-
-        if(userFrom.getId()==userTo.getId()) myScheduleView = true;
-
-        if(startDate==null || endDate == null) validDate=false;
-        else{
-            try{
-                startDateFormat = formatter.parse(startDate+"0000");
-                endDateFormat = formatter.parse(endDate+"2359");
-            }catch (Exception e){
-                throw new DateFormatErrorException();
-            }
-        }
-
-        for(Schedule schedule : scheduleList){
-            if(validDate && checkDate(schedule, startDateFormat, endDateFormat)) continue;
-
-            if(myScheduleView){
+            if(viewMySchedule){
                 if(schedule.getType().equals(Type.REQUEST)) requestList.add(new ScheduleViewDto(schedule));
-                else if(schedule.getType().equals(Type.CANCEL)) cancelList.add(new ScheduleCancelDto(schedule));
+                if(schedule.getType().equals(Type.CANCEL)) cancelList.add(new ScheduleCancelDto(schedule));
             }
 
             if (schedule.getType().equals(Type.ACCEPT)) acceptList.add(new ScheduleViewDto(schedule));
-            else if (schedule.getType().equals(Type.BLOCK)) blockList.add(new ScheduleBlockDto(schedule));
+            if (schedule.getType().equals(Type.BLOCK)) blockList.add(new ScheduleBlockDto(schedule));
+        });
 
-        }
+        userTo.getCategoryList().forEach(category -> categoryList.add(new CategoryViewResponseDto(category)));
 
-        for(Category category :userTo.getCategoryList()){
-            categoryList.add(new CategoryViewResponseDto(category));
-        }
-
-        blockDayList = userTo.getBlockDays();
-
-        ScheduleViewResponseDto responseDtos = new ScheduleViewResponseDto(categoryList, requestList, acceptList, blockList, cancelList, blockDayList);
-
-        return responseDtos;
+        return new ScheduleViewResponseDto(categoryList,
+                requestList,
+                acceptList,
+                blockList,
+                cancelList,
+                blockDayList);
     }
 
     @Override
@@ -96,12 +79,37 @@ public class ScheduleServiceImpl implements ScheduleService{
         Schedule schedule = scheduleRepository.findScheduleById(id).orElseThrow(()->{
             throw new NoExistScheduleDetailException();
         });
-        ScheduleViewDetailResponseDto responseDto = new ScheduleViewDetailResponseDto(schedule);
-        return responseDto;
+        return new ScheduleViewDetailResponseDto(schedule);
     }
 
     public boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){
-        if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().before(startDateFormat) || schedule.getStartDate().after(endDateFormat) || schedule.getEndDate().after(endDateFormat)) return true;
-        return false;
+        return schedule.getStartDate().before(startDateFormat)
+                || schedule.getEndDate().before(startDateFormat)
+                || schedule.getStartDate().after(endDateFormat)
+                || schedule.getEndDate().after(endDateFormat);
+    }
+    public boolean checkSamePerson(User userFrom, User userTo){
+        return userFrom.getId()==userTo.getId();
+    }
+    public boolean validDateCheck(String startDate, String endDate){
+        return startDate!=null && endDate != null;
+    }
+    public Date[] makeDateFormat(boolean validDate, String startDate, String endDate){
+        Date []dateArray = new Date[2];
+
+        for(int i=0;i<2;i++) dateArray[i]=new Date();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+
+        if(validDate){
+            try{
+                dateArray[0] = formatter.parse(startDate+"0000");
+                dateArray[1] = formatter.parse(endDate+"2359");
+            }catch (Exception e){
+                throw new DateFormatErrorException();
+            }
+        }
+
+        return dateArray;
     }
 }

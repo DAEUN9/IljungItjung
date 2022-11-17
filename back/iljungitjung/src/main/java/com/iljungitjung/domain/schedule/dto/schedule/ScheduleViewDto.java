@@ -1,10 +1,7 @@
 package com.iljungitjung.domain.schedule.dto.schedule;
 
-
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import lombok.Getter;
-
-import java.text.SimpleDateFormat;
 
 @Getter
 public class ScheduleViewDto {
@@ -14,9 +11,7 @@ public class ScheduleViewDto {
     private final String color;
     private final String startDate;
     private final String endDate;
-
     private final String contents;
-
     private final String phonenum;
     private final String nickname;
     private final String imagePath;

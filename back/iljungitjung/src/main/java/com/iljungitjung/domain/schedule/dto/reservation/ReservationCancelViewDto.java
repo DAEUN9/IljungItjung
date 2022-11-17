@@ -4,7 +4,6 @@ package com.iljungitjung.domain.schedule.dto.reservation;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import lombok.Getter;
 
-import java.text.SimpleDateFormat;
 
 @Getter
 public class ReservationCancelViewDto {
@@ -13,11 +12,8 @@ public class ReservationCancelViewDto {
     private final String categoryName;
     private final String startDate;
     private final String endDate;
-
     private final String reason;
-
     private final String imagePath;
-
     private final String nickname;
     private final String contents;
     private final String cancelFrom;
@@ -32,6 +28,5 @@ public class ReservationCancelViewDto {
         this.nickname=schedule.getUserFrom().getNickname();
         this.contents=schedule.getContents();
         this.cancelFrom=schedule.getCancelFrom();
-
     }
 }

@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -200,11 +197,12 @@ public class ReservationServiceImpl implements ReservationService{
         return responseDtos;
     }
     public boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){
-        if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().before(startDateFormat) || schedule.getStartDate().after(endDateFormat) || schedule.getEndDate().after(endDateFormat)) return true;
-        return false;
+        return schedule.getStartDate().before(startDateFormat)
+                || schedule.getEndDate().before(startDateFormat)
+                || schedule.getStartDate().after(endDateFormat)
+                || schedule.getEndDate().after(endDateFormat);
     }
-    public boolean checkSamePerson(User user1, User user2){
-        if(user1.getId()==user2.getId()) return true;
-        return false;
+    public boolean checkSamePerson(User userFrom, User userTo){
+        return userFrom.getId()==userTo.getId();
     }
 }
