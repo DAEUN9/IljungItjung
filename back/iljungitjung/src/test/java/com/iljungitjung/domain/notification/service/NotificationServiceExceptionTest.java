@@ -5,8 +5,7 @@ import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
 import com.iljungitjung.domain.notification.exception.notification.NoExistPhonenumException;
-import com.iljungitjung.domain.notification.service.NotificationService;
-import com.iljungitjung.domain.notification.service.NotificationServiceImpl;
+import com.iljungitjung.domain.notification.exception.phone.NoMatchAutoScheduleException;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.user.entity.User;
@@ -88,7 +87,40 @@ public class NotificationServiceExceptionTest {
         when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 
         assertThatThrownBy(() -> notificationService.autoReservationMessage(schedule))
-                .isInstanceOf(NoExistPhonenumException.class);    }
+                .isInstanceOf(NoExistPhonenumException.class);
+    }
+
+    @Test
+    @DisplayName("일치하는 Auto 타입이 존재하지 않으면 NoMatchAutoScheduleException 발생")
+    public void notMatchAutoNotificationType() throws Exception {
+        String categoryName = "파마";
+
+        String userFromNickname = "1";
+        String userToNickname = "2";
+        String phone = "01012341234";
+        String email = "email";
+
+        User userFrom = User.builder()
+                .nickname(userFromNickname)
+                .email(email).build();
+        User userTo = User.builder()
+                .nickname(userToNickname)
+                .phonenum(phone).build();
+        Schedule schedule = Schedule.builder()
+                .type(Type.BLOCK)
+                .userFrom(userFrom)
+                .userTo(userTo)
+                .endDate(new Date())
+                .startDate(new Date())
+                .categoryName(categoryName)
+                .phonenum(phone).build();
+
+        when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
+        when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
+
+        assertThatThrownBy(() -> notificationService.autoReservationMessage(schedule))
+                .isInstanceOf(NoMatchAutoScheduleException.class);
+    }
 
     private List<NotificationMessage> makeMessageList(NotificationMessage... message){
         return Arrays.asList(message);
