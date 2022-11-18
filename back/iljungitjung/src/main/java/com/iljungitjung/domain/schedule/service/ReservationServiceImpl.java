@@ -36,26 +36,28 @@ public class ReservationServiceImpl implements ReservationService{
     @Transactional
     public ReservationIdResponseDto reservationRequest(ReservationRequestDto reservationRequestDto, HttpSession httpSession) {
 
-        User user = userService.findUserBySessionId(httpSession);
+        User userFrom = userService.findUserBySessionId(httpSession);
 
         User userTo= userRepository.findUserByNickname(reservationRequestDto.getUserToNickname()).orElseThrow(() -> {
             throw new NoExistUserException();
         });
 
+        Schedule schedule = saveSchedule(userFrom, userTo, reservationRequestDto);
+
+        notificationService.autoReservationMessage(schedule);
+
+        return new ReservationIdResponseDto(schedule.getId());
+    }
+    private Schedule saveSchedule(User userFrom, User userTo, ReservationRequestDto reservationRequestDto){
+
         Category category = categoryRepository.findByCategoryNameAndUser_Email(reservationRequestDto.getCategoryName(), userTo.getEmail()).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-        Date startDate;
+        Date startDate = makeDateFormat(reservationRequestDto.getDate()+reservationRequestDto.getStartTime());
+
         String date = category.getTime();
         Calendar cal = Calendar.getInstance();
-
-        try{
-            startDate = formatter.parse(reservationRequestDto.getDate()+reservationRequestDto.getStartTime());
-        }catch (Exception e){
-            throw new DateFormatErrorException();
-        }
 
         cal.setTime(startDate);
         cal.add(Calendar.MINUTE, Integer.parseInt(date.substring(2)));
@@ -64,12 +66,11 @@ public class ReservationServiceImpl implements ReservationService{
         Date endDate = cal.getTime();
 
         Schedule schedule = reservationRequestDto.toEntity(startDate, endDate, category.getColor());
-        schedule.setScheduleRequestList(user);
+        schedule.setScheduleRequestList(userFrom);
         schedule.setScheduleResponseList(userTo);
 
         schedule = scheduleRepository.save(schedule);
-        notificationService.autoReservationMessage(schedule);
-        return new ReservationIdResponseDto(schedule.getId());
+        return schedule;
     }
 
     @Override
@@ -82,30 +83,30 @@ public class ReservationServiceImpl implements ReservationService{
             throw new NoExistScheduleDetailException();
         });
 
-        String cancelFrom = "";
+        if(checkSamePerson(user, schedule.getUserTo())) providerManageReservation(schedule, reservationManageRequestDto);
+        else if(checkSamePerson(user, schedule.getUserFrom())) applicantManageReservation(schedule, reservationManageRequestDto);
 
-        if(checkSamePerson(user, schedule.getUserTo())){
-            if(reservationManageRequestDto.isAccept()){
-                schedule.accepted();
-            }else{
-                cancelFrom="제공자";
-                schedule.canceled(cancelFrom, reservationManageRequestDto.getReason());
-            }
-        }else if(checkSamePerson(user, schedule.getUserFrom())){
-            if(reservationManageRequestDto.isAccept()){
-                throw new NoGrantAcceptScheduleException();
-            }else{
-                cancelFrom="사용자";
-                schedule.canceled(cancelFrom, reservationManageRequestDto.getReason());
-            }
-        }else{
-            throw new NoGrantAccessScheduleException();
-        }
         notificationService.autoReservationMessage(schedule);
+
         return new ReservationIdResponseDto(schedule.getId());
+    }
+    private void providerManageReservation(Schedule schedule, ReservationManageRequestDto reservationManageRequestDto){
+        if(reservationManageRequestDto.isAccept()){
+            schedule.accepted();
+            return;
+        }
+        schedule.canceled("제공자", reservationManageRequestDto.getReason());
+    }
+
+    private void applicantManageReservation(Schedule schedule, ReservationManageRequestDto reservationManageRequestDto){
+        if(reservationManageRequestDto.isAccept()){
+            throw new NoGrantAcceptScheduleException();
+        }
+        schedule.canceled("사용자", reservationManageRequestDto.getReason());
     }
 
     @Override
+    @Transactional
     public void reservationDelete(Long id, String reason, HttpSession httpSession) {
 
         User user = userService.findUserBySessionId(httpSession);
@@ -115,12 +116,15 @@ public class ReservationServiceImpl implements ReservationService{
         });
 
         checkUserSchedule(user, schedule);
-        //notificasionService.autoReservationMessage(schedule);
+        notificationService.autoReservationMessage(schedule);
+        scheduleRepository.delete(schedule);
     }
 
     private void checkUserSchedule(User user, Schedule schedule){
-        if (schedule.isUserSchedule(user))
+        if (schedule.isUserSchedule(user)) {
+            schedule.deleted();
             return;
+        }
         throw new NoGrantDeleteScheduleException();
     }
 
@@ -139,14 +143,7 @@ public class ReservationServiceImpl implements ReservationService{
 
         User user = userService.findUserBySessionId(httpSession);
 
-        startDate += "0000";
-        endDate += "2359";
-
-        Date startDateFormat = makeDateFormat(startDate);
-        Date endDateFormat = makeDateFormat(endDate);
-
-
-        return makeReservationViewResponseDto(user, startDateFormat, endDateFormat);
+        return makeReservationViewResponseDto(user, startDate, endDate);
     }
     private boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){
         return schedule.getStartDate().before(startDateFormat)
@@ -173,7 +170,14 @@ public class ReservationServiceImpl implements ReservationService{
         return dateFormat;
     }
 
-    private ReservationViewResponseDto makeReservationViewResponseDto(User user, Date startDateFormat, Date endDateFormat){
+    private ReservationViewResponseDto makeReservationViewResponseDto(User user, String startDate, String endDate){
+
+        startDate += "0000";
+        endDate += "2359";
+
+        Date startDateFormat = makeDateFormat(startDate);
+        Date endDateFormat = makeDateFormat(endDate);
+
         List<Schedule> scheduleList = scheduleRepository.findByUserFrom_IdIs(user.getId());
 
 
