@@ -33,6 +33,11 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        if(isAuthenticatePhonenum(request)){
+            log.debug("authenticate phonenum");
+            return true;
+        }
+
         String sessionId = request.getSession().getId();
         log.debug("session Id : {}", sessionId);
         if(!redisUserRepository.existsById(sessionId)){
@@ -53,6 +58,14 @@ public class LoginInterceptor implements HandlerInterceptor {
     private boolean isUpdateUserRequest(HttpServletRequest request){
         if(request.getMethod().equals("PUT") && request.getRequestURI().equals("/api/users")) return true;
         if(request.getMethod().equals("PUT") && request.getRequestURI().equals("/users")) return true;
+        return false;
+    }
+
+    private boolean isAuthenticatePhonenum(HttpServletRequest request){
+        if(request.getMethod().equals("PUT") && request.getRequestURI().equals("/api/phones")) return true;
+        if(request.getMethod().equals("PUT") && request.getRequestURI().equals("/phones")) return true;
+        if(request.getMethod().equals("POST") && request.getRequestURI().startsWith("/api/phones/")) return true;
+        if(request.getMethod().equals("POST") && request.getRequestURI().startsWith("/phones/")) return true;
         return false;
     }
 }

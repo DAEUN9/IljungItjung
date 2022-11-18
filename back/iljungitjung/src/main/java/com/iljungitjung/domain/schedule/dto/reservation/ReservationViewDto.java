@@ -2,7 +2,10 @@ package com.iljungitjung.domain.schedule.dto.reservation;
 
 
 import com.iljungitjung.domain.schedule.entity.Schedule;
+import com.iljungitjung.domain.schedule.entity.Type;
 import lombok.Getter;
+
+import java.text.SimpleDateFormat;
 
 @Getter
 public class ReservationViewDto {
@@ -15,6 +18,7 @@ public class ReservationViewDto {
     private final String imagePath;
     private final String nickname;
     private final String contents;
+    private final Type type;
 
     public ReservationViewDto(Schedule schedule){
         this.id=schedule.getId();
@@ -22,8 +26,9 @@ public class ReservationViewDto {
         this.color= schedule.getColor();
         this.startDate=schedule.getDateFormat(schedule.getStartDate());
         this.endDate= schedule.getDateFormat(schedule.getEndDate());
-        this.imagePath=schedule.getUserFrom().getImagePath();
-        this.nickname=schedule.getUserFrom().getNickname();
+        this.imagePath=schedule.getUserTo().getImagePath();
+        this.nickname=schedule.getUserTo().getNickname();
         this.contents=schedule.getContents();
+        this.type=schedule.getType();
     }
 }

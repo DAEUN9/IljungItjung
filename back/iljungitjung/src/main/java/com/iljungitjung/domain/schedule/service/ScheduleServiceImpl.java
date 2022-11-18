@@ -1,6 +1,7 @@
 package com.iljungitjung.domain.schedule.service;
 
 import com.iljungitjung.domain.category.dto.CategoryViewResponseDto;
+import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.schedule.dto.schedule.*;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
@@ -101,10 +102,9 @@ public class ScheduleServiceImpl implements ScheduleService{
             if(validDate && checkDate(schedule, startDateFormat, endDateFormat)) return;
 
             if(viewMySchedule){
-                if(schedule.getType().equals(Type.REQUEST)) requestList.add(new ScheduleViewDto(schedule));
                 if(schedule.getType().equals(Type.CANCEL)) cancelList.add(new ScheduleCancelDto(schedule));
             }
-
+            if(schedule.getType().equals(Type.REQUEST)) requestList.add(new ScheduleViewDto(schedule));
             if (schedule.getType().equals(Type.ACCEPT)) acceptList.add(new ScheduleViewDto(schedule));
             if (schedule.getType().equals(Type.BLOCK)) blockList.add(new ScheduleBlockDto(schedule));
         });

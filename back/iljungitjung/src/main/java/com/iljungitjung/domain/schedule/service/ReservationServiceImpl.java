@@ -27,6 +27,7 @@ public class ReservationServiceImpl implements ReservationService{
 
     private final ScheduleRepository scheduleRepository;
     private final CategoryRepository categoryRepository;
+
     private final UserRepository userRepository;
     private final UserService userService;
     private final NotificationService notificationService;
@@ -35,7 +36,7 @@ public class ReservationServiceImpl implements ReservationService{
     @Transactional
     public ReservationIdResponseDto reservationRequest(ReservationRequestDto reservationRequestDto, HttpSession httpSession) {
 
-        User userFrom = userService.findUserBySessionId(httpSession);
+        User user = userService.findUserBySessionId(httpSession);
 
         User userTo= userRepository.findUserByNickname(reservationRequestDto.getUserToNickname()).orElseThrow(() -> {
             throw new NoExistUserException();
@@ -45,25 +46,29 @@ public class ReservationServiceImpl implements ReservationService{
             throw new NoExistCategoryException();
         });
 
-        Date startDate = makeDateFormat(reservationRequestDto.getDate()+reservationRequestDto.getStartTime());
-
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+        Date startDate;
         String date = category.getTime();
-        int minute = Integer.parseInt(date.substring(2));
-        int hour = Integer.parseInt(date.substring(0, 2));
-
         Calendar cal = Calendar.getInstance();
+
+        try{
+            startDate = formatter.parse(reservationRequestDto.getDate()+reservationRequestDto.getStartTime());
+        }catch (Exception e){
+            throw new DateFormatErrorException();
+        }
+
         cal.setTime(startDate);
-        cal.add(Calendar.MINUTE, minute);
-        cal.add(Calendar.HOUR, hour);
+        cal.add(Calendar.MINUTE, Integer.parseInt(date.substring(2)));
+        cal.add(Calendar.HOUR, Integer.parseInt(date.substring(0, 2)));
 
         Date endDate = cal.getTime();
 
         Schedule schedule = reservationRequestDto.toEntity(startDate, endDate, category.getColor());
-        schedule.setScheduleRequestList(userFrom);
+        schedule.setScheduleRequestList(user);
         schedule.setScheduleResponseList(userTo);
 
         schedule = scheduleRepository.save(schedule);
-        //notificasionService.autoReservationMessage(schedule);
+        notificationService.autoReservationMessage(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -96,7 +101,7 @@ public class ReservationServiceImpl implements ReservationService{
         }else{
             throw new NoGrantAccessScheduleException();
         }
-        //notificasionService.autoReservationMessage(schedule);
+        notificationService.autoReservationMessage(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -168,21 +173,20 @@ public class ReservationServiceImpl implements ReservationService{
         return dateFormat;
     }
 
-    private ReservationViewResponseDto makeReservationViewResponseDto(User user, Date startDateFormat, Date endDateFormat){
         List<Schedule> scheduleList = scheduleRepository.findByUserFrom_IdIs(user.getId());
 
-        List<ReservationViewDto> requestList = new ArrayList<>();
-        List<ReservationViewDto> acceptList = new ArrayList<>();
-        List<ReservationCancelViewDto> cancelList = new ArrayList<>();
+        List<ReservationViewDto> reservationViewDtoList = new ArrayList<>();
 
-        scheduleList.forEach(schedule -> {
-            if(checkDate(schedule, startDateFormat, endDateFormat)) return;
+        for(Schedule schedule : scheduleList){
+            if(checkDate(schedule, startDateFormat, endDateFormat)) continue;
 
-            if(schedule.getType().equals(Type.REQUEST)) requestList.add(new ReservationViewDto(schedule));
-            if(schedule.getType().equals(Type.ACCEPT)) acceptList.add(new ReservationViewDto(schedule));
-            if(schedule.getType().equals(Type.CANCEL)) cancelList.add(new ReservationCancelViewDto(schedule));
-        });
+            if(schedule.getType().equals(Type.BLOCK)) continue;
+            if(schedule.getType().equals(Type.DELETE)) continue;
 
+            reservationViewDtoList.add(new ReservationViewDto(schedule));
+
+        }
+        ReservationViewResponseDto responseDtos = new ReservationViewResponseDto(reservationViewDtoList);
         return new ReservationViewResponseDto(requestList, acceptList, cancelList);
     }
 

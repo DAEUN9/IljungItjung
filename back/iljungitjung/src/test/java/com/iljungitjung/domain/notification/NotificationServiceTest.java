@@ -17,7 +17,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +39,7 @@ public class NotificationServiceTest {
 
     @Test
     @DisplayName("메시지 전송")
-    public void A() throws Exception {
+    public void sendNotificationMessage() throws Exception {
         String content = "하이";
         String phone = "01000000000";
 
@@ -62,7 +61,7 @@ public class NotificationServiceTest {
 
     @Test
     @DisplayName("예약 신청 알림 문자 전송")
-    public void B() throws Exception {
+    public void sendRequestNotificationMessage() throws Exception {
 
         String categoryName = "파마";
 
@@ -96,7 +95,7 @@ public class NotificationServiceTest {
 
     @Test
     @DisplayName("예약 승인 문자 전송")
-    public void C() throws Exception {
+    public void sendAcceptNotificationMessage() throws Exception {
         String categoryName = "파마";
 
         String userFromNickname = "1";
@@ -130,7 +129,7 @@ public class NotificationServiceTest {
 
     @Test
     @DisplayName("예약 신청 거절 문자 전송")
-    public void D() throws Exception {
+    public void sendRefuseNotificationMessage() throws Exception {
         String categoryName = "파마";
 
         String userFromNickname = "1";
@@ -168,7 +167,7 @@ public class NotificationServiceTest {
 
     @Test
     @DisplayName("예약 신청 취소 문자 전송")
-    public void E() throws Exception {
+    public void sendCancelNotificationMessage() throws Exception {
         String categoryName = "파마";
 
         String userFromNickname = "1";
@@ -204,7 +203,7 @@ public class NotificationServiceTest {
 
     @Test
     @DisplayName("예약 취소 문자 전송")
-    public void F() throws Exception {
+    public void sendDeleteNotificationMessage() throws Exception {
         String categoryName = "파마";
 
         String userFromNickname = "1";
@@ -235,9 +234,7 @@ public class NotificationServiceTest {
 
         notificationService.autoReservationMessage(schedule);
     }
-    private String statusAccepted() {
-        return HttpStatus.ACCEPTED.value()+"";
-    }
+    private String statusAccepted() {return Integer.toString(HttpStatus.ACCEPTED.value());}
 
 
 }

@@ -4,7 +4,7 @@ import com.iljungitjung.domain.notification.dto.NotificationMessage;
 import com.iljungitjung.domain.notification.dto.NotificationMessageRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
-import com.iljungitjung.domain.notification.exception.FailSendMessageException;
+import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
 import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.notification.service.NotificationServiceImpl;
 import com.iljungitjung.domain.schedule.entity.Schedule;
@@ -19,7 +19,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -45,12 +44,12 @@ public class NotificationServiceExceptionTest {
 
     @Test
     @DisplayName("ncloud 메세지 전송 예외 발생")
-    public void A() throws Exception {
+    public void errorCorrespondenceNcloud() throws Exception {
         String content = "하이";
         String phone = "01000000000";
 
         NotificationMessage message = new NotificationMessage(phone, content);
-        List<NotificationMessage> messageList = makeMessages(message);
+        List<NotificationMessage> messageList = makeMessageList(message);
         NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
 
         when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
@@ -62,7 +61,7 @@ public class NotificationServiceExceptionTest {
 
     @Test
     @DisplayName("전화번호가 존재하지 않는 예약은 문자를 보내지 않음")
-    public void B() throws Exception {
+    public void notSendMessageNullPhonenum() throws Exception {
         String categoryName = "파마";
 
         String userFromNickname = "1";
@@ -92,11 +91,9 @@ public class NotificationServiceExceptionTest {
         verify(notificationCorrespondence, times(0)).sendNcloud(any(HttpEntity.class));
     }
 
-    private List<NotificationMessage> makeMessages(NotificationMessage... message){
+    private List<NotificationMessage> makeMessageList(NotificationMessage... message){
         return Arrays.asList(message);
     }
 
-    private String statusAccepted() {
-        return HttpStatus.ACCEPTED.value()+"";
-    }
+    private String statusAccepted() {return Integer.toString(HttpStatus.ACCEPTED.value());}
 }
