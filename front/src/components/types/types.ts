@@ -118,6 +118,20 @@ interface AppointmentsTypes {
   phonenum: string;
 }
 
+interface ReservationTypes {
+  id: number;
+  type: string;
+  categoryName: string;
+  color: string;
+  contents: string;
+  startDate: string;
+  endDate: string;
+  nickname: string;
+  imagePath: string;
+  cancelFrom?: string;
+  reason?: string;
+}
+
 export type {
   SettingCategoryState,
   BlockListTypes,
@@ -130,4 +144,5 @@ export type {
   CategoryState,
   AppointmentsTypes,
   BlockState,
+  ReservationTypes,
 };

@@ -1,183 +1,66 @@
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import Sidebar from "@components/common/Sidebar";
 import Period from "@components/Reservation/Period";
 import Reservation from "@components/Reservation/Reservation";
 import styles from "@styles/Reservation/Reservation.module.scss";
-import defaultImg from "@assets/defaultImg.png";
-import { useEffect } from "react";
 import { getReservations } from "@api/reservation";
-import { useDispatch } from "react-redux";
-import { setReservations } from "@modules/reservation";
-import { AxiosResponse } from "axios";
-
-const reservations = [
-  {
-    date: "10월 16일",
-    list: [
-      {
-        isCanceled: true,
-        cancelReason: "지송합니다.",
-        detail: "예쁘게 그려주세요.",
-        time: "12:00-13:00",
-        userImg: defaultImg,
-        userName: "곰고구마",
-        userId: "1",
-        category: "예쁜 그림",
-        color: "#F4F38A",
-      },
-      {
-        isCanceled: false,
-        time: "16:00-17:00",
-        userImg: defaultImg,
-        detail: "잘 그려주세요.",
-        userName: "곰고구마",
-        userId: "1",
-        category: "멋진 그림",
-        color: "#D7CBF4",
-      },
-      {
-        isCanceled: false,
-        time: "16:00-17:00",
-        userImg: defaultImg,
-        detail: "잘 그려주세요.",
-        userName: "곰고구마",
-        userId: "1",
-        category: "멋진 그림",
-        color: "#D7CBF4",
-      },
-      {
-        isCanceled: true,
-        time: "16:00-17:00",
-        userImg: defaultImg,
-        detail: "잘 그려주세요.",
-        userName: "곰고구마",
-        userId: "1",
-        category: "멋진 그림",
-        color: "#D7CBF4",
-      },
-      {
-        isCanceled: true,
-        time: "16:00-17:00",
-        userImg: defaultImg,
-        detail: "잘 그려주세요.",
-        userName: "곰고구마",
-        userId: "1",
-        category: "멋진 그림",
-        color: "#D7CBF4",
-      },
-    ],
-  },
-  {
-    date: "10월 14일",
-    list: [
-      {
-        isCanceled: false,
-        detail: "멋지게 그려주세요.",
-        time: "12:00-13:00",
-        userImg: defaultImg,
-        userName: "곰고구마",
-        userId: "1",
-        category: "예쁜 그림",
-        color: "#F4F38A",
-      },
-      {
-        isCanceled: false,
-        detail: "귀엽게 그려주세요.",
-        time: "16:00-17:00",
-        userImg: defaultImg,
-        userName: "곰고구마",
-        userId: "1",
-        category: "멋진 그림",
-        color: "#D7CBF4",
-      },
-    ],
-  },
-  {
-    date: "10월 12일",
-    list: [
-      {
-        isCanceled: false,
-        detail: "멋지게 그려주세요.",
-        time: "12:00-13:00",
-        userImg: defaultImg,
-        userName: "곰고구마",
-        userId: "1",
-        category: "예쁜 그림",
-        color: "#F4F38A",
-      },
-      {
-        isCanceled: false,
-        detail: "귀엽게 그려주세요.",
-        time: "16:00-17:00",
-        userImg: defaultImg,
-        userName: "곰고구마",
-        userId: "1",
-        category: "멋진 그림",
-        color: "#D7CBF4",
-      },
-    ],
-  },
-  {
-    date: "10월 12일",
-    list: [
-      {
-        isCanceled: false,
-        detail: "멋지게 그려주세요.",
-        time: "12:00-13:00",
-        userImg: defaultImg,
-        userName: "곰고구마",
-        userId: "1",
-        category: "예쁜 그림",
-        color: "#F4F38A",
-      },
-      {
-        isCanceled: false,
-        detail: "귀엽게 그려주세요.",
-        time: "16:00-17:00",
-        userImg: defaultImg,
-        userName: "곰고구마",
-        userId: "1",
-        category: "멋진 그림",
-        color: "#D7CBF4",
-      },
-    ],
-  },
-];
+import { RootState } from "@modules/index";
+import { makeFormat } from "@components/Calendar/common/util";
+import { ReservationTypes } from "@components/types/types";
 
 const ReservationPage = () => {
-  const dispatch = useDispatch();
-  const onSetReservations = (reservations: object[]) => {
-    dispatch(setReservations(reservations));
-  };
+  const [reservations, setReservations] = useState<
+    Map<string, ReservationTypes[]>
+  >(new Map<string, ReservationTypes[]>());
+  const profile = useSelector((state: RootState) => state.profile.profile);
 
   useEffect(() => {
     // 첫 렌더링 시 현재 날짜로부터 15일 전후를 기간으로 요청한다.
     const date = new Date();
-    const startDate = new Date(
+    const start = new Date(
       date.getFullYear(),
       date.getMonth(),
       date.getDate() - 15
     );
-    const endDate = new Date(
+    const end = new Date(
       date.getFullYear(),
       date.getMonth(),
       date.getDate() + 15
     );
 
-    const startMonth = startDate.getMonth() + 1;
-    const endMonth = endDate.getMonth() + 1;
+    const sMonth = start.getMonth() + 1;
+    const eMonth = end.getMonth() + 1;
+    const sDate = start.getDate();
+    const eDate = end.getDate();
 
-    const dateParam = {
-      startDate: `${startDate.getFullYear()}${
-        startMonth >= 10 ? startMonth : "0" + startMonth
-      }${startDate.getDate()}`,
-      endDate: `${endDate.getFullYear()}${
-        endMonth >= 10 ? endMonth : "0" + endMonth
-      }${endDate.getDate()}`,
-    };
+    const startDate = `${start.getFullYear()}${makeFormat(
+      sMonth.toString()
+    )}${makeFormat(sDate.toString())}`;
+    const endDate = `${end.getFullYear()}${makeFormat(
+      eMonth.toString()
+    )}${makeFormat(eDate.toString())}`;
 
-    // 닉네임과 기간을 보내서 내 예약 목록을 요청한다.
-    // const response = getReservations("곰고구마", dateParam);
-    // console.log(response);
+    const map = new Map<string, ReservationTypes[]>();
+    getReservations(profile.nickname, startDate, endDate, (res: any) => {
+      res.data.reservationViewDtoList.map((item: ReservationTypes) => {
+        const obj = new Date(item.startDate);
+        const date =
+          obj.getFullYear().toString() +
+          makeFormat((obj.getMonth() + 1).toString()) +
+          makeFormat(obj.getDate().toString());
+
+        if (!map.has(date)) {
+          const arr: ReservationTypes[] = [];
+          map.set(date, arr);
+        }
+
+        map.get(date)?.push(item);
+      });
+      setReservations(new Map([...map].sort().reverse()));
+      console.log(map);
+    });
   }, []);
 
   return (
@@ -189,11 +72,19 @@ const ReservationPage = () => {
           <Period />
         </div>
         <div className={styles["reservations"]}>
-          {reservations.map((reservation, index) => (
+          {Array.from(reservations.keys()).map((item, index) => (
             <Reservation
               key={index}
-              date={reservation.date}
-              list={reservation.list}
+              date={`${item.substring(4, 6)}월 ${item.substring(6)}일`}
+              list={
+                reservations
+                  .get(item)
+                  ?.sort((a: ReservationTypes, b: ReservationTypes): number => {
+                    if (a.startDate > b.startDate) return 1;
+                    if (a.startDate < b.startDate) return -1;
+                    return 0;
+                  }) as ReservationTypes[]
+              }
             />
           ))}
         </div>
