@@ -183,12 +183,12 @@ const RegisterPage = () => {
   const onSubmit = () => {
     // 회원가입 API 요청
     postRegister(name, intro, phone, () => {
-      // 결과에 따라서 페이지 이동.
       const category = [
         { categoryName: "기본", color: "#D5EAEF", time: "0100" },
       ];
       registerCategory(category, () => {});
-      navigate(`/profile`);
+      // 회원가입 후 다시 로그인페이지로 이동
+      navigate(`/`);
     });
   };
 

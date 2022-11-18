@@ -1,6 +1,5 @@
 import styles from "@styles/Calendar/Calendar.module.scss";
 import Schedule from "@components/common/Schedule";
-import iljung from "@assets/defaultImg.png";
 import DetailInfo from "./DetailInfo";
 import {
   formatTime,
@@ -17,6 +16,7 @@ const UpcomingItem = ({ item }: InfoItemProps) => {
     nickname,
     phonenum,
     contents,
+    imagePath,
   } = item;
   const time = formatTime(startDate?.toString(), endDate?.toString());
 
@@ -29,7 +29,7 @@ const UpcomingItem = ({ item }: InfoItemProps) => {
         userId={nickname}
         userName={nickname}
         category={categoryName ?? "-"}
-        userImg={iljung}
+        userImg={imagePath}
         render={() => <DetailInfo phone={phonenum} desc={contents} />}
       />
     </div>
