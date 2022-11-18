@@ -1,4 +1,7 @@
-import { SettingCategoryState } from "@components/types/types";
+import {
+  AppointmentsTypes,
+  SettingCategoryState,
+} from "@components/types/types";
 
 // 카테고리 관련
 const SET_CATEGORY = "setting/SET_CATEGORY" as const;
@@ -6,12 +9,15 @@ const ADD_CATEGORY = "setting/ADD_CATEGORY" as const;
 const DEL_CATEGORY = "setting/DEL_CATEGORY" as const;
 const EDIT_CATEGORY = "setting/EDIT_CATEGORY" as const;
 const SELECT_CATEGORY = "setting/SELECT_CATEGORY" as const;
+const SET_LOCK = "setting/SET_LOCK" as const;
 const TOGGLE_LOCK = "setting/TOGGLE_LOCK" as const;
 
 // 달력 관련
+const SET_SHADE = "setting/SET_SHADE" as const;
 const TOGGLE_SHADE = "setting/TOGGLE_SHADE" as const;
 const LOCK_SHADE = "setting/LOCK_SHADE" as const;
 const DELETE_LOCK_SHADE = "setting/DELETE_LOCK_SHADE" as const;
+const SET_DELETE_SCHEDULE = "setting/SET_DELETE_SCHEDULE" as const;
 
 export const setCategory = (categories: SettingCategoryState[]) => ({
   type: SET_CATEGORY,
@@ -38,9 +44,19 @@ export const selectCategory = (category: SettingCategoryState) => ({
   payload: category,
 });
 
+export const setLock = (lock: boolean[]) => ({
+  type: SET_LOCK,
+  payload: lock,
+});
+
 export const toggleLock = (index: number) => ({
   type: TOGGLE_LOCK,
   payload: index,
+});
+
+export const setShade = (set: Set<string>) => ({
+  type: SET_SHADE,
+  payload: set,
 });
 
 export const toggleShade = (date: string) => ({
@@ -59,10 +75,15 @@ export const lockShade = (day: number, time: string) => ({
 export const deleteLockShade = (day: number, time: string, all?: boolean) => ({
   type: DELETE_LOCK_SHADE,
   payload: {
-    day: day,
-    time: time,
-    all: all,
+    day,
+    time,
+    all,
   },
+});
+
+export const setDeleteSchedule = (data: AppointmentsTypes) => ({
+  type: SET_DELETE_SCHEDULE,
+  payload: data,
 });
 
 type SettingAction =
@@ -71,10 +92,13 @@ type SettingAction =
   | ReturnType<typeof delCategory>
   | ReturnType<typeof editCategory>
   | ReturnType<typeof selectCategory>
+  | ReturnType<typeof setLock>
   | ReturnType<typeof toggleLock>
+  | ReturnType<typeof setShade>
   | ReturnType<typeof toggleShade>
   | ReturnType<typeof lockShade>
-  | ReturnType<typeof deleteLockShade>;
+  | ReturnType<typeof deleteLockShade>
+  | ReturnType<typeof setDeleteSchedule>;
 
 interface SettingState {
   // 카테고리 관련 상태
@@ -84,14 +108,25 @@ interface SettingState {
   lock: boolean[];
   set: Set<string>;
   lockMap: Map<number, string[]>; // 요일, 시간
+  deleteItem: AppointmentsTypes;
 }
 
 const initialState: SettingState = {
-  categories: [{ categoryName: "기본", color: "#D5EAEF", time: "0100" }],
+  categories: [],
   selectedCategory: { categoryName: "", color: "", time: "" },
   lock: [false, false, false, false, false, false, false],
   set: new Set<string>(),
   lockMap: new Map<number, string[]>(),
+  deleteItem: {
+    id: 0,
+    categoryName: "",
+    nickname: "",
+    phonenum: "",
+    color: "",
+    contents: "",
+    startDate: "",
+    endDate: "",
+  },
 };
 
 function setting(
@@ -130,14 +165,28 @@ function setting(
         ...state,
         selectedCategory: action.payload,
       };
+    case SET_LOCK:
+      return {
+        ...state,
+        lock: action.payload,
+      };
     case TOGGLE_LOCK:
       return {
         ...state,
         lock: state.lock.map((day, index) => {
           if (index === action.payload) return !day;
+
           return day;
         }),
       };
+    case SET_SHADE: {
+      const copy: Set<string> = new Set<string>(action.payload);
+
+      return {
+        ...state,
+        set: copy,
+      };
+    }
     case TOGGLE_SHADE: {
       const copy: Set<string> = new Set<string>(state.set);
       if (copy.has(action.payload)) copy.delete(action.payload);
@@ -187,6 +236,11 @@ function setting(
         lockMap: copy,
       };
     }
+    case SET_DELETE_SCHEDULE:
+      return {
+        ...state,
+        deleteItem: action.payload,
+      };
     default:
       return state;
   }

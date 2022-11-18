@@ -31,6 +31,8 @@
 .bottom {
   & img {
     width: 50%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
     border-radius: 30px;
     border: 1.5px solid #fff;
     cursor: pointer;

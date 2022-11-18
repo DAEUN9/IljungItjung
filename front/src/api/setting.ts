@@ -18,4 +18,8 @@ const blockSchedule = (
   api.post(`/reservations/block`, { days, blockList }).then(success);
 };
 
-export { registerCategory, blockSchedule };
+const deleteSchedule = (scheduleId: number, reason: string, success: any) => {
+  api.delete(`/reservations/${scheduleId}?reason=${reason}`).then(success);
+};
+
+export { registerCategory, blockSchedule, deleteSchedule };

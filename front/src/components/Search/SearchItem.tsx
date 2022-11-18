@@ -9,14 +9,6 @@ import { useEffect } from "react";
 const SearchItem = (props: SearchState) => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log("props", props);
-  });
-
-  useEffect(() => {
-    console.log("props", props);
-  });
-
   const handleClick = () => {
     dispatch(selectUser({ ...props }));
   };

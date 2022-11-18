@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoHelpCircleOutline } from "react-icons/io5";
-import { Fab, IconButton, Tab, Tabs } from "@mui/material";
+import { Fab, IconButton, Tab, Tabs, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { BsQuestionLg } from "react-icons/bs";
 import { ThemeProvider } from "@emotion/react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Sidebar from "@components/common/Sidebar";
 import styles from "@styles/Setting/Setting.module.scss";
@@ -24,7 +24,17 @@ import {
 import { CategoryTooltip } from "@components/Setting/Category/CategoryTooltip";
 import { blockSchedule, registerCategory } from "@api/setting";
 import { RootState } from "@modules/index";
-import { BlockListTypes } from "@components/types/types";
+import { AppointmentsTypes, BlockListTypes } from "@components/types/types";
+import { getSchedule } from "@api/calendar";
+import DeleteModal from "@components/Setting/DeleteModal";
+import {
+  lockShade,
+  selectCategory,
+  setCategory,
+  setLock,
+  setShade,
+} from "@modules/setting";
+import { getFullStringFromDate } from "@components/Calendar/common/util";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -48,14 +58,45 @@ interface SettingApiData {
 }
 
 const SettingPage = () => {
-  const [tab, setTab] = useState(0);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const [tab, setTab] = useState(0);
   const [saveOpen, setSaveOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
+  const [appointments, setAppointments] = useState<AppointmentsTypes[]>([]);
   const { categories, set, lock } = useSelector(
     (state: RootState) => state.setting
   );
+  const profile = useSelector((state: RootState) => state.profile.profile);
+
+  useEffect(() => {
+    getSchedule(profile.nickname, (res: any) => {
+      const { acceptList, categoryList, blockDayList, blockList } = res.data;
+      console.log(res.data);
+      setAppointments(acceptList);
+      dispatch(setCategory(categoryList));
+      dispatch(setLock(blockDayList));
+
+      const tempSet = new Set<string>();
+      blockList.map((block: any) => {
+        const start = new Date(block.startDate);
+        const end = new Date(block.endDate);
+        const time = getFullStringFromDate(start, end);
+        tempSet.add(time);
+
+        const day = start.getDay();
+        if (lock[(day + 6) % 7]) {
+          dispatch(lockShade(day, time));
+        }
+      });
+      dispatch(setShade(tempSet));
+    });
+  }, []);
+
+  const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
+    setTab(newValue);
+  };
 
   const handleSubmit = () => {
     setSaveOpen(false);
@@ -79,11 +120,9 @@ const SettingPage = () => {
       console.log(res.data);
     });
 
-    // navigate("/calendar/my");
-  };
+    dispatch(selectCategory({ categoryName: "", time: "", color: "" }));
 
-  const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
+    navigate("/calendar/my");
   };
 
   return (
@@ -91,7 +130,7 @@ const SettingPage = () => {
       <Sidebar />
       <div className={styles.content}>
         <div className={styles["calendar-container"]}>
-          <SetCalendar />
+          <SetCalendar appointments={appointments} />
           <ThemeProvider theme={theme}>
             <CalendarTooltip title={TooltipContent()}>
               <div className={styles["fab-wrapper"]}>
@@ -101,6 +140,7 @@ const SettingPage = () => {
               </div>
             </CalendarTooltip>
           </ThemeProvider>
+          <DeleteModal />
         </div>
         <div className={styles.right}>
           <div className={styles["button-group"]}>
@@ -139,7 +179,7 @@ const SettingPage = () => {
             setOpen={setCancelOpen}
             cancelLabel="취소"
             confirmLabel="확인"
-            handleConfirm={handleSubmit}
+            handleConfirm={() => navigate("/calendar/my")}
             children={
               <div className={styles["modal-content"]}>
                 <div className={styles.img}>

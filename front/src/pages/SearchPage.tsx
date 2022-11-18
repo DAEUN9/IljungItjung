@@ -1,7 +1,8 @@
 import { IoSearchOutline } from "react-icons/io5";
-import { IconButton, InputBase } from "@mui/material";
+import { IconButton, InputBase, Snackbar } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@modules/index";
 
 import Sidebar from "@components/common/Sidebar";
 import SearchResult from "@components/Search/SearchResult";
@@ -10,7 +11,6 @@ import SearchItem from "@components/Search/SearchItem";
 import { getSearchList } from "@api/search";
 import { SearchState } from "@components/types/types";
 import { selectUser } from "@modules/search";
-import { RootState } from "@modules/index";
 
 interface SearchApiData {
   status: string;
@@ -31,6 +31,7 @@ const SearchPage = () => {
 
   const [search, setSearch] = useState("");
   const [searchList, setSearchList] = useState<SearchState[]>([]);
+  const [snackbar, setSnackbar] = useState(false);
   const selectedName = useSelector((state: RootState) => state.search.nickname);
 
   useEffect(() => {
@@ -52,9 +53,18 @@ const SearchPage = () => {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === "Enter") {
-      getSearchList(search, (res: SearchApiData) => {
-        setSearchList(res.data.users);
-      });
+      if (search.length < 2) {
+        setSnackbar(true);
+        setSearchList([]);
+      } else {
+        getSearchList(
+          search,
+          (res: SearchApiData) => {
+            setSearchList(res.data.users);
+          },
+          (err: any) => setSearchList([])
+        );
+      }
     }
   };
 
@@ -100,6 +110,13 @@ const SearchPage = () => {
           )}
         </div>
       </div>
+      <Snackbar
+        open={snackbar}
+        autoHideDuration={3000}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        onClose={() => setSnackbar(false)}
+        message="두 글자 이상 입력해 주세요."
+      />
     </div>
   );
 };

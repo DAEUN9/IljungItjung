@@ -102,7 +102,7 @@ export const getFullStringFromDate = (time: Date, endTime: Date) => {
 
   const day = time.getDay().toString();
   const year = time.getFullYear().toString();
-  const month = makeFormat(time.getMonth().toString());
+  const month = makeFormat((time.getMonth() + 1).toString());
   const date = makeFormat(time.getDate().toString());
   const hour = makeFormat(time.getHours().toString());
   const min = makeFormat(time.getMinutes().toString());
@@ -128,4 +128,34 @@ export const getFullDate = (date: SchedulerDateTime | undefined) => {
         "일"
       );
   }
+};
+
+// 이번주 일정 중에서 오늘 날짜보다 큰 것만 표시
+export const parseList = (list: SchedulerDate[] | undefined) => {
+  if (!list) return [];
+
+  const plus = [0, 6, 5, 4, 3, 2, 1];
+
+  let parsed: SchedulerDate[] = [];
+  const today = new Date();
+  const lastDay = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() + plus[today.getDay()]
+  );
+  lastDay.setHours(23);
+  lastDay.setMinutes(59);
+
+  for (let item of list) {
+    const { startDate } = item;
+    if (!startDate) continue;
+
+    const start = new Date(startDate);
+
+    if (start >= today && start <= lastDay) {
+      parsed.push(item);
+    }
+  }
+
+  return parsed;
 };
