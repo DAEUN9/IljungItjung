@@ -14,6 +14,7 @@ import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
@@ -36,7 +37,12 @@ public class ScheduleServiceImpl implements ScheduleService{
             throw new NoExistUserException();
         });
 
-        boolean viewMySchedule = checkSamePerson(userFrom, userTo);
+        return makeScheduleViewResponseDto(userFrom, userTo, startDate, endDate);
+    }
+
+    private ScheduleViewResponseDto makeScheduleViewResponseDto(User userFrom, User userTo, String startDate, String endDate){
+
+        boolean viewMySchedule = checkSameUser(userFrom, userTo);
         boolean validDate = validDateCheck(startDate, endDate);
 
         startDate+="0000";
@@ -45,49 +51,6 @@ public class ScheduleServiceImpl implements ScheduleService{
         Date startDateFormat = makeDateFormat(validDate, startDate);
         Date endDateFormat = makeDateFormat(validDate, endDate);
 
-        return makeScheduleViewResponseDto(viewMySchedule, validDate, userTo, startDateFormat, endDateFormat);
-    }
-
-    @Override
-    public ScheduleViewDetailResponseDto scheduleViewDetail(Long id) {
-        Schedule schedule = scheduleRepository.findScheduleById(id).orElseThrow(()->{
-            throw new NoExistScheduleDetailException();
-        });
-        return new ScheduleViewDetailResponseDto(schedule);
-    }
-
-    private boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){
-        return schedule.getStartDate().before(startDateFormat)
-                || schedule.getEndDate().before(startDateFormat)
-                || schedule.getStartDate().after(endDateFormat)
-                || schedule.getEndDate().after(endDateFormat);
-    }
-
-    private boolean checkSamePerson(User userFrom, User userTo){
-        return userFrom.getId()==userTo.getId();
-    }
-
-    private boolean validDateCheck(String startDate, String endDate){
-        return startDate!=null && endDate != null;
-    }
-
-    private Date makeDateFormat(boolean validDate, String date){
-        Date dateFormat = new Date();
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-
-        if(validDate){
-            try{
-                dateFormat = formatter.parse(date);
-            }catch (Exception e){
-                throw new DateFormatErrorException();
-            }
-        }
-
-        return dateFormat;
-    }
-
-    private ScheduleViewResponseDto makeScheduleViewResponseDto(boolean viewMySchedule, boolean validDate, User userTo, Date startDateFormat, Date endDateFormat){
         List<Schedule> scheduleList = scheduleRepository.findByUserTo_IdIs(userTo.getId());
 
         List<ScheduleViewDto> requestList = new ArrayList<>();
@@ -117,5 +80,44 @@ public class ScheduleServiceImpl implements ScheduleService{
                 blockList,
                 cancelList,
                 blockDayList);
+    }
+
+    private boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){
+        return schedule.getStartDate().before(startDateFormat)
+                || schedule.getEndDate().before(startDateFormat)
+                || schedule.getStartDate().after(endDateFormat)
+                || schedule.getEndDate().after(endDateFormat);
+    }
+
+    private boolean checkSameUser(User userFrom, User userTo){
+        return userFrom.getId()==userTo.getId();
+    }
+
+    private boolean validDateCheck(String startDate, String endDate){
+        return StringUtils.hasText(startDate) && StringUtils.hasText(endDate);
+    }
+
+    private Date makeDateFormat(boolean validDate, String date){
+        Date dateFormat = new Date();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+
+        if(validDate){
+            try{
+                dateFormat = formatter.parse(date);
+            }catch (Exception e){
+                throw new DateFormatErrorException();
+            }
+        }
+
+        return dateFormat;
+    }
+
+    @Override
+    public ScheduleViewDetailResponseDto scheduleViewDetail(Long id) {
+        Schedule schedule = scheduleRepository.findScheduleById(id).orElseThrow(()->{
+            throw new NoExistScheduleDetailException();
+        });
+        return new ScheduleViewDetailResponseDto(schedule);
     }
 }
