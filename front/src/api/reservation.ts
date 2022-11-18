@@ -12,5 +12,8 @@ function getReservations(startDate: string, endDate: string, success: any) {
 }
 
 // 취소 요청
+function cancelReservation(id: number, reason: string, success: any) {
+  api.put(`/reservations/${id}`, { accept: false, reason }).then(success);
+}
 
-export { getReservations };
+export { getReservations, cancelReservation };
