@@ -21,10 +21,15 @@ public class SignUpDto {
     @Size(min = 0, max = 50, message = "한줄소개는 최소 0자, 최대 50자만 가능합니다.")
     private String introduction;
 
+    @NotBlank(message = "전화번호는 필수 입력 값입니다.")
+    @Pattern(regexp = "^01\\d{8,9}$", message = "전화번호는 01로 시작하고 10~11자리의 숫자만 입력가능합니다.")
+    private String phonenum;
+
     public User toEntity(){
         return User.builder()
                 .nickname(this.nickname)
                 .introduction(this.introduction)
+                .phonenum(this.phonenum)
                 .build();
     }
 }

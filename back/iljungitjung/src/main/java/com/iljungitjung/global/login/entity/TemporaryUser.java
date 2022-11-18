@@ -1,5 +1,7 @@
 package com.iljungitjung.global.login.entity;
 
+import com.iljungitjung.domain.user.dto.SignUpDto;
+import com.iljungitjung.global.login.exception.NotMatchPhonenumException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,10 +19,22 @@ public class TemporaryUser {
     private String email;
 
     private String profileImg;
+    private String phonenum;
     @Builder
-    public TemporaryUser(String id, String email, String profileImg){
+    public TemporaryUser(String id, String email, String profileImg, String phonenum){
         this.id = id;
         this.email = email;
         this.profileImg = profileImg;
+        this.phonenum = phonenum;
+    }
+
+    public void setPhonenum(String phonenum) {
+        this.phonenum = phonenum;
+    }
+
+    public void matchPhonenum(SignUpDto signUpDto) {
+        if (!signUpDto.getPhonenum().equals(phonenum)) {
+            throw new NotMatchPhonenumException();
+        }
     }
 }

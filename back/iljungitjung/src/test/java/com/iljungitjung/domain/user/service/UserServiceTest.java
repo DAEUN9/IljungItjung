@@ -61,14 +61,15 @@ public class UserServiceTest {
         String id = "1";
         String email = "email@naver.com";
         String profileImg = "profile_img";
+        String phonenume = "01012341234";
 
         Long userId = 1L;
 
-        SignUpDto signUpDto = new SignUpDto(nickname, introduction);
+        SignUpDto signUpDto = new SignUpDto(nickname, introduction, phonenume);
 
         User user = signUpDto.toEntity();
         user.setId(userId);
-        Optional<TemporaryUser> temporaryUser = Optional.of(new TemporaryUser(id, email, profileImg));
+        Optional<TemporaryUser> temporaryUser = Optional.of(new TemporaryUser(id, email, profileImg, phonenume));
 
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
 

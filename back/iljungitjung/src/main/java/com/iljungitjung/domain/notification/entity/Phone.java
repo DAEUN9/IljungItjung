@@ -25,21 +25,21 @@ public class Phone {
         this.phonenum = phonenum;
     }
 
-    public boolean checkCorrect(PhoneConfirmRequestDto requestDto) {
-        return checkPhonenum(requestDto.getPhonenum()) && checkRandomNumber(requestDto.getRandomNumber());
+    public void checkCorrect(PhoneConfirmRequestDto requestDto) {
+        checkPhonenum(requestDto.getPhonenum());
+        checkRandomNumber(requestDto.getRandomNumber());
     }
 
-    private boolean checkPhonenum(String phonenum) {
-        if(!this.phonenum.equals(phonenum)) {
+    private void checkPhonenum(String other) {
+        if(!phonenum.equals(other)) {
             throw new IncorrectPhonenumException();
         }
-        return this.phonenum.equals(phonenum);
     }
 
-    private boolean checkRandomNumber(String randomNumber) {
-        if(!this.randomNumber.equals(randomNumber)) {
+    private void checkRandomNumber(String other) {
+        if(!randomNumber.equals(other)) {
             throw new IncorrectRandomNumberException();
         }
-        return this.randomNumber.equals(randomNumber);
     }
+
 }
