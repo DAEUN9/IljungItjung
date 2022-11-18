@@ -5,7 +5,11 @@ import { Scheduler } from "@devexpress/dx-react-scheduler-material-ui";
 import Paper from "@mui/material/Paper";
 
 import { RootState } from "@modules/index";
-import { setRequestList, setScheduleList } from "@modules/mycalendar";
+import {
+  setBlockList,
+  setRequestList,
+  setScheduleList,
+} from "@modules/mycalendar";
 import "@styles/Calendar/CustomCalendar.css";
 import styles from "@styles/Calendar/Calendar.module.scss";
 import CustomWeekView from "@components/Calendar/common/CustomWeekView";
@@ -30,13 +34,13 @@ const MyCalendar = () => {
       getSchedule(profile.nickname, (res: ScheduleApiData) => {
         const { acceptList, requestList, blockList, blockDayList } = res.data;
         console.log(res.data);
-        
+
         // 일정 목록 설정
         dispatch(setScheduleList(acceptList));
         // 요청 목록 설정
         dispatch(setRequestList(requestList));
         // 블락 설정
-
+        dispatch(setBlockList(blockList, blockDayList));
       });
     }
   }, [profile]);
