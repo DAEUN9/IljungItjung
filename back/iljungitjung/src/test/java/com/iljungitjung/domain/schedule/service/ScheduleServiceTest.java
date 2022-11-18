@@ -8,6 +8,7 @@ import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
+import com.iljungitjung.domain.user.entity.BlockDays;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
@@ -291,7 +292,6 @@ class ScheduleServiceTest{
                 .color(categoryColor)
                 .time(time)
                 .build();
-        category.setId(categoryId);
 
         return category;
     }
@@ -301,6 +301,7 @@ class ScheduleServiceTest{
 
         User userFrom = User.builder().nickname(nickname).build();
         userFrom.setId(userFromId);
+        userFrom.setBlockDays(new BlockDays());
 
         return userFrom;
     }
@@ -315,6 +316,7 @@ class ScheduleServiceTest{
         List<Category> categoryList = new ArrayList<>();
         categoryList.add(createCategory());
         userTo.setCategoryList(categoryList);
+        userTo.setBlockDays(new BlockDays());
 
         return userTo;
     }

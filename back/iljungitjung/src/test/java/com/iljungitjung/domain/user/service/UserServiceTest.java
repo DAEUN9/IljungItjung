@@ -1,11 +1,9 @@
 package com.iljungitjung.domain.user.service;
 
 import com.iljungitjung.domain.category.entity.Category;
-import com.iljungitjung.domain.user.dto.SignUpDto;
-import com.iljungitjung.domain.user.dto.SignUpUserResponseDto;
-import com.iljungitjung.domain.user.dto.UserInfo;
-import com.iljungitjung.domain.user.dto.UserInfoList;
+import com.iljungitjung.domain.user.dto.*;
 import com.iljungitjung.domain.user.entity.User;
+import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
 import com.iljungitjung.domain.user.service.UserServiceImpl;
@@ -27,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -63,14 +61,15 @@ public class UserServiceTest {
         String id = "1";
         String email = "email@naver.com";
         String profileImg = "profile_img";
+        String phonenume = "01012341234";
 
         Long userId = 1L;
 
-        SignUpDto signUpDto = new SignUpDto(nickname, introduction);
+        SignUpDto signUpDto = new SignUpDto(nickname, introduction, phonenume);
 
         User user = signUpDto.toEntity();
         user.setId(userId);
-        Optional<TemporaryUser> temporaryUser = Optional.of(new TemporaryUser(id, email, profileImg));
+        Optional<TemporaryUser> temporaryUser = Optional.of(new TemporaryUser(id, email, profileImg, phonenume));
 
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
 
@@ -230,5 +229,60 @@ public class UserServiceTest {
         assertEquals(result.getUsers().get(0).getNickname(), firstUserNickname);
         assertEquals(result.getUsers().get(1).getNickname(), secondUserNickname);
         assertEquals(result.getUsers().get(2).getNickname(), thirdUserNickname);
+    }
+
+    @Test
+    @DisplayName("사용자 정보 업데이트")
+    void updateUserTest(){
+        String sessionId = "sessionId";
+        String originUserNickname = "originNickname";
+        String originUserIntroduction = "originIntroduction";
+        String originUserDescription = "originDescription";
+
+        String email = "email@email";
+
+        RedisUser redisUser = RedisUser.builder()
+                .nickname(originUserNickname)
+                .email(email)
+                .build();
+
+        User user = User.builder()
+                .nickname(originUserDescription)
+                .introduction(originUserIntroduction)
+                .description(originUserDescription)
+                .build();
+
+        String updateNickname = "updateNickname";
+        String updateIntroduction = "updateIntroduction";
+        String updateDescription = "updateDescription";
+        UpdateUser updateUserDto = new UpdateUser(updateNickname, updateIntroduction, updateDescription);
+
+        when(redisUserRepository.findById(any())).thenReturn(Optional.ofNullable(redisUser));
+        when(userRepository.findUserByEmail(email)).thenReturn(Optional.ofNullable(user));
+
+        userService.updateUser(updateUserDto, httpSession);
+
+        assertEquals(updateNickname, user.getNickname());
+        assertEquals(updateIntroduction, user.getIntroduction());
+        assertEquals(updateDescription, user.getDescription());
+    }
+
+    @Test
+    @DisplayName("사용자 닉네임 중복시 AlreadyExistUserException 에러 발생")
+    void isExistNicknameTest(){
+        String existNickname = "existNickname";
+
+        when(userRepository.existsUserByNickname(existNickname)).thenReturn(true);
+
+        assertThrows(AlreadyExistUserException.class, () -> userService.isExistUserByNickname(existNickname));
+    }
+
+    @Test
+    @DisplayName("사용자 닉네임이 중복이 아닐시 그냥 종료")
+    void isNotExistNicknameTest(){
+        String notExistNickname = "notExistNickname";
+
+        when(userRepository.existsUserByNickname(notExistNickname)).thenReturn(false);
+        userService.isExistUserByNickname(notExistNickname);
     }
 }

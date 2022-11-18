@@ -2,12 +2,10 @@ package com.iljungitjung.domain.schedule.dto.reservation;
 
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
-import com.iljungitjung.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -16,26 +14,20 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReservationBlockRequestDto {
+public class ReservationBlockDto {
 
-    @NotNull(message = "block는 true 또는 false 입니다.")
-    private boolean block;
-
-    @Size(min=8, max=8, message = "date 형식을 맞춰주세요 (ex.20221017)")
-    @Pattern(regexp = "^[0-9]+$", message = "date는 숫자만 입력가능합니다.")
+    @Pattern(regexp = "^[0-9]{8}$", message = "startDate는 8자리 숫자만 입력가능합니다. (ex.20221017)")
     private String date;
 
-    @Size(min=4, max=4, message = "startTime 형식을 맞춰주세요 (ex.1500)")
-    @Pattern(regexp = "^[0-9]+$", message = "startTime은 숫자만 입력가능합니다.")
+    @Pattern(regexp = "^[0-9]{4}$", message = "startTime은 4자리 숫자만 입력가능합니다. (ex.1500)")
     private String startTime;
 
-    @Size(min=4, max=4, message = "endTime 형식을 맞춰주세요 (ex.1500)")
-    @Pattern(regexp = "^[0-9]+$", message = "endTime은 숫자만 입력가능합니다.")
+    @Pattern(regexp = "^[0-9]{4}$", message = "endTime은 4자리 숫자만 입력가능합니다. (ex.1500)")
     private String endTime;
 
     public Schedule toEntity(Date startDate, Date endDate) {
         return Schedule.builder()
-                .block(block)
+                .categoryName("block")
                 .startDate(startDate)
                 .endDate(endDate)
                 .type(Type.BLOCK)

@@ -2,7 +2,6 @@ package com.iljungitjung.domain.schedule.service;
 
 import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
-import com.iljungitjung.domain.category.exception.NoGrantDeleteCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.schedule.dto.reservation.*;
@@ -14,9 +13,7 @@ import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
-import com.iljungitjung.global.login.repository.RedisUserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -36,7 +33,7 @@ public class ReservationServiceImpl implements ReservationService{
 
     private final UserRepository userRepository;
     private final UserService userService;
-    private final NotificationService notificasionService;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -48,7 +45,7 @@ public class ReservationServiceImpl implements ReservationService{
             throw new NoExistUserException();
         });
 
-        Category category = categoryRepository.findByCategoryNameAndUser_Email(reservationRequestDto.getCategoryName(), user.getEmail()).orElseThrow(() -> {
+        Category category = categoryRepository.findByCategoryNameAndUser_Email(reservationRequestDto.getCategoryName(), userTo.getEmail()).orElseThrow(() -> {
             throw new NoExistCategoryException();
         });
 
@@ -74,7 +71,7 @@ public class ReservationServiceImpl implements ReservationService{
         schedule.setScheduleResponseList(userTo);
 
         schedule = scheduleRepository.save(schedule);
-        notificasionService.autoReservationMessage(schedule);
+        notificationService.autoReservationMessage(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -107,7 +104,7 @@ public class ReservationServiceImpl implements ReservationService{
         }else{
             throw new NoGrantAccessScheduleException();
         }
-        notificasionService.autoReservationMessage(schedule);
+        notificationService.autoReservationMessage(schedule);
         return new ReservationIdResponseDto(schedule.getId());
     }
 
@@ -122,31 +119,44 @@ public class ReservationServiceImpl implements ReservationService{
 
         if(!checkSamePerson(user, schedule.getUserTo())) throw new NoGrantDeleteScheduleException();
 
-        scheduleRepository.delete(schedule);
         schedule.deleted();
-        notificasionService.autoReservationMessage(schedule);
+        notificationService.autoReservationMessage(schedule);
     }
 
     @Override
     @Transactional
-    public ReservationIdResponseDto reservationBlock(ReservationBlockRequestDto reservationBlockRequestDto, HttpSession httpSession) {
+    public ReservationBlockResponseDto reservationBlock(ReservationBlockListRequestDto reservationBlockListRequestDto, HttpSession httpSession) {
+        Long count = 0L;
         User user = userService.findUserBySessionId(httpSession);
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
-        Date startDate;
-        Date endDate;
-        try{
-            startDate = formatter.parse(reservationBlockRequestDto.getDate()+reservationBlockRequestDto.getStartTime());
-            endDate = formatter.parse(reservationBlockRequestDto.getDate()+reservationBlockRequestDto.getEndTime());
-        }catch (Exception e){
-            throw new DateFormatErrorException();
+        List<Schedule> scheduleList = scheduleRepository.findByUserTo_IdIs(user.getId());
+
+        for(Schedule schedule : scheduleList){
+
+            if(schedule.getType().equals(Type.BLOCK)){
+                scheduleRepository.delete(schedule);
+            }
         }
 
-        Schedule schedule = reservationBlockRequestDto.toEntity(startDate, endDate);
-        schedule.setScheduleResponseList(user);
-        schedule = scheduleRepository.save(schedule);
+        user.updateBlockDays(reservationBlockListRequestDto.getDays());
 
-        return new ReservationIdResponseDto(schedule.getId());
+        for(ReservationBlockDto reservationBlockDto : reservationBlockListRequestDto.getBlockList()){
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmm");
+            Date startDate;
+            Date endDate;
+            try{
+                startDate = formatter.parse(reservationBlockDto.getDate()+reservationBlockDto.getStartTime());
+                endDate = formatter.parse(reservationBlockDto.getDate()+reservationBlockDto.getEndTime());
+            }catch (Exception e){
+                throw new DateFormatErrorException();
+            }
+            Schedule schedule = reservationBlockDto.toEntity(startDate, endDate);
+            schedule.setScheduleResponseList(user);
+            scheduleRepository.save(schedule);
+
+            count++;
+        }
+        return new ReservationBlockResponseDto(count);
 
     }
 
@@ -198,4 +208,3 @@ public class ReservationServiceImpl implements ReservationService{
         return false;
     }
 }
-

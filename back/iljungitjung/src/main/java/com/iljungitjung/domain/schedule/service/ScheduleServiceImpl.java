@@ -13,7 +13,6 @@ import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -45,6 +44,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         List<ScheduleBlockDto> blockList = new ArrayList<>();
         List<ScheduleCancelDto> cancelList = new ArrayList<>();
         List<CategoryViewResponseDto> categoryList = new ArrayList<>();
+        List<Boolean> blockDayList = new ArrayList<>();
 
         boolean myScheduleView = false;
         boolean validDate = true;
@@ -84,7 +84,9 @@ public class ScheduleServiceImpl implements ScheduleService{
             categoryList.add(new CategoryViewResponseDto(category));
         }
 
-        ScheduleViewResponseDto responseDtos = new ScheduleViewResponseDto(categoryList, requestList, acceptList, blockList, cancelList);
+        blockDayList = userTo.getBlockDays();
+
+        ScheduleViewResponseDto responseDtos = new ScheduleViewResponseDto(categoryList, requestList, acceptList, blockList, cancelList, blockDayList);
 
         return responseDtos;
     }

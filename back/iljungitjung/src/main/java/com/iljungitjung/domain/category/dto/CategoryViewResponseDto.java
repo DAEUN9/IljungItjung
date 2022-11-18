@@ -1,14 +1,14 @@
 package com.iljungitjung.domain.category.dto;
 
 import com.iljungitjung.domain.category.entity.Category;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 public class CategoryViewResponseDto {
 
      private final Long id;
 
-    private final String cateogryName;
+    private final String categoryName;
 
     private final String color;
 
@@ -16,7 +16,7 @@ public class CategoryViewResponseDto {
 
     public CategoryViewResponseDto(Category category) {
         this.id=category.getId();
-        this.cateogryName=category.getCategoryName();
+        this.categoryName=category.getCategoryName();
         this.color= category.getColor();
         this.time=category.getTime();
     }

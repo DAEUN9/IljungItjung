@@ -15,7 +15,6 @@ public class NotificationMessageRequestDto {
     private String type;
     @JsonProperty("from")
     private String from;
-    // 추후 LMS 기준으로 변경
     @JsonProperty("content")
     private String content;
     @JsonProperty("messages")
@@ -28,4 +27,5 @@ public class NotificationMessageRequestDto {
         this.content = "기본메시지";
         this.messages = requestDto.getMessages();
     }
+
 }

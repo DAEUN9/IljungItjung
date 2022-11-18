@@ -26,4 +26,7 @@ public interface UserService {
     void deleteUserByEmail(String email);
 
     void updateUser(UpdateUser updateUser, HttpSession session);
+
+    void isExistUserByNickname(String nickname);
 }
+

@@ -18,12 +18,11 @@ public class ScheduleViewDetailResponseDto {
     private final String phonenum;
 
     public ScheduleViewDetailResponseDto(Schedule schedule){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
         this.id=schedule.getId();
         this.categoryName=schedule.getCategoryName();
         this.contents=schedule.getContents();
-        this.startDate=simpleDateFormat.format(schedule.getStartDate());
-        this.endDate=simpleDateFormat.format(schedule.getEndDate());
+        this.startDate=schedule.getDateFormat(schedule.getStartDate());
+        this.endDate= schedule.getDateFormat(schedule.getEndDate());
         this.phonenum=schedule.getPhonenum();
     }
 }

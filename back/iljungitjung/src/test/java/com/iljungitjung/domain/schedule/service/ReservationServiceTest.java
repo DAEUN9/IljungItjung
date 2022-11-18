@@ -8,6 +8,7 @@ import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
+import com.iljungitjung.domain.user.entity.BlockDays;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import com.iljungitjung.domain.user.service.UserService;
@@ -220,9 +221,9 @@ public class ReservationServiceTest{
 
         //given
         User userTo = createUserToWithCategoryList();
+        userTo.setBlockDays(new BlockDays());
 
         Long scheduleId = 1L;
-        boolean block = false;
         String date="20221017";
         String startTime = "1500";
         String endTime = "1630";
@@ -237,19 +238,31 @@ public class ReservationServiceTest{
             throw new DateFormatErrorException();
         }
 
-        ReservationBlockRequestDto reservationBlockRequestDto = new ReservationBlockRequestDto(block, date, startTime, endTime);
+        List<Boolean> days = new ArrayList<>();
+        for(int i=0;i<7;i++) days.add(false);
+
+        ReservationBlockDto reservationBlockRequestDto = new ReservationBlockDto(date, startTime, endTime);
 
         Schedule schedule = reservationBlockRequestDto.toEntity(startDateFormat, endDateFormat);
         schedule.setId(scheduleId);
 
+        List<Schedule> scheduleList = new ArrayList<>();
+        scheduleList.add(schedule);
+
+        List<ReservationBlockDto> reservationBlockDtoList = new ArrayList<>();
+        reservationBlockDtoList.add(reservationBlockRequestDto);
+
+        ReservationBlockListRequestDto reservationBlockListRequestDto = new ReservationBlockListRequestDto(days, reservationBlockDtoList);
+
         //when
         when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userTo);
         when(scheduleRepository.save(any(Schedule.class))).thenReturn(schedule);
+        when(scheduleRepository.findByUserTo_IdIs(any(Long.class))).thenReturn(scheduleList);
 
-        ReservationIdResponseDto reservationIdResponseDto = reservationService.reservationBlock(reservationBlockRequestDto, httpSession);
+        ReservationBlockResponseDto reservationBlockResponseDto = reservationService.reservationBlock(reservationBlockListRequestDto, httpSession);
 
         //then
-        Assertions.assertEquals(1L, reservationIdResponseDto.getId());
+        Assertions.assertEquals(1L, reservationBlockResponseDto.getCount());
 
     }
     private Schedule createSchedule() {
@@ -278,7 +291,6 @@ public class ReservationServiceTest{
         return schedule;
     }
     private Category createCategory(){
-        Long categoryId = 1L;
         String categoryName = "categoryName";
         String categoryColor = "#000000";
         String time = "0130";
@@ -288,7 +300,6 @@ public class ReservationServiceTest{
                 .color(categoryColor)
                 .time(time)
                 .build();
-        category.setId(categoryId);
 
         return category;
     }

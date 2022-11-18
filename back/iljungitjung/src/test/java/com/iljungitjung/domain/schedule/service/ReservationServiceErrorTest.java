@@ -4,13 +4,15 @@ import com.iljungitjung.domain.category.entity.Category;
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
 import com.iljungitjung.domain.category.repository.CategoryRepository;
 import com.iljungitjung.domain.notification.service.NotificationService;
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockRequestDto;
+import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockDto;
+import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockListRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.domain.schedule.exception.*;
 import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
+import com.iljungitjung.domain.user.entity.BlockDays;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
@@ -196,14 +198,23 @@ public class ReservationServiceErrorTest {
     void inputDateErrorWhenBlockSchedule(){
         //given
         User userFrom = User.builder().build();
-        ReservationBlockRequestDto reservationBlockRequestDto = new ReservationBlockRequestDto();
+        userFrom.setBlockDays(new BlockDays());
 
+        List<Boolean> days = new ArrayList<>();
+        for(int i=0;i<7;i++) days.add(false);
+
+        ReservationBlockDto reservationBlockRequestDto = new ReservationBlockDto(null, null, null);
+
+        List<ReservationBlockDto> reservationBlockDtoList = new ArrayList<>();
+        reservationBlockDtoList.add(reservationBlockRequestDto);
+
+        ReservationBlockListRequestDto reservationBlockListRequestDto = new ReservationBlockListRequestDto(days, reservationBlockDtoList);
         //when
         when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userFrom);
 
         //then
         Assertions.assertThrows(DateFormatErrorException.class, () -> {
-            reservationService.reservationBlock(reservationBlockRequestDto, httpSession);
+            reservationService.reservationBlock(reservationBlockListRequestDto, httpSession);
         });
     }
 
@@ -279,7 +290,6 @@ public class ReservationServiceErrorTest {
                 .color(categoryColor)
                 .time(time)
                 .build();
-        category.setId(categoryId);
 
         return category;
     }
