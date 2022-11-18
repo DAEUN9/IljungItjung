@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoHelpCircleOutline } from "react-icons/io5";
-import { Fab, IconButton, Tab, Tabs, TextField } from "@mui/material";
+import { Fab, IconButton, Tab, Tabs } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { BsQuestionLg } from "react-icons/bs";
 import { ThemeProvider } from "@emotion/react";
@@ -28,13 +28,17 @@ import { AppointmentsTypes, BlockListTypes } from "@components/types/types";
 import { getSchedule } from "@api/calendar";
 import DeleteModal from "@components/Setting/DeleteModal";
 import {
+  initLockMap,
   lockShade,
   selectCategory,
   setCategory,
   setLock,
   setShade,
 } from "@modules/setting";
-import { getFullStringFromDate } from "@components/Calendar/common/util";
+import {
+  getFullStringFromDate,
+  makeFormat,
+} from "@components/Calendar/common/util";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -65,15 +69,17 @@ const SettingPage = () => {
   const [saveOpen, setSaveOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [appointments, setAppointments] = useState<AppointmentsTypes[]>([]);
-  const { categories, set, lock } = useSelector(
+  const { categories, selectedCategory, set, lock, lockMap } = useSelector(
     (state: RootState) => state.setting
   );
   const profile = useSelector((state: RootState) => state.profile.profile);
+  const renderObj = useSelector((state: RootState) => state.render.renderObj);
 
   useEffect(() => {
+    dispatch(initLockMap());
+
     getSchedule(profile.nickname, (res: any) => {
       const { acceptList, categoryList, blockDayList, blockList } = res.data;
-      console.log(res.data);
       setAppointments(acceptList);
       dispatch(setCategory(categoryList));
       dispatch(setLock(blockDayList));
@@ -82,19 +88,30 @@ const SettingPage = () => {
       blockList.map((block: any) => {
         const start = new Date(block.startDate);
         const end = new Date(block.endDate);
-        const time = getFullStringFromDate(start, end);
-        tempSet.add(time);
+        const date = getFullStringFromDate(start, end);
+        const time =
+          makeFormat(start.getHours().toString()) +
+          makeFormat(start.getMinutes().toString());
 
         const day = start.getDay();
         if (lock[(day + 6) % 7]) {
           dispatch(lockShade(day, time));
+        } else {
+          tempSet.add(date);
         }
       });
       dispatch(setShade(tempSet));
     });
-  }, []);
+  }, [renderObj]);
+
+  useEffect(() => {
+    if (selectedCategory.categoryName.length > 0) setTab(1);
+  }, [selectedCategory]);
 
   const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
+    if (newValue === 0) {
+      dispatch(selectCategory({ categoryName: "", time: "", color: "" }));
+    }
     setTab(newValue);
   };
 
@@ -111,14 +128,8 @@ const SettingPage = () => {
       blockList.push(obj);
     });
 
-    console.log(blockList);
-
-    registerCategory(categories, (res: SettingApiData) => {
-      console.log(res.data);
-    });
-    blockSchedule(lock, blockList, (res: SettingApiData) => {
-      console.log(res.data);
-    });
+    registerCategory(categories, (res: SettingApiData) => {});
+    blockSchedule(lock, blockList, (res: SettingApiData) => {});
 
     dispatch(selectCategory({ categoryName: "", time: "", color: "" }));
 

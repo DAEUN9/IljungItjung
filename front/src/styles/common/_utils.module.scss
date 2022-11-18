@@ -1,5 +1,31 @@
 $primary-color: #6b7bb1;
 
+body,
+input,
+textarea,
+button,
+span {
+  font-family: "LeferiBaseType-RegularA" !important;
+  font-weight: 400;
+  font-size: 0.9em;
+}
+
+@font-face {
+  font-family: "LeferiBaseType-RegularA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiBaseType-RegularA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "LeferiPoint-BlackA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiPoint-BlackA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @mixin page-default {
   width: 100vw;
   height: 100vh;

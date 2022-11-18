@@ -2,7 +2,6 @@ import { IoSearchOutline } from "react-icons/io5";
 import { IconButton, InputBase, Snackbar } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@modules/index";
 
 import Sidebar from "@components/common/Sidebar";
 import SearchResult from "@components/Search/SearchResult";
@@ -11,6 +10,7 @@ import SearchItem from "@components/Search/SearchItem";
 import { getSearchList } from "@api/search";
 import { SearchState } from "@components/types/types";
 import { selectUser } from "@modules/search";
+import { RootState } from "@modules/index";
 
 interface SearchApiData {
   status: string;
