@@ -6,6 +6,7 @@ import styled from "@emotion/styled";
 import caroL from "@assets/carouselL.png";
 import caroR from "@assets/carouselR.png";
 import defaultImg from "@assets/defaultImg.png";
+import "@styles/Login/slick-dots.scss";
 
 const Image = styled.img`
   width: 60%;
@@ -60,10 +61,7 @@ const CustomCarousel = () => {
 
   return (
     <div className={styles["carousel"]}>
-      <StyledSlider
-        {...settings}
-        // dotsClass={styles["slick-dots"]}
-      >
+      <StyledSlider {...settings} dotsClass="slick-dots">
         <div>
           <Image src={defaultImg} />
         </div>
