@@ -29,13 +29,14 @@ public class NotificationServiceImpl implements NotificationService{
     private final String REFUSE_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]\n [%s] 예약 신청이 거절되었습니다.\n";
     private final String DELETE_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]의 [%s]예약이 취소되었습니다.\n";
     private final String REQUEST_BASE = "일정있정에서 안내드립니다.\n%s\n%s - %s\n[%s]님이 [%s]예약을 신청 하셨습니다.\n홈페이지에서 확인해주세요.";
+    private final String TEMP_PHONE = "01000000000";
     private final NotificationCorrespondence notificationCorrespondence;
 
     @Override
     public NotificationResponseDto sendMessage(NotificationRequestDto requestDto) {
         HttpEntity<NotificationMessageRequestDto> body = makeBody(requestDto);
         NotificationResponseDto responseDto = notificationCorrespondence.sendNcloud(body);
-        return checkStatusEqualsAccpeted(responseDto);
+        return checkStatusEqualsAccepted(responseDto);
     }
 
     private HttpEntity<NotificationMessageRequestDto> makeBody(NotificationRequestDto requestDto) {
@@ -44,13 +45,13 @@ public class NotificationServiceImpl implements NotificationService{
         return new HttpEntity<>(jsonBody, headers);
     }
 
-    public NotificationResponseDto checkStatusEqualsAccpeted(NotificationResponseDto response){
+    public NotificationResponseDto checkStatusEqualsAccepted(NotificationResponseDto response){
         if(response.getStatusCode().equals(statusAccepted())) return response;
         throw new FailSendMessageException();
     }
 
     private String statusAccepted() {
-        return HttpStatus.ACCEPTED.value()+"";
+        return Integer.toString(HttpStatus.ACCEPTED.value());
     }
 
     @Override
@@ -64,9 +65,8 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     private boolean existPhoneNum(NotificationMessage message) {
-        if (message.getTo() == null) {
+        if(message.getTo() == null)
             return false;
-        }
         return true;
     }
 

@@ -1,13 +1,11 @@
 package com.iljungitjung.domain.schedule.controller;
 
-import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationBlockListRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationManageRequestDto;
 import com.iljungitjung.domain.schedule.dto.reservation.ReservationRequestDto;
 import com.iljungitjung.domain.schedule.service.ReservationService;
 import com.iljungitjung.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,15 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 
 @RequiredArgsConstructor
 @RequestMapping("/reservations")
 @RestController
 @Validated
-@Slf4j
 public class ReservationController {
+
     private final ReservationService reservationService;
 
     @PostMapping

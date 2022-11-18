@@ -19,37 +19,34 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_id")
     private Long id;
-
-
     @ManyToOne
     @JoinColumn(name = "user_to_id")
     private User userTo;
-
     @ManyToOne
     @JoinColumn(name = "user_from_id")
     private User userFrom;
-
     @Column(nullable = false, name="start_date")
     private Date startDate;
-
     @Column(nullable = false, name="end_date")
     private Date endDate;
-
     @Column(nullable = false, name="category_name")
     private String categoryName;
-
     private String color;
-
     private String contents;
-
     private String phonenum;
-
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Type type;
-
     private String cancelFrom;
     private String reason;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public boolean isUserSchedule(User user){
+        return user.getId() == this.userTo.getId();
+    }
 
     public String getDateFormat(Date date){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
@@ -64,8 +61,24 @@ public class Schedule {
         user.getScheduleResponseList().add(this);
         this.userTo = user;
     }
-    public void setId(Long id) {
-        this.id = id;
+
+    public void accepted() {
+        this.type= Type.ACCEPT;
+    }
+
+    public void deleted() {
+        this.type= Type.DELETE;
+    }
+
+    public void blocked(){
+        this.categoryName="block";
+        this.type=Type.BLOCK;
+    }
+
+    public void canceled(String cancelFrom, String reason){
+        this.cancelFrom=cancelFrom;
+        this.reason=reason;
+        this.type=Type.CANCEL;
     }
 
     @Builder
@@ -80,18 +93,4 @@ public class Schedule {
         this.phonenum = phonenum;
         this.type=type;
     }
-    public void accepted() {
-        this.type= Type.ACCEPT;
-    }
-
-    public void deleted() {
-        this.type= Type.DELETE;
-    }
-
-    public void canceled(String cancelFrom, String reason){
-        this.cancelFrom=cancelFrom;
-        this.reason=reason;
-        this.type=Type.CANCEL;
-    }
-
 }
