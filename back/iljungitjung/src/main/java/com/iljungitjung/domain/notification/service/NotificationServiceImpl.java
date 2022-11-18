@@ -7,16 +7,13 @@ import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.entity.Auto;
 import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
 import com.iljungitjung.domain.schedule.entity.Schedule;
-import com.iljungitjung.domain.schedule.entity.Type;
 import com.iljungitjung.global.scheduler.NotificationCorrespondence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,6 +22,7 @@ public class NotificationServiceImpl implements NotificationService{
 
     @Value("${message.ncloud.phone}")
     private String SENDER_PHONE;
+
     private final NotificationCorrespondence notificationCorrespondence;
 
     @Override
@@ -68,5 +66,6 @@ public class NotificationServiceImpl implements NotificationService{
         String phonenum = auto.getPhonenum(schedule);
         return new NotificationMessage(phonenum, content);
     }
+
 
 }

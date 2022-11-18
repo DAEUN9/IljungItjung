@@ -3,9 +3,10 @@ package com.iljungitjung.domain.notification.dto;
 import com.iljungitjung.domain.notification.exception.notification.NoExistPhonenumException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -26,6 +27,7 @@ public class NotificationMessage {
             throw new NoExistPhonenumException();
         }
     }
+
 }
 
 

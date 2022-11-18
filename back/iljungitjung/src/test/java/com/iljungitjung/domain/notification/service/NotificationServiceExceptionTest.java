@@ -82,7 +82,7 @@ public class NotificationServiceExceptionTest {
                 .startDate(new Date())
                 .categoryName(categoryName)
                 .phonenum(phone).build();
-        schedule.accpeted();
+        schedule.accepted();
         when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
         when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 
