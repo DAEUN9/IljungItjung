@@ -59,8 +59,6 @@ public class UserServiceImpl implements UserService{
         temporaryUser.matchPhonenum(signUpDto);
         temporaryUserRepository.deleteById(request.getSession().getId());
         user = userRepository.save(user);
-        RedisUser redisUser = RedisUser.builder().id(temporaryUser.getId()).email(temporaryUser.getEmail()).nickname(user.getNickname()).build();
-        redisUserRepository.save(redisUser);
 
         return new SignUpUserResponseDto(user.getId());
     }
