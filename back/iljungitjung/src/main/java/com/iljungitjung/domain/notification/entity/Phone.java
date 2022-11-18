@@ -1,6 +1,8 @@
 package com.iljungitjung.domain.notification.entity;
 
 import com.iljungitjung.domain.notification.dto.PhoneConfirmRequestDto;
+import com.iljungitjung.domain.notification.exception.phone.IncorrectPhonenumException;
+import com.iljungitjung.domain.notification.exception.phone.IncorrectRandomNumberException;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
@@ -23,15 +25,21 @@ public class Phone {
         this.phonenum = phonenum;
     }
 
-    public boolean checkCorrect(PhoneConfirmRequestDto requestDto) {
-        return checkPhonenum(requestDto.getPhonenum()) && checkRandomNumber(requestDto.getRandomNumber());
+    public void checkCorrect(PhoneConfirmRequestDto requestDto) {
+        checkPhonenum(requestDto.getPhonenum());
+        checkRandomNumber(requestDto.getRandomNumber());
     }
 
-    private boolean checkPhonenum(String phonnum) {
-        return this.phonenum.equals(phonnum);
+    private void checkPhonenum(String other) {
+        if(!phonenum.equals(other)) {
+            throw new IncorrectPhonenumException();
+        }
     }
 
-    private boolean checkRandomNumber(String randomNumber) {
-        return this.randomNumber.equals(randomNumber);
+    private void checkRandomNumber(String other) {
+        if(!randomNumber.equals(other)) {
+            throw new IncorrectRandomNumberException();
+        }
     }
+
 }

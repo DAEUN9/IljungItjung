@@ -3,9 +3,14 @@ package com.iljungitjung.domain.notification.service;
 
 import com.iljungitjung.domain.notification.dto.*;
 import com.iljungitjung.domain.notification.entity.Phone;
-import com.iljungitjung.domain.notification.exception.FailSendMessageException;
+import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
+import com.iljungitjung.domain.notification.exception.phone.ExpireRandomNumException;
 import com.iljungitjung.domain.notification.repository.PhoneRepository;
+import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.repository.UserRepository;
+import com.iljungitjung.global.login.entity.TemporaryUser;
+import com.iljungitjung.global.login.exception.ExpireTemporaryUserException;
+import com.iljungitjung.global.login.repository.TemporaryUserRepository;
 import com.iljungitjung.global.scheduler.NotificationCorrespondence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,11 +34,11 @@ public class PhoneServiceImpl implements PhoneService{
     private final String AUTH_PHONE = "인증 번호를 입력해 주세요\n[%s]";
     private final String PRESENTED_NUMBER = "이미 존재하는 전화번호 입니다.";
     private final UserRepository userRepository;
+    private final TemporaryUserRepository temporaryUserRepository;
     private final PhoneRepository phoneRepository;
     private final NotificationCorrespondence notificationCorrespondence;
 
     @Override
-    @Transactional
     public String requestRandomNumber(String phone, HttpSession httpSession) {
         if (checkDuplicatePhone(phone)) {
             return PRESENTED_NUMBER;
@@ -61,7 +64,7 @@ public class PhoneServiceImpl implements PhoneService{
     }
 
     private String statusAccepted() {
-        return HttpStatus.ACCEPTED.value()+"";
+        return Integer.toString(HttpStatus.ACCEPTED.value());
     }
     private HttpEntity<NotificationMessageRequestDto> makeBody(NotificationRequestDto requestDto) {
         HttpHeaders headers = notificationCorrespondence.makeHeaders();
@@ -86,6 +89,7 @@ public class PhoneServiceImpl implements PhoneService{
         return userRepository.existsUserByPhonenum(phone);
     }
 
+    @Transactional
     private void savePhoneRandomNumber(PhoneConfirmRequestDto requestDto, HttpSession session) {
         String id = session.getId();
         deleteExistPhone(id);
@@ -103,13 +107,22 @@ public class PhoneServiceImpl implements PhoneService{
     }
 
     @Override
-    @Transactional
-    public boolean comfirmRandomNumber(PhoneConfirmRequestDto requestDto, HttpSession session) {
-        if (!phoneRepository.existsById(session.getId())) {
-            return false;
-        }
-        Optional<Phone> phone = phoneRepository.findById(session.getId());
-        return phone.get().checkCorrect(requestDto);
+    public void confirmRandomNumber(PhoneConfirmRequestDto requestDto, HttpSession session) {
+        Phone phone = phoneRepository.findById(session.getId()).orElseThrow(() -> {
+            throw new ExpireRandomNumException();
+        });
+        phone.checkCorrect(requestDto);
+        updatePhonenumTemporaryUser(requestDto, session);
     }
+
+    @Transactional
+    private void updatePhonenumTemporaryUser(PhoneConfirmRequestDto requestDto, HttpSession session) {
+        TemporaryUser temporaryUser = temporaryUserRepository.findById(session.getId()).orElseThrow(() -> {
+            throw new ExpireTemporaryUserException();
+        });
+        temporaryUser.setPhonenum(requestDto.getPhonenum());
+        temporaryUserRepository.save(temporaryUser);
+    }
+
 
 }
