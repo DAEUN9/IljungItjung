@@ -1,4 +1,4 @@
-import { Button, Collapse } from "@mui/material";
+import { Button, Collapse, TextField } from "@mui/material";
 import { useState } from "react";
 import { TbTrashX } from "react-icons/tb";
 import { RiArrowDownSLine } from "react-icons/ri";
@@ -6,6 +6,7 @@ import { RiArrowDownSLine } from "react-icons/ri";
 import styles from "@styles/Reservation/Reservation.module.scss";
 import CustomModal from "@components/common/CustomModal";
 import iljung from "@assets/iljung.png";
+import { deleteSchedule } from "@api/setting";
 
 interface CancelReasonProps {
   reason: string;
@@ -13,14 +14,21 @@ interface CancelReasonProps {
 }
 
 interface CancelButtonProps {
+  id: number;
   detail: string;
 }
 
-const CancelButton = ({ detail }: CancelButtonProps) => {
+const CancelButton = ({ id, detail }: CancelButtonProps) => {
   const [open, setOpen] = useState(false);
+  const [reason, setReason] = useState("");
 
   const handleConfirm = () => {
     // 예약 취소 api 통신 코드
+    deleteSchedule(id, reason, (res: any) => {
+      console.log(id, reason);
+    });
+
+    setOpen(false);
   };
 
   return (
@@ -38,14 +46,18 @@ const CancelButton = ({ detail }: CancelButtonProps) => {
           handleConfirm={handleConfirm}
           children={
             <div className={styles["modal-content"]}>
-              <div className={styles["img"]}>
+              <div className={styles.img}>
                 <img src={iljung} />
               </div>
-              <div className={styles["text"]}>
-                예약이 취소됩니다.
-                <br />
-                계속 하시겠습니까?
-              </div>
+              <div className={styles.text}>예약을 취소하시겠습니까?</div>
+              <TextField
+                className={styles.textfield}
+                multiline
+                rows={3}
+                placeholder="예약을 취소하는 이유를 알려주세요."
+                fullWidth
+                onChange={(e) => setReason(e.target.value)}
+              />
             </div>
           }
         />

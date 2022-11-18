@@ -166,3 +166,11 @@
     }
   }
 }
+
+.modal-content {
+  @include custom-modal();
+
+  & .textfield {
+    margin-bottom: 1rem;
+  }
+}
