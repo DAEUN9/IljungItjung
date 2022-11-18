@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { TextField } from "@mui/material";
 
 import { RootState } from "@modules/index";
@@ -9,11 +9,15 @@ import { deleteSchedule } from "@api/setting";
 import iljung from "@assets/iljung.png";
 import theme from "@components/common/theme";
 import { ThemeProvider } from "@emotion/react";
+import { setDeleteSchedule } from "@modules/setting";
+import { rerender } from "@modules/render";
 
 const DeleteModal = () => {
+  const dispatch = useDispatch();
   const [reason, setReason] = useState("");
   const [deleteOpen, setDeleteOpen] = useState(false);
   const { deleteItem } = useSelector((state: RootState) => state.setting);
+  const { renderObj } = useSelector((state: RootState) => state.render);
 
   useEffect(() => {
     if (deleteItem.categoryName.length > 0) setDeleteOpen(true);
@@ -21,7 +25,9 @@ const DeleteModal = () => {
 
   const handleDelete = () => {
     deleteSchedule(deleteItem.id, reason, (res: any) => {
-      console.log(deleteItem.id, reason);
+      console.log(res.data);
+      dispatch(setDeleteSchedule({ ...deleteItem, categoryName: "" }));
+      dispatch(rerender({ ...renderObj }));
     });
 
     setDeleteOpen(false);

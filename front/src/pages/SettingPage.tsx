@@ -69,6 +69,7 @@ const SettingPage = () => {
     (state: RootState) => state.setting
   );
   const profile = useSelector((state: RootState) => state.profile.profile);
+  const renderObj = useSelector((state: RootState) => state.render.renderObj);
 
   useEffect(() => {
     getSchedule(profile.nickname, (res: any) => {
@@ -92,7 +93,7 @@ const SettingPage = () => {
       });
       dispatch(setShade(tempSet));
     });
-  }, []);
+  }, [renderObj]);
 
   const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
