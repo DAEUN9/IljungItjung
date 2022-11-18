@@ -28,13 +28,17 @@ import { AppointmentsTypes, BlockListTypes } from "@components/types/types";
 import { getSchedule } from "@api/calendar";
 import DeleteModal from "@components/Setting/DeleteModal";
 import {
+  initLockMap,
   lockShade,
   selectCategory,
   setCategory,
   setLock,
   setShade,
 } from "@modules/setting";
-import { getFullStringFromDate } from "@components/Calendar/common/util";
+import {
+  getFullStringFromDate,
+  makeFormat,
+} from "@components/Calendar/common/util";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -65,13 +69,15 @@ const SettingPage = () => {
   const [saveOpen, setSaveOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [appointments, setAppointments] = useState<AppointmentsTypes[]>([]);
-  const { categories, set, lock } = useSelector(
+  const { categories, set, lock, lockMap } = useSelector(
     (state: RootState) => state.setting
   );
   const profile = useSelector((state: RootState) => state.profile.profile);
   const renderObj = useSelector((state: RootState) => state.render.renderObj);
 
   useEffect(() => {
+    dispatch(initLockMap());
+
     getSchedule(profile.nickname, (res: any) => {
       const { acceptList, categoryList, blockDayList, blockList } = res.data;
       console.log(res.data);
@@ -83,12 +89,14 @@ const SettingPage = () => {
       blockList.map((block: any) => {
         const start = new Date(block.startDate);
         const end = new Date(block.endDate);
-        const time = getFullStringFromDate(start, end);
-        tempSet.add(time);
+        const time =
+          makeFormat(start.getHours().toString()) +
+          makeFormat(start.getMinutes().toString());
 
         const day = start.getDay();
         if (lock[(day + 6) % 7]) {
           dispatch(lockShade(day, time));
+          console.log(lockMap);
         }
       });
       dispatch(setShade(tempSet));

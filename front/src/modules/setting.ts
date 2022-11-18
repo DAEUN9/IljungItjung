@@ -15,6 +15,7 @@ const TOGGLE_LOCK = "setting/TOGGLE_LOCK" as const;
 // 달력 관련
 const SET_SHADE = "setting/SET_SHADE" as const;
 const TOGGLE_SHADE = "setting/TOGGLE_SHADE" as const;
+const INIT_LOCK_MAP = "setting/INIT_LOCK_MAP" as const;
 const LOCK_SHADE = "setting/LOCK_SHADE" as const;
 const DELETE_LOCK_SHADE = "setting/DELETE_LOCK_SHADE" as const;
 const SET_DELETE_SCHEDULE = "setting/SET_DELETE_SCHEDULE" as const;
@@ -64,6 +65,10 @@ export const toggleShade = (date: string) => ({
   payload: date,
 });
 
+export const initLockMap = () => ({
+  type: INIT_LOCK_MAP,
+});
+
 export const lockShade = (day: number, time: string) => ({
   type: LOCK_SHADE,
   payload: {
@@ -96,6 +101,7 @@ type SettingAction =
   | ReturnType<typeof toggleLock>
   | ReturnType<typeof setShade>
   | ReturnType<typeof toggleShade>
+  | ReturnType<typeof initLockMap>
   | ReturnType<typeof lockShade>
   | ReturnType<typeof deleteLockShade>
   | ReturnType<typeof setDeleteSchedule>;
@@ -197,6 +203,11 @@ function setting(
         set: copy,
       };
     }
+    case INIT_LOCK_MAP:
+      return {
+        ...state,
+        lockMap: new Map<number, string[]>(),
+      };
     case LOCK_SHADE: {
       const copy: Map<number, string[]> = new Map<number, string[]>(
         state.lockMap
@@ -222,6 +233,8 @@ function setting(
       if (action.payload.all) {
         const arr: string[] = [];
         copy.set(action.payload.day, arr);
+        console.log(action.payload.day);
+        console.log(copy);
       } else {
         let list = copy.get(action.payload.day);
 

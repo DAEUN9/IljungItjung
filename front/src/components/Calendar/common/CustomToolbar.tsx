@@ -28,9 +28,7 @@ export default function CustomToolbar() {
   const [visible, setVisible] = useState(true);
   const location = useLocation();
   const dispatch = useDispatch();
-  const { set, lock, lockMap } = useSelector(
-    (state: RootState) => state.setting
-  );
+  const { set, lock } = useSelector((state: RootState) => state.setting);
 
   useEffect(() => {
     if (location.pathname.includes("setting")) {
@@ -44,7 +42,6 @@ export default function CustomToolbar() {
     // set에서 해당하는 요일의 block된 시간들을 lockMap에 저장한다.
     const keys = set.keys();
     for (const key of keys) {
-      console.log(key + " in set");
       const blockDay = Number(key.substring(0, 1));
       if ((blockDay + 6) % 7 === index) {
         const time = key.substring(9);
@@ -57,7 +54,8 @@ export default function CustomToolbar() {
     dispatch(toggleLock(index));
 
     // lockMap의 저장된 시간들을 지운다.
-    dispatch(deleteLockShade((index + 6) % 7, "", true));
+    console.log((index + 1) % 7);
+    dispatch(deleteLockShade((index + 1) % 7, "", true));
   };
 
   return (
