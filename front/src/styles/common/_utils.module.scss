@@ -9,7 +9,7 @@ $primary-color: #6b7bb1;
 
 @mixin custom-scroll {
   &::-webkit-scrollbar {
-    width: 1vw;
+    width: 15px;
   }
 
   &::-webkit-scrollbar-thumb {
@@ -17,5 +17,21 @@ $primary-color: #6b7bb1;
     border-radius: 10px;
     border: 4px solid transparent;
     background-clip: padding-box;
+  }
+}
+
+@mixin custom-modal {
+  & .text {
+    text-align: center;
+    margin: 1rem 0 1.5rem 0;
+  }
+
+  & .img {
+    width: 100%;
+    text-align: center;
+
+    & img {
+      width: 30%;
+    }
   }
 }

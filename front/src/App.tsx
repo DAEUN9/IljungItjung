@@ -1,14 +1,14 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import LoginPage from '@pages/LoginPage';
-import RegisterPage from '@pages/RegisterPage';
-import CalendarPage from '@pages/CalendarPage';
-import MyCalendar from '@components/Calendar/MyCalendar';
-import OtherCalendar from '@components/Calendar/OtherCalendar';
-import ProfileEditPage from '@pages/ProfileEditPage';
-import ReservationPage from '@pages/ReservationPage';
-import SearchPage from '@pages/SearchPage';
-import SettingPage from '@pages/SettingPage';
+import LoginPage from "@pages/LoginPage";
+import RegisterPage from "@pages/RegisterPage";
+import CalendarPage from "@pages/CalendarPage";
+import MyCalendar from "@components/Calendar/MyCalendar";
+import OtherCalendar from "@components/Calendar/OtherCalendar";
+import ProfileEditPage from "@pages/ProfileEditPage";
+import ReservationPage from "@pages/ReservationPage";
+import SearchPage from "@pages/SearchPage";
+import SettingPage from "@pages/SettingPage";
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/calendar" element={<CalendarPage />}>
           <Route path="my" element={<MyCalendar />} />
-          <Route path=":seqNum" element={<OtherCalendar />} />
+          <Route path=":nickname" element={<OtherCalendar />} />
         </Route>
         <Route path="/profile" element={<ProfileEditPage />} />
         <Route path="/reservation" element={<ReservationPage />} />

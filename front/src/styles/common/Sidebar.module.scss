@@ -1,3 +1,5 @@
+@use "../common/utils.module" as *;
+
 .drawer {
   width: 6%;
 }
@@ -29,6 +31,8 @@
 .bottom {
   & img {
     width: 50%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
     border-radius: 30px;
     border: 1.5px solid #fff;
     cursor: pointer;
@@ -79,4 +83,8 @@ button.click-icon {
 
 .click-profile {
   box-shadow: rgba(107, 121, 178, 0.25) 0px 0px 10px 4px !important;
+}
+
+.modal-content {
+  @include custom-modal();
 }

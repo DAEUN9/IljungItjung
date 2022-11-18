@@ -1,8 +1,403 @@
 @use "../common/utils.module" as *;
 
+$gray: #3d3d3d;
+$light-gray: #f5f5f5;
+
 .calendar-page {
   @include page-default();
 }
 
 .content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.calendar-container {
+  width: 60%;
+  height: 100%;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  color: gray;
+  font-size: 16px;
+}
+
+/* toolbar */
+
+.today {
+  min-width: 50px !important;
+  padding: 3px !important;
+  color: $gray !important;
+  border: 1px solid $gray !important;
+  margin-right: 10px !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+
+  & .MuiTouchRipple-root {
+    color: transparent !important;
+  }
+}
+
+.open-button {
+  color: $gray !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+
+  & .MuiTouchRipple-root {
+    color: transparent !important;
+  }
+}
+
+.navigator {
+  color: $gray !important;
+  border: 1px solid $gray !important;
+  border-radius: 4px !important;
+  padding: 3px !important;
+  margin-right: 5px !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+
+  & .MuiTouchRipple-root {
+    color: transparent !important;
+  }
+}
+
+.toolbar-right {
+  display: flex;
+}
+
+.avatar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Weekview */
+.timeTableCell {
+  &:hover,
+  &:focus {
+    background-color: unset !important;
+  }
+
+  &-inner {
+    height: 100%;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #6b7bb1 !important;
+    }
+  }
+
+  &-selected {
+    background-color: #6b7bb1 !important;
+    height: 100%;
+
+    &:hover {
+      background-color: #6b7bb1 !important;
+    }
+  }
+
+  &-disabled {
+    background-color: $light-gray !important;
+    height: 100%;
+  }
+}
+
+/* appointment */
+.appointment {
+  &-category {
+    color: black;
+    font-size: 1.2em;
+    font-weight: 900;
+    white-space: normal;
+    line-height: normal;
+    letter-spacing: normal;
+  }
+
+  &-nickname {
+    display: flex;
+    justify-content: end;
+    font-size: 0.8em;
+    color: black;
+    white-space: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    margin-bottom: 2px;
+
+    &-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-left: 2px;
+    }
+  }
+}
+
+/* tooltip */
+.tooltip-content {
+  margin-left: 20px;
+}
+
+.tooltip {
+  display: flex;
+  margin-bottom: 10px;
+
+  &-title {
+    display: flex;
+    padding-bottom: 16px;
+
+    > div {
+      & div:first-child {
+        font-size: 20px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  &-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10px;
+
+    > div > span {
+      font-weight: 500;
+    }
+
+    &:last-child {
+      max-width: 320px;
+    }
+  }
+}
+
+.svg {
+  width: 36px !important;
+  height: 36px !important;
+  margin-right: 10px;
+}
+
+/* info profile */
+.info {
+  height: 100%;
+  width: 100%;
+}
+
+.profile {
+  margin: 15px;
+  height: 270px;
+
+  &-inner {
+    height: 100%;
+    background-color: $light-gray;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-title {
+    display: flex;
+    padding: 20px;
+
+    & img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+
+  &-my {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10px;
+
+    & div {
+      &:first-child {
+        font-size: 27px;
+        font-weight: 900;
+      }
+
+      &:nth-child(2) {
+        margin-top: 5px;
+        padding-left: 5px;
+      }
+    }
+  }
+
+  &-desc {
+    padding: 0 20px;
+    font-size: 0.9em;
+  }
+}
+
+/* info tab */
+.tab {
+  $profile-height: 300px;
+  $tab-button-height: 48px;
+  $inner-padding: 25px;
+  $tab-height: calc(
+    100vh - $tab-button-height - $profile-height - $inner-padding
+  );
+
+  height: $tab-height;
+  background-color: $light-gray;
+  border-radius: 15px;
+
+  overflow-y: overlay;
+  overflow-x: hidden;
+
+  @include custom-scroll();
+
+  &-inner {
+    padding: $inner-padding;
+    height: calc($tab-height - $inner-padding * 2);
+  }
+}
+
+.info-item {
+  padding-bottom: 15px;
+
+  &:last-child {
+    padding-bottom: 30px;
+  }
+
+  > div {
+    width: unset;
+    margin: unset;
+  }
+
+  &-inner {
+    display: flex;
+    margin-top: 10px;
+
+    & svg {
+      padding-top: 3px !important;
+    }
+  }
+
+  &-content {
+    color: #565656;
+    margin-left: 10px;
+    width: 450px;
+  }
+}
+
+.request {
+  &-buttons {
+    display: flex;
+    justify-content: end;
+
+    > button {
+      width: 80px;
+
+      &:last-child {
+        margin-left: 10px;
+      }
+    }
+  }
+
+  &-text-length {
+    font-size: 13px;
+    color: gray;
+    text-align: end;
+    margin-bottom: 10px;
+  }
+}
+
+/* other */
+.reservation {
+  height: calc(100% - 315px);
+  margin: 15px;
+  background-color: $light-gray;
+  border-radius: 15px;
+
+  > form {
+    height: 100%;
+  }
+
+  &-inner {
+    $inner-padding: 20px;
+
+    height: calc(100% - $inner-padding * 2);
+    padding: $inner-padding;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  &-item {
+    padding: 5px;
+    display: flex;
+
+    > div {
+      color: black;
+      margin-right: 15px;
+      height: unset;
+    }
+
+    &:nth-child(2),
+    &:nth-child(3) {
+      padding: 10px 5px;
+    }
+  }
+
+  &-request {
+    padding: 5px;
+
+    > div {
+      font-weight: 600;
+      font-size: 17px;
+      margin-bottom: 5px;
+    }
+  }
+
+  > button {
+    width: 100%;
+  }
+}
+
+.icon {
+  &-short {
+    padding-top: 3px;
+  }
+
+  &-long {
+    padding-top: 10px;
+  }
+}
+
+.menu {
+  width: 100%;
+  padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.error {
+  color: rgb(222, 0, 0);
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.no-shadow {
+  box-shadow: none !important;
+
+  &:hover {
+    box-shadow: none !important;
+  }
 }
