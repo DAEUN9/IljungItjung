@@ -1,3 +1,4 @@
+import { getStringFromDate } from "@components/Calendar/common/util";
 import { BlockState, SchedulerDate } from "@components/types/types";
 
 /* action type */
@@ -36,7 +37,7 @@ export const setBlockList = (
 
   return {
     type: SET_BLOCK_LIST,
-    payload: block,
+    payload: { block, blockDayList },
   };
 };
 
@@ -59,16 +60,13 @@ function getBlockList(blockList: BlockState[], blockDayList: boolean[]) {
   blockList.forEach((block) => {
     const startDate = new Date(block.startDate.toString());
     const day = (startDate.getDay() + 6) % 7;
+    const time =
+      startDate.getHours().toString() + startDate.getMinutes().toString();
 
     if (blockDayList[day]) {
-      const time =
-        startDate.getHours().toString() + startDate.getMinutes().toString();
       map.get(day)?.push(time);
     } else {
-      const date =
-        startDate.getFullYear().toString() +
-        startDate.getMonth().toString() +
-        startDate.getDate().toString();
+      const date = getStringFromDate(startDate) + time;
       set.add(date);
     }
   });
@@ -119,10 +117,14 @@ export default function reducer(
       const request = filterRequest(state.request, action.payload);
       return { ...state, request };
     case SET_BLOCK_LIST:
-      const { map, set } = action.payload;
-      console.log(map);
-      console.log(set);
-      return { ...state, blockList: set, fixedBlockList: map };
+      const { block, blockDayList } = action.payload;
+      console.log(block);
+      return {
+        ...state,
+        blockList: block.set,
+        fixedBlockList: block.map,
+        lock: blockDayList,
+      };
     default:
       return state;
   }
