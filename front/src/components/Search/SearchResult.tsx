@@ -24,30 +24,34 @@ const SearchResult = () => {
   return (
     <div className={styles["search-result"]}>
       <div className={styles.profile}>
-        <div className={styles.img}>
-          <img src={imagePath} />
+        <div className={styles.top}>
+          <div className={styles.img}>
+            <img src={imagePath} />
+          </div>
+          <div className={styles.right}>
+            <div className={styles.name}>{nickname}</div>
+            <div className={styles.desc}>{introduction}</div>
+          </div>
         </div>
-        <div className={styles.right}>
-          <div className={styles.name}>{nickname}</div>
-          <div className={styles.desc}>{introduction}</div>
+        <div className={styles.detail}>{description}</div>
+      </div>
+      <div className={styles.bottom}>
+        <div className={styles.categories}>
+          {categories &&
+            categories.length > 0 &&
+            categories.map((category, index) => (
+              <div className={styles.chip} key={index}>
+                <CustomChip label={category.categoryName} onClick={() => {}} />
+              </div>
+            ))}
         </div>
-      </div>
-      <div className={styles.detail}>{description}</div>
-      <div className={styles.categories}>
-        {categories &&
-          categories.length > 0 &&
-          categories.map((category, index) => (
-            <div className={styles.chip} key={index}>
-              <CustomChip label={category.categoryName} onClick={() => {}} />
-            </div>
-          ))}
-      </div>
-      <div className={styles.button}>
-        <CustomButton
-          variant="contained"
-          children="바로가기"
-          onClick={handleClick}
-        />
+        <div className={styles.button}>
+          <CustomButton
+            variant="contained"
+            children="바로가기"
+            onClick={handleClick}
+          />
+        </div>
       </div>
     </div>
   );

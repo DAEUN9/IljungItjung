@@ -1,56 +1,64 @@
 .search-result {
-  display: grid;
+  display: flex;
   flex-direction: column;
-  grid-template-rows: 1fr 5fr 0.7fr 0.5fr;
+  justify-content: space-between;
+  height: 100%;
   margin: 0 2rem;
 
   & .profile {
     display: flex;
+    flex-direction: column;
 
-    & .img {
-      margin-right: 0.3rem;
-
-      & img {
-        height: 80px;
-        width: 80px;
-        border-radius: 50px;
-        object-fit: cover;
-      }
-    }
-
-    & .right {
+    & .top {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      margin-left: 0.5rem;
+      & .img {
+        margin-right: 0.3rem;
 
-      & .name {
-        font-weight: 800;
-        font-size: 1.5rem;
+        & img {
+          height: 80px;
+          width: 80px;
+          border-radius: 50px;
+          object-fit: cover;
+        }
       }
 
-      & .desc {
-        font-size: 1.1rem;
+      & .right {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-left: 0.5rem;
+
+        & .name {
+          font-weight: 800;
+          font-size: 1.5rem;
+        }
+
+        & .desc {
+          font-size: 1.1rem;
+        }
       }
+    }
+
+    & .detail {
+      margin-top: 1rem;
     }
   }
 
-  & .detail {
-    margin-top: 1rem;
-  }
-
-  & .categories {
-    display: flex;
-    & .chip {
-      margin-right: 0.5rem;
+  & .bottom {
+    & .categories {
+      display: flex;
+      & .chip {
+        margin-right: 0.5rem;
+      }
     }
-  }
 
-  & .button {
-    & button {
-      width: 100%;
-      padding: 0.8rem;
-      font-weight: 700;
+    & .button {
+      margin-top: 1rem;
+      & button {
+        width: 100%;
+        padding: 0.8rem;
+        font-weight: 700;
+      }
     }
   }
 }

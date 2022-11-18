@@ -25,6 +25,23 @@ interface SearchState {
   categories: SearchCategoryState[];
 }
 
+<<<<<<< HEAD
+=======
+interface SearchCategoryState {
+  categoryName: string;
+}
+
+// 검색 관련 타입
+interface SearchState {
+  nickname: string;
+  email: string;
+  imagePath: string;
+  introduction: string;
+  description: string;
+  categories: SearchCategoryState[];
+}
+
+>>>>>>> front-develop
 declare type SchedulerDateTime = Date | number | string;
 
 interface SchedulerDate {
