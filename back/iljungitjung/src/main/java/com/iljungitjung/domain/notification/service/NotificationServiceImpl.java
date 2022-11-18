@@ -7,6 +7,7 @@ import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.entity.Auto;
 import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
 import com.iljungitjung.domain.schedule.entity.Schedule;
+
 import com.iljungitjung.global.scheduler.NotificationCorrespondence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
