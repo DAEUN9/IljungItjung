@@ -27,7 +27,6 @@ public class ReservationServiceImpl implements ReservationService{
 
     private final ScheduleRepository scheduleRepository;
     private final CategoryRepository categoryRepository;
-
     private final UserRepository userRepository;
     private final UserService userService;
     private final NotificationService notificationService;
@@ -196,6 +195,10 @@ public class ReservationServiceImpl implements ReservationService{
         Date startDateFormat = makeDateFormat(startDate);
         Date endDateFormat = makeDateFormat(endDate);
 
+        return divideScheduleByType(user, startDateFormat, endDateFormat);
+    }
+
+    private ReservationViewResponseDto divideScheduleByType(User user, Date startDateFormat, Date endDateFormat){
         List<Schedule> scheduleList = scheduleRepository.findByUserFrom_IdIs(user.getId());
 
         List<ReservationViewDto> reservationViewDtoList = new ArrayList<>();
@@ -211,9 +214,7 @@ public class ReservationServiceImpl implements ReservationService{
             if(schedule.getType().equals(Type.REQUEST) || schedule.getType().equals(Type.ACCEPT)) reservationViewDtoList.add(new ReservationViewDto(schedule));
         });
 
-        ReservationViewResponseDto responseDto = new ReservationViewResponseDto(reservationViewDtoList, reservationCancelViewDtoList);
-
-        return responseDto;
+        return new ReservationViewResponseDto(reservationViewDtoList, reservationCancelViewDtoList);
     }
 
     private boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){

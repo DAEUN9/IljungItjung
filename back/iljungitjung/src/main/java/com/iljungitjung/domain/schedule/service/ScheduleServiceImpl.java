@@ -51,6 +51,10 @@ public class ScheduleServiceImpl implements ScheduleService{
         Date startDateFormat = makeDateFormat(validDate, startDate);
         Date endDateFormat = makeDateFormat(validDate, endDate);
 
+        return divideScheduleByType(userTo, viewMySchedule, validDate, startDateFormat, endDateFormat);
+    }
+
+    private ScheduleViewResponseDto divideScheduleByType(User userTo, boolean viewMySchedule, boolean validDate, Date startDateFormat, Date endDateFormat){
         List<Schedule> scheduleList = scheduleRepository.findByUserTo_IdIs(userTo.getId());
 
         List<ScheduleViewDto> requestList = new ArrayList<>();
