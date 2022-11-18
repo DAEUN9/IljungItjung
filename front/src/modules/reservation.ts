@@ -1,4 +1,3 @@
-import { formatReservationDate } from "@components/Calendar/common/util";
 import { ReservationTypes } from "@components/types/types";
 
 const SET_RESERVATIONS = "reservation/SET_RESERVATIONS" as const;
