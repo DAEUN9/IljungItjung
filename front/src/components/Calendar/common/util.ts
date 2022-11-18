@@ -130,6 +130,15 @@ export const getFullDate = (date: SchedulerDateTime | undefined) => {
   }
 };
 
+export const formatReservationDate = (fullDate: Date) => {
+  const month = fullDate.getMonth() + 1;
+  const date = fullDate.getDate();
+
+  return `${fullDate.getFullYear()}${makeFormat(month.toString())}${makeFormat(
+    date.toString()
+  )}`;
+};
+
 // 이번주 일정 중에서 오늘 날짜보다 큰 것만 표시
 export const parseList = (list: SchedulerDate[] | undefined) => {
   if (!list) return [];
