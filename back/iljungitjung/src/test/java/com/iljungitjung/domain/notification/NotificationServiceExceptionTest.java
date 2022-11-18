@@ -1,7 +1,6 @@
 package com.iljungitjung.domain.notification;
 
 import com.iljungitjung.domain.notification.dto.NotificationMessage;
-import com.iljungitjung.domain.notification.dto.NotificationMessageRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
