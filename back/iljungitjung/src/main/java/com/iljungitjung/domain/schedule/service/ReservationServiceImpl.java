@@ -178,17 +178,21 @@ public class ReservationServiceImpl implements ReservationService{
 
 
         List<ReservationViewDto> reservationViewDtoList = new ArrayList<>();
+        List<ReservationCancelViewDto> reservationCancelViewDtoList = new ArrayList<>();
+
 
         for(Schedule schedule : scheduleList){
             if(checkDate(schedule, startDateFormat, endDateFormat)) continue;
 
             if(schedule.getType().equals(Type.BLOCK)) continue;
             if(schedule.getType().equals(Type.DELETE)) continue;
+            if(schedule.getType().equals(Type.CANCEL)) reservationCancelViewDtoList.add(new ReservationCancelViewDto(schedule));
+            if(schedule.getType().equals(Type.REQUEST) || schedule.getType().equals(Type.ACCEPT)) reservationViewDtoList.add(new ReservationViewDto(schedule));
 
-            reservationViewDtoList.add(new ReservationViewDto(schedule));
 
         }
-        ReservationViewResponseDto responseDto = new ReservationViewResponseDto(reservationViewDtoList);
+        ReservationViewResponseDto responseDto = new ReservationViewResponseDto(reservationViewDtoList, reservationCancelViewDtoList);
+
         return responseDto;
     }
 
@@ -217,6 +221,7 @@ public class ReservationServiceImpl implements ReservationService{
         Date endDateFormat = makeDateFormat(reservationBlockDto.getDate()+reservationBlockDto.getEndTime());
 
         Schedule schedule = reservationBlockDto.toEntity(startDateFormat, endDateFormat);
+        schedule.blocked();
         schedule.setScheduleResponseList(user);
         scheduleRepository.save(schedule);
     }

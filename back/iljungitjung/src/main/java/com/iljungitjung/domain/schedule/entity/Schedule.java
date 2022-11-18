@@ -80,6 +80,11 @@ public class Schedule {
         this.type= Type.DELETE;
     }
 
+    public void blocked(){
+        this.categoryName="block";
+        this.type=Type.BLOCK;
+    }
+
     public void canceled(String cancelFrom, String reason){
         this.cancelFrom=cancelFrom;
         this.reason=reason;

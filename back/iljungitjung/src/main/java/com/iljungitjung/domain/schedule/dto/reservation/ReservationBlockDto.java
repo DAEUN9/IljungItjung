@@ -21,10 +21,8 @@ public class ReservationBlockDto {
 
     public Schedule toEntity(Date startDate, Date endDate) {
         return Schedule.builder()
-                .categoryName("block")
                 .startDate(startDate)
                 .endDate(endDate)
-                .type(Type.BLOCK)
                 .build();
     }
 }
