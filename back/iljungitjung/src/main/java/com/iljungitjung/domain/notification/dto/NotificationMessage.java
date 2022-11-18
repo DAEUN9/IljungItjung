@@ -1,5 +1,6 @@
 package com.iljungitjung.domain.notification.dto;
 
+import com.iljungitjung.domain.notification.exception.notification.NoExistPhonenumException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,11 @@ public class NotificationMessage {
     @Size(min=1, max=80, message = "메시지(content) 길이는 1~80자 입니다.")
     private String content;
 
-
+    public void checkExistPhonenum() {
+        if (to.isBlank()) {
+            throw new NoExistPhonenumException();
+        }
+    }
 }
 
 

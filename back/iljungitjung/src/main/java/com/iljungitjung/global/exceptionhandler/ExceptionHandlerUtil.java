@@ -1,10 +1,7 @@
 package com.iljungitjung.global.exceptionhandler;
 
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
-import com.iljungitjung.domain.notification.exception.notification.ConvertToJsonErrorException;
-import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
-import com.iljungitjung.domain.notification.exception.notification.FailSignatureKeyErrorException;
-import com.iljungitjung.domain.notification.exception.notification.MessageUriSyntaxErrorException;
+import com.iljungitjung.domain.notification.exception.notification.*;
 import com.iljungitjung.domain.notification.exception.phone.ExpireRandomNumException;
 import com.iljungitjung.domain.notification.exception.phone.IncorrectPhonenumException;
 import com.iljungitjung.domain.notification.exception.phone.IncorrectRandomNumberException;
@@ -131,5 +128,9 @@ public class ExceptionHandlerUtil {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CommonResponse.getErrorResponse(e.getMessage()));
     }
 
+    @ExceptionHandler(NoExistPhonenumException.class)
+    ResponseEntity<CommonResponse> NoExistPhonenumException(NoExistPhonenumException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(CommonResponse.getErrorResponse(e.getMessage()));
+    }
 
 }

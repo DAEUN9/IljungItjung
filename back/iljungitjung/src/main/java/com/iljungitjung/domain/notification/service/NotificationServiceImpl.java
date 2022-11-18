@@ -56,18 +56,10 @@ public class NotificationServiceImpl implements NotificationService{
     @Override
     public void autoReservationMessage(Schedule schedule) {
         NotificationMessage message = makeMessage(schedule);
-        if (existPhoneNum(message)) {
-            List<NotificationMessage> messageList = makeMessageList(message);
-            NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
-            sendMessage(requestDto);
-        }
-    }
-
-    private boolean existPhoneNum(NotificationMessage message) {
-        if (message.getTo() == null) {
-            return false;
-        }
-        return true;
+        message.checkExistPhonenum();
+        List<NotificationMessage> messageList = makeMessageList(message);
+        NotificationRequestDto requestDto = NotificationRequestDto.createFromMessages(messageList);
+        sendMessage(requestDto);
     }
 
     private List<NotificationMessage> makeMessageList(NotificationMessage... message){

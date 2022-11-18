@@ -1,4 +1,4 @@
-package com.iljungitjung.domain.notification;
+package com.iljungitjung.domain.notification.service;
 
 import com.iljungitjung.domain.notification.dto.NotificationMessage;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
