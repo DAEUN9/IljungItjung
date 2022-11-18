@@ -130,4 +130,5 @@ export type {
   CategoryState,
   AppointmentsTypes,
   BlockState,
+  RequestState,
 };

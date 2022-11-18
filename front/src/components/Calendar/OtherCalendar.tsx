@@ -13,10 +13,11 @@ import Reservation from "./Other/Reservation/Reservation";
 import OtherAppointments from "./Other/OtherAppointments";
 import OtherWeekView from "./Other/OtherWeekView";
 import { RootState } from "@modules/index";
-import { setCategory, setDisabledMap } from "@modules/othercalendar";
+import { setCategory } from "@modules/othercalendar";
 import { useParams } from "react-router-dom";
 import { getOtherProfile, getSchedule } from "@api/calendar";
 import { MyProfile, ScheduleApiData } from "@components/types/types";
+import { setBlockList } from "@modules/othercalendar";
 
 interface MyInfoApiData {
   status: string;
@@ -27,49 +28,6 @@ interface MyInfoApiData {
   status: string;
   data: MyProfile;
 }
-
-const next = [
-  {
-    id: 1,
-    startDate: "2022-11-07T09:30",
-    endDate: "2022-11-07T11:00",
-    title: "목욕",
-    nickname: "곰고구마",
-    desc: "요청사항이 엄청나게 길어지면 어떻게 보일지 정말정말 궁금하네요 요청사항이 엄청나게 길어지면 어떻게 보일지 정말정말 궁금하네요",
-    phone: "010-1111-1111",
-    color: "#F4F38A",
-  },
-  {
-    id: 2,
-    startDate: "2022-11-09T12:00",
-    endDate: "2022-11-09T13:30",
-    title: "손발톱관리",
-    nickname: "신봉선",
-    desc: "예쁘게 해주세용",
-    phone: "010-2222-2222",
-    color: "#C3DBE3",
-  },
-  {
-    id: 3,
-    startDate: "2022-11-10T12:00",
-    endDate: "2022-11-10T13:30",
-    title: "커트",
-    nickname: "퍼플독",
-    desc: "멋지게 해주십쇼",
-    phone: "010-3333-3333",
-    color: "#D7CBF4",
-  },
-  {
-    id: 4,
-    startDate: "2022-11-11T13:00",
-    endDate: "2022-11-11T14:30",
-    title: "카테고리",
-    nickname: "닉네임",
-    desc: "요청사항",
-    phone: "010-3333-3333",
-    color: "#D7CBF4",
-  },
-];
 
 interface MyInfoApiData {
   status: string;
@@ -100,12 +58,21 @@ const OtherCalendar = () => {
 
       // 캘린더 조회
       getSchedule(nickname, (res: ScheduleApiData) => {
-        const { categoryList, blockList, acceptList } = res.data;
+        const {
+          categoryList,
+          blockList,
+          blockDayList,
+          acceptList,
+          requestList,
+        } = res.data;
         console.log(res.data);
 
+        const reservations = acceptList.concat(requestList);
         const now = new Date();
-        const filter = next.filter((item) => new Date(item.startDate) >= now);
-        dispatch(setDisabledMap(filter));
+        const filter = reservations.filter(
+          (reservation) => new Date(reservation.startDate) >= now
+        );
+        dispatch(setBlockList(filter, blockList, blockDayList));
         dispatch(setCategory(categoryList));
       });
     }

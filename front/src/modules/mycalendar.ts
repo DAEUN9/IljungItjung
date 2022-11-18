@@ -118,7 +118,6 @@ export default function reducer(
       return { ...state, request };
     case SET_BLOCK_LIST:
       const { block, blockDayList } = action.payload;
-      console.log(block);
       return {
         ...state,
         blockList: block.set,

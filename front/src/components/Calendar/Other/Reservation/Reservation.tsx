@@ -153,22 +153,19 @@ const Reservation = () => {
         selected.startDate.toString()
       );
 
-      console.log(endDate.getHours());
-      console.log(endDate.getMinutes());
+      // if (
+      //   isOverlapWithSchedule(selected.startDate, endDate) ||
+      //   (endDate.getHours() >= 22 && endDate.getMinutes() > 0)
+      // ) {
+      //   unsetSelected(0, selected.startDate);
+      // } else {
+      //   const newSelected: SchedulerDate = { startDate: selected.startDate };
 
-      if (
-        isOverlapWithSchedule(selected.startDate, endDate) ||
-        (endDate.getHours() >= 22 && endDate.getMinutes() > 0)
-      ) {
-        unsetSelected(0, selected.startDate);
-      } else {
-        const newSelected: SchedulerDate = { startDate: selected.startDate };
+      //   newSelected.endDate = endDate;
 
-        newSelected.endDate = endDate;
-
-        dispatch(setSelectedTime(newSelected));
-        dispatch(setMinutes(minutes));
-      }
+      //   dispatch(setSelectedTime(newSelected));
+      //   dispatch(setMinutes(minutes));
+      // }
     }
   }, [watchCategory]);
 
@@ -177,14 +174,14 @@ const Reservation = () => {
     if (selected && selected.endDate) {
       const endDate = new Date(selected.endDate.toString());
 
-      if (
-        isOverlapWithSchedule(selected.startDate, selected.endDate) ||
-        (endDate.getHours() >= 22 && endDate.getMinutes() > 0)
-      ) {
-        unsetSelected(1, selected.startDate);
-      } else {
-        dispatch(setCurrent());
-      }
+      // if (
+      //   isOverlapWithSchedule(selected.startDate, selected.endDate) ||
+      //   (endDate.getHours() >= 22 && endDate.getMinutes() > 0)
+      // ) {
+      //   unsetSelected(1, selected.startDate);
+      // } else {
+      //   dispatch(setCurrent());
+      // }
     }
   }, [selected]);
 

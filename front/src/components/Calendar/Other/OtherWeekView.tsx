@@ -54,21 +54,7 @@ export default function OtherWeekView() {
         let isDisabled = false;
 
         if (props.startDate && props.endDate) {
-          const str = getStringFromDate(props.startDate);
-          const list = map.get(str);
-
-          if (list) {
-            for (let item of list) {
-              if (
-                props.startDate >= new Date(item.startDate) &&
-                item.endDate &&
-                props.endDate <= new Date(item.endDate)
-              ) {
-                isDisabled = true;
-                break;
-              }
-            }
-          } else if (props.startDate && props.startDate <= now) {
+          if (props.startDate && props.startDate <= now) {
             isDisabled = true;
           }
         }
