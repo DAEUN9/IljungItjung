@@ -22,7 +22,7 @@ public class NotificationMessage {
     private String content;
 
     public void checkExistPhonenum() {
-        if (to.isBlank()) {
+        if (to == null) {
             throw new NoExistPhonenumException();
         }
     }

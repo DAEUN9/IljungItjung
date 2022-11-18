@@ -4,6 +4,7 @@ import com.iljungitjung.domain.notification.dto.NotificationMessage;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
+import com.iljungitjung.domain.notification.exception.notification.NoExistPhonenumException;
 import com.iljungitjung.domain.notification.service.NotificationService;
 import com.iljungitjung.domain.notification.service.NotificationServiceImpl;
 import com.iljungitjung.domain.schedule.entity.Schedule;
@@ -86,9 +87,8 @@ public class NotificationServiceExceptionTest {
         when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
         when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 
-        notificationService.autoReservationMessage(schedule);
-        verify(notificationCorrespondence, times(0)).sendNcloud(any(HttpEntity.class));
-    }
+        assertThatThrownBy(() -> notificationService.autoReservationMessage(schedule))
+                .isInstanceOf(NoExistPhonenumException.class);    }
 
     private List<NotificationMessage> makeMessageList(NotificationMessage... message){
         return Arrays.asList(message);

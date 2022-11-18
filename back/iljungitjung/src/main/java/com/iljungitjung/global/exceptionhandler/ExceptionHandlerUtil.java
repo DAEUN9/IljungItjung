@@ -5,6 +5,7 @@ import com.iljungitjung.domain.notification.exception.notification.*;
 import com.iljungitjung.domain.notification.exception.phone.ExpireRandomNumException;
 import com.iljungitjung.domain.notification.exception.phone.IncorrectPhonenumException;
 import com.iljungitjung.domain.notification.exception.phone.IncorrectRandomNumberException;
+import com.iljungitjung.domain.notification.exception.phone.NoMatchAutoScheduleException;
 import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
@@ -131,6 +132,11 @@ public class ExceptionHandlerUtil {
     @ExceptionHandler(NoExistPhonenumException.class)
     ResponseEntity<CommonResponse> NoExistPhonenumException(NoExistPhonenumException e){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(CommonResponse.getErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(NoMatchAutoScheduleException.class)
+    ResponseEntity<CommonResponse> handleNoMatchAutoScheduleException(NoMatchAutoScheduleException e) {
+        return ResponseEntity.badRequest().body(CommonResponse.getErrorResponse(e.getMessage()));
     }
 
 }
