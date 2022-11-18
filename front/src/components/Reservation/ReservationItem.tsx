@@ -2,11 +2,17 @@ import { Button, Collapse, TextField } from "@mui/material";
 import { useState } from "react";
 import { TbTrashX } from "react-icons/tb";
 import { RiArrowDownSLine } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
 
 import styles from "@styles/Reservation/Reservation.module.scss";
 import CustomModal from "@components/common/CustomModal";
 import iljung from "@assets/iljung.png";
 import { cancelReservation } from "@api/reservation";
+import { ThemeProvider } from "@emotion/react";
+import theme from "@components/common/theme";
+import { RootState } from "@modules/index";
+import { setStartDate } from "@modules/reservation";
+import { rerender } from "@modules/render";
 
 interface CancelReasonProps {
   reason: string;
@@ -21,16 +27,17 @@ interface CancelButtonProps {
 }
 
 const CancelButton = ({ id, detail }: CancelButtonProps) => {
+  const dispatch = useDispatch();
+  const renderObj = useSelector((state: RootState) => state.render.renderObj);
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
 
   const handleConfirm = () => {
     // 예약 취소 api 통신 코드
     cancelReservation(id, reason, (res: any) => {
-      console.log(res);
+      setOpen(false);
+      dispatch(rerender({ ...renderObj }));
     });
-
-    setOpen(false);
   };
 
   return (
@@ -52,14 +59,16 @@ const CancelButton = ({ id, detail }: CancelButtonProps) => {
                 <img src={iljung} />
               </div>
               <div className={styles.text}>예약을 취소하시겠습니까?</div>
-              <TextField
-                className={styles.textfield}
-                multiline
-                rows={3}
-                placeholder="예약을 취소하는 이유를 알려주세요."
-                fullWidth
-                onChange={(e) => setReason(e.target.value)}
-              />
+              <ThemeProvider theme={theme}>
+                <TextField
+                  className={styles.textfield}
+                  multiline
+                  rows={3}
+                  placeholder="예약을 취소하는 이유를 알려주세요."
+                  fullWidth
+                  onChange={(e) => setReason(e.target.value)}
+                />
+              </ThemeProvider>
             </div>
           }
         />

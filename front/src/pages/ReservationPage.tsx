@@ -19,6 +19,7 @@ const ReservationPage = () => {
   const { reservations, startDate, endDate } = useSelector(
     (state: RootState) => state.reservation
   );
+  const renderObj = useSelector((state: RootState) => state.render.renderObj);
 
   useEffect(() => {
     const map = new Map<string, ReservationTypes[]>();
@@ -58,7 +59,7 @@ const ReservationPage = () => {
         dispatch(setReservations(new Map([...map].sort().reverse())));
       }
     );
-  }, [startDate, endDate]);
+  }, [startDate, endDate, renderObj]);
 
   return (
     <div className={styles["reservation-page"]}>
