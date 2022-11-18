@@ -4,104 +4,96 @@
   @include page-default();
 }
 
-.editmodal{
+.modal {
   margin: auto;
 
-  & .picturebox{
+  & .picturebox {
     display: flex;
     justify-content: center;
-    
-    & .picture{
+
+    & .picture {
       width: 50%;
       height: 50%;
     }
   }
 
-  & .textbox{
+  & .textbox {
     text-align: center;
     font-weight: bold;
   }
 }
 
-.left{
+.left {
   width: 40%;
   display: flex;
+  align-items: center;
   justify-content: center;
   text-align: center;
-  
-  & .pictureBox{
-    display: flex;
-    justify-content: end;
-    align-items: flex-end;
 
-    & .picture{
-      margin-top: 30%;
+  & .pictureBox {
+    & .picture {
       width: 300px;
       height: 300px;
       border-radius: 150px;
-      filter: drop-shadow(3px 3px 3px #000000);
+      box-shadow: rgba($color: #000000, $alpha: 0.1) 12px 12px 30px 5px;
+      object-fit: cover;
     }
-    
-    & .pictureEdit{
+
+    & .pictureEdit {
       position: absolute;
       z-index: 1;
     }
   }
 
-  & .name{
+  & .name {
     margin-bottom: 40%;
   }
 
-  & .savebtn{
+  & .savebtn {
     width: 100%;
     height: 6%;
     font-weight: bolder;
   }
 }
 
-.right{
+.right {
   width: 55%;
   display: flex;
+  align-items: center;
   justify-content: center;
-  
-  & .content{
-    width: 70%;
-    margin-top: 10%;
 
-    & .nicknameinput{
+  & .content {
+    width: 70%;
+
+    & .nicknamebox {
       display: flex;
       justify-content: space-between;
 
-      & .nickname{
-      width: 80%;
-      height: 36px;
-      padding: 0 0.5rem;
+      & .nickname {
+        width: 82%;
+        legend {
+          width: auto !important;
+        }
       }
     }
 
-    & .oneline{
-      width: 96%;
-      height: 30px;
-      padding: 0 0.5rem;
+    & .intro {
+      width: 100%;
     }
 
-    & .explain{
-      width: 96%;
-      height: 120px;
-      resize: none;
-      padding: 0.5rem 0.5rem;
+    & .description {
+      width: 100%;
     }
 
-    & .count{
+    & .count {
       display: flex;
       justify-content: end;
       color: #757575;
     }
 
-    & .withdrow{
+    & .withdrow {
       text-align: end;
       color: red;
     }
   }
-
 }

@@ -89,7 +89,7 @@ interface MyProfile {
   nickname: string;
   email: string;
   imagePath: string;
-  introduction?: string;
+  introduction: string;
   description: string;
 }
 
