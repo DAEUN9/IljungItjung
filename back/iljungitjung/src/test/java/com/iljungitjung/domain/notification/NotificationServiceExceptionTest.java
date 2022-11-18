@@ -1,7 +1,6 @@
 package com.iljungitjung.domain.notification;
 
 import com.iljungitjung.domain.notification.dto.NotificationMessage;
-import com.iljungitjung.domain.notification.dto.NotificationMessageRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
 import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
@@ -83,7 +82,7 @@ public class NotificationServiceExceptionTest {
                 .startDate(new Date())
                 .categoryName(categoryName)
                 .phonenum(phone).build();
-        schedule.accpeted();
+        schedule.accepted();
         when(notificationCorrespondence.makeHeaders()).thenReturn(new HttpHeaders());
         when(notificationCorrespondence.sendNcloud(any(HttpEntity.class))).thenReturn(new NotificationResponseDto(statusAccepted()));
 

@@ -89,7 +89,7 @@ public class ReservationServiceImpl implements ReservationService{
 
         if(checkSamePerson(user, schedule.getUserTo())){
             if(reservationManageRequestDto.isAccept()){
-                schedule.accpeted();
+                schedule.accepted();
             }else{
                 cancelFrom="제공자";
                 schedule.canceled(cancelFrom, reservationManageRequestDto.getReason());
@@ -109,6 +109,7 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     @Override
+    @Transactional
     public void reservationDelete(Long id, String reason, HttpSession httpSession) {
 
         User user = userService.findUserBySessionId(httpSession);
@@ -180,20 +181,20 @@ public class ReservationServiceImpl implements ReservationService{
         List<Schedule> scheduleList = scheduleRepository.findByUserFrom_IdIs(user.getId());
 
         List<ReservationViewDto> reservationViewDtoList = new ArrayList<>();
+        List<ReservationCancelViewDto> reservationCancelViewDtoList = new ArrayList<>();
 
         for(Schedule schedule : scheduleList){
             if(checkDate(schedule, startDateFormat, endDateFormat)) continue;
 
             if(schedule.getType().equals(Type.BLOCK)) continue;
             if(schedule.getType().equals(Type.DELETE)) continue;
-
-            reservationViewDtoList.add(new ReservationViewDto(schedule));
+            if(schedule.getType().equals(Type.CANCEL)) reservationCancelViewDtoList.add(new ReservationCancelViewDto(schedule));
+            if(schedule.getType().equals(Type.REQUEST) || schedule.getType().equals(Type.ACCEPT)) reservationViewDtoList.add(new ReservationViewDto(schedule));
 
         }
-        ReservationViewResponseDto responseDtos = new ReservationViewResponseDto(reservationViewDtoList);
+        ReservationViewResponseDto responseDto = new ReservationViewResponseDto(reservationViewDtoList, reservationCancelViewDtoList);
 
-
-        return responseDtos;
+        return responseDto;
     }
     public boolean checkDate(Schedule schedule, Date startDateFormat, Date endDateFormat){
         if(schedule.getStartDate().before(startDateFormat) || schedule.getEndDate().before(startDateFormat) || schedule.getStartDate().after(endDateFormat) || schedule.getEndDate().after(endDateFormat)) return true;
