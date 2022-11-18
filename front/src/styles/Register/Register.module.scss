@@ -35,16 +35,15 @@
 
   & .content {
     text-align: start;
-    margin-bottom: 5%;
-    width: 80%;
+    width: 90%;
 
     & .nicknamebox {
       display: flex;
       justify-content: space-between;
     }
-    & .nickname {
-      width: 82%;
 
+    & .nickname {
+      width: 84%;
       legend {
         width: auto !important;
       }
@@ -60,12 +59,44 @@
       justify-content: flex-end;
       color: #757575;
     }
+
+    & .phonecheck {
+      display: flex;
+      justify-content: space-between;
+
+      & .numgetbox {
+        width: 60%;
+        display: flex;
+        justify-content: space-between;
+
+        & .numget {
+          width: 66%;
+
+          legend {
+            width: auto !important;
+          }
+        }
+      }
+
+      & .numcheckbox {
+        width: 38%;
+        display: flex;
+        justify-content: space-between;
+
+        & .numcheck {
+          width: 46%;
+
+          legend {
+            width: auto !important;
+          }
+        }
+      }
+    }
   }
 
   & .startbox {
     display: flex;
     justify-content: center;
-    margin-top: 10%;
 
     & .startbtn {
       width: 70%;

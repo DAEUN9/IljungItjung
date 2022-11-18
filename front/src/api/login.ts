@@ -19,7 +19,11 @@ function getMyProfile(success: any) {
     .catch((err) => console.log(err));
 }
 
-export { getKakaoLogin, getMyProfile };
+function logout(success?: any) {
+  api.delete(`/logout`).then(success);
+}
+
+export { getKakaoLogin, getMyProfile, logout };
 
 // 요청한 뒤 로그인 시 백엔드에서 302 또는 401 Response 를 보내주는데
 // 302일 경우 메인페이지로 이동

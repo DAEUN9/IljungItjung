@@ -10,7 +10,7 @@ import {
   Select,
   InputLabel,
 } from "@components/Calendar/Other/CustomComponents";
-import { RootState } from '@modules/index';
+import { RootState } from "@modules/index";
 
 const getTime = (time: string) => {
   const hours = parseInt(time.slice(0, 2));
@@ -29,7 +29,9 @@ const ReservationCategory = () => {
     register,
     formState: { errors },
   } = useFormContext();
-  const category = useSelector((state: RootState) => state.othercalendar.category);
+  const category = useSelector(
+    (state: RootState) => state.othercalendar.category
+  );
 
   return (
     <div className={styles["reservation-item"]}>
