@@ -59,7 +59,7 @@ class ScheduleServiceTest{
         List<Schedule> scheduleList = new ArrayList<>();
 
         Schedule schedule = createSchedule();
-        schedule.accpeted();
+        schedule.accepted();
         scheduleList.add(schedule);
 
         Date date = new Date();
@@ -97,7 +97,7 @@ class ScheduleServiceTest{
         List<Schedule> scheduleList = new ArrayList<>();
 
         Schedule schedule = createSchedule();
-        schedule.accpeted();
+        schedule.accepted();
         scheduleList.add(schedule);
 
         //when

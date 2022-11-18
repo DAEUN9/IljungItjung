@@ -200,7 +200,7 @@ public class ReservationServiceTest{
     public void deleteScheduleFromOwner() {
 
         //given
-        String reason = "가능합니다. 잘부탁드려요";
+        String reason = "schedule delete reason";
 
         User userTo = createUserToWithCategoryList();
 

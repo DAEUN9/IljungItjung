@@ -80,13 +80,14 @@ public class Schedule {
         this.phonenum = phonenum;
         this.type=type;
     }
-    public void accpeted() {
+    public void accepted() {
         this.type= Type.ACCEPT;
     }
-    // 추가
+
     public void deleted() {
         this.type= Type.DELETE;
     }
+
     public void canceled(String cancelFrom, String reason){
         this.cancelFrom=cancelFrom;
         this.reason=reason;
