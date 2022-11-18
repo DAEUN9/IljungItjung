@@ -94,7 +94,6 @@ const TabContent = ({ flag }: TabContentProps) => {
       hour = time.substring(0, 1);
       min = time.substring(1);
     }
-    console.log(hour, min);
 
     setEdit({
       name: selectedCategory.categoryName,

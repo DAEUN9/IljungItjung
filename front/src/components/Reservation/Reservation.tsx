@@ -21,8 +21,20 @@ const Reservation = ({ date, list }: ReservationProps) => {
    */
   const calculateDate = (time: string): boolean => {
     const reservationDate = new Date(time);
+    const today = new Date();
+    const tomorrow = new Date(today.setDate(today.getDate() + 1));
 
-    if (reservationDate < new Date()) return true;
+    const a =
+      reservationDate.getFullYear() +
+      makeFormat(reservationDate.getMonth().toString()) +
+      makeFormat(reservationDate.getDate().toString());
+    const b =
+      tomorrow.getFullYear() +
+      makeFormat(tomorrow.getMonth().toString()) +
+      makeFormat(tomorrow.getDate().toString());
+
+    // 당일이나 하루 전 취소는 안됨
+    if (a <= b) return true;
     else return false;
   };
 
