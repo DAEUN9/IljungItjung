@@ -27,7 +27,7 @@ public class BlockDays {
         this.saturday = blockDaysList.get(dayCount++);
         this.sunday = blockDaysList.get(dayCount);
     }
-    public List<Boolean> getBlockDays(){
+    public List<Boolean> getBlockDaysList(){
         List<Boolean> blockDays = new ArrayList<>();
 
         blockDays.add(this.monday);

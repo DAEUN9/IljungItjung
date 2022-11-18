@@ -52,16 +52,6 @@ public class User {
     @Embedded
     private BlockDays blockDays;
 
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
     public void setBlockDays(BlockDays blockDays) {
         this.blockDays = blockDays;
     }
@@ -71,7 +61,7 @@ public class User {
     }
 
     public List<Boolean> getBlockDays(){
-        return this.blockDays.getBlockDays();
+        return this.blockDays.getBlockDaysList();
     }
 
     public void setId(Long id) {

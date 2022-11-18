@@ -173,7 +173,9 @@ public class ReservationServiceImpl implements ReservationService{
         return dateFormat;
     }
 
+    private ReservationViewResponseDto makeReservationViewResponseDto(User user, Date startDateFormat, Date endDateFormat){
         List<Schedule> scheduleList = scheduleRepository.findByUserFrom_IdIs(user.getId());
+
 
         List<ReservationViewDto> reservationViewDtoList = new ArrayList<>();
 
@@ -186,8 +188,8 @@ public class ReservationServiceImpl implements ReservationService{
             reservationViewDtoList.add(new ReservationViewDto(schedule));
 
         }
-        ReservationViewResponseDto responseDtos = new ReservationViewResponseDto(reservationViewDtoList);
-        return new ReservationViewResponseDto(requestList, acceptList, cancelList);
+        ReservationViewResponseDto responseDto = new ReservationViewResponseDto(reservationViewDtoList);
+        return responseDto;
     }
 
     private void updateBlockDays(User user, ReservationBlockListRequestDto reservationBlockListRequestDto){
