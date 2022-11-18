@@ -233,8 +233,6 @@ function setting(
       if (action.payload.all) {
         const arr: string[] = [];
         copy.set(action.payload.day, arr);
-        console.log(action.payload.day);
-        console.log(copy);
       } else {
         let list = copy.get(action.payload.day);
 

@@ -25,7 +25,6 @@ const DeleteModal = () => {
 
   const handleDelete = () => {
     deleteSchedule(deleteItem.id, reason, (res: any) => {
-      console.log(res.data);
       dispatch(setDeleteSchedule({ ...deleteItem, categoryName: "" }));
       dispatch(rerender({ ...renderObj }));
     });

@@ -54,7 +54,6 @@ export default function CustomToolbar() {
     dispatch(toggleLock(index));
 
     // lockMap의 저장된 시간들을 지운다.
-    console.log((index + 1) % 7);
     dispatch(deleteLockShade((index + 1) % 7, "", true));
   };
 
