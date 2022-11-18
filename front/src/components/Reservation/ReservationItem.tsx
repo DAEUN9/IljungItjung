@@ -6,11 +6,13 @@ import { RiArrowDownSLine } from "react-icons/ri";
 import styles from "@styles/Reservation/Reservation.module.scss";
 import CustomModal from "@components/common/CustomModal";
 import iljung from "@assets/iljung.png";
-import { deleteSchedule } from "@api/setting";
+import { cancelReservation } from "@api/reservation";
 
 interface CancelReasonProps {
   reason: string;
   detail: string;
+  nickname: string;
+  cancelFrom: string;
 }
 
 interface CancelButtonProps {
@@ -24,8 +26,8 @@ const CancelButton = ({ id, detail }: CancelButtonProps) => {
 
   const handleConfirm = () => {
     // 예약 취소 api 통신 코드
-    deleteSchedule(id, reason, (res: any) => {
-      console.log(id, reason);
+    cancelReservation(id, reason, (res: any) => {
+      console.log(res);
     });
 
     setOpen(false);
@@ -33,8 +35,8 @@ const CancelButton = ({ id, detail }: CancelButtonProps) => {
 
   return (
     <div className={styles["cancel-button"]}>
-      <div className={styles["detail"]}>{detail}</div>
-      <div className={styles["button"]}>
+      <div className={styles.detail}>{detail}</div>
+      <div className={styles.button}>
         <Button startIcon={<TbTrashX />} onClick={() => setOpen(true)}>
           취소하기
         </Button>
@@ -66,16 +68,19 @@ const CancelButton = ({ id, detail }: CancelButtonProps) => {
   );
 };
 
-const CancelReason = ({ reason, detail }: CancelReasonProps) => {
+const CancelReason = ({
+  reason,
+  detail,
+  nickname,
+  cancelFrom,
+}: CancelReasonProps) => {
   const [checked, setChecked] = useState(false);
 
   return (
     <div className={styles["cancel-reason"]}>
-      <div className={`${styles["detail"]} ${styles["canceled"]}`}>
-        {detail}
-      </div>
-      <div className={styles["wraaper"]}>
-        <div className={styles["button"]}>
+      <div className={`${styles.detail} ${styles.canceled}`}>{detail}</div>
+      <div className={styles.wraaper}>
+        <div className={styles.button}>
           <Button
             startIcon={<RiArrowDownSLine />}
             onClick={() => setChecked(!checked)}
@@ -84,7 +89,14 @@ const CancelReason = ({ reason, detail }: CancelReasonProps) => {
           </Button>
         </div>
         <Collapse in={checked}>
-          <div className={styles["reason"]}>{reason}</div>
+          <div className={styles.cancelFrom}>
+            {cancelFrom === "사용자" ? (
+              <div>사용자가 취소한 예약입니다.</div>
+            ) : (
+              <div>{nickname}님에 의해 취소된 예약입니다.</div>
+            )}
+          </div>
+          <div className={styles.reason}>{reason}</div>
         </Collapse>
       </div>
     </div>

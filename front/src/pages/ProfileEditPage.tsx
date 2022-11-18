@@ -173,7 +173,11 @@ const ProfileEditPage = () => {
             <img className={styles["picture"]} src={img} />
           </div>
           <h1 className={styles["name"]}>{defalutName}</h1>
-          <CustomButton className={styles["savebtn"]} onClick={handleOpen}>
+          <CustomButton
+            size="large"
+            className={styles["savebtn"]}
+            onClick={handleOpen}
+          >
             저장하기
           </CustomButton>
         </div>

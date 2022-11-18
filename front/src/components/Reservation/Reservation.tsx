@@ -8,10 +8,6 @@ import {
 } from "@components/Reservation/ReservationItem";
 import { ReservationTypes } from "@components/types/types";
 import { makeFormat } from "@components/Calendar/common/util";
-import CustomModal from "@components/common/CustomModal";
-import { TextField } from "@mui/material";
-import iljung from "@assets/iljung.png";
-import { deleteSchedule } from "@api/setting";
 
 interface ReservationProps {
   date: string;
@@ -19,9 +15,6 @@ interface ReservationProps {
 }
 
 const Reservation = ({ date, list }: ReservationProps) => {
-  const [open, setOpen] = useState(false);
-  const [reason, setReason] = useState("");
-
   /**
    * 만료된 예약인지 아닌지 계산
    * @returns 만료되었다면 true, 그렇지 않다면 false
@@ -70,6 +63,8 @@ const Reservation = ({ date, list }: ReservationProps) => {
                   <CancelReason
                     reason={item.reason as string}
                     detail={item.contents}
+                    nickname={item.nickname}
+                    cancelFrom={item.cancelFrom as string}
                   />
                 )}
               />
