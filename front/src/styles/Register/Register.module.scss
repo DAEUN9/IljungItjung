@@ -16,7 +16,7 @@
     align-items: flex-start;
 
     & .iljung {
-      width: 35%;
+      width: 40%;
       height: auto;
     }
 
@@ -27,44 +27,115 @@
 }
 
 .right {
-  width: 45%;
   text-align: center;
   display: flex;
-  justify-content: center;
   align-items: center;
+  width: 45%;
 
   & .content {
     text-align: start;
-    margin-bottom: 5%;
-    width: 80%;
 
-    & .nicknamebox {
-      display: flex;
-      justify-content: space-between;
+    & p {
+      margin: 0.5rem 0;
     }
-    & .nickname {
-      width: 82%;
-      legend {
-        width: auto !important;
+
+    & .top {
+      & h1 {
+        font-family: "LeferiPoint-BlackA";
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+        font-size: 2rem;
+      }
+
+      & p {
+        margin: 0.3rem 0;
       }
     }
 
-    & .oneline {
-      width: 100%;
-      overflow: auto;
+    & h2 {
+      font-family: "LeferiPoint-BlackA";
+      margin: 1rem 0 0 0;
     }
 
-    & .count {
-      display: flex;
-      justify-content: flex-end;
-      color: #757575;
+    & .nickname-wrapper {
+      margin-top: 3rem;
+
+      & .nicknamebox {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      & .nickname {
+        width: 73%;
+        legend {
+          width: auto !important;
+        }
+      }
+
+      & button {
+        width: 25%;
+      }
+    }
+
+    & .phone-wrapper {
+      margin-top: 2rem;
+      & .phonecheck {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        & .numgetbox {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+
+          & .numget {
+            width: 63%;
+
+            legend {
+              width: auto !important;
+            }
+          }
+        }
+
+        & .numcheckbox {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          margin-top: 0.5rem;
+
+          & .numcheck {
+            width: 63%;
+
+            legend {
+              width: auto !important;
+            }
+          }
+        }
+      }
+    }
+
+    & .intro-wrapper {
+      margin-top: 2rem;
+
+      & .oneline {
+        margin-top: 0.5rem;
+        width: 100%;
+        overflow: auto;
+      }
+
+      & .count {
+        display: flex;
+        justify-content: flex-end;
+        color: #757575;
+      }
     }
   }
 
   & .startbox {
     display: flex;
     justify-content: center;
-    margin-top: 10%;
+    margin-top: 3rem;
 
     & .startbtn {
       width: 70%;

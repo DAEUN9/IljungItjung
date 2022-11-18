@@ -216,7 +216,7 @@ const ProfileEditPage = () => {
             </CustomButton>
           </div>
           <br />
-          <h2>한 줄 소개</h2>
+          <h2>한줄 소개</h2>
           <TextField
             className={styles["intro"]}
             onChange={handleIntro}
