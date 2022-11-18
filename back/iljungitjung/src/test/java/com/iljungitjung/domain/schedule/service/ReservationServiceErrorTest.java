@@ -31,7 +31,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 @DisplayName("상담예약 서비스 에러")
 @ExtendWith(SpringExtension.class)
 public class ReservationServiceErrorTest {
@@ -166,29 +166,6 @@ public class ReservationServiceErrorTest {
 
         //then
         Assertions.assertThrows(NoGrantAcceptScheduleException.class, () -> {
-            reservationService.reservationManage(1L, reservationManageRequestDto, httpSession);
-        });
-    }
-
-    @Test
-    @DisplayName("일정 관리시 일정 주인, 신청자가 아닌 제3자가 접근함")
-    void noGrantAccessScheduleWhenManageSchedule(){
-        //given
-        User userError = createUserFrom();
-        userError.setId(3L);
-
-        boolean accept = true;
-        String reason = "가능합니다. 잘부탁드려요";
-
-        ReservationManageRequestDto reservationManageRequestDto = new ReservationManageRequestDto(accept, reason);
-        Optional<Schedule> schedule = Optional.of(createSchedule());
-
-        //when
-        when(userService.findUserBySessionId(any(HttpSession.class))).thenReturn(userError);
-        when(scheduleRepository.findScheduleById(any(Long.class))).thenReturn(schedule);
-
-        //then
-        Assertions.assertThrows(NoGrantAccessScheduleException.class, () -> {
             reservationService.reservationManage(1L, reservationManageRequestDto, httpSession);
         });
     }

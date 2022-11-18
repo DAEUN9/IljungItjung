@@ -8,6 +8,7 @@ import com.iljungitjung.domain.schedule.repository.ScheduleRepository;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,9 +82,9 @@ class DeleteUserServiceTest {
         scheduleRepository.save(schedule);
     }
 
-//    @Test
+    //@Test
     @DisplayName("사용자 삭제 후 카테고리와 스케쥴 삭제")
-    void deleteUserAndCategoiresAndSchedule(){
+    void deleteUserAndCategoriesAndSchedule(){
         String userToEmail = "userTo@naver.com";
 
         assertEquals(1, scheduleRepository.findAll().size());

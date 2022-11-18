@@ -8,5 +8,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryListCreateRequestDto {
+
     private List<CategoryCreateDto> categoryList;
 }

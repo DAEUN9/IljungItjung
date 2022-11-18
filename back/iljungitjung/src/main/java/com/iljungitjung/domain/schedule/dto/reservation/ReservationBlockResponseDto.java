@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class ReservationBlockResponseDto {
+
     private final Long count;
 
     public ReservationBlockResponseDto(Long count) {

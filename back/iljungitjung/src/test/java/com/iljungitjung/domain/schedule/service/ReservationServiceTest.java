@@ -24,7 +24,7 @@ import java.util.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 @DisplayName("상담예약 서비스")
 @ExtendWith(SpringExtension.class)
 public class ReservationServiceTest{
@@ -246,6 +246,7 @@ public class ReservationServiceTest{
 
         Schedule schedule = reservationBlockRequestDto.toEntity(startDateFormat, endDateFormat);
         schedule.setId(scheduleId);
+        schedule.blocked();
 
         List<Schedule> scheduleList = new ArrayList<>();
         scheduleList.add(schedule);
