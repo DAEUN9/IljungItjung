@@ -1,10 +1,7 @@
 package com.iljungitjung.domain.schedule.dto.schedule;
 
-
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import lombok.Getter;
-
-import java.text.SimpleDateFormat;
 
 @Getter
 public class ScheduleBlockDto {
@@ -12,7 +9,6 @@ public class ScheduleBlockDto {
     private final Long id;
     private final String startDate;
     private final String endDate;
-
 
     public ScheduleBlockDto(Schedule schedule){
         this.id=schedule.getId();

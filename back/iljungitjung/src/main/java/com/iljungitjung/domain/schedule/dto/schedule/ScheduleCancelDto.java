@@ -1,10 +1,7 @@
 package com.iljungitjung.domain.schedule.dto.schedule;
 
-
 import com.iljungitjung.domain.schedule.entity.Schedule;
 import lombok.Getter;
-
-import java.text.SimpleDateFormat;
 
 @Getter
 public class ScheduleCancelDto {
@@ -13,13 +10,10 @@ public class ScheduleCancelDto {
     private final String categoryName;
     private final String startDate;
     private final String endDate;
-
     private final String reason;
     private final String cancelFrom;
     private final String contents;
-
     private final String phonenum;
-
 
     public ScheduleCancelDto(Schedule schedule){
         this.id=schedule.getId();
@@ -30,6 +24,5 @@ public class ScheduleCancelDto {
         this.cancelFrom=schedule.getCancelFrom();
         this.contents=schedule.getContents();
         this.phonenum=schedule.getPhonenum();
-
     }
 }

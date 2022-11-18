@@ -1,8 +1,6 @@
 package com.iljungitjung.domain.schedule.dto.reservation;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,5 +11,4 @@ public class ReservationBlockListRequestDto {
 
     private List<Boolean> days;
     private List<ReservationBlockDto> blockList;
-
 }
