@@ -71,12 +71,11 @@ public class ScheduleServiceImpl implements ScheduleService{
             if(validDate && checkDate(schedule, startDateFormat, endDateFormat)) continue;
 
             if(myScheduleView){
-                if(schedule.getType().equals(Type.REQUEST)) requestList.add(new ScheduleViewDto(schedule));
-                else if(schedule.getType().equals(Type.CANCEL)) cancelList.add(new ScheduleCancelDto(schedule));
+                if(schedule.getType().equals(Type.CANCEL)) cancelList.add(new ScheduleCancelDto(schedule));
             }
-
+            if(schedule.getType().equals(Type.REQUEST)) requestList.add(new ScheduleViewDto(schedule));
             if (schedule.getType().equals(Type.ACCEPT)) acceptList.add(new ScheduleViewDto(schedule));
-            else if (schedule.getType().equals(Type.BLOCK)) blockList.add(new ScheduleBlockDto(schedule));
+            if (schedule.getType().equals(Type.BLOCK)) blockList.add(new ScheduleBlockDto(schedule));
 
         }
 
