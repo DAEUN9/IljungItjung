@@ -155,6 +155,7 @@ public class ReservationServiceTest{
 
         //given
         User userFrom = createUserFrom();
+        User userTo = createUserToWithCategoryList();
 
         Date date = new Date();
 
@@ -167,19 +168,19 @@ public class ReservationServiceTest{
         cal.add(Calendar.DATE, 1);
 
         List<Schedule> scheduleList = new ArrayList<>();
-        Schedule schedule = Schedule.builder().userFrom(userFrom).startDate(date).endDate(date).type(Type.REQUEST).build();
+        Schedule schedule = Schedule.builder().userFrom(userFrom).userTo(userTo).startDate(date).endDate(date).type(Type.REQUEST).build();
         schedule.setId(1L);
         scheduleList.add(schedule);
 
-        schedule = Schedule.builder().userFrom(userFrom).startDate(date).endDate(date).type(Type.ACCEPT).build();
+        schedule = Schedule.builder().userFrom(userFrom).userTo(userTo).startDate(date).endDate(date).type(Type.ACCEPT).build();
         schedule.setId(2L);
         scheduleList.add(schedule);
 
-        schedule = Schedule.builder().userFrom(userFrom).startDate(date).endDate(date).type(Type.CANCEL).build();
+        schedule = Schedule.builder().userFrom(userFrom).userTo(userTo).startDate(date).endDate(date).type(Type.CANCEL).build();
         schedule.setId(3L);
         scheduleList.add(schedule);
 
-        schedule = Schedule.builder().userFrom(userFrom).startDate(cal.getTime()).endDate(cal.getTime()).type(Type.CANCEL).build();
+        schedule = Schedule.builder().userFrom(userFrom).userTo(userTo).startDate(cal.getTime()).endDate(cal.getTime()).type(Type.CANCEL).build();
         schedule.setId(4L);
         scheduleList.add(schedule);
 
@@ -190,7 +191,7 @@ public class ReservationServiceTest{
         ReservationViewResponseDto reservationViewResponseDto = reservationService.reservationView(startDate, endDate, httpSession);
 
         //then
-        Assertions.assertEquals(1L, reservationViewResponseDto.getRequestList().get(0).getId());
+        Assertions.assertEquals(1L, reservationViewResponseDto.getReservationViewDtoList().get(0).getId());
     }
 
 
