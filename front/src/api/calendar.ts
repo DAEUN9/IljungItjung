@@ -53,3 +53,11 @@ export function getOtherProfile(nickname: string, success: any) {
     .then(success)
     .catch((err) => console.log(err));
 }
+
+// 일정 상세 조회
+export function getScheduleItem(id: number, success: any) {
+  api
+    .get(`/schedules/detail/${id}`)
+    .then(success)
+    .catch((err) => console.log(err));
+}
