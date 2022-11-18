@@ -1,52 +1,19 @@
-import { AxiosResponse } from "axios";
-
 import { apiInstance } from "@api/index";
 
 const api = apiInstance();
 
-interface DateProps {
-  startDate: string;
-  endDate: string;
-}
-
-interface ScheduleListProps {
-  color: string;
-  id: number;
-  categoryName: string;
-  startDate: string;
-  endDate: string;
-}
-
-interface BlockListProps {
-  id: number;
-  categoryName: string;
-  startDate: string;
-  endDate: string;
-}
-
-interface CancelListProps {
-  id: number;
-  categoryName: string;
-  startDate: string;
-  endDate: string;
-  reason: string;
-}
-
-interface GetReservationsResponse {
-  requestList: ScheduleListProps;
-  acceptList: ScheduleListProps;
-  blockList: BlockListProps;
-  cancelList: CancelListProps;
-}
-
 // 예약 목록 조회
-function getReservations(nickname: string, date: DateProps) {
-  console.log(nickname, date.startDate, date.endDate);
+function getReservations(startDate: string, endDate: string, success: any) {
   api
-    .get<GetReservationsResponse>(`/schedules/${nickname}`, { params: date })
-    .then((data) => data);
+    .get(`/reservations`, {
+      params: { startDate, endDate },
+    })
+    .then(success);
 }
 
 // 취소 요청
+function cancelReservation(id: number, reason: string, success: any) {
+  api.put(`/reservations/${id}`, { accept: false, reason }).then(success);
+}
 
-export { getReservations };
+export { getReservations, cancelReservation };

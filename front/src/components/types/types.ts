@@ -62,9 +62,8 @@ interface RequestState extends CommonState, DateState {
 
 interface AcceptState extends RequestState {}
 
-interface BlockState extends CategoryState, DateState {
-  contents: string;
-  block: boolean;
+interface BlockState extends DateState {
+  id: number;
 }
 
 interface CancelState extends CategoryState, DateState {
@@ -81,6 +80,7 @@ interface ScheduleApiData {
     requestList: RequestState[];
     acceptList: AcceptState[];
     blockList: BlockState[];
+    blockDayList: boolean[];
     cancelList: CancelState[];
   };
 }
@@ -104,6 +104,20 @@ interface AppointmentsTypes {
   phonenum: string;
 }
 
+interface ReservationTypes {
+  id: number;
+  type: string;
+  categoryName: string;
+  color: string;
+  contents: string;
+  startDate: string;
+  endDate: string;
+  nickname: string;
+  imagePath: string;
+  cancelFrom?: string;
+  reason?: string;
+}
+
 export type {
   SettingCategoryState,
   BlockListTypes,
@@ -115,4 +129,6 @@ export type {
   MyProfile,
   CategoryState,
   AppointmentsTypes,
+  BlockState,
+  ReservationTypes,
 };
