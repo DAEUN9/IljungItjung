@@ -2,7 +2,7 @@ package com.iljungitjung.global.scheduler;
 
 import com.iljungitjung.domain.notification.dto.NotificationMessageRequestDto;
 import com.iljungitjung.domain.notification.dto.NotificationResponseDto;
-import com.iljungitjung.domain.notification.exception.FailSignatureKeyErrorException;
+import com.iljungitjung.domain.notification.exception.notification.FailSignatureKeyErrorException;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
