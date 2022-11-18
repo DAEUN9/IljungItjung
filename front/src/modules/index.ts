@@ -6,6 +6,7 @@ import mycalendar from "@modules/mycalendar";
 import othercalendar from "@modules/othercalendar";
 import setting from "@modules/setting";
 import profile from "@modules/profile";
+import render from "@modules/render";
 
 const rootReducer = combineReducers({
   reservation,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   othercalendar,
   setting,
   profile,
+  render,
 });
 
 export default rootReducer;

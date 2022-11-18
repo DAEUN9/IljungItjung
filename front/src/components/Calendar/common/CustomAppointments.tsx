@@ -24,7 +24,10 @@ export default function CustomAppointments() {
                   {data.categoryName}
                 </div>
                 <div className={styles["appointment-nickname"]}>
-                  <Avatar sx={{ width: "18px", height: "18px" }} />
+                  <Avatar
+                    sx={{ width: "18px", height: "18px" }}
+                    src={data.imagePath}
+                  />
                   <div className={styles["appointment-nickname-wrapper"]}>
                     <div>
                       <span style={{ fontWeight: 600 }}>{data.nickname}</span>{" "}
