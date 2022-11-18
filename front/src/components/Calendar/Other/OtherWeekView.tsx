@@ -7,6 +7,8 @@ import { SchedulerDate, SchedulerDateTime } from "@components/types/types";
 import { RootState } from "@modules/index";
 import { setSelectedTime } from "@modules/othercalendar";
 
+const now = new Date();
+
 const isSameTime = (
   date1: SchedulerDateTime | undefined,
   date2: Date | undefined
@@ -21,11 +23,10 @@ const isSameTime = (
 };
 
 export default function OtherWeekView() {
-  const { map, selected, minutes } = useSelector(
+  const { selected, minutes, lock, blockList, fixedBlockList } = useSelector(
     (state: RootState) => state.othercalendar
   );
   const dispatch = useDispatch();
-  const now = new Date();
 
   const handleClick = (startDate: SchedulerDateTime) => {
     const newSelected: SchedulerDate = { startDate };
@@ -54,8 +55,22 @@ export default function OtherWeekView() {
         let isDisabled = false;
 
         if (props.startDate && props.endDate) {
-          if (props.startDate && props.startDate <= now) {
+          const startDate = props.startDate;
+
+          if (startDate <= now) {
             isDisabled = true;
+          } else {
+            const day = (startDate.getDay() + 6) % 7;
+            const time =
+              startDate.getHours().toString() +
+              startDate.getMinutes().toString();
+
+            if (lock[day]) {
+              isDisabled = fixedBlockList.get(day)?.includes(time) ?? false;
+            } else {
+              const date = getStringFromDate(startDate) + time;
+              isDisabled = blockList.has(date);
+            }
           }
         }
 

@@ -7,7 +7,6 @@ import {
 import { getStringFromDate } from "@components/Calendar/common/util";
 
 /* action type */
-const SET_DISABLED_MAP = "othercalendar/SET_DISABLED_MAP" as const;
 const SET_CURRENT = "othercalendar/SET_CURRENT" as const;
 const DELETE_CURRENT = "othercalendar/DELETE_CURRENT" as const;
 const SET_SELECTED_TIME = "othercalendar/SET_SELECTED_TIME" as const;
@@ -16,11 +15,6 @@ const SET_CATEGORY = "othercalendar/SET_CATEGORY" as const;
 const SET_BLOCK_LIST = "mycalendar/SET_BLOCK_LIST" as const;
 
 /* action creator */
-export const setDisabledMap = (list: SchedulerDate[]) => ({
-  type: SET_DISABLED_MAP,
-  payload: list,
-});
-
 export const setCurrent = () => ({
   type: SET_CURRENT,
 });
@@ -50,7 +44,7 @@ export const setBlockList = (
   blockDayList: boolean[]
 ) => {
   const block = getBlockList(reservations, blockList, blockDayList);
-  console.log(block);
+
   return {
     type: SET_BLOCK_LIST,
     payload: { block, blockDayList },
@@ -90,11 +84,20 @@ function getBlockList(
   // 예약, 예약 요청 목록 시간대 블락
   reservations.forEach((reservation) => {
     const startDate = new Date(reservation.startDate.toString());
-    const time =
-      startDate.getHours().toString() + startDate.getMinutes().toString();
-    const date = getStringFromDate(startDate) + time;
-    if (!set.has(date)) {
-      set.add(date);
+    const endDate = new Date(reservation.endDate.toString());
+
+    let skip = 30;
+
+    while (startDate < endDate) {
+      const time =
+        startDate.getHours().toString() + startDate.getMinutes().toString();
+      const date = getStringFromDate(startDate) + time;
+
+      if (!set.has(date)) {
+        set.add(date);
+      }
+      startDate.setMinutes(skip);
+      skip += 30;
     }
   });
 
@@ -102,7 +105,6 @@ function getBlockList(
 }
 
 type OtherCalenderActions =
-  | ReturnType<typeof setDisabledMap>
   | ReturnType<typeof setCurrent>
   | ReturnType<typeof deleteCurrent>
   | ReturnType<typeof setSelectedTime>
@@ -114,7 +116,6 @@ export interface OtherCalenderState {
   current: SchedulerDate[];
   selected?: SchedulerDate;
   minutes: number;
-  map: Map<string, SchedulerDate[]>;
   category: CategoryState[];
   lock: boolean[];
   fixedBlockList: Map<number, string[]>;
@@ -124,7 +125,6 @@ export interface OtherCalenderState {
 const initialState: OtherCalenderState = {
   current: [],
   minutes: 0,
-  map: new Map<string, SchedulerDate[]>(),
   category: [
     {
       id: 0,
@@ -143,19 +143,6 @@ export default function reducer(
   action: OtherCalenderActions
 ) {
   switch (action.type) {
-    case SET_DISABLED_MAP:
-      for (let item of action.payload) {
-        const str = getStringFromDate(item.startDate.toString());
-
-        if (!state.map.has(str)) {
-          const list: SchedulerDate[] = [];
-          state.map.set(str, list);
-        }
-
-        state.map.get(str)?.push(item);
-      }
-
-      return state;
     case SET_CURRENT:
       if (state.selected) {
         return { ...state, current: [state.selected] };
