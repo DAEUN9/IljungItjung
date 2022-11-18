@@ -15,7 +15,7 @@ import javax.validation.Valid;
 @RequestMapping(value = "/categories")
 @Validated
 public class CategoryController {
-
+    
     private final CategoryService categoryService;
 
     @PostMapping

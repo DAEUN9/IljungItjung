@@ -3,22 +3,20 @@ package com.iljungitjung.domain.schedule.controller;
 import com.iljungitjung.domain.schedule.service.ScheduleService;
 import com.iljungitjung.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.utility.nullability.AlwaysNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import reactor.util.annotation.Nullable;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 @RequiredArgsConstructor
 @RequestMapping("/schedules")
 @RestController
 @Validated
 public class ScheduleController {
+
     private final ScheduleService scheduleService;
 
     @GetMapping("/{nickname}")

@@ -6,12 +6,9 @@ import lombok.*;
 @Getter
 public class CategoryViewResponseDto {
 
-     private final Long id;
-
+    private final Long id;
     private final String categoryName;
-
     private final String color;
-
     private final String time;
 
     public CategoryViewResponseDto(Category category) {

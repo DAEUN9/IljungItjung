@@ -30,7 +30,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("유저 서비스")
 @ExtendWith(SpringExtension.class)
 public class UserServiceTest {

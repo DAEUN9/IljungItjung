@@ -19,7 +19,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("카테고리 서비스")
 @ExtendWith(SpringExtension.class)
 class CategoryServiceTest {

@@ -14,14 +14,11 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     private Long id;
-
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
-
     @Column(nullable = false, name = "category_name")
     private String categoryName;
-
     @Column(nullable = false)
     private String color;
     @Column(nullable = false)
