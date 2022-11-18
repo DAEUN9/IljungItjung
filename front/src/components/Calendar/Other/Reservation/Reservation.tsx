@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
 
 import styles from "@styles/Calendar/Calendar.module.scss";
 import CustomButton from "@components/common/CustomButton";
-import { getStringFromDate } from "@components/Calendar/common/util";
+import {
+  getStringFromDate,
+  makeFormat,
+} from "@components/Calendar/common/util";
 import { SchedulerDate, SchedulerDateTime } from "@components/types/types";
 import { RootState } from "@modules/index";
 import {
@@ -19,6 +23,7 @@ import ReservationDate from "@components/Calendar/Other/Reservation/ReservationD
 import ReservationTime from "@components/Calendar/Other/Reservation/ReservationTime";
 import ReservationPhone from "@components/Calendar/Other/Reservation/ReservationPhone";
 import ReservationRequest from "@components/Calendar/Other/Reservation/ReservationRequest";
+import { requestReservation } from "@api/calendar";
 
 interface RequestData {
   category: string;
@@ -27,27 +32,12 @@ interface RequestData {
   time: string;
 }
 
-const getMinutes = (time: string) => {
-  const hours = parseInt(time.slice(0, 2));
-  const minutes = parseInt(time.slice(2));
-
-  return hours * 60 + minutes;
-};
-
-const items = [
-  {
-    categoryName: "예쁜 그림",
-    time: "0100",
-  },
-  {
-    categoryName: "멋진 그림",
-    time: "0130",
-  },
-  {
-    categoryName: "예쁘고 멋진 그림",
-    time: "0300",
-  },
-];
+interface RequestApiData {
+  status: string;
+  data: {
+    id: number;
+  };
+}
 
 const messages = [
   "카테고리를 선택할 수 없습니다.",
@@ -59,31 +49,59 @@ const Reservation = () => {
   const methods = useForm<RequestData>();
   const { handleSubmit, watch, setValue } = methods;
   const watchCategory = watch("category", "");
-  const { selected, map } = useSelector(
+  const { selected, map, category } = useSelector(
     (state: RootState) => state.othercalendar
   );
   const dispatch = useDispatch();
+  const { nickname } = useParams();
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(0);
 
-  const onSubmit: SubmitHandler<RequestData> = useCallback((data) => {
-    console.log(data);
-    openSnackbar(2);
-  }, []);
+  // form onSubmit 핸들러
+  const onSubmit: SubmitHandler<RequestData> = (data) => {
+    if (selected) {
+      let startDate =
+        typeof selected.startDate === "object"
+          ? selected.startDate
+          : new Date(selected.startDate);
 
-  const handleClose = useCallback(() => setOpen(false), []);
+      const requestData = {
+        userToNickname: nickname ?? "",
+        date: getStringFromDate(startDate),
+        startTime:
+          makeFormat(startDate.getHours().toString()) +
+          makeFormat(startDate.getMinutes().toString()),
+        contents: data.request,
+        phone: data.phone,
+        categoryName: data.category,
+      };
 
-  const getScheduleEndDate = (startDate: string) => {
-    const endDate = new Date(startDate);
-    const time = items.filter((item) => item.categoryName === watchCategory)[0]
-      .time;
-    const minutes = getMinutes(time);
+      console.log(requestData);
 
-    endDate.setMinutes(endDate.getMinutes() + minutes);
-
-    return { endDate, minutes };
+      requestReservation(requestData, (res: RequestApiData) => {
+        console.log(res);
+        openSnackbar(2);
+      });
+    }
   };
 
+  // 시간대, 카테고리 선택됐을 때 endDate 구하기
+  const getScheduleEndDate = (startDate: string) => {
+    const endDate = new Date(startDate);
+    const time = category.filter(
+      (item) => item.categoryName === watchCategory
+    )[0].time;
+
+    const hours = parseInt(time.slice(0, 2));
+    const minutes = parseInt(time.slice(2));
+    const endDateMinutes = hours * 60 + minutes;
+
+    endDate.setMinutes(endDate.getMinutes() + endDateMinutes);
+
+    return { endDate, minutes: endDateMinutes };
+  };
+
+  // 블락된 시간대와 겹치는지 확인
   const isOverlapWithSchedule = (
     startDate: SchedulerDateTime,
     endDate: SchedulerDateTime
@@ -111,6 +129,7 @@ const Reservation = () => {
     return isOverlap;
   };
 
+  // 선택할 수 없는 카테고리 or 시간대이면 캘린더에 표시된 예약 삭제
   const unsetSelected = (id: number = 0, startDate: SchedulerDateTime) => {
     dispatch(deleteCurrent());
     dispatch(setSelectedTime({ startDate }));
@@ -118,10 +137,14 @@ const Reservation = () => {
     setValue("category", "");
   };
 
+  // 스낵바 open 핸들러
   const openSnackbar = useCallback((id: number = 0) => {
     setId(id);
     setOpen(true);
   }, []);
+
+  // 스낵바 close 핸들러
+  const handleClose = useCallback(() => setOpen(false), []);
 
   // 카테고리가 선택됐을 때
   useEffect(() => {
@@ -130,7 +153,13 @@ const Reservation = () => {
         selected.startDate.toString()
       );
 
-      if (isOverlapWithSchedule(selected.startDate, endDate)) {
+      console.log(endDate.getHours());
+      console.log(endDate.getMinutes());
+
+      if (
+        isOverlapWithSchedule(selected.startDate, endDate) ||
+        (endDate.getHours() >= 22 && endDate.getMinutes() > 0)
+      ) {
         unsetSelected(0, selected.startDate);
       } else {
         const newSelected: SchedulerDate = { startDate: selected.startDate };
@@ -146,7 +175,12 @@ const Reservation = () => {
   // selectedTime이 변경됐을 때
   useEffect(() => {
     if (selected && selected.endDate) {
-      if (isOverlapWithSchedule(selected.startDate, selected.endDate)) {
+      const endDate = new Date(selected.endDate.toString());
+
+      if (
+        isOverlapWithSchedule(selected.startDate, selected.endDate) ||
+        (endDate.getHours() >= 22 && endDate.getMinutes() > 0)
+      ) {
         unsetSelected(1, selected.startDate);
       } else {
         dispatch(setCurrent());

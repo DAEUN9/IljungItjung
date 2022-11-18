@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoHelpCircleOutline } from "react-icons/io5";
-import { Fab, IconButton, Tab, Tabs } from "@mui/material";
+import { Fab, IconButton, Tab, Tabs, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { BsQuestionLg } from "react-icons/bs";
 import { ThemeProvider } from "@emotion/react";
+import { useDispatch, useSelector } from "react-redux";
 
 import Sidebar from "@components/common/Sidebar";
 import styles from "@styles/Setting/Setting.module.scss";
@@ -20,6 +21,20 @@ import {
   CalendarTooltip,
   TooltipContent,
 } from "@components/Setting/CalendarTooltip";
+import { CategoryTooltip } from "@components/Setting/Category/CategoryTooltip";
+import { blockSchedule, registerCategory } from "@api/setting";
+import { RootState } from "@modules/index";
+import { AppointmentsTypes, BlockListTypes } from "@components/types/types";
+import { getSchedule } from "@api/calendar";
+import DeleteModal from "@components/Setting/DeleteModal";
+import {
+  lockShade,
+  selectCategory,
+  setCategory,
+  setLock,
+  setShade,
+} from "@modules/setting";
+import { getFullStringFromDate } from "@components/Calendar/common/util";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -37,37 +52,85 @@ const TabPanel = (props: TabPanelProps) => {
   );
 };
 
+interface SettingApiData {
+  status: string;
+  data: number;
+}
+
 const SettingPage = () => {
-  const [tab, setTab] = useState(0);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const [tab, setTab] = useState(0);
   const [saveOpen, setSaveOpen] = useState(false);
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [appointments, setAppointments] = useState<AppointmentsTypes[]>([]);
+  const { categories, set, lock } = useSelector(
+    (state: RootState) => state.setting
+  );
+  const profile = useSelector((state: RootState) => state.profile.profile);
 
-  const handleClickSave = () => {
-    // 모달 띄우기
-    setSaveOpen(true);
-  };
+  useEffect(() => {
+    getSchedule(profile.nickname, (res: any) => {
+      const { acceptList, categoryList, blockDayList, blockList } = res.data;
+      console.log(res.data);
+      setAppointments(acceptList);
+      dispatch(setCategory(categoryList));
+      dispatch(setLock(blockDayList));
 
-  const handleClickCancel = () => {
-    navigate("/calendar/my");
-  };
+      const tempSet = new Set<string>();
+      blockList.map((block: any) => {
+        const start = new Date(block.startDate);
+        const end = new Date(block.endDate);
+        const time = getFullStringFromDate(start, end);
+        tempSet.add(time);
 
-  const handleSubmit = () => {
-    console.log("handleSubmit()");
-    // 변경 내용 api 요청
-    setSaveOpen(false);
-  };
+        const day = start.getDay();
+        if (lock[(day + 6) % 7]) {
+          dispatch(lockShade(day, time));
+        }
+      });
+      dispatch(setShade(tempSet));
+    });
+  }, []);
 
   const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };
 
+  const handleSubmit = () => {
+    setSaveOpen(false);
+
+    let blockList: BlockListTypes[] = [];
+    set.forEach((item) => {
+      const obj = {
+        startTime: item.substring(9, 13),
+        endTime: item.substring(13),
+        date: item.substring(1, 9),
+      };
+      blockList.push(obj);
+    });
+
+    console.log(blockList);
+
+    registerCategory(categories, (res: SettingApiData) => {
+      console.log(res.data);
+    });
+    blockSchedule(lock, blockList, (res: SettingApiData) => {
+      console.log(res.data);
+    });
+
+    dispatch(selectCategory({ categoryName: "", time: "", color: "" }));
+
+    navigate("/calendar/my");
+  };
+
   return (
     <div className={styles["setting-page"]}>
       <Sidebar />
-      <div className={styles["content"]}>
+      <div className={styles.content}>
         <div className={styles["calendar-container"]}>
-          <SetCalendar />
+          <SetCalendar appointments={appointments} />
           <ThemeProvider theme={theme}>
             <CalendarTooltip title={TooltipContent()}>
               <div className={styles["fab-wrapper"]}>
@@ -77,18 +140,19 @@ const SettingPage = () => {
               </div>
             </CalendarTooltip>
           </ThemeProvider>
+          <DeleteModal />
         </div>
-        <div className={styles["right"]}>
+        <div className={styles.right}>
           <div className={styles["button-group"]}>
             <CustomButton
               variant="contained"
               children="저장"
-              onClick={handleClickSave}
+              onClick={() => setSaveOpen(true)}
             />
             <CustomButton
               color="secondary"
               children="취소"
-              onClick={handleClickCancel}
+              onClick={() => setCancelOpen(true)}
             />
           </div>
           <CustomModal
@@ -99,10 +163,10 @@ const SettingPage = () => {
             handleConfirm={handleSubmit}
             children={
               <div className={styles["modal-content"]}>
-                <div className={styles["img"]}>
+                <div className={styles.img}>
                   <img src={iljung} />
                 </div>
-                <div className={styles["text"]}>
+                <div className={styles.text}>
                   변경사항이 저장됩니다.
                   <br />
                   계속 하시겠습니까?
@@ -110,11 +174,30 @@ const SettingPage = () => {
               </div>
             }
           />
+          <CustomModal
+            open={cancelOpen}
+            setOpen={setCancelOpen}
+            cancelLabel="취소"
+            confirmLabel="확인"
+            handleConfirm={() => navigate("/calendar/my")}
+            children={
+              <div className={styles["modal-content"]}>
+                <div className={styles.img}>
+                  <img src={iljung} />
+                </div>
+                <div className={styles.text}>
+                  변경사항이 사라집니다.
+                  <br />
+                  계속 하시겠습니까?
+                </div>
+              </div>
+            }
+          />
           <div className={styles["category-container"]}>
-            <div className={styles["title"]}>
+            <div className={styles.title}>
               <h2>카테고리 관리</h2>
               <CustomTooltip
-                title="카테고리 관리"
+                title={CategoryTooltip()}
                 children={
                   <IconButton>
                     <IoHelpCircleOutline />
@@ -122,9 +205,9 @@ const SettingPage = () => {
                 }
               />
             </div>
-            <div className={styles["content"]}>
+            <div className={styles.content}>
               <CategoryList />
-              <div className={styles["tabs"]}>
+              <div className={styles.tabs}>
                 <Tabs value={tab} onChange={handleTabChange}>
                   <Tab label="추가" />
                   <Tab label="변경" />

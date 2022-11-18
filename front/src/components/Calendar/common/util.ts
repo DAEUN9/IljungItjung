@@ -1,4 +1,5 @@
 import { SchedulerDate, SchedulerDateTime } from "@components/types/types";
+import { DateNavigatorProps } from "@devexpress/dx-react-scheduler";
 
 /* type, interface */
 export interface TabPanelProps {
@@ -85,7 +86,7 @@ export const getStringFromDate = (time: Date | string | undefined) => {
 
   const str =
     date.getFullYear().toString() +
-    date.getMonth().toString() +
+    (date.getMonth() + 1) +
     date.getDate().toString();
 
   return str;
@@ -96,17 +97,19 @@ export const makeFormat = (time: string) => {
   return time;
 };
 
-export const getFullStringFromDate = (time: Date) => {
+export const getFullStringFromDate = (time: Date, endTime: Date) => {
   if (!time) return "";
 
   const day = time.getDay().toString();
   const year = time.getFullYear().toString();
-  let month = makeFormat(time.getMonth().toString());
-  let date = makeFormat(time.getDate().toString());
-  let hour = makeFormat(time.getHours().toString());
-  let min = makeFormat(time.getMinutes().toString());
+  const month = makeFormat((time.getMonth() + 1).toString());
+  const date = makeFormat(time.getDate().toString());
+  const hour = makeFormat(time.getHours().toString());
+  const min = makeFormat(time.getMinutes().toString());
+  const endHour = makeFormat(endTime.getHours().toString());
+  const endMin = makeFormat(endTime.getMinutes().toString());
 
-  return day + year + month + date + hour + min;
+  return day + year + month + date + hour + min + endHour + endMin;
 };
 
 export const getFullDate = (date: SchedulerDateTime | undefined) => {

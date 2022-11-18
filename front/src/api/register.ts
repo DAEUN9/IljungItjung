@@ -3,16 +3,16 @@ import { apiInstance } from "@api/index";
 const api = apiInstance();
 
 // 닉네임 중복체크 api
-function getOverlap(nickname: string, success: any) {
-  api.get(`/nicknames/${nickname}`).then(success);
+function getOverlap(nickname: string, success: any, fail: any) {
+  api.get(`/users/${nickname}`).then(success).catch(fail);
 }
 
 // 회원가입 api
-function postRegister(nickname: string, description: string, success: any) {
+function postRegister(nickname: string, introduction: string, success: any) {
   api
     .post(`/users`, {
       nickname: nickname,
-      description: description,
+      introduction: introduction,
     })
     .then(success);
 }

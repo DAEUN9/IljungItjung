@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Snackbar } from "@mui/material";
 
 import CustomChip from "@components/common/CustomChip";
 import styles from "@styles/Setting/CategoryList.module.scss";
-import { delCategory, selectCategory, setCategory } from "@modules/setting";
+import { delCategory, selectCategory } from "@modules/setting";
 import { SettingCategoryState } from "@components/types/types";
 import { RootState } from "@modules/index";
 
@@ -15,31 +15,21 @@ const data: SettingCategoryState[] = [
 ];
 
 const CategoryList = () => {
-  const categories = useSelector(
-    (state: RootState) => state.setting.categories
-  );
-  const selectedCategory = useSelector(
-    (state: RootState) => state.setting.selectedCategory
-  );
-
   const dispatch = useDispatch();
-  const onSetCategory = (categories: SettingCategoryState[]) =>
-    dispatch(setCategory(categories));
-  const onDelCategory = (category: SettingCategoryState) =>
-    dispatch(delCategory(category));
-  const onSelectCategory = (category: SettingCategoryState) =>
-    dispatch(selectCategory(category));
 
+  const { categories, selectedCategory } = useSelector(
+    (state: RootState) => state.setting
+  );
   const [delSnackbar, setDelSnackbar] = useState(false);
 
   const handleDeleteCategory = (category: SettingCategoryState) => {
     if (categories.length < 2) {
       setDelSnackbar(true);
     } else {
-      if (category.name === selectedCategory.name) {
-        onSelectCategory({ name: "", hour: "", min: "", color: "" });
+      if (category.categoryName === selectedCategory.categoryName) {
+        dispatch(selectCategory({ categoryName: "", time: "", color: "" }));
       }
-      onDelCategory(category);
+      dispatch(delCategory(category));
     }
   };
 
@@ -52,13 +42,17 @@ const CategoryList = () => {
       <div className={styles["content"]}>
         {categories.map((category, index) => (
           <div
-            className={`${styles["chip"]} ${category.color} chip${category.name}`}
+            className={`${styles["chip"]} ${category.color} chip${category.categoryName}`}
             key={index}
           >
             <CustomChip
-              active={selectedCategory.name === category.name ? true : false}
-              label={category.name}
-              onClick={() => onSelectCategory(category)}
+              active={
+                selectedCategory.categoryName === category.categoryName
+                  ? true
+                  : false
+              }
+              label={category.categoryName}
+              onClick={() => dispatch(selectCategory(category))}
               onDelete={() => handleDeleteCategory(category)}
             />
           </div>

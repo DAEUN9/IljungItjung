@@ -22,8 +22,6 @@ export default function SettingWeekView() {
   const onDeleteLockShade = (day: number, time: string, all?: boolean) =>
     dispatch(deleteLockShade(day, time, all));
 
-  useEffect(() => {}, [lockMap]);
-
   return (
     <WeekView
       startDayHour={9}
@@ -39,7 +37,9 @@ export default function SettingWeekView() {
         let isDisabled = false;
 
         if (props.startDate && props.endDate) {
-          isDisabled = set.has(getFullStringFromDate(props.startDate));
+          isDisabled = set.has(
+            getFullStringFromDate(props.startDate, props.endDate)
+          );
 
           const day = props.startDate.getDay();
           if (lock[(day + 6) % 7]) {
@@ -49,7 +49,7 @@ export default function SettingWeekView() {
                 const propsTime =
                   makeFormat(props.startDate.getHours().toString()) +
                   makeFormat(props.startDate.getMinutes().toString());
-                if (item === propsTime) {
+                if (item.substring(0, 4) === propsTime) {
                   isDisabled = true;
                   break;
                 }
@@ -70,7 +70,11 @@ export default function SettingWeekView() {
                     : styles["cell"]
                 }
                 onClick={() => {
-                  const date = getFullStringFromDate(props.startDate as Date);
+                  const date = getFullStringFromDate(
+                    props.startDate as Date,
+                    props.endDate as Date
+                  );
+                  console.log(date);
                   onToggleShade(date);
 
                   if (props.startDate) {

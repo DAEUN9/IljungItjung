@@ -4,6 +4,7 @@ import { Divider } from "@mui/material";
 import styles from "@styles/Search/SearchItem.module.scss";
 import { selectUser } from "@modules/search";
 import { SearchState } from "@components/types/types";
+import { useEffect } from "react";
 
 const SearchItem = (props: SearchState) => {
   const dispatch = useDispatch();

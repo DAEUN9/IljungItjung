@@ -1,9 +1,28 @@
 // 카테고리 관련 타입
 interface SettingCategoryState {
-  name: string;
+  categoryName: string;
   color: string;
-  hour: string;
-  min: string;
+  time: string;
+}
+
+interface BlockListTypes {
+  startTime: string;
+  endTime: string;
+  date: string;
+}
+
+interface SearchCategoryState {
+  categoryName: string;
+}
+
+// 검색 관련 타입
+interface SearchState {
+  nickname: string;
+  email: string;
+  imagePath: string;
+  introduction: string;
+  description: string;
+  categories: SearchCategoryState[];
 }
 
 interface SearchCategoryState {
@@ -27,7 +46,6 @@ interface SchedulerDate {
   endDate?: SchedulerDateTime;
   title?: string;
   allDay?: boolean;
-  id?: number | string;
   rRule?: string | undefined;
   exDate?: string | undefined;
   [propertyName: string]: any;
@@ -52,6 +70,8 @@ interface RequestState extends CommonState, DateState {
   color: string;
   contents: string;
   phonenum: string;
+  nickname: string;
+  imagePath: string;
 }
 
 interface AcceptState extends RequestState {}
@@ -83,16 +103,30 @@ interface MyProfile {
   nickname: string;
   email: string;
   imagePath: string;
-  introduction?: string;
+  introduction: string;
   description: string;
+}
+
+interface AppointmentsTypes {
+  id: number;
+  categoryName: string;
+  startDate: string;
+  endDate: string;
+  color: string;
+  nickname: string;
+  contents: string;
+  phonenum: string;
 }
 
 export type {
   SettingCategoryState,
+  BlockListTypes,
   SearchCategoryState,
   SearchState,
   SchedulerDateTime,
   SchedulerDate,
   ScheduleApiData,
   MyProfile,
+  CategoryState,
+  AppointmentsTypes,
 };
