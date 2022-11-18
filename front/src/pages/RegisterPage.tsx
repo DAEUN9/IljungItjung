@@ -1,12 +1,15 @@
-import React, { useState } from "react";
-import { getOverlap, postPhone, postRegister, putNum } from "@api/register";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import TextField from "@mui/material/TextField";
+import { ThemeProvider } from "@mui/material";
+
+import { getOverlap, postPhone, postRegister, putNum } from "@api/register";
 import styles from "@styles/Register/Register.module.scss";
 import iljung from "@assets/iljung.png";
 import logo from "@assets/logo.png";
 import CustomButton from "@components/common/CustomButton";
-import TextField from "@mui/material/TextField";
 import { registerCategory } from "@api/setting";
+import theme from "@components/common/theme";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -194,131 +197,147 @@ const RegisterPage = () => {
 
   return (
     <div className={styles["register-page"]}>
-      <div className={styles["left"]}>
-        <div className={styles["picturebox"]}>
-          <img src={logo} alt="로고" className={styles["logo"]} />
-          <img src={iljung} alt="일정이" className={styles["iljung"]} />
+      <div className={styles.left}>
+        <div className={styles.picturebox}>
+          <img src={logo} alt="로고" className={styles.logo} />
+          <img src={iljung} alt="일정이" className={styles.iljung} />
         </div>
       </div>
-      <div className={styles["right"]}>
-        <div className={styles["content"]}>
-          <h1>회원가입</h1>
-          <p>최소한의 정보를 입력하고 빠르게 시작해보세요</p>
-          <p>각 정보는 추후에 수정할 수 있습니다.</p>
-          <h2>닉네임</h2>
-          <p>2~10글자의 한글, 영어 대/소문자</p>
-          <div className={styles["nicknamebox"]}>
-            <TextField
-              className={styles["nickname"]}
-              onChange={handleInput}
-              placeholder="닉네임을 입력해주세요"
-              inputProps={{ maxLength: 10, minLength: 2 }}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              focused={focus}
-              error={
-                check === "공백을 제외한 한글과 영어만 입력해주세요." ||
-                check === "이미 등록된 닉네임 입니다."
-                  ? true
-                  : false
-              }
-              color={
-                check === "사용 가능한 닉네임 입니다." ? "success" : "primary"
-              }
-              label={check}
-              value={name}
-              onKeyDown={handleKeyDown}
-            />
-            <CustomButton
-              variant="outlined"
-              onClick={checkOverlap}
-              disabled={ableName}
-            >
-              중복 확인
-            </CustomButton>
-          </div>
-          <h2>휴대폰 번호 인증</h2>
-          <p>
-            문자로 예약 관련 알림을 드리기 위해 휴대폰 번호 인증을 진행해주세요.
-          </p>
-          <div className={styles["phonecheck"]}>
-            <div className={styles["numgetbox"]}>
-              <TextField
-                className={styles["numget"]}
-                size="small"
-                placeholder="ex)01012345678"
-                onChange={handlePhone}
-                value={phone}
-                disabled={ableInputPhone}
-                inputProps={{ maxLength: 11, minLength: 10 }}
-                label={checkPhone}
-                error={
-                  checkPhone === "'-'를 제외한 숫자만 입력해주세요." ||
-                  checkPhone === "정확한 휴대폰 번호를 입력해주세요." ||
-                  checkPhone === "이미 등록된 휴대폰 번호 입니다."
-                    ? true
-                    : false
-                }
-              />
-              <CustomButton
-                variant="outlined"
-                disabled={ablePhone}
-                onClick={handleGetNum}
-              >
-                인증번호 요청
-              </CustomButton>
+      <div className={styles.right}>
+        <div className={styles.content}>
+          <ThemeProvider theme={theme}>
+            <div className={styles.top}>
+              <h1>회원가입</h1>
+              <p>최소한의 정보를 입력하고 빠르게 시작해보세요</p>
+              <p>각 정보는 추후에 수정할 수 있습니다.</p>
             </div>
-            <div className={styles["numcheckbox"]}>
-              <TextField
-                className={styles["numcheck"]}
-                size="small"
-                placeholder="ex)123abc"
-                onChange={handleNum}
-                value={authNum}
-                disabled={ableInputNum}
-                inputProps={{ maxLength: 6, minLength: 6 }}
-                label={checkNum}
-                error={
-                  checkNum === "인증번호 오류" || checkNum === "ex)123abc"
-                    ? true
-                    : false
-                }
-              />
-              <CustomButton
-                variant="outlined"
-                disabled={ableNum}
-                onClick={handleCheckNum}
-              >
-                인증번호 확인
-              </CustomButton>
+            <div className={styles["nickname-wrapper"]}>
+              <h2>닉네임</h2>
+              <p>2~10글자의 한글, 영어 대/소문자</p>
+              <div className={styles.nicknamebox}>
+                <TextField
+                  className={styles.nickname}
+                  onChange={handleInput}
+                  placeholder="닉네임을 입력해주세요"
+                  size="small"
+                  fullWidth
+                  inputProps={{ maxLength: 10, minLength: 2 }}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                  focused={focus}
+                  error={
+                    check === "공백을 제외한 한글과 영어만 입력해주세요." ||
+                    check === "이미 등록된 닉네임 입니다."
+                      ? true
+                      : false
+                  }
+                  color={
+                    check === "사용 가능한 닉네임 입니다."
+                      ? "success"
+                      : "primary"
+                  }
+                  label={check}
+                  value={name}
+                  onKeyDown={handleKeyDown}
+                />
+                <CustomButton
+                  variant="outlined"
+                  onClick={checkOverlap}
+                  disabled={ableName}
+                >
+                  중복 확인
+                </CustomButton>
+              </div>
             </div>
-          </div>
-          <h2>한 줄 소개</h2>
-          <TextField
-            id="oneline"
-            value={intro}
-            onChange={handleIntro}
-            type="text"
-            placeholder="한 줄 소개를 입력해주세요"
-            inputProps={{ maxLength: 50 }}
-            className={styles["oneline"]}
-          />
-          <span className={styles["count"]}>{intro.length}/50</span>
-          <div className={styles["startbox"]}>
-            <CustomButton
-              className={styles["startbtn"]}
-              size="large"
-              disabled={
-                !(
-                  check === "사용 가능한 닉네임 입니다." &&
-                  checkNum === "인증 완료!"
-                )
-              }
-              onClick={onSubmit}
-            >
-              시작하기
-            </CustomButton>
-          </div>
+            <div className={styles["phone-wrapper"]}>
+              <h2>휴대폰 번호 인증</h2>
+              <p>
+                문자로 예약 관련 알림을 드리기 위해 휴대폰 번호 인증을
+                진행해주세요.
+              </p>
+              <div className={styles.phonecheck}>
+                <div className={styles.numgetbox}>
+                  <TextField
+                    className={styles.numget}
+                    size="small"
+                    placeholder="ex)01012345678"
+                    onChange={handlePhone}
+                    value={phone}
+                    disabled={ableInputPhone}
+                    inputProps={{ maxLength: 11, minLength: 10 }}
+                    label={checkPhone}
+                    error={
+                      checkPhone === "'-'를 제외한 숫자만 입력해주세요." ||
+                      checkPhone === "정확한 휴대폰 번호를 입력해주세요." ||
+                      checkPhone === "이미 등록된 휴대폰 번호 입니다."
+                        ? true
+                        : false
+                    }
+                  />
+                  <CustomButton
+                    variant="outlined"
+                    disabled={ablePhone}
+                    onClick={handleGetNum}
+                  >
+                    인증번호 요청
+                  </CustomButton>
+                </div>
+                <div className={styles.numcheckbox}>
+                  <TextField
+                    className={styles.numcheck}
+                    size="small"
+                    placeholder="ex)123abc"
+                    onChange={handleNum}
+                    value={authNum}
+                    disabled={ableInputNum}
+                    inputProps={{ maxLength: 6, minLength: 6 }}
+                    label={checkNum}
+                    error={
+                      checkNum === "인증번호 오류" || checkNum === "ex)123abc"
+                        ? true
+                        : false
+                    }
+                  />
+                  <CustomButton
+                    variant="outlined"
+                    disabled={ableNum}
+                    onClick={handleCheckNum}
+                  >
+                    인증번호 확인
+                  </CustomButton>
+                </div>
+              </div>
+            </div>
+            <div className={styles["intro-wrapper"]}>
+              <h2>한줄 소개</h2>
+              <TextField
+                id="oneline"
+                size="small"
+                value={intro}
+                onChange={handleIntro}
+                type="text"
+                placeholder="한줄 소개를 입력해주세요"
+                inputProps={{ maxLength: 50 }}
+                className={styles.oneline}
+              />
+              <span className={styles.count}>{intro.length}/50</span>
+              <div className={styles.startbox}>
+                <CustomButton
+                  className={styles.startbtn}
+                  size="large"
+                  disabled={
+                    !(
+                      check === "사용 가능한 닉네임 입니다." &&
+                      checkNum === "인증 완료!"
+                    )
+                  }
+                  onClick={onSubmit}
+                >
+                  시작하기
+                </CustomButton>
+              </div>
+            </div>
+          </ThemeProvider>
         </div>
       </div>
     </div>
