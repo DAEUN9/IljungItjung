@@ -1,11 +1,13 @@
-import styles from "@styles/Login/Login.module.scss";
 import Slider from "react-slick";
+import styled from "@emotion/styled";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import styled from "@emotion/styled";
+
 import caroL from "@assets/carouselL.png";
 import caroR from "@assets/carouselR.png";
 import defaultImg from "@assets/defaultImg.png";
+import "@styles/Login/slick-dots.scss";
+import styles from "@styles/Login/Login.module.scss";
 
 const Image = styled.img`
   width: 60%;
@@ -60,10 +62,7 @@ const CustomCarousel = () => {
 
   return (
     <div className={styles["carousel"]}>
-      <StyledSlider
-        {...settings}
-        // dotsClass={styles["slick-dots"]}
-      >
+      <StyledSlider {...settings} dotsClass="slick-dots">
         <div>
           <Image src={defaultImg} />
         </div>
