@@ -1,21 +1,19 @@
-import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/esm/locale";
 import { RiCalendarCheckLine } from "react-icons/ri";
 import { IconButton, Tooltip, Zoom } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 
 import styles from "@styles/Reservation/Reservation.module.scss";
 import "@styles/Reservation/DatePicker.scss";
+import { RootState } from "@modules/index";
+import { setEndDate, setStartDate } from "@modules/reservation";
 
 const Period = () => {
-  // default 기간은 오늘로부터 -15일~15일
-  const date = new Date();
-  const [startDate, setStartDate] = useState<Date>(
-    new Date(date.getFullYear(), date.getMonth(), date.getDate() - 15)
-  );
-  const [endDate, setEndDate] = useState<Date>(
-    new Date(date.getFullYear(), date.getMonth(), date.getDate() + 15)
+  const dispatch = useDispatch();
+  const { startDate, endDate } = useSelector(
+    (state: RootState) => state.reservation
   );
 
   const tooltip = "기간을 설정해 보세요.";
@@ -31,7 +29,7 @@ const Period = () => {
         <DatePicker
           dateFormat="yyyy/MM/dd"
           selected={startDate}
-          onChange={(date: Date) => setStartDate(date)}
+          onChange={(date: Date) => dispatch(setStartDate(date))}
           selectsStart
           startDate={startDate}
           endDate={endDate}
@@ -41,7 +39,7 @@ const Period = () => {
         <DatePicker
           dateFormat="yyyy/MM/dd"
           selected={endDate > startDate ? endDate : startDate}
-          onChange={(date: Date) => setEndDate(date)}
+          onChange={(date: Date) => dispatch(setEndDate(date))}
           selectsEnd
           startDate={startDate}
           endDate={endDate}
