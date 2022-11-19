@@ -6,6 +6,11 @@ import {
 } from "@components/types/types";
 import { getStringFromDate } from "@components/Calendar/common/util";
 
+interface BlockDate {
+  startDate: Date;
+  endDate: Date;
+}
+
 /* action type */
 const SET_CURRENT = "othercalendar/SET_CURRENT" as const;
 const DELETE_CURRENT = "othercalendar/DELETE_CURRENT" as const;
@@ -57,53 +62,51 @@ function getBlockList(
   blockList: BlockState[],
   blockDayList: boolean[]
 ) {
-  const set = new Set<string>();
-  const map = new Map<number, string[]>();
+  const map = new Map<string, BlockDate[]>();
+  const fixedMap = new Map<number, BlockDate[]>();
 
   // 설정한 시간대 블락
   blockDayList.forEach((day, index) => {
     if (day) {
-      map.set(index, []);
+      fixedMap.set(index, []);
     }
   });
 
   blockList.forEach((block) => {
-    const startDate = new Date(block.startDate.toString());
+    const startDate = new Date(block.startDate);
+    const endDate = new Date(block.endDate);
     const day = (startDate.getDay() + 6) % 7;
-    const time =
-      startDate.getHours().toString() + startDate.getMinutes().toString();
 
     if (blockDayList[day]) {
-      map.get(day)?.push(time);
-    } else {
-      const date = getStringFromDate(startDate) + time;
-      set.add(date);
+      fixedMap.get(day)?.push({ startDate, endDate });
     }
   });
 
   // 예약, 예약 요청 목록 시간대 블락
   reservations.forEach((reservation) => {
-    const startDate = new Date(reservation.startDate.toString());
-    const endDate = new Date(reservation.endDate.toString());
+    const startDate = new Date(reservation.startDate);
+    const endDate = new Date(reservation.endDate);
 
     let skip = 30;
 
     while (startDate < endDate) {
-      const time =
-        startDate.getHours().toString() + startDate.getMinutes().toString();
-      const date = getStringFromDate(startDate) + time;
+      const date = getStringFromDate(startDate);
+      const newStartDate = new Date(startDate.toString());
+      const newEndDate = new Date(startDate.toString());
+      newEndDate.setMinutes(newEndDate.getMinutes() + 30);
 
-      if (!set.has(date)) {
-        set.add(date);
+      if (!map.get(date)) {
+        map.set(date, []);
       }
+
+      map.get(date)?.push({ startDate: newStartDate, endDate: newEndDate });
       startDate.setMinutes(startDate.getMinutes() + skip);
-      skip += 30;
     }
   });
 
-  console.log(set);
+  console.log(map);
 
-  return { set, map };
+  return { map, fixedMap };
 }
 
 type OtherCalenderActions =
@@ -122,6 +125,8 @@ export interface OtherCalenderState {
   lock: boolean[];
   fixedBlockList: Map<number, string[]>;
   blockList: Set<string>;
+  map: Map<string, BlockDate[]>;
+  fixedMap: Map<number, BlockDate[]>;
 }
 
 const initialState: OtherCalenderState = {
@@ -138,6 +143,8 @@ const initialState: OtherCalenderState = {
   lock: [false, false, false, false, false, false, false],
   fixedBlockList: new Map<number, string[]>(),
   blockList: new Set<string>(),
+  map: new Map<string, BlockDate[]>(),
+  fixedMap: new Map<number, BlockDate[]>(),
 };
 
 export default function reducer(
@@ -164,8 +171,8 @@ export default function reducer(
       return {
         ...state,
         lock: blockDayList,
-        blockList: block.set,
-        fixedBlockList: block.map,
+        map: block.map,
+        fixedMap: block.fixedMap,
       };
     default:
       return state;

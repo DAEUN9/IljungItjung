@@ -23,9 +23,8 @@ const isSameTime = (
 };
 
 export default function OtherWeekView() {
-  const { selected, minutes, lock, blockList, fixedBlockList } = useSelector(
-    (state: RootState) => state.othercalendar
-  );
+  const { selected, minutes, lock, blockList, fixedBlockList, map, fixedMap } =
+    useSelector((state: RootState) => state.othercalendar);
   const dispatch = useDispatch();
 
   const handleClick = (startDate: SchedulerDateTime) => {
@@ -54,25 +53,46 @@ export default function OtherWeekView() {
       timeTableCellComponent={(props) => {
         let isDisabled = false;
 
-        if (props.startDate && props.endDate) {
+        if (props.startDate) {
           const startDate = props.startDate;
 
           if (startDate <= now) {
             isDisabled = true;
           } else {
             const day = (startDate.getDay() + 6) % 7;
-            const time =
+            const propsTime =
               startDate.getHours().toString() +
               startDate.getMinutes().toString();
 
             if (lock[day]) {
-              isDisabled = fixedBlockList.get(day)?.includes(time) ?? false;
+              const list = fixedMap.get(day);
+
+              if (list) {
+                for (let item of list) {
+                  const itemTime =
+                    item.startDate.getHours().toString() +
+                    item.startDate.getMinutes().toString();
+
+                  if (itemTime === propsTime) {
+                    isDisabled = true;
+                    break;
+                  }
+                }
+              }
             }
 
             if (!isDisabled) {
-              const date = getStringFromDate(startDate) + time;
-              isDisabled = blockList.has(date);
-              if (isDisabled) console.log(date);
+              const key = getStringFromDate(startDate);
+              const list = map.get(key);
+
+              if (list) {
+                for (let item of list) {
+                  if (item.startDate.toString() === startDate.toString()) {
+                    isDisabled = true;
+                    break;
+                  }
+                }
+              }
             }
           }
         }
