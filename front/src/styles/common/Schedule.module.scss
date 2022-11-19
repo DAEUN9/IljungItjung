@@ -1,3 +1,5 @@
+@use "../common/utils.module" as *;
+
 .schedule {
   padding: 1rem;
   border-radius: 15px;
@@ -12,7 +14,6 @@
   align-items: center;
   justify-content: space-between;
   font-size: 0.9rem;
-  font-weight: 800;
   margin-bottom: 0.5rem;
 
   & .left {
@@ -25,6 +26,10 @@
       width: 10px;
       height: 10px;
       margin-right: 0.5rem;
+    }
+
+    & span {
+      font-family: "LeferiPoint-BlackA" !important;
     }
   }
 
@@ -45,7 +50,7 @@
 
 .bottom {
   & .category {
-    font-weight: 800;
+    font-family: "LeferiPoint-BlackA" !important;
   }
 }
 

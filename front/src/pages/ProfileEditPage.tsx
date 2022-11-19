@@ -173,7 +173,11 @@ const ProfileEditPage = () => {
             <img className={styles["picture"]} src={img} />
           </div>
           <h1 className={styles["name"]}>{defalutName}</h1>
-          <CustomButton className={styles["savebtn"]} onClick={handleOpen}>
+          <CustomButton
+            size="large"
+            className={styles["savebtn"]}
+            onClick={handleOpen}
+          >
             저장하기
           </CustomButton>
         </div>
@@ -212,7 +216,7 @@ const ProfileEditPage = () => {
             </CustomButton>
           </div>
           <br />
-          <h2>한 줄 소개</h2>
+          <h2>한줄 소개</h2>
           <TextField
             className={styles["intro"]}
             onChange={handleIntro}

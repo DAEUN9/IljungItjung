@@ -53,8 +53,9 @@ const Reservation = () => {
   const methods = useForm<RequestData>();
   const { handleSubmit, watch, setValue } = methods;
   const watchCategory = watch("category", "");
-  const { selected, category, lock, blockList, fixedBlockList, fixedMap, map } =
-    useSelector((state: RootState) => state.othercalendar);
+  const { selected, category, lock, fixedMap, map } = useSelector(
+    (state: RootState) => state.othercalendar
+  );
   const dispatch = useDispatch();
   const { nickname } = useParams();
   const [open, setOpen] = useState(false);

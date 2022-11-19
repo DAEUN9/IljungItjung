@@ -26,20 +26,17 @@
 .left {
   width: 40%;
   display: flex;
+  align-items: center;
   justify-content: center;
   text-align: center;
 
   & .pictureBox {
-    display: flex;
-    justify-content: end;
-    align-items: flex-end;
-
     & .picture {
-      margin-top: 30%;
       width: 300px;
       height: 300px;
       border-radius: 150px;
-      filter: drop-shadow(3px 3px 3px #000000);
+      box-shadow: rgba($color: #000000, $alpha: 0.1) 12px 12px 30px 5px;
+      object-fit: cover;
     }
 
     & .pictureEdit {
@@ -62,6 +59,7 @@
 .right {
   width: 55%;
   display: flex;
+  align-items: center;
   justify-content: center;
 
   & .content {
@@ -73,6 +71,9 @@
 
       & .nickname {
         width: 82%;
+        legend {
+          width: auto !important;
+        }
       }
     }
 

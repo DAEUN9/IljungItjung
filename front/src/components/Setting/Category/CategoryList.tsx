@@ -8,12 +8,6 @@ import { delCategory, selectCategory } from "@modules/setting";
 import { SettingCategoryState } from "@components/types/types";
 import { RootState } from "@modules/index";
 
-const data: SettingCategoryState[] = [
-  // { name: "커트", color: "#FF0000", hour: "2", min: "30" },
-  // { name: "손발톱관리", color: "#000000", hour: "1", min: "00" },
-  // { name: "목욕", color: "#00FF00", hour: "3", min: "00" },
-];
-
 const CategoryList = () => {
   const dispatch = useDispatch();
 

@@ -1,6 +1,5 @@
 import { WeekView } from "@devexpress/dx-react-scheduler-material-ui";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
 
 import {
   getDay,
