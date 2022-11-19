@@ -26,7 +26,7 @@ public class NotificationScheduler {
     final private String BASE_MESSAGE = "일정있정에서 오늘 일정 안내드립니다.\n";
     final private String SCHEDULE_GUIDE = "[%s]\n%s - %s\n%s\n";
 
-    @Scheduled(cron=" 0 0 20 ? * * ", zone = "Asia/Seoul")
+    @Scheduled(cron=" 0 0 10 ? * * ", zone = "Asia/Seoul")
     private void searchTodaySchedules() {
         Date startToday = setTodayTime(0, 0, 0);
         Date endToday = setTodayTime(23, 59, 59);
