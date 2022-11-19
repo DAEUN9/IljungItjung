@@ -114,6 +114,8 @@ public class UserServiceImpl implements UserService{
         });
         user.updateUser(updateUser);
         userRepository.save(user);
+        sessionUser.updateRedisUser(updateUser);
+        redisUserRepository.save(sessionUser);
         log.debug("user save ok");
     }
 
