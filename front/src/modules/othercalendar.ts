@@ -104,8 +104,6 @@ function getBlockList(
     }
   });
 
-  console.log(map);
-
   return { map, fixedMap };
 }
 

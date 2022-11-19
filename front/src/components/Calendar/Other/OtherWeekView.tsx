@@ -23,8 +23,9 @@ const isSameTime = (
 };
 
 export default function OtherWeekView() {
-  const { selected, minutes, lock, blockList, fixedBlockList, map, fixedMap } =
-    useSelector((state: RootState) => state.othercalendar);
+  const { selected, minutes, lock, map, fixedMap } = useSelector(
+    (state: RootState) => state.othercalendar
+  );
   const dispatch = useDispatch();
 
   const handleClick = (startDate: SchedulerDateTime) => {
