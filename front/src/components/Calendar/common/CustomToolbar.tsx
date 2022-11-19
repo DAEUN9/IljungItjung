@@ -28,7 +28,9 @@ export default function CustomToolbar() {
   const [visible, setVisible] = useState(true);
   const location = useLocation();
   const dispatch = useDispatch();
-  const { set, lock } = useSelector((state: RootState) => state.setting);
+  const { set, lock, lockMap } = useSelector(
+    (state: RootState) => state.setting
+  );
 
   useEffect(() => {
     if (location.pathname.includes("setting")) {

@@ -49,7 +49,7 @@ const Reservation = () => {
   const methods = useForm<RequestData>();
   const { handleSubmit, watch, setValue } = methods;
   const watchCategory = watch("category", "");
-  const { selected, map, category } = useSelector(
+  const { selected, category, lock, blockList, fixedBlockList } = useSelector(
     (state: RootState) => state.othercalendar
   );
   const dispatch = useDispatch();
@@ -106,24 +106,26 @@ const Reservation = () => {
     startDate: SchedulerDateTime,
     endDate: SchedulerDateTime
   ) => {
-    const list = map.get(getStringFromDate(endDate.toString()));
     let isOverlap = false;
+    const _startDate = new Date(startDate.toString());
+    const _endDate = new Date(endDate.toString());
+    const day = (_startDate.getDay() + 6) % 7;
 
-    if (list) {
-      for (let item of list) {
-        if (item.endDate) {
-          const itemStartDate = new Date(item.startDate.toString());
-          const itemEndDate = new Date(item.endDate.toString());
+    _endDate.setMinutes(_endDate.getMinutes() - 30);
+    const time =
+      _endDate.getHours().toString() + _endDate.getMinutes().toString();
 
-          if (
-            (endDate > itemStartDate && endDate <= itemEndDate) ||
-            (startDate <= itemStartDate && endDate >= itemEndDate)
-          ) {
-            isOverlap = true;
-            break;
-          }
-        }
+    // 고정된 블락 리스트와 겹치는지 확인
+    if (lock[day]) {
+      const list = fixedBlockList.get(day);
+
+      if (list) {
+        isOverlap = list.includes(time);
       }
+    } else {
+      const date = getStringFromDate(_endDate) + time;
+      console.log(date);
+      isOverlap = blockList.has(date);
     }
 
     return isOverlap;
@@ -153,9 +155,6 @@ const Reservation = () => {
         selected.startDate.toString()
       );
 
-      console.log(endDate.getHours());
-      console.log(endDate.getMinutes());
-
       if (
         isOverlapWithSchedule(selected.startDate, endDate) ||
         (endDate.getHours() >= 22 && endDate.getMinutes() > 0)
@@ -176,15 +175,16 @@ const Reservation = () => {
   useEffect(() => {
     if (selected && selected.endDate) {
       const endDate = new Date(selected.endDate.toString());
+      dispatch(setCurrent());
 
-      if (
-        isOverlapWithSchedule(selected.startDate, selected.endDate) ||
-        (endDate.getHours() >= 22 && endDate.getMinutes() > 0)
-      ) {
-        unsetSelected(1, selected.startDate);
-      } else {
-        dispatch(setCurrent());
-      }
+      // if (
+      //   isOverlapWithSchedule(selected.startDate, selected.endDate) ||
+      //   (endDate.getHours() >= 22 && endDate.getMinutes() > 0)
+      // ) {
+      //   unsetSelected(1, selected.startDate);
+      // } else {
+      //   dispatch(setCurrent());
+      // }
     }
   }, [selected]);
 

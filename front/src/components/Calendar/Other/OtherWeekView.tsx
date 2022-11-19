@@ -7,6 +7,8 @@ import { SchedulerDate, SchedulerDateTime } from "@components/types/types";
 import { RootState } from "@modules/index";
 import { setSelectedTime } from "@modules/othercalendar";
 
+const now = new Date();
+
 const isSameTime = (
   date1: SchedulerDateTime | undefined,
   date2: Date | undefined
@@ -21,11 +23,10 @@ const isSameTime = (
 };
 
 export default function OtherWeekView() {
-  const { map, selected, minutes } = useSelector(
+  const { selected, minutes, lock, blockList, fixedBlockList } = useSelector(
     (state: RootState) => state.othercalendar
   );
   const dispatch = useDispatch();
-  const now = new Date();
 
   const handleClick = (startDate: SchedulerDateTime) => {
     const newSelected: SchedulerDate = { startDate };
@@ -54,22 +55,25 @@ export default function OtherWeekView() {
         let isDisabled = false;
 
         if (props.startDate && props.endDate) {
-          const str = getStringFromDate(props.startDate);
-          const list = map.get(str);
+          const startDate = props.startDate;
 
-          if (list) {
-            for (let item of list) {
-              if (
-                props.startDate >= new Date(item.startDate) &&
-                item.endDate &&
-                props.endDate <= new Date(item.endDate)
-              ) {
-                isDisabled = true;
-                break;
-              }
-            }
-          } else if (props.startDate && props.startDate <= now) {
+          if (startDate <= now) {
             isDisabled = true;
+          } else {
+            const day = (startDate.getDay() + 6) % 7;
+            const time =
+              startDate.getHours().toString() +
+              startDate.getMinutes().toString();
+
+            if (lock[day]) {
+              isDisabled = fixedBlockList.get(day)?.includes(time) ?? false;
+            }
+
+            if (!isDisabled) {
+              const date = getStringFromDate(startDate) + time;
+              isDisabled = blockList.has(date);
+              if (isDisabled) console.log(date);
+            }
           }
         }
 
