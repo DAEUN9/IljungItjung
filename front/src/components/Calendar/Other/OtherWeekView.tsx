@@ -67,9 +67,12 @@ export default function OtherWeekView() {
 
             if (lock[day]) {
               isDisabled = fixedBlockList.get(day)?.includes(time) ?? false;
-            } else {
+            }
+
+            if (!isDisabled) {
               const date = getStringFromDate(startDate) + time;
               isDisabled = blockList.has(date);
+              if (isDisabled) console.log(date);
             }
           }
         }

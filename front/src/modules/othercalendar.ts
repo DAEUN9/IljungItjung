@@ -96,10 +96,12 @@ function getBlockList(
       if (!set.has(date)) {
         set.add(date);
       }
-      startDate.setMinutes(skip);
+      startDate.setMinutes(startDate.getMinutes() + skip);
       skip += 30;
     }
   });
+
+  console.log(set);
 
   return { set, map };
 }
