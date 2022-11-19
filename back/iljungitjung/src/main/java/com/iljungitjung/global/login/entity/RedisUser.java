@@ -1,5 +1,6 @@
 package com.iljungitjung.global.login.entity;
 
+import com.iljungitjung.domain.user.dto.UpdateUser;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.global.oauth.dto.KakaoUserInfoResponseDto;
 import lombok.Builder;
@@ -24,6 +25,10 @@ public class RedisUser {
         this.nickname = user.getNickname();
         this.email = kakaoUserInfo.getKakaoAccount().getEmail();
         this.profileImg = kakaoUserInfo.getKakaoAccount().getKakaoUserProfile().getProfile_image_url();
+    }
+
+    public void updateRedisUser(UpdateUser updateUser){
+        this.nickname = updateUser.getNickname();
     }
 
     @Builder
