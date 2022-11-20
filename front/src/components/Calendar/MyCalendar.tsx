@@ -33,7 +33,6 @@ const MyCalendar = () => {
     if (profile.nickname !== "") {
       getSchedule(profile.nickname, (res: ScheduleApiData) => {
         const { acceptList, requestList, blockList, blockDayList } = res.data;
-        console.log(res.data);
 
         // 일정 목록 설정
         dispatch(setScheduleList(acceptList));

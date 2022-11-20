@@ -80,10 +80,7 @@ const Reservation = () => {
         categoryName: data.category,
       };
 
-      console.log(requestData);
-
       requestReservation(requestData, (res: RequestApiData) => {
-        console.log(res);
         openSnackbar(2);
       });
     }

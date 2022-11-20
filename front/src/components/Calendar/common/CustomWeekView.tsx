@@ -10,8 +10,6 @@ export default function CustomWeekView() {
     (state: RootState) => state.mycalendar
   );
 
-  console.log(lock);
-
   return (
     <WeekView
       startDayHour={9}
@@ -38,7 +36,7 @@ export default function CustomWeekView() {
           // 고정이 아닐 때
           else {
             const date = getStringFromDate(startDate) + time;
-            isDisabled = blockList.has(date);
+            isDisabled = blockList?.has(date);
           }
         }
 
