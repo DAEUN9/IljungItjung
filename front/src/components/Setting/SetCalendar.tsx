@@ -1,6 +1,6 @@
 import { ViewState } from "@devexpress/dx-react-scheduler";
 import { Scheduler } from "@devexpress/dx-react-scheduler-material-ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import CustomDateNavigator from "@components/Calendar/common/CustomDateNavigator";
 import CustomTodayButton from "@components/Calendar/common/CustomTodayButton";

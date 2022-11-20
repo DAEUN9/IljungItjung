@@ -27,7 +27,6 @@ const ReservationPage = () => {
       formatReservationDate(startDate),
       formatReservationDate(endDate),
       (res: any) => {
-        console.log(res.data);
         res.data.reservationViewDtoList.map((item: ReservationTypes) => {
           const obj = new Date(item.startDate);
           const date =

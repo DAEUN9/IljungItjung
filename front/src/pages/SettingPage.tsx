@@ -102,7 +102,7 @@ const SettingPage = () => {
       });
       dispatch(setShade(tempSet));
     });
-  }, [renderObj]);
+  }, []);
 
   useEffect(() => {
     if (selectedCategory.categoryName.length > 0) setTab(1);

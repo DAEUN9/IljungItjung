@@ -73,7 +73,6 @@ export default function SettingWeekView() {
                     props.startDate as Date,
                     props.endDate as Date
                   );
-                  console.log(date);
                   onToggleShade(date);
 
                   if (props.startDate) {
