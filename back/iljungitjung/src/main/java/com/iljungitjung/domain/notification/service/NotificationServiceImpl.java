@@ -105,7 +105,7 @@ public class NotificationServiceImpl implements NotificationService{
         String startTime = makeTimeFormat(schedule.getStartDate());
         String endTime = makeTimeFormat(schedule.getEndDate());
         if (idx == 1) {
-            return String.format(REFUSE_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getCategoryName());
+            return String.format(REFUSE_BASE, date, startTime, endTime, schedule.getUserTo().getNickname(), schedule.getCategoryName());
         }
         if (idx == 2) {
             return String.format(CANCEL_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getUserTo().getNickname());
