@@ -2,16 +2,19 @@ import Slider from "react-slick";
 import styled from "@emotion/styled";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
 import caroL from "@assets/carouselL.png";
 import caroR from "@assets/carouselR.png";
 import defaultImg from "@assets/defaultImg.png";
 import "@styles/Login/slick-dots.scss";
 import styles from "@styles/Login/Login.module.scss";
+import carousel_1 from "@assets/carousel_1.gif";
+import carousel_2 from "@assets/carousel_2.gif";
+import carousel_3 from "@assets/carousel_3.gif";
+import carousel_4 from "@assets/carousel_4.gif";
+import carousel_5 from "@assets/carousel_5.gif";
 
 const Image = styled.img`
-  width: 60%;
-  height: 60%;
+  width: 70%;
   margin: auto;
 `;
 
@@ -64,19 +67,19 @@ const CustomCarousel = () => {
     <div className={styles["carousel"]}>
       <StyledSlider {...settings} dotsClass="slick-dots">
         <div>
-          <Image src={defaultImg} />
+          <Image src={carousel_1} />
         </div>
         <div>
-          <Image src={defaultImg} />
+          <Image src={carousel_2} />
         </div>
         <div>
-          <Image src={defaultImg} />
+          <Image src={carousel_3} />
         </div>
         <div>
-          <Image src={defaultImg} />
+          <Image src={carousel_4} />
         </div>
         <div>
-          <Image src={defaultImg} />
+          <Image src={carousel_5} />
         </div>
       </StyledSlider>
     </div>

@@ -24,16 +24,6 @@ interface MyInfoApiData {
   data: MyProfile;
 }
 
-interface MyInfoApiData {
-  status: string;
-  data: MyProfile;
-}
-
-interface MyInfoApiData {
-  status: string;
-  data: MyProfile;
-}
-
 const OtherCalendar = () => {
   const [profile, setProfile] = useState<MyProfile>({
     nickname: "",
