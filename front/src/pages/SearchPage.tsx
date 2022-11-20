@@ -19,13 +19,6 @@ interface SearchApiData {
   };
 }
 
-interface SearchApiData {
-  status: string;
-  data: {
-    users: SearchState[];
-  };
-}
-
 const SearchPage = () => {
   const dispatch = useDispatch();
 
