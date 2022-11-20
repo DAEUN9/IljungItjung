@@ -4,7 +4,7 @@ import { Fab, IconButton, Tab, Tabs, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { BsQuestionLg } from "react-icons/bs";
 import { ThemeProvider } from "@emotion/react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Sidebar from "@components/common/Sidebar";
 import styles from "@styles/Setting/Setting.module.scss";
@@ -27,6 +27,18 @@ import { RootState } from "@modules/index";
 import { AppointmentsTypes, BlockListTypes } from "@components/types/types";
 import { getSchedule } from "@api/calendar";
 import DeleteModal from "@components/Setting/DeleteModal";
+import {
+  initLockMap,
+  lockShade,
+  selectCategory,
+  setCategory,
+  setLock,
+  setShade,
+} from "@modules/setting";
+import {
+  getFullStringFromDate,
+  makeFormat,
+} from "@components/Calendar/common/util";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -49,59 +61,57 @@ interface SettingApiData {
   data: number;
 }
 
-const data: AppointmentsTypes[] = [
-  {
-    id: 1,
-    startDate: "2022-11-16T09:30",
-    endDate: "2022-11-16T11:00",
-    categoryName: "목욕",
-    nickname: "곰고구마",
-    contents:
-      "요청사항이 엄청나게 길어지면 어떻게 보일지 정말정말 궁금하네요 요청사항이 엄청나게 길어지면 어떻게 보일지 정말정말 궁금하네요",
-    phonenum: "010-1111-1111",
-    color: "#F4F38A",
-  },
-  {
-    id: 2,
-    startDate: "2022-11-16T12:00",
-    endDate: "2022-11-16T13:30",
-    categoryName: "손발톱관리",
-    nickname: "신봉선",
-    contents: "예쁘게 해주세용",
-    phonenum: "010-2222-2222",
-    color: "#C3DBE3",
-  },
-  {
-    id: 3,
-    startDate: "2022-11-18T12:00",
-    endDate: "2022-11-18T13:30",
-    categoryName: "커트",
-    nickname: "퍼플독",
-    contents: "멋지게 해주십쇼",
-    phonenum: "010-3333-3333",
-    color: "#D7CBF4",
-  },
-];
-
 const SettingPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [tab, setTab] = useState(0);
   const [saveOpen, setSaveOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [appointments, setAppointments] = useState<AppointmentsTypes[]>([]);
-  const { categories, set, lock } = useSelector(
+  const { categories, selectedCategory, set, lock, lockMap } = useSelector(
     (state: RootState) => state.setting
   );
   const profile = useSelector((state: RootState) => state.profile.profile);
+  const renderObj = useSelector((state: RootState) => state.render.renderObj);
 
   useEffect(() => {
+    dispatch(initLockMap());
+
     getSchedule(profile.nickname, (res: any) => {
-      setAppointments(res.data.acceptList);
+      const { acceptList, categoryList, blockDayList, blockList } = res.data;
+      setAppointments(acceptList);
+      dispatch(setCategory(categoryList));
+      dispatch(setLock(blockDayList));
+
+      const tempSet = new Set<string>();
+      blockList.map((block: any) => {
+        const start = new Date(block.startDate);
+        const end = new Date(block.endDate);
+        const date = getFullStringFromDate(start, end);
+        const time =
+          makeFormat(start.getHours().toString()) +
+          makeFormat(start.getMinutes().toString());
+
+        const day = start.getDay();
+        if (lock[(day + 6) % 7]) {
+          dispatch(lockShade(day, time));
+        } else {
+          tempSet.add(date);
+        }
+      });
+      dispatch(setShade(tempSet));
     });
-  }, []);
+  }, [renderObj]);
+
+  useEffect(() => {
+    if (selectedCategory.categoryName.length > 0) setTab(1);
+  }, [selectedCategory]);
 
   const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
+    if (newValue === 0) {
+      dispatch(selectCategory({ categoryName: "", time: "", color: "" }));
+    }
     setTab(newValue);
   };
 
@@ -118,14 +128,10 @@ const SettingPage = () => {
       blockList.push(obj);
     });
 
-    console.log(blockList);
+    registerCategory(categories, (res: SettingApiData) => {});
+    blockSchedule(lock, blockList, (res: SettingApiData) => {});
 
-    registerCategory(categories, (res: SettingApiData) => {
-      console.log(res.data);
-    });
-    blockSchedule(lock, blockList, (res: SettingApiData) => {
-      console.log(res.data);
-    });
+    dispatch(selectCategory({ categoryName: "", time: "", color: "" }));
 
     navigate("/calendar/my");
   };
@@ -184,7 +190,7 @@ const SettingPage = () => {
             setOpen={setCancelOpen}
             cancelLabel="취소"
             confirmLabel="확인"
-            handleConfirm={handleSubmit}
+            handleConfirm={() => navigate("/calendar/my")}
             children={
               <div className={styles["modal-content"]}>
                 <div className={styles.img}>

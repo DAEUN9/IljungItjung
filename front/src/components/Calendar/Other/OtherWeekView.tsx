@@ -7,6 +7,8 @@ import { SchedulerDate, SchedulerDateTime } from "@components/types/types";
 import { RootState } from "@modules/index";
 import { setSelectedTime } from "@modules/othercalendar";
 
+const now = new Date();
+
 const isSameTime = (
   date1: SchedulerDateTime | undefined,
   date2: Date | undefined
@@ -21,11 +23,10 @@ const isSameTime = (
 };
 
 export default function OtherWeekView() {
-  const { map, selected, minutes } = useSelector(
+  const { selected, minutes, lock, map, fixedMap } = useSelector(
     (state: RootState) => state.othercalendar
   );
   const dispatch = useDispatch();
-  const now = new Date();
 
   const handleClick = (startDate: SchedulerDateTime) => {
     const newSelected: SchedulerDate = { startDate };
@@ -53,23 +54,47 @@ export default function OtherWeekView() {
       timeTableCellComponent={(props) => {
         let isDisabled = false;
 
-        if (props.startDate && props.endDate) {
-          const str = getStringFromDate(props.startDate);
-          const list = map.get(str);
+        if (props.startDate) {
+          const startDate = props.startDate;
 
-          if (list) {
-            for (let item of list) {
-              if (
-                props.startDate >= new Date(item.startDate) &&
-                item.endDate &&
-                props.endDate <= new Date(item.endDate)
-              ) {
-                isDisabled = true;
-                break;
+          if (startDate <= now) {
+            isDisabled = true;
+          } else {
+            const day = (startDate.getDay() + 6) % 7;
+            const propsTime =
+              startDate.getHours().toString() +
+              startDate.getMinutes().toString();
+
+            if (lock[day]) {
+              const list = fixedMap.get(day);
+
+              if (list) {
+                for (let item of list) {
+                  const itemTime =
+                    item.startDate.getHours().toString() +
+                    item.startDate.getMinutes().toString();
+
+                  if (itemTime === propsTime) {
+                    isDisabled = true;
+                    break;
+                  }
+                }
               }
             }
-          } else if (props.startDate && props.startDate <= now) {
-            isDisabled = true;
+
+            if (!isDisabled) {
+              const key = getStringFromDate(startDate);
+              const list = map.get(key);
+
+              if (list) {
+                for (let item of list) {
+                  if (item.startDate.toString() === startDate.toString()) {
+                    isDisabled = true;
+                    break;
+                  }
+                }
+              }
+            }
           }
         }
 

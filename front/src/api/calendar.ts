@@ -53,3 +53,9 @@ export function getOtherProfile(nickname: string, success: any) {
     .then(success)
     .catch((err) => console.log(err));
 }
+export function getScheduleItem(id: number, success: any) {
+  api
+    .get(`/schedules/detail/${id}`)
+    .then(success)
+    .catch((err) => console.log(err));
+}

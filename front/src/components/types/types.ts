@@ -25,20 +25,6 @@ interface SearchState {
   categories: SearchCategoryState[];
 }
 
-interface SearchCategoryState {
-  categoryName: string;
-}
-
-// 검색 관련 타입
-interface SearchState {
-  nickname: string;
-  email: string;
-  imagePath: string;
-  introduction: string;
-  description: string;
-  categories: SearchCategoryState[];
-}
-
 declare type SchedulerDateTime = Date | number | string;
 
 interface SchedulerDate {
@@ -76,9 +62,8 @@ interface RequestState extends CommonState, DateState {
 
 interface AcceptState extends RequestState {}
 
-interface BlockState extends CategoryState, DateState {
-  contents: string;
-  block: boolean;
+interface BlockState extends DateState {
+  id: number;
 }
 
 interface CancelState extends CategoryState, DateState {
@@ -95,6 +80,7 @@ interface ScheduleApiData {
     requestList: RequestState[];
     acceptList: AcceptState[];
     blockList: BlockState[];
+    blockDayList: boolean[];
     cancelList: CancelState[];
   };
 }
@@ -118,6 +104,20 @@ interface AppointmentsTypes {
   phonenum: string;
 }
 
+interface ReservationTypes {
+  id: number;
+  type: string;
+  categoryName: string;
+  color: string;
+  contents: string;
+  startDate: string;
+  endDate: string;
+  nickname: string;
+  imagePath: string;
+  cancelFrom?: string;
+  reason?: string;
+}
+
 export type {
   SettingCategoryState,
   BlockListTypes,
@@ -129,4 +129,7 @@ export type {
   MyProfile,
   CategoryState,
   AppointmentsTypes,
+  BlockState,
+  ReservationTypes,
+  RequestState,
 };
