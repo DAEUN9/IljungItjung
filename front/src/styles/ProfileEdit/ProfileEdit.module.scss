@@ -4,23 +4,8 @@
   @include page-default();
 }
 
-.modal {
-  margin: auto;
-
-  & .picturebox {
-    display: flex;
-    justify-content: center;
-
-    & .picture {
-      width: 50%;
-      height: 50%;
-    }
-  }
-
-  & .textbox {
-    text-align: center;
-    font-weight: bold;
-  }
+.modal-content {
+  @include custom-modal();
 }
 
 .left {
@@ -94,6 +79,7 @@
     & .withdrow {
       text-align: end;
       color: red;
+      cursor: pointer;
     }
   }
 }
