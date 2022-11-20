@@ -45,11 +45,15 @@ const messages = [
   "예약 요청이 완료되었습니다.",
 ];
 
+const end = new Date();
+end.setHours(22);
+end.setMinutes(0);
+
 const Reservation = () => {
   const methods = useForm<RequestData>();
   const { handleSubmit, watch, setValue } = methods;
   const watchCategory = watch("category", "");
-  const { selected, map, category } = useSelector(
+  const { selected, category, lock, fixedMap, map } = useSelector(
     (state: RootState) => state.othercalendar
   );
   const dispatch = useDispatch();
@@ -106,21 +110,33 @@ const Reservation = () => {
     startDate: SchedulerDateTime,
     endDate: SchedulerDateTime
   ) => {
-    const list = map.get(getStringFromDate(endDate.toString()));
     let isOverlap = false;
+    const _startDate = new Date(startDate.toString());
+    const _endDate = new Date(endDate.toString());
+    const day = (_startDate.getDay() + 6) % 7;
 
-    if (list) {
-      for (let item of list) {
-        if (item.endDate) {
-          const itemStartDate = new Date(item.startDate.toString());
-          const itemEndDate = new Date(item.endDate.toString());
+    if (lock[day]) {
+      const list = fixedMap.get(day);
 
-          if (
-            (endDate > itemStartDate && endDate <= itemEndDate) ||
-            (startDate <= itemStartDate && endDate >= itemEndDate)
-          ) {
+      if (list) {
+        for (let item of list) {
+          if (_startDate < item.startDate && _endDate >= item.endDate) {
             isOverlap = true;
             break;
+          }
+        }
+      }
+
+      if (!isOverlap) {
+        const key = getStringFromDate(_startDate);
+        const list = map.get(key);
+
+        if (list) {
+          for (let item of list) {
+            if (_startDate < item.startDate && _endDate >= item.endDate) {
+              isOverlap = true;
+              break;
+            }
           }
         }
       }
@@ -153,13 +169,7 @@ const Reservation = () => {
         selected.startDate.toString()
       );
 
-      console.log(endDate.getHours());
-      console.log(endDate.getMinutes());
-
-      if (
-        isOverlapWithSchedule(selected.startDate, endDate) ||
-        (endDate.getHours() >= 22 && endDate.getMinutes() > 0)
-      ) {
+      if (isOverlapWithSchedule(selected.startDate, endDate) || endDate > end) {
         unsetSelected(0, selected.startDate);
       } else {
         const newSelected: SchedulerDate = { startDate: selected.startDate };
@@ -177,11 +187,8 @@ const Reservation = () => {
     if (selected && selected.endDate) {
       const endDate = new Date(selected.endDate.toString());
 
-      if (
-        isOverlapWithSchedule(selected.startDate, selected.endDate) ||
-        (endDate.getHours() >= 22 && endDate.getMinutes() > 0)
-      ) {
-        unsetSelected(1, selected.startDate);
+      if (isOverlapWithSchedule(selected.startDate, endDate) || endDate > end) {
+        unsetSelected(0, selected.startDate);
       } else {
         dispatch(setCurrent());
       }

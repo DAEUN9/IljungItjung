@@ -131,4 +131,5 @@ export type {
   AppointmentsTypes,
   BlockState,
   ReservationTypes,
+  RequestState,
 };

@@ -43,7 +43,7 @@ const Profile = ({ profile }: ProfileProps) => {
           {!profile.description && loading && (
             <Skeleton variant="rounded" width="100%" height="150px" />
           )}
-          {profile.description && <div>{profile.description}</div>}
+          {profile.description && <>{profile.description}</>}
         </div>
       </div>
     </div>

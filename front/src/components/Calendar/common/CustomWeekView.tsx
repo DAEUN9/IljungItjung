@@ -39,7 +39,6 @@ export default function CustomWeekView() {
           else {
             const date = getStringFromDate(startDate) + time;
             isDisabled = blockList.has(date);
-            if (isDisabled) console.log(date);
           }
         }
 
