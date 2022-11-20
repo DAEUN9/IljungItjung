@@ -71,7 +71,7 @@ docker logs --tail 300 iljungitjung_server_green
 ## frontend
 1. 레포지토리를 clone 받는다.
 ```bash
-git clone https://lab.ssafy.com/s07-bigdata-dist-sub2/S07P22D110.git
+git clone https://lab.ssafy.com/s07-final/S07P31D106.git
 ```
 2. `front` 폴더에서 `package.json`에 정의된 모듈을 설치한다.
 ```shell
