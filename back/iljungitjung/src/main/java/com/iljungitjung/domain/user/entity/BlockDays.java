@@ -16,6 +16,16 @@ public class BlockDays {
     private Boolean saturday;
     private Boolean sunday;
 
+    public void setBlockDays(){
+        this.monday=false;
+        this.tuesday=false;
+        this.wednesday=false;
+        this.thursday=false;
+        this.friday=false;
+        this.saturday=false;
+        this.sunday=false;
+    }
+
     public void updateBlockDays(List<Boolean> blockDaysList){
         int dayCount=0;
 

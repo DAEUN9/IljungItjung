@@ -1,6 +1,7 @@
 package com.iljungitjung.domain.user.service;
 
 import com.iljungitjung.domain.user.dto.*;
+import com.iljungitjung.domain.user.entity.BlockDays;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
@@ -58,6 +59,11 @@ public class UserServiceImpl implements UserService{
         log.debug("user : {}", user);
         temporaryUser.matchPhonenum(signUpDto);
         temporaryUserRepository.deleteById(request.getSession().getId());
+
+        BlockDays blockDays = new BlockDays();
+        blockDays.setBlockDays();
+        user.setBlockDays(blockDays);
+
         user = userRepository.save(user);
 
         return new SignUpUserResponseDto(user.getId());
