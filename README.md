@@ -51,6 +51,7 @@
 
 # 4. 시스템 구성도
 
+![제목_없는_다이어그램.drawio](/uploads/ebef644f5d0403a88d5f6a6374dec53f/제목_없는_다이어그램.drawio.png)
 
 # 5. 실행 방법
 ## backend
