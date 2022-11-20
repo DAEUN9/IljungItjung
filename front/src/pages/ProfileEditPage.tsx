@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import CustomButton from "@components/common/CustomButton";
 import Sidebar from "@components/common/Sidebar";
 import styles from "@styles/ProfileEdit/ProfileEdit.module.scss";
-import defaultImg from "@assets/defaultImg.png";
+import iljung from "@assets/iljung.png";
 import React, { useEffect, useState } from "react";
 import CustomModal from "@components/common/CustomModal";
 import { putProfile } from "@api/profile";
@@ -141,13 +141,14 @@ const ProfileEditPage = () => {
         setOpen={setOpen}
         handleConfirm={handleConfirm}
         children={
-          <div className={styles["modal"]}>
-            <div className={styles["picturebox"]}>
-              <img src={defaultImg} className={styles["picture"]} />
+          <div className={styles["modal-content"]}>
+            <div className={styles.img}>
+              <img src={iljung} />
             </div>
-            <div className={styles["textbox"]}>
-              <p>회원 정보가 수정됩니다.</p>
-              <p>계속 하시겠습니까?</p>
+            <div className={styles.text}>
+              회원 정보가 수정됩니다.
+              <br />
+              계속 하시겠습니까?
             </div>
           </div>
         }
@@ -157,37 +158,35 @@ const ProfileEditPage = () => {
         setOpen={setOpenWithdrow}
         handleConfirm={handleConfirmWithdrow}
         children={
-          <div className={styles["modal"]}>
-            <div className={styles["picturebox"]}>
-              <img src={defaultImg} className={styles["picture"]} />
+          <div className={styles["modal-content"]}>
+            <div className={styles.img}>
+              <img src={iljung} />
             </div>
-            <div className={styles["textbox"]}>
-              <p>정말 탈퇴하시겠습니까?</p>
-            </div>
+            <div className={styles.text}>정말 탈퇴하시겠습니까?</div>
           </div>
         }
       />
-      <div className={styles["left"]}>
+      <div className={styles.left}>
         <div>
-          <div className={styles["pictureBox"]}>
-            <img className={styles["picture"]} src={img} />
+          <div className={styles.pictureBox}>
+            <img className={styles.picture} src={img} />
           </div>
-          <h1 className={styles["name"]}>{defalutName}</h1>
+          <h1 className={styles.name}>{defalutName}</h1>
           <CustomButton
             size="large"
-            className={styles["savebtn"]}
+            className={styles.savebtn}
             onClick={handleOpen}
           >
             저장하기
           </CustomButton>
         </div>
       </div>
-      <div className={styles["right"]}>
-        <div className={styles["content"]}>
+      <div className={styles.right}>
+        <div className={styles.content}>
           <h2>닉네임</h2>
-          <div className={styles["nicknamebox"]}>
+          <div className={styles.nicknamebox}>
             <TextField
-              className={styles["nickname"]}
+              className={styles.nickname}
               onChange={handleName}
               placeholder="2~10글자의 한글, 영어 대/소문자"
               inputProps={{ maxLength: 10, minLength: 2 }}
@@ -218,7 +217,7 @@ const ProfileEditPage = () => {
           <br />
           <h2>한줄 소개</h2>
           <TextField
-            className={styles["intro"]}
+            className={styles.intro}
             onChange={handleIntro}
             multiline
             minRows={2}
@@ -226,13 +225,13 @@ const ProfileEditPage = () => {
             value={intro}
             inputProps={{ maxLength: 50 }}
           />
-          <span className={styles["count"]}>
+          <span className={styles.count}>
             {intro === null ? "0" : intro.length}/50
           </span>
           <br />
           <h2>설명</h2>
           <TextField
-            className={styles["description"]}
+            className={styles.description}
             multiline
             minRows={9}
             value={description}
@@ -240,12 +239,12 @@ const ProfileEditPage = () => {
             placeholder="상세 설명을 입력해주세요"
             inputProps={{ maxLength: 300 }}
           />
-          <span className={styles["count"]}>
+          <span className={styles.count}>
             {description === null ? "0" : description.length}/300
           </span>
           <br />
           <br />
-          <div className={styles["withdrow"]} onClick={handleOpenWithdrow}>
+          <div className={styles.withdrow} onClick={handleOpenWithdrow}>
             회원 탈퇴
           </div>
         </div>

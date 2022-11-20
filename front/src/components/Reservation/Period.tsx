@@ -39,7 +39,11 @@ const Period = () => {
         <DatePicker
           dateFormat="yyyy/MM/dd"
           selected={endDate > startDate ? endDate : startDate}
+          onChange={(date: Date) => dispatch(setEndDate(date))}
           selectsEnd
+          startDate={startDate}
+          endDate={endDate}
+          minDate={startDate}
           locale={ko}
         />
       </div>
