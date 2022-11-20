@@ -1,5 +1,4 @@
 
-
 ## 목차
 1. [서비스 소개](#1-서비스-소개)
 2. [주요 기능](#2-주요-기능)
@@ -51,11 +50,15 @@
 gitlab(back branch) push or merge -> jenkins webhook -> auto build  
 
 ### SSH
-
+```
+ssh -i K7D106T.pem ubuntu@k7d106.p.ssafy.io
+```
 
 ### docker logs
-
-
+![image](/uploads/cea753e37746b5ce94b991333c57c16a/image.png)
+```
+docker logs --tail 300 iljungitjung_server_green
+```
 
 ## frontend
 1. 레포지토리를 clone 받는다.
