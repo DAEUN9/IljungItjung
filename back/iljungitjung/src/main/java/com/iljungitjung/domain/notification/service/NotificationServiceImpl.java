@@ -116,7 +116,7 @@ public class NotificationServiceImpl implements NotificationService{
         if (idx == 4) {
             return String.format(REQUEST_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getCategoryName());
         }
-        return String.format(DELETE_BASE, date, startTime, endTime, schedule.getUserFrom().getNickname(), schedule.getCategoryName());
+        return String.format(DELETE_BASE, date, startTime, endTime, schedule.getUserTo().getNickname(), schedule.getCategoryName());
     }
 
 }
