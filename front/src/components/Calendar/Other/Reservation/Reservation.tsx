@@ -45,10 +45,6 @@ const messages = [
   "예약 요청이 완료되었습니다.",
 ];
 
-const end = new Date();
-end.setHours(22);
-end.setMinutes(0);
-
 const Reservation = () => {
   const methods = useForm<RequestData>();
   const { handleSubmit, watch, setValue } = methods;
@@ -117,23 +113,33 @@ const Reservation = () => {
 
       if (list) {
         for (let item of list) {
-          if (_startDate < item.startDate && _endDate >= item.endDate) {
+          if (
+            ((_startDate.getHours() < item.startDate.getHours() ||
+              (_startDate.getHours() === item.startDate.getHours() &&
+                _startDate.getMinutes() < item.startDate.getMinutes())) &&
+              _endDate.getHours() > item.endDate.getHours()) ||
+            (_endDate.getHours() === item.endDate.getHours() &&
+              _endDate.getMinutes() >= item.endDate.getMinutes())
+          ) {
             isOverlap = true;
             break;
           }
         }
       }
+    }
 
-      if (!isOverlap) {
-        const key = getStringFromDate(_startDate);
-        const list = map.get(key);
+    if (!isOverlap) {
+      const key = getStringFromDate(_startDate);
+      const list = map.get(key);
 
-        if (list) {
-          for (let item of list) {
-            if (_startDate < item.startDate && _endDate >= item.endDate) {
-              isOverlap = true;
-              break;
-            }
+      if (list) {
+        for (let item of list) {
+          if (
+            _startDate < item.startDate &&
+            _endDate.getTime() >= item.endDate.getTime()
+          ) {
+            isOverlap = true;
+            break;
           }
         }
       }
@@ -166,6 +172,10 @@ const Reservation = () => {
         selected.startDate.toString()
       );
 
+      const end = new Date(selected.startDate.toString());
+      end.setHours(22);
+      end.setMinutes(0);
+
       if (isOverlapWithSchedule(selected.startDate, endDate) || endDate > end) {
         unsetSelected(0, selected.startDate);
       } else {
@@ -183,9 +193,12 @@ const Reservation = () => {
   useEffect(() => {
     if (selected && selected.endDate) {
       const endDate = new Date(selected.endDate.toString());
+      const end = new Date(selected.startDate.toString());
+      end.setHours(22);
+      end.setMinutes(0);
 
       if (isOverlapWithSchedule(selected.startDate, endDate) || endDate > end) {
-        unsetSelected(0, selected.startDate);
+        unsetSelected(1, selected.startDate);
       } else {
         dispatch(setCurrent());
       }

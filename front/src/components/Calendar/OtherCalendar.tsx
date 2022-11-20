@@ -65,6 +65,7 @@ const OtherCalendar = () => {
           acceptList,
           requestList,
         } = res.data;
+        console.log(res.data);
 
         const reservations = acceptList.concat(requestList);
         const now = new Date();
