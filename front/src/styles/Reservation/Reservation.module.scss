@@ -1,0 +1,181 @@
+@use "../common/utils.module" as *;
+
+.reservation-page {
+  @include page-default();
+
+  overflow: overlay;
+}
+
+.content {
+  width: 100%;
+  padding: 2rem;
+
+  & .header {
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    z-index: 2;
+    top: 0;
+    left: 0;
+
+    & h2 {
+      margin: 0;
+    }
+  }
+
+  & .reservations {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    overflow-x: overlay;
+    margin-top: 2rem;
+    width: 100%;
+    height: 85vh;
+
+    @include custom-scroll();
+  }
+}
+
+/* 기간 설정 컴포넌트 */
+.period {
+  display: flex;
+
+  & .picker {
+    display: flex;
+    align-items: center;
+
+    & button {
+      color: #3d3d3d;
+
+      &:hover {
+        background-color: inherit;
+      }
+
+      & svg {
+        text-align: center;
+        font-size: 1.2rem;
+      }
+    }
+
+    & .divider {
+      margin: 0 0.2rem;
+    }
+  }
+
+  // 툴팁
+  & .MuiTooltip-popper {
+    inset: -10px auto 0px auto;
+  }
+}
+
+/* 날짜별 예약 목록 컴포넌트 */
+.reservation {
+  margin-right: 3rem;
+  padding-right: 3rem;
+  border-right: 1px solid rgba($color: #000000, $alpha: 0.5);
+  height: 80vh;
+  overflow-y: overlay;
+  overflow-x: hidden;
+
+  @include custom-scroll();
+
+  &:last-child {
+    border-right: 0;
+  }
+
+  & .date {
+    padding: 0 0.5rem 1rem 1rem;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fcfcfc;
+    z-index: 1;
+  }
+}
+
+/* 요청 사항 */
+.detail {
+  margin-top: 0.2rem;
+
+  &.canceled {
+    opacity: 50%;
+  }
+}
+
+/* 취소된 일정 */
+.cancel-reason {
+  & .wraaper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    & .button {
+      text-align: center;
+      margin: 0.5rem 0 0 0;
+
+      & button {
+        color: #000000;
+
+        &:hover {
+          background-color: #fff;
+        }
+      }
+    }
+
+    & .reason {
+      background-color: rgba($color: #f5f5f5, $alpha: 0.7);
+      border-radius: 5px;
+      padding: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    & .cancelFrom {
+      color: #636363;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+/* 취소되지 않고 만료되지 않은 일정 */
+.cancel-button {
+  & .button {
+    display: flex;
+    justify-content: center;
+
+    & button {
+      color: rgba($color: #ff0000, $alpha: 0.5);
+      font-weight: 600;
+
+      &:hover {
+        color: #ff0000;
+        background-color: #fff;
+      }
+    }
+  }
+}
+
+.modal-content {
+  & .text {
+    text-align: center;
+    margin: 1rem 0 1.5rem 0;
+  }
+
+  & .img {
+    width: 100%;
+    text-align: center;
+
+    & img {
+      width: 30%;
+    }
+  }
+}
+
+.modal-content {
+  @include custom-modal();
+
+  & .textfield {
+    margin-bottom: 1rem;
+  }
+}

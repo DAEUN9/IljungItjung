@@ -1,0 +1,81 @@
+@use "../common/utils.module" as *;
+
+.react-datepicker {
+  &-wrapper {
+    width: inherit;
+  }
+
+  &__input-container {
+    input {
+      border: 0;
+      border-radius: 15px;
+      padding: 0.3rem 0.5rem;
+      background-color: #3d3d3d;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #fff;
+      text-align: center;
+      width: 90px;
+      cursor: pointer;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  &__triangle::after {
+    border-bottom-color: #fff !important;
+  }
+
+  &__navigation-icon::before {
+    border-color: #000 !important;
+    border-width: 2px 2px 0 0 !important;
+    height: 7px !important;
+    width: 7px !important;
+    margin-top: 3px;
+  }
+
+  &__header {
+    background-color: #fff;
+    border: 0;
+  }
+
+  &__day-names {
+    font-weight: 800;
+    margin-top: 0.5rem;
+  }
+
+  &__month {
+    &--selecting-range {
+      border-radius: 30px;
+    }
+  }
+
+  &__day {
+    border-radius: 30px !important;
+
+    // 선택한 기간이 포함된 달 이외의 달의 해당 기간
+    &--in-selecting-range {
+      background-color: #fff !important;
+      color: #000;
+    }
+
+    // 선택한 기간
+    &--in-range {
+      background-color: rgba($color: $primary-color, $alpha: 0.5) !important;
+      color: #fff !important;
+    }
+
+    // 선택한 시작 날짜, 끝 날짜
+    &--selected {
+      background-color: $primary-color !important;
+    }
+
+    // 모든 날짜에 대해 hover 시
+    &:hover {
+      background-color: $primary-color !important;
+      color: #fff;
+    }
+  }
+}

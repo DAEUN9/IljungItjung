@@ -1,0 +1,11 @@
+@use "../common/utils.module" as *;
+
+.delete-button {
+  display: flex;
+  justify-content: end;
+  color: #000;
+}
+
+.modal-content {
+  @include custom-modal();
+}
