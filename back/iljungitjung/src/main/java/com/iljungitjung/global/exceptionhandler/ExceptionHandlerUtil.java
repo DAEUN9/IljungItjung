@@ -1,13 +1,20 @@
 package com.iljungitjung.global.exceptionhandler;
 
 import com.iljungitjung.domain.category.exception.NoExistCategoryException;
-import com.iljungitjung.domain.notification.exception.*;
+import com.iljungitjung.domain.notification.exception.notification.ConvertToJsonErrorException;
+import com.iljungitjung.domain.notification.exception.notification.FailSendMessageException;
+import com.iljungitjung.domain.notification.exception.notification.FailSignatureKeyErrorException;
+import com.iljungitjung.domain.notification.exception.notification.MessageUriSyntaxErrorException;
+import com.iljungitjung.domain.notification.exception.phone.ExpireRandomNumException;
+import com.iljungitjung.domain.notification.exception.phone.IncorrectPhonenumException;
+import com.iljungitjung.domain.notification.exception.phone.IncorrectRandomNumberException;
 import com.iljungitjung.domain.schedule.exception.DateFormatErrorException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleDetailException;
 import com.iljungitjung.domain.schedule.exception.NoExistScheduleException;
 import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
 import com.iljungitjung.global.common.CommonResponse;
 import com.iljungitjung.global.login.exception.ExpireRedisUserException;
+import com.iljungitjung.global.login.exception.NotMatchPhonenumException;
 import com.iljungitjung.global.login.exception.NotMemberException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -17,9 +24,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
+import java.util.Iterator;
 
 
 @RestControllerAdvice
@@ -93,4 +102,34 @@ public class ExceptionHandlerUtil {
     ResponseEntity<CommonResponse> handleExpireRedisUserException(ExpireRedisUserException e){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CommonResponse.getErrorResponse(e.getMessage()));
     }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    ResponseEntity<CommonResponse> handleConstraintViolationException(ConstraintViolationException e){
+        Iterator<ConstraintViolation<?>> iterator = e.getConstraintViolations().iterator();
+        ConstraintViolation<?> error = iterator.next();
+
+        return ResponseEntity.badRequest().body(CommonResponse.getErrorResponse(error.getMessage()));
+    }
+
+    @ExceptionHandler(IncorrectPhonenumException.class)
+    ResponseEntity<CommonResponse> handleIncorrectPhonenumException(IncorrectPhonenumException e) {
+        return ResponseEntity.badRequest().body(CommonResponse.getErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(IncorrectRandomNumberException.class)
+    ResponseEntity<CommonResponse> handleIncorrectRandomNumberException(IncorrectRandomNumberException e) {
+        return ResponseEntity.badRequest().body(CommonResponse.getErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(ExpireRandomNumException.class)
+    ResponseEntity<CommonResponse> handleExpireRandomNumException(ExpireRandomNumException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CommonResponse.getErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(NotMatchPhonenumException.class)
+    ResponseEntity<CommonResponse> NotMatchPhonenumException(NotMatchPhonenumException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CommonResponse.getErrorResponse(e.getMessage()));
+    }
+
+
 }

@@ -1,10 +1,8 @@
 package com.iljungitjung.domain.schedule.dto.schedule;
 
-
 import com.iljungitjung.domain.schedule.entity.Schedule;
+import lombok.Builder;
 import lombok.Getter;
-
-import java.text.SimpleDateFormat;
 
 @Getter
 public class ScheduleViewDto {
@@ -14,19 +12,20 @@ public class ScheduleViewDto {
     private final String color;
     private final String startDate;
     private final String endDate;
-
     private final String contents;
-
     private final String phonenum;
+    private final String nickname;
+    private final String imagePath;
 
     public ScheduleViewDto(Schedule schedule){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm aa");
         this.id=schedule.getId();
         this.categoryName=schedule.getCategoryName();
         this.color= schedule.getColor();
-        this.startDate=simpleDateFormat.format(schedule.getStartDate());
-        this.endDate=simpleDateFormat.format(schedule.getEndDate());
+        this.startDate=schedule.getDateFormat(schedule.getStartDate());
+        this.endDate= schedule.getDateFormat(schedule.getEndDate());
         this.contents=schedule.getContents();
         this.phonenum=schedule.getPhonenum();
+        this.nickname=schedule.getUserFrom().getNickname();
+        this.imagePath=schedule.getUserFrom().getImagePath();
     }
 }

@@ -1,8 +1,7 @@
 package com.iljungitjung.domain.user.service;
 
-import com.iljungitjung.domain.user.dto.SignUpDto;
-import com.iljungitjung.domain.user.dto.SignUpUserResponseDto;
-import com.iljungitjung.domain.user.dto.UserInfo;
+import com.iljungitjung.domain.user.dto.*;
+import com.iljungitjung.domain.user.entity.BlockDays;
 import com.iljungitjung.domain.user.entity.User;
 import com.iljungitjung.domain.user.exception.NoExistUserException;
 import com.iljungitjung.domain.user.exception.AlreadyExistUserException;
@@ -20,7 +19,10 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +57,13 @@ public class UserServiceImpl implements UserService{
             throw new AlreadyExistUserException();
         }
         log.debug("user : {}", user);
+        temporaryUser.matchPhonenum(signUpDto);
         temporaryUserRepository.deleteById(request.getSession().getId());
+
+        BlockDays blockDays = new BlockDays();
+        blockDays.setBlockDays();
+        user.setBlockDays(blockDays);
+
         user = userRepository.save(user);
 
         return new SignUpUserResponseDto(user.getId());
@@ -88,5 +96,38 @@ public class UserServiceImpl implements UserService{
         });
 
         return user;
+    }
+
+    @Override
+    public UserInfoList getUserInfoList(String nickname) {
+        List<User> userList = userRepository.findByNicknameContaining(nickname);
+        List<UserInfo> userInfoList = userList.stream().map(user -> getUserInfo(user.getNickname())).collect(Collectors.toList());
+        return new UserInfoList(userInfoList);
+    }
+
+    @Transactional
+    public void deleteUserByEmail(String email) {
+        userRepository.deleteUserByEmail(email);
+    }
+
+    @Override
+    public void updateUser(UpdateUser updateUser, HttpSession session) {
+        RedisUser sessionUser = redisUserRepository.findById(session.getId()).orElseThrow(() -> {
+            throw new ExpireTemporaryUserException();
+        });
+        User user = userRepository.findUserByEmail(sessionUser.getEmail()).orElseThrow(() -> {
+            throw new NoExistUserException();
+        });
+        user.updateUser(updateUser);
+        userRepository.save(user);
+        sessionUser.updateRedisUser(updateUser);
+        redisUserRepository.save(sessionUser);
+        log.debug("user save ok");
+    }
+
+    @Override
+    public void isExistUserByNickname(String nickname) {
+        if(userRepository.existsUserByNickname(nickname))
+            throw new AlreadyExistUserException();
     }
 }

@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class ReservationIdResponseDto {
+
     private final Long id;
 
     public ReservationIdResponseDto(Long id) {
