@@ -1,0 +1,43 @@
+@use "../common/utils.module" as *;
+
+@mixin common() {
+  & h1 {
+    margin-top: 0;
+  }
+
+  & .func {
+    margin-top: 1.2rem;
+
+    & .title {
+      display: flex;
+      align-items: center;
+
+      & h2 {
+        margin: 0 0 0 0.5rem;
+      }
+    }
+
+    & .content {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+.tooltip {
+  &-calendar {
+    @include common();
+  }
+
+  &-category {
+    @include common();
+
+    & b {
+      font-size: 0.8rem;
+
+      & span {
+        color: $primary-color;
+      }
+    }
+  }
+}

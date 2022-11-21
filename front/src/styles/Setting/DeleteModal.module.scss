@@ -1,0 +1,9 @@
+@use "../common/utils.module" as *;
+
+.modal-content {
+  @include custom-modal();
+
+  & .textfield {
+    margin-bottom: 1rem;
+  }
+}
